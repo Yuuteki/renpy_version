@@ -190,6 +190,8 @@ screen front_page_project:
                         for button_name, path in p.get_renpy_launcher()["edit_file"].items():
                             textbutton button_name action editor.Edit(path, check=True)
 
+                        textbutton _("Visual Editor") action project.OpenVisualEditor()
+
                         if editor.CanEditProject():
                             textbutton _("Open project") action editor.EditProject()
                         else:

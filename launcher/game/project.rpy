@@ -35,6 +35,8 @@ init python in project:
     import subprocess
     import re
     import tempfile
+    import urllib.parse
+    import urllib.request
 
     multipersistent = MultiPersistent("launcher.renpy.org")
 
@@ -1021,6 +1023,43 @@ init python in project:
         def __call__(self):
             self.project.launch()
             renpy.invoke_in_new_context(self.post_launch)
+
+    class OpenVisualEditor(Action):
+        """
+        Opens the visual editor for the supplied project, or for the current
+        project if no project is supplied.
+        """
+
+        def __init__(self, p=None):
+            if p is None:
+                self.project = current
+            elif isinstance(p, str):
+                self.project = manager.get(p)
+            else:
+                self.project = p
+
+        def get_sensitive(self):
+            return self.project is not None
+
+        def __call__(self):
+            if self.project is None:
+                return
+
+            editor_index = os.path.join(config.renpy_base, "visual_editor", "index.html")
+
+            if os.path.exists(editor_index):
+                url = urllib.parse.urljoin("file:", urllib.request.pathname2url(editor_index))
+                url += "?" + urllib.parse.urlencode({ "project": self.project.path })
+                renpy.open_url(url)
+                return
+
+            renpy.invoke_in_new_context(
+                interface.info,
+                _("Visual editor integration is not available yet."),
+                _("The launcher entry has been added, but no visual editor frontend was found.\n\nExpected file: [editor_index!q]\nProject: [project_path!q]"),
+                editor_index=editor_index,
+                project_path=self.project.path,
+            )
 
     class Rescan(Action):
         def __call__(self):
