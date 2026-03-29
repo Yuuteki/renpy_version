@@ -1,190 +1,197 @@
-==============================
-The Ren'Py Visual Novel Engine
-==============================
+=====================================
+Ren'Py Source Fork for Visual Editing
+=====================================
 
-https://www.renpy.org
+This repository is a development fork of the `Ren'Py <https://www.renpy.org>`_
+visual novel engine.
 
-
-Branches
-========
-
-The following branches are the most interesting.
-
-``fix``
-    The fix branch is used for fixes to the current version of Ren'Py that do
-    not require dangerous changes. The fix branch is also the source of the
-    documentation on https://www.renpy.org/. This branch is automatically
-    merged into master on a regular basis.
-
-    Pull requests that contain fixes or documentation improvements should be
-    made to the fix branch. When a release is made, the master branch is
-    copied to the fix branch.
-
-``master``
-    The master branch is where the main focus of development is. This branch
-    will eventually become the next release of Ren'Py.
-
-    Pull requests that contain new features, that require incompatible changes,
-    or major changes to Ren'Py's internals should be targeted at the master
-    branch.
+It is intended to serve as a local baseline for custom development, with a
+focus on exploring visual editing and visual scripting workflows on top of
+Ren'Py.
 
 
-Getting Started
-===============
+Status
+======
 
-Ren'Py depends on a number of Python modules written in Cython and C. For
-changes to Ren'Py that only involve Python modules, you can use the modules
-found in the latest nightly build. Otherwise, you'll have to compile the
-modules yourself.
+This repository currently contains a source import of Ren'Py and should be
+treated as a custom fork rather than the official upstream project.
 
-The development scripts assume a POSIX-like platform. The scripts should run
-on Linux or macOS, and can be made to run on Windows using an environment
-like MSYS.
+Unless explicitly noted otherwise:
 
-Nightly Build
--------------
+* this repository is not the canonical Ren'Py source repository,
+* upstream branch policies do not automatically apply here,
+* local changes may diverge from upstream in structure, behavior, or release
+  process.
 
-Nightly builds can be downloaded from:
+
+Upstream Reference
+==================
+
+Official Ren'Py resources:
+
+* Website: https://www.renpy.org
+* Source repository: https://github.com/renpy/renpy
+* Cross-compilation and runtime build system: https://github.com/renpy/renpy-build
+
+If this fork is kept in sync with upstream, it is recommended to preserve an
+``upstream`` git remote that points to the official Ren'Py repository.
+
+
+Intended Direction
+==================
+
+The current intended direction of this fork is to investigate a more visual
+editing experience for Ren'Py-based development.
+
+The working assumption for this repository is:
+
+* prefer additive tooling before invasive engine changes,
+* keep the source tree buildable while experimentation is ongoing,
+* document any intentional divergence from upstream behavior,
+* keep licensing and attribution information intact.
+
+In practice, that usually means trying launcher/editor/export-pipeline changes
+before modifying the parser, AST, or runtime.
+
+
+Repository Layout
+=================
+
+The most relevant top-level directories are:
+
+* ``renpy/`` - core engine modules.
+* ``renpy/common/`` - built-in Ren'Py script library loaded into projects.
+* ``launcher/`` - the Ren'Py launcher project and related tooling.
+* ``src/`` - C, Cython, and native extension sources.
+* ``scripts/`` - build, release, translation, and maintenance scripts.
+* ``gui/`` - default GUI template project.
+* ``tutorial/`` - tutorial project and examples.
+* ``the_question/`` - sample project.
+* ``testcases/`` and ``unittests/`` - automated and semi-automated tests.
+* ``sphinx/`` - documentation source and generation helpers.
+
+
+Development Setup
+=================
+
+Ren'Py depends on a number of Python modules written in Cython and C. If you
+only change pure Python modules, working against an existing build may be
+enough. Changes to compiled modules require a local build.
+
+The development scripts assume a POSIX-like environment. Linux and macOS are
+the primary targets. Windows development is generally done through an MSYS-like
+environment.
+
+
+Option 1: Use an Existing Nightly Build
+---------------------------------------
+
+Nightly builds are available from:
 
    https://nightly.renpy.org
 
-Note that the latest nightly build is at the bottom of the list. Once you've
-unpacked the nightly, change into this repository, and run::
+After unpacking a nightly build, run::
 
     ./after_checkout.sh <path-to-nightly>
 
-Once this script completes, you should be able to run Ren'Py using renpy.sh,
-renpy.app, or renpy.exe, as appropriate for your platform.
+This links the local source tree against the runtime components from the
+nightly build.
 
-If the current nightly build doesn't work, please wait 24 hours for a new
-build to occur. If that build still doesn't work, contact Tom (`pytom at bishoujo.us`,
-or @renpytom on Twitter/X) to find out what's wrong.
 
-The ``doc`` symlink will dangle until documentation is built, as described
-below.
+Option 2: Build Locally
+-----------------------
 
-Compiling the Modules
-----------------------
+We recommend using a virtual environment and dependency manager. This repository
+already includes configuration suitable for `uv <https://docs.astral.sh/uv/>`_.
 
-Building the modules requires you have the many dependencies installed on
-your system. On Ubuntu and Debian, these dependencies can be installed with
-the command::
+Create the environment and install dependencies with::
+
+    uv sync
+
+Then build and run the project with::
+
+    ./run.sh
+
+If you only want to build the compiled modules without starting Ren'Py, run::
+
+    ./run.sh --build
+
+
+System Dependencies
+-------------------
+
+On Ubuntu or Debian, the required development packages can be installed with::
 
     sudo apt install python3-dev libassimp-dev libavcodec-dev libavformat-dev \
         libswresample-dev libswscale-dev libharfbuzz-dev libfreetype6-dev libfribidi-dev libsdl2-dev \
         libsdl2-image-dev libsdl2-gfx-dev libsdl2-mixer-dev libsdl2-ttf-dev libjpeg-dev pkg-config
 
-Ren'Py requires SDL_image 2.6 or greater. If your distribution doesn't include
-that version, you'll need to download it from:
-
-    https://github.com/libsdl-org/SDL_image/tree/SDL2
-
-We strongly suggest using a package manager to create virtual environment and
-manage dependencies. We have tested with `uv <https://docs.astral.sh/uv/>`_ but
-other package managers should work as well. To create a virtual environment and
-install dependencies, open a new terminal and run::
-
-    uv sync
-
-After that, compile extension modules and run Ren'Py using the command::
-
-    ./run.sh
+Ren'Py requires SDL_image 2.6 or newer. If your distribution does not provide a
+new enough version, you may need to build SDL_image separately.
 
 
-Other Platforms
----------------
+Build Notes
+===========
 
-Where supported, Ren'Py will attempt to find include directories and library paths
-using pkg-config. If pkg-config is not present, include and library paths can be
-specified using CFLAGS and LDFLAGS.
+Where supported, Ren'Py will discover include directories and library paths via
+``pkg-config``. If that is not available, include and library paths can be
+provided through environment variables such as ``CFLAGS`` and ``LDFLAGS``.
 
-If RENPY_CFLAGS is present in the environment and CFLAGS is not, setup.py
-will set CFLAGS to RENPY_CFLAGS. The same is true for RENPY_LDFLAGS,
-RENPY_CC, RENPY_CXX, and RENPY_LD.
+If ``RENPY_CFLAGS`` is present and ``CFLAGS`` is not, ``setup.py`` will use
+``RENPY_CFLAGS``. The same pattern applies to ``RENPY_LDFLAGS``, ``RENPY_CC``,
+``RENPY_CXX``, and ``RENPY_LD``.
 
-Setup.py does not support cross-compiling. See https://github.com/renpy/renpy-build
-for software that cross-compiles Ren'Py for many platforms. The renpy-build system
-also include some runtime components for Android, iOS, and web.
+This repository's ``setup.py`` does not support cross-compilation. Use
+``renpy-build`` for cross-platform packaging workflows.
 
 
 Documentation
 =============
 
-Building
---------
+Building the documentation requires a working Ren'Py environment plus Sphinx.
 
-Building the documentation requires Ren'Py to work. You'll either need to
-link in a nightly build, or compile the modules as described above. You'll
-also need the `Sphinx <https://www.sphinx-doc.org>`_ documentation generator.
-If you have pip working, install Sphinx using::
+Install the documentation dependencies with::
 
     pip install -U sphinx sphinx_rtd_theme sphinx_rtd_dark_mode
 
-Once Sphinx is installed, change into the ``sphinx`` directory inside the
-Ren'Py checkout and run::
+Then build the docs from the ``sphinx`` directory::
 
     ./build.sh
 
-Format
-------
-
-Ren'Py's documentation consists of reStructuredText files found in sphinx/source, and
-generated documentation found in function docstrings scattered throughout the code. Do
-not edit the files in sphinx/source/inc directly, as they will be overwritten.
-
-Docstrings may include tags on the first few lines:
-
-\:doc: `section` `kind`
-    Indicates that this function should be documented. `section` gives
-    the name of the include file the function will be documented in, while
-    `kind` indicates the kind of object to be documented (one of ``function``,
-    ``method`` or ``class``. If omitted, `kind` will be auto-detected.
-\:name: `name`
-    The name of the function to be documented. Function names are usually
-    detected, so this is only necessary when a function has multiple aliases.
-\:args: `args`
-    This overrides the detected argument list. It can be used if some arguments
-    to the function are deprecated.
-
-For example::
-
-    def warp_speed(factor, transwarp=False):
-        """
-        :doc: warp
-        :name: renpy.warp_speed
-        :args: (factor)
-
-        Exceeds the speed of light.
-
-        `factor`
-            The warp factor. See Sternbach (1991) for details.
-
-        `transwarp`
-            If True, use transwarp. This does not work on all platforms.
-        """
-
-        renpy.engine.warp_drive.engage(factor)
+The documentation source is primarily stored in ``sphinx/source`` together with
+generated material derived from code docstrings.
 
 
-Translating
-===========
+Change Management
+=================
 
-For best practices when it comes to translating the launcher and template
-game, please read:
+If this fork is used as the basis for a larger project, a conservative workflow
+is recommended:
 
-https://lemmasoft.renai.us/forums/viewtopic.php?p=321603#p321603
+* keep one branch that mirrors the imported upstream baseline,
+* do feature work in dedicated branches,
+* record any behavioral divergence from upstream in commit messages or release
+  notes,
+* avoid removing upstream copyright and license notices from source files.
 
 
-Contributing
-============
+License and Attribution
+=======================
 
-For bug fixes, documentation improvements, and simple changes, just
-make a pull request. For more complex changes, it might make sense
-to file an issue first so we can discuss the design.
+Most of Ren'Py is distributed under the MIT license, but the complete licensing
+picture is broader because the engine and distributed binaries can include
+third-party components under additional licenses, including LGPL-covered
+dependencies.
 
-License
-=======
+Before redistributing binaries, packaged SDKs, or downstream products based on
+this fork, review the full licensing information in:
 
-For the complete licensing terms, please read:
+* ``sphinx/source/license.rst``
+* the copyright and license headers in the individual source files
+* any third-party license files included in the source tree
 
-https://www.renpy.org/doc/html/license.html
+If you publish this repository or a derivative of it, it is recommended to:
+
+* state clearly that it is a modified fork based on Ren'Py,
+* preserve upstream copyright notices,
+* include or reference the full license information when redistributing.
