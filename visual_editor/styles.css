@@ -17,7 +17,7 @@
   --shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
   --radius: 18px;
   --sidebar-width: 360px;
-  --page-padding: 16px;
+  --sidebar-offset: 16px;
 }
 
 * {
@@ -82,10 +82,10 @@ button.secondary {
 
 .sidebar {
   position: absolute;
-  top: var(--page-padding);
-  left: var(--page-padding);
-  bottom: var(--page-padding);
-  width: min(var(--sidebar-width), calc(100vw - 2 * var(--page-padding)));
+  top: var(--sidebar-offset);
+  left: var(--sidebar-offset);
+  bottom: var(--sidebar-offset);
+  width: min(var(--sidebar-width), calc(100vw - 2 * var(--sidebar-offset)));
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: 24px;
@@ -275,7 +275,7 @@ button.secondary {
 }
 
 .sidebar.is-open + .sidebar-toggle {
-  left: calc(var(--page-padding) + var(--sidebar-width) - 20px);
+  left: calc(var(--sidebar-offset) + var(--sidebar-width) - 20px);
 }
 
 .sidebar-toggle-label {
@@ -287,35 +287,13 @@ button.secondary {
 .canvas-stage {
   position: absolute;
   inset: 0;
-  padding: var(--page-padding);
-}
-
-.canvas-meta {
-  position: absolute;
-  top: 26px;
-  left: 74px;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.canvas-meta h2 {
-  margin: 0;
-  font-size: 22px;
-}
-
-.canvas-meta-note {
-  margin: 6px 0 0 0;
-  color: var(--muted);
-  font-size: 13px;
 }
 
 .canvas-surface {
   position: absolute;
-  inset: var(--page-padding);
+  inset: 0;
   overflow: hidden;
-  border-radius: 24px;
   background: var(--canvas);
-  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .grid-overlay {
@@ -369,46 +347,15 @@ button.secondary {
   line-height: 1.45;
 }
 
-.canvas-placeholder {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: 280px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: rgba(7, 11, 18, 0.86);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #f3f4f6;
-  backdrop-filter: blur(8px);
-}
-
-.canvas-placeholder p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
 @media (max-width: 900px) {
   :root {
     --sidebar-width: 320px;
-    --page-padding: 12px;
-  }
-
-  .canvas-meta {
-    left: 72px;
+    --sidebar-offset: 12px;
   }
 }
 
 @media (max-width: 640px) {
   :root {
     --sidebar-width: calc(100vw - 24px);
-  }
-
-  .canvas-meta-note {
-    display: none;
-  }
-
-  .canvas-placeholder {
-    width: 220px;
   }
 }
