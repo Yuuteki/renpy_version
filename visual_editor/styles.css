@@ -106,7 +106,7 @@ button:hover {
 
 button.primary {
   background: var(--accent);
-  color: #08111d;
+  color: #0a0b0d;
 }
 
 button.primary:hover {
@@ -205,7 +205,7 @@ button.secondary {
   overflow: hidden;
   border-radius: 16px;
   background: var(--canvas);
-  border: 1px solid rgba(154, 177, 221, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .grid-overlay {
@@ -269,7 +269,7 @@ button.secondary {
   border-radius: 14px;
   background: rgba(7, 11, 18, 0.86);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #eff7ff;
+  color: #f3f4f6;
   backdrop-filter: blur(8px);
 }
 
@@ -303,7 +303,7 @@ button.secondary {
 .inspector-form input,
 .inspector-form textarea {
   width: 100%;
-  border: 1px solid rgba(154, 177, 221, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 10px 12px;
   background: var(--input);
