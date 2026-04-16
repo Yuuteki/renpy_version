@@ -1,37 +1,44 @@
 :root {
   color-scheme: dark;
-  --bg: #0d0e11;
-  --bg-secondary: #14161a;
-  --panel: rgba(22, 24, 29, 0.9);
-  --panel-strong: rgba(28, 30, 36, 0.96);
+  --bg: #0b0c0f;
+  --bg-secondary: #101217;
+  --panel: rgba(19, 21, 26, 0.94);
   --panel-border: rgba(255, 255, 255, 0.08);
   --text: #f3f4f6;
   --muted: #a5a8b0;
   --accent: #d7d9de;
   --accent-strong: #f0f1f4;
   --accent-soft: rgba(255, 255, 255, 0.08);
-  --canvas: #0a0b0e;
-  --canvas-grid: rgba(255, 255, 255, 0.05);
-  --card: rgba(30, 32, 38, 0.94);
+  --canvas: #090a0d;
+  --canvas-grid: rgba(255, 255, 255, 0.045);
+  --card: rgba(31, 34, 41, 0.96);
   --card-border: rgba(255, 255, 255, 0.1);
-  --input: rgba(15, 16, 20, 0.94);
-  --shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+  --input: rgba(14, 16, 21, 0.96);
+  --shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
   --radius: 18px;
+  --sidebar-width: 360px;
+  --page-padding: 16px;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  min-height: 100%;
+}
+
+body {
   min-height: 100vh;
   font-family: "Segoe UI", "Helvetica Neue", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.03), transparent 22%),
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.04), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.025), transparent 22%),
     linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg) 100%);
+  overflow: hidden;
 }
 
 button,
@@ -40,64 +47,12 @@ textarea {
   font: inherit;
 }
 
-.app-shell {
-  min-height: 100vh;
-  padding: 24px;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: 16px;
-}
-
-.topbar,
-.project-banner,
-.panel,
-.statusbar {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
-}
-
-.topbar,
-.project-banner,
-.statusbar {
-  padding: 18px 20px;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.topbar h1,
-.panel h2 {
-  margin: 0;
-}
-
-.eyebrow,
-.banner-label {
-  margin: 0 0 6px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.topbar-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
 button {
   border: 0;
   border-radius: 999px;
   padding: 11px 16px;
   cursor: pointer;
-  transition: transform 120ms ease, background 120ms ease, color 120ms ease, border-color 120ms ease;
+  transition: transform 120ms ease, background 120ms ease, color 120ms ease, border-color 120ms ease, opacity 120ms ease;
 }
 
 button:hover {
@@ -119,56 +74,131 @@ button.secondary {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.project-banner {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 18px;
+.app-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
-.project-path,
-.project-files {
-  margin: 0;
-  font-family: "Cascadia Code", "SFMono-Regular", monospace;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--muted);
-  word-break: break-all;
+.sidebar {
+  position: absolute;
+  top: var(--page-padding);
+  left: var(--page-padding);
+  bottom: var(--page-padding);
+  width: min(var(--sidebar-width), calc(100vw - 2 * var(--page-padding)));
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  z-index: 20;
+  transform: translateX(0);
+  transition: transform 180ms ease, opacity 180ms ease;
 }
 
-.workspace {
-  min-height: 0;
+.sidebar:not(.is-open) {
+  transform: translateX(calc(-100% - 24px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-scroll {
+  height: 100%;
+  overflow: auto;
+  padding: 20px;
   display: grid;
-  grid-template-columns: 280px minmax(520px, 1fr) 320px;
+  align-content: start;
   gap: 16px;
 }
 
-.panel {
-  min-height: 0;
+.sidebar-header,
+.sidebar-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+}
+
+.sidebar-header {
+  padding: 18px;
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
 }
 
-.panel-header {
-  padding: 18px 18px 12px 18px;
-  border-bottom: 1px solid var(--panel-border);
+.sidebar-header h1 {
+  margin: 0;
+  font-size: 24px;
 }
 
-.panel-header p {
+.eyebrow,
+.section-label {
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.secondary-label {
+  margin-top: 14px;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.icon-button span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.sidebar-section {
+  padding: 16px;
+}
+
+.sidebar-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.section-header {
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.section-header p {
   margin: 6px 0 0 0;
   color: var(--muted);
   font-size: 14px;
 }
 
-.library-panel,
-.inspector-panel {
-  overflow: auto;
+.project-path,
+.project-files,
+.status-text {
+  margin: 0;
+  font-family: "Cascadia Code", "SFMono-Regular", monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+  word-break: break-all;
 }
 
 .node-list {
   display: grid;
   gap: 12px;
-  padding: 18px;
 }
 
 .node-card {
@@ -193,19 +223,99 @@ button.secondary {
   font-size: 13px;
 }
 
-.canvas-panel {
-  min-width: 0;
+.inspector-empty p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.inspector-form {
+  display: grid;
+  gap: 14px;
+}
+
+.inspector-form label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.inspector-form input,
+.inspector-form textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: var(--input);
+  color: var(--text);
+}
+
+.inspector-form input:focus,
+.inspector-form textarea:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.hidden {
+  display: none;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(12, 14, 18, 0.92);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+}
+
+.sidebar.is-open + .sidebar-toggle {
+  left: calc(var(--page-padding) + var(--sidebar-width) - 20px);
+}
+
+.sidebar-toggle-label {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.canvas-stage {
+  position: absolute;
+  inset: 0;
+  padding: var(--page-padding);
+}
+
+.canvas-meta {
+  position: absolute;
+  top: 26px;
+  left: 74px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.canvas-meta h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.canvas-meta-note {
+  margin: 6px 0 0 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .canvas-surface {
-  position: relative;
-  min-height: 560px;
-  flex: 1;
-  margin: 18px;
+  position: absolute;
+  inset: var(--page-padding);
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 24px;
   background: var(--canvas);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .grid-overlay {
@@ -227,8 +337,7 @@ button.secondary {
   width: 220px;
   padding: 14px;
   border-radius: 16px;
-  background:
-    linear-gradient(180deg, rgba(38, 40, 47, 0.98), rgba(26, 28, 34, 0.98));
+  background: linear-gradient(180deg, rgba(38, 40, 47, 0.98), rgba(26, 28, 34, 0.98));
   border: 1px solid var(--card-border);
   box-shadow: 0 18px 28px rgba(0, 0, 0, 0.28);
   cursor: pointer;
@@ -279,86 +388,27 @@ button.secondary {
   line-height: 1.5;
 }
 
-.inspector-empty,
-.inspector-form {
-  padding: 18px;
-}
-
-.inspector-empty p {
-  margin: 0;
-  color: var(--muted);
-}
-
-.inspector-form {
-  display: grid;
-  gap: 14px;
-}
-
-.inspector-form label {
-  display: grid;
-  gap: 8px;
-  font-size: 14px;
-}
-
-.inspector-form input,
-.inspector-form textarea {
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 10px 12px;
-  background: var(--input);
-  color: var(--text);
-}
-
-.inspector-form input:focus,
-.inspector-form textarea:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-.hidden {
-  display: none;
-}
-
-.statusbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-@media (max-width: 1200px) {
-  .workspace {
-    grid-template-columns: 260px 1fr;
+@media (max-width: 900px) {
+  :root {
+    --sidebar-width: 320px;
+    --page-padding: 12px;
   }
 
-  .inspector-panel {
-    grid-column: 1 / -1;
+  .canvas-meta {
+    left: 72px;
   }
 }
 
-@media (max-width: 860px) {
-  .app-shell {
-    padding: 16px;
+@media (max-width: 640px) {
+  :root {
+    --sidebar-width: calc(100vw - 24px);
   }
 
-  .topbar,
-  .project-banner,
-  .workspace {
-    grid-template-columns: 1fr;
+  .canvas-meta-note {
+    display: none;
   }
 
-  .topbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .workspace {
-    display: grid;
-  }
-
-  .canvas-surface {
-    min-height: 440px;
+  .canvas-placeholder {
+    width: 220px;
   }
 }

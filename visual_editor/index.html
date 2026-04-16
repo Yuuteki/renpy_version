@@ -8,113 +8,126 @@
   </head>
   <body>
     <div class="app-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Prototype</p>
-          <h1>Ren'Py Visual Editor</h1>
-        </div>
-
-        <div class="topbar-actions">
-          <button id="newGraphButton" class="secondary">New Graph</button>
-          <button id="saveDraftButton" class="secondary">Save Draft</button>
-          <button id="exportButton" class="primary">Export to .rpy</button>
-        </div>
-      </header>
-
-      <section class="project-banner">
-        <div>
-          <p class="banner-label">Current Project</p>
-          <p id="projectPath" class="project-path">No project path provided.</p>
-        </div>
-
-        <div>
-          <p class="banner-label">Expected Files</p>
-          <p id="projectFiles" class="project-files"></p>
-        </div>
-      </section>
-
-      <main class="workspace">
-        <aside class="panel library-panel">
-          <div class="panel-header">
-            <h2>Scence</h2>
-            <p>Initial building blocks for the first prototype.</p>
-          </div>
-
-          <div class="node-list">
-            <button class="node-card" data-node-type="start">
-              <strong>Start</strong>
-              <span>Entry point of the visual flow.</span>
-            </button>
-
-            <button class="node-card" data-node-type="dialogue">
-              <strong>Dialogue</strong>
-              <span>Character line with text content.</span>
-            </button>
-
-            <button class="node-card" data-node-type="menu">
-              <strong>Choice</strong>
-              <span>Branch into multiple options.</span>
-            </button>
-
-            <button class="node-card" data-node-type="jump">
-              <strong>Jump</strong>
-              <span>Transfer execution to another node.</span>
-            </button>
-          </div>
-        </aside>
-
-        <section class="panel canvas-panel">
-          <div class="panel-header">
-            <h2>Flow Canvas</h2>
-            <p>For now this shows a lightweight graph preview and placeholder connections.</p>
-          </div>
-
-          <div id="canvas" class="canvas-surface">
-            <div class="grid-overlay"></div>
-            <div id="graphNodes" class="graph-nodes"></div>
-            <div class="canvas-placeholder">
-              <p>Next step: replace this area with draggable nodes and editable edges.</p>
+      <aside id="sidebar" class="sidebar is-open">
+        <div class="sidebar-scroll">
+          <header class="sidebar-header">
+            <div>
+              <p class="eyebrow">Prototype</p>
+              <h1>Ren'Py Visual Editor</h1>
             </div>
+
+            <button id="sidebarCloseButton" class="icon-button" type="button" aria-label="Hide sidebar">
+              <span aria-hidden="true">×</span>
+            </button>
+          </header>
+
+          <section class="sidebar-section">
+            <p class="section-label">Quick Actions</p>
+            <div class="sidebar-actions">
+              <button id="newGraphButton" class="secondary">New Graph</button>
+              <button id="saveDraftButton" class="secondary">Save Draft</button>
+              <button id="exportButton" class="primary">Export to .rpy</button>
+            </div>
+          </section>
+
+          <section class="sidebar-section">
+            <p class="section-label">Current Project</p>
+            <p id="projectPath" class="project-path">No project path provided.</p>
+            <p class="section-label secondary-label">Expected Files</p>
+            <p id="projectFiles" class="project-files"></p>
+          </section>
+
+          <section class="sidebar-section">
+            <div class="section-header">
+              <h2>Scene</h2>
+              <p>Blocks used to build the flow.</p>
+            </div>
+
+            <div class="node-list">
+              <button class="node-card" data-node-type="start">
+                <strong>Start</strong>
+                <span>Entry point of the visual flow.</span>
+              </button>
+
+              <button class="node-card" data-node-type="dialogue">
+                <strong>Dialogue</strong>
+                <span>Character line with text content.</span>
+              </button>
+
+              <button class="node-card" data-node-type="menu">
+                <strong>Choice</strong>
+                <span>Branch into multiple options.</span>
+              </button>
+
+              <button class="node-card" data-node-type="jump">
+                <strong>Jump</strong>
+                <span>Transfer execution to another node.</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="sidebar-section">
+            <div class="section-header">
+              <h2>Inspector</h2>
+              <p>Details for the selected node.</p>
+            </div>
+
+            <div id="inspectorEmpty" class="inspector-empty">
+              <p>Select a node to inspect its properties.</p>
+            </div>
+
+            <form id="inspectorForm" class="inspector-form hidden">
+              <label>
+                Node Id
+                <input id="nodeIdInput" type="text" readonly />
+              </label>
+
+              <label>
+                Node Type
+                <input id="nodeTypeInput" type="text" readonly />
+              </label>
+
+              <label>
+                Title
+                <input id="nodeTitleInput" type="text" />
+              </label>
+
+              <label>
+                Content
+                <textarea id="nodeContentInput" rows="8"></textarea>
+              </label>
+            </form>
+          </section>
+
+          <section class="sidebar-section status-section">
+            <p class="section-label">Status</p>
+            <p id="statusText" class="status-text">Visual editor scaffold ready.</p>
+          </section>
+        </div>
+      </aside>
+
+      <button id="sidebarToggleButton" class="sidebar-toggle" type="button" aria-expanded="true">
+        <span class="sidebar-toggle-label">Tools</span>
+      </button>
+
+      <main class="canvas-stage">
+        <div class="canvas-meta">
+          <div>
+            <p class="eyebrow">Canvas</p>
+            <h2>Flow Canvas</h2>
           </div>
-        </section>
 
-        <aside class="panel inspector-panel">
-          <div class="panel-header">
-            <h2>Inspector</h2>
-            <p>Details for the currently selected node.</p>
+          <p class="canvas-meta-note">The main editing area should stay as large as possible.</p>
+        </div>
+
+        <div id="canvas" class="canvas-surface">
+          <div class="grid-overlay"></div>
+          <div id="graphNodes" class="graph-nodes"></div>
+          <div class="canvas-placeholder">
+            <p>Next step: replace this surface with draggable nodes, editable edges, and viewport controls.</p>
           </div>
-
-          <div id="inspectorEmpty" class="inspector-empty">
-            <p>Select a node to inspect its properties.</p>
-          </div>
-
-          <form id="inspectorForm" class="inspector-form hidden">
-            <label>
-              Node Id
-              <input id="nodeIdInput" type="text" readonly />
-            </label>
-
-            <label>
-              Node Type
-              <input id="nodeTypeInput" type="text" readonly />
-            </label>
-
-            <label>
-              Title
-              <input id="nodeTitleInput" type="text" />
-            </label>
-
-            <label>
-              Content
-              <textarea id="nodeContentInput" rows="8"></textarea>
-            </label>
-          </form>
-        </aside>
+        </div>
       </main>
-
-      <footer class="statusbar">
-        <span id="statusText">Visual editor scaffold ready.</span>
-      </footer>
     </div>
 
     <script src="./app.js"></script>

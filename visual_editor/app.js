@@ -5,6 +5,9 @@ const projectPathEl = document.getElementById("projectPath");
 const projectFilesEl = document.getElementById("projectFiles");
 const graphNodesEl = document.getElementById("graphNodes");
 const statusTextEl = document.getElementById("statusText");
+const sidebarEl = document.getElementById("sidebar");
+const sidebarToggleButton = document.getElementById("sidebarToggleButton");
+const sidebarCloseButton = document.getElementById("sidebarCloseButton");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
 const inspectorFormEl = document.getElementById("inspectorForm");
@@ -47,6 +50,7 @@ const defaultGraph = {
 };
 
 let state = loadState();
+let sidebarOpen = true;
 
 function loadState() {
   try {
@@ -73,6 +77,13 @@ function saveState(message) {
 
 function setStatus(message) {
   statusTextEl.textContent = message;
+}
+
+function setSidebarState(nextOpen) {
+  sidebarOpen = nextOpen;
+  sidebarEl.classList.toggle("is-open", sidebarOpen);
+  sidebarToggleButton.setAttribute("aria-expanded", String(sidebarOpen));
+  sidebarToggleButton.querySelector(".sidebar-toggle-label").textContent = sidebarOpen ? "Hide" : "Tools";
 }
 
 function renderProjectInfo() {
@@ -188,6 +199,12 @@ saveDraftButton.addEventListener("click", () => {
 
 newGraphButton.addEventListener("click", resetGraph);
 exportButton.addEventListener("click", exportGraph);
+sidebarToggleButton.addEventListener("click", () => {
+  setSidebarState(!sidebarOpen);
+});
+sidebarCloseButton.addEventListener("click", () => {
+  setSidebarState(false);
+});
 
 document.querySelectorAll(".node-card").forEach((button) => {
   button.addEventListener("click", () => {
@@ -213,4 +230,5 @@ function capitalize(value) {
 }
 
 render();
+setSidebarState(true);
 setStatus("Visual editor scaffold ready. Data currently persists in local browser storage.");
