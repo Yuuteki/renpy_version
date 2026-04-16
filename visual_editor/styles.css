@@ -294,6 +294,12 @@ button.secondary {
   inset: 0;
   overflow: hidden;
   background: var(--canvas);
+  cursor: grab;
+  touch-action: none;
+}
+
+.canvas-surface.is-panning {
+  cursor: grabbing;
 }
 
 .grid-overlay {
@@ -303,11 +309,14 @@ button.secondary {
     linear-gradient(var(--canvas-grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--canvas-grid) 1px, transparent 1px);
   background-size: 28px 28px;
+  pointer-events: none;
 }
 
 .graph-nodes {
   position: absolute;
   inset: 0;
+  transform-origin: 0 0;
+  will-change: transform;
 }
 
 .graph-node {

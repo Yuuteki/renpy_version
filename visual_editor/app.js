@@ -3,6 +3,8 @@ const projectPath = params.get("project") || "";
 
 const projectPathEl = document.getElementById("projectPath");
 const projectFilesEl = document.getElementById("projectFiles");
+const canvasEl = document.getElementById("canvas");
+const gridOverlayEl = canvasEl.querySelector(".grid-overlay");
 const graphNodesEl = document.getElementById("graphNodes");
 const statusTextEl = document.getElementById("statusText");
 const sidebarEl = document.getElementById("sidebar");
@@ -28,6 +30,11 @@ const defaultGraph = {
   meta: {
     name: "Main Flow",
   },
+  viewport: {
+    x: 0,
+    y: 0,
+    scale: 1,
+  },
   nodes: [
     {
       id: "start",
@@ -49,8 +56,9 @@ const defaultGraph = {
   selectedNodeId: "dialogue_1",
 };
 
-let state = loadState();
+let state = normalizeState(loadState());
 let sidebarOpen = true;
+let panSession = null;
 
 function loadState() {
   try {
@@ -65,6 +73,24 @@ function loadState() {
     console.error(error);
     return structuredClone(defaultGraph);
   }
+}
+
+function normalizeState(rawState) {
+  return {
+    meta: {
+      ...defaultGraph.meta,
+      ...(rawState.meta || {}),
+    },
+    viewport: {
+      ...defaultGraph.viewport,
+      ...(rawState.viewport || {}),
+      scale: clampScale(rawState.viewport?.scale ?? defaultGraph.viewport.scale),
+    },
+    nodes: Array.isArray(rawState.nodes) && rawState.nodes.length
+      ? rawState.nodes
+      : structuredClone(defaultGraph.nodes),
+    selectedNodeId: rawState.selectedNodeId || defaultGraph.selectedNodeId,
+  };
 }
 
 function saveState(message) {
@@ -84,6 +110,23 @@ function setSidebarState(nextOpen) {
   sidebarEl.classList.toggle("is-open", sidebarOpen);
   sidebarToggleButton.setAttribute("aria-expanded", String(sidebarOpen));
   sidebarToggleButton.querySelector(".sidebar-toggle-label").textContent = sidebarOpen ? "Hide" : "Tools";
+}
+
+function clampScale(value) {
+  return Math.min(2.5, Math.max(0.35, value));
+}
+
+function formatZoom(scale) {
+  return `${Math.round(scale * 100)}%`;
+}
+
+function renderViewport() {
+  const { x, y, scale } = state.viewport;
+  const gridSize = 28 * scale;
+
+  graphNodesEl.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+  gridOverlayEl.style.backgroundSize = `${gridSize}px ${gridSize}px`;
+  gridOverlayEl.style.backgroundPosition = `${x}px ${y}px`;
 }
 
 function renderProjectInfo() {
@@ -151,6 +194,7 @@ function render() {
   renderProjectInfo();
   renderGraph();
   renderInspector();
+  renderViewport();
 }
 
 function updateSelectedNode(patch) {
@@ -185,6 +229,67 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function beginPan(event) {
+  if (event.button !== 0) {
+    return;
+  }
+
+  if (event.target.closest(".graph-node")) {
+    return;
+  }
+
+  panSession = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    originX: state.viewport.x,
+    originY: state.viewport.y,
+  };
+
+  canvasEl.classList.add("is-panning");
+  canvasEl.setPointerCapture(event.pointerId);
+}
+
+function updatePan(event) {
+  if (!panSession || event.pointerId !== panSession.pointerId) {
+    return;
+  }
+
+  state.viewport.x = panSession.originX + (event.clientX - panSession.startX);
+  state.viewport.y = panSession.originY + (event.clientY - panSession.startY);
+  renderViewport();
+}
+
+function endPan(event) {
+  if (!panSession || event.pointerId !== panSession.pointerId) {
+    return;
+  }
+
+  panSession = null;
+  canvasEl.classList.remove("is-panning");
+}
+
+function zoomAtPoint(clientX, clientY, deltaY) {
+  const rect = canvasEl.getBoundingClientRect();
+  const nextScale = clampScale(state.viewport.scale * Math.exp(-deltaY * 0.0015));
+
+  if (nextScale === state.viewport.scale) {
+    return;
+  }
+
+  const surfaceX = clientX - rect.left;
+  const surfaceY = clientY - rect.top;
+  const worldX = (surfaceX - state.viewport.x) / state.viewport.scale;
+  const worldY = (surfaceY - state.viewport.y) / state.viewport.scale;
+
+  state.viewport.scale = nextScale;
+  state.viewport.x = surfaceX - worldX * nextScale;
+  state.viewport.y = surfaceY - worldY * nextScale;
+
+  renderViewport();
+  setStatus(`Canvas zoom set to ${formatZoom(nextScale)}. Drag empty space to move the view.`);
+}
+
 nodeTitleInput.addEventListener("input", (event) => {
   updateSelectedNode({ title: event.target.value });
 });
@@ -205,6 +310,15 @@ sidebarToggleButton.addEventListener("click", () => {
 sidebarCloseButton.addEventListener("click", () => {
   setSidebarState(false);
 });
+canvasEl.addEventListener("pointerdown", beginPan);
+canvasEl.addEventListener("pointermove", updatePan);
+canvasEl.addEventListener("pointerup", endPan);
+canvasEl.addEventListener("pointercancel", endPan);
+canvasEl.addEventListener("lostpointercapture", endPan);
+canvasEl.addEventListener("wheel", (event) => {
+  event.preventDefault();
+  zoomAtPoint(event.clientX, event.clientY, event.deltaY);
+}, { passive: false });
 
 document.querySelectorAll(".node-card").forEach((button) => {
   button.addEventListener("click", () => {
@@ -231,4 +345,4 @@ function capitalize(value) {
 
 render();
 setSidebarState(true);
-setStatus("Visual editor scaffold ready. Data currently persists in local browser storage.");
+setStatus("Visual editor scaffold ready. Drag empty space to move the canvas, and use the mouse wheel to zoom.");
