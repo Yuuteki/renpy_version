@@ -10,6 +10,9 @@ const statusTextEl = document.getElementById("statusText");
 const sidebarEl = document.getElementById("sidebar");
 const sidebarToggleButton = document.getElementById("sidebarToggleButton");
 const sidebarCloseButton = document.getElementById("sidebarCloseButton");
+const inspectorSidebarEl = document.getElementById("inspectorSidebar");
+const addBlockDockEl = document.getElementById("addBlockDock");
+const addBlockToggleButton = document.getElementById("addBlockToggleButton");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
 const inspectorFormEl = document.getElementById("inspectorForm");
@@ -58,7 +61,10 @@ const defaultGraph = {
 
 let state = normalizeState(loadState());
 let sidebarOpen = true;
+let inspectorOpen = true;
+let addBlockOpen = false;
 let panSession = null;
+let dragSession = null;
 
 function loadState() {
   try {
@@ -112,6 +118,18 @@ function setSidebarState(nextOpen) {
   sidebarToggleButton.querySelector(".sidebar-toggle-label").textContent = sidebarOpen ? "Hide" : "Tools";
 }
 
+function setInspectorState(nextOpen) {
+  inspectorOpen = nextOpen;
+  inspectorSidebarEl.classList.toggle("is-open", inspectorOpen);
+  addBlockDockEl.classList.toggle("is-offset-for-inspector", inspectorOpen);
+}
+
+function setAddBlockState(nextOpen) {
+  addBlockOpen = nextOpen;
+  addBlockDockEl.classList.toggle("is-open", addBlockOpen);
+  addBlockToggleButton.setAttribute("aria-expanded", String(addBlockOpen));
+}
+
 function clampScale(value) {
   return Math.min(2.5, Math.max(0.35, value));
 }
@@ -163,10 +181,13 @@ function renderGraph() {
       <p class="node-content">${escapeHtml(node.content)}</p>
     `;
 
-    el.addEventListener("click", () => {
-      state.selectedNodeId = node.id;
-      render();
+    el.addEventListener("pointerdown", (event) => {
+      beginNodeDrag(event, node.id, el);
     });
+    el.addEventListener("pointermove", updateNodeDrag);
+    el.addEventListener("pointerup", endNodeDrag);
+    el.addEventListener("pointercancel", endNodeDrag);
+    el.addEventListener("lostpointercapture", endNodeDrag);
 
     graphNodesEl.appendChild(el);
   });
@@ -220,6 +241,26 @@ function exportGraph() {
   setStatus("Export placeholder complete. Next step: write generated .rpy into the project.");
 }
 
+function findNode(nodeId) {
+  return state.nodes.find((node) => node.id === nodeId);
+}
+
+function selectNode(nodeId, element) {
+  state.selectedNodeId = nodeId;
+  setInspectorState(true);
+  setAddBlockState(false);
+
+  graphNodesEl.querySelectorAll(".graph-node.is-selected").forEach((nodeEl) => {
+    nodeEl.classList.remove("is-selected");
+  });
+
+  if (element) {
+    element.classList.add("is-selected");
+  }
+
+  renderInspector();
+}
+
 function escapeHtml(value) {
   return value
     .replaceAll("&", "&amp;")
@@ -238,6 +279,9 @@ function beginPan(event) {
     return;
   }
 
+  setInspectorState(false);
+  setAddBlockState(false);
+
   panSession = {
     pointerId: event.pointerId,
     startX: event.clientX,
@@ -250,6 +294,36 @@ function beginPan(event) {
   canvasEl.setPointerCapture(event.pointerId);
 }
 
+function beginNodeDrag(event, nodeId, element) {
+  if (event.button !== 0) {
+    return;
+  }
+
+  event.stopPropagation();
+
+  const node = findNode(nodeId);
+
+  if (!node) {
+    return;
+  }
+
+  selectNode(nodeId, element);
+
+  dragSession = {
+    pointerId: event.pointerId,
+    nodeId,
+    element,
+    startX: event.clientX,
+    startY: event.clientY,
+    originX: node.x,
+    originY: node.y,
+    moved: false,
+  };
+
+  element.classList.add("is-dragging");
+  element.setPointerCapture(event.pointerId);
+}
+
 function updatePan(event) {
   if (!panSession || event.pointerId !== panSession.pointerId) {
     return;
@@ -260,6 +334,31 @@ function updatePan(event) {
   renderViewport();
 }
 
+function updateNodeDrag(event) {
+  if (!dragSession || event.pointerId !== dragSession.pointerId) {
+    return;
+  }
+
+  const node = findNode(dragSession.nodeId);
+
+  if (!node) {
+    return;
+  }
+
+  const deltaX = (event.clientX - dragSession.startX) / state.viewport.scale;
+  const deltaY = (event.clientY - dragSession.startY) / state.viewport.scale;
+
+  if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+    dragSession.moved = true;
+  }
+
+  node.x = Math.round(dragSession.originX + deltaX);
+  node.y = Math.round(dragSession.originY + deltaY);
+
+  dragSession.element.style.left = `${node.x}px`;
+  dragSession.element.style.top = `${node.y}px`;
+}
+
 function endPan(event) {
   if (!panSession || event.pointerId !== panSession.pointerId) {
     return;
@@ -267,6 +366,22 @@ function endPan(event) {
 
   panSession = null;
   canvasEl.classList.remove("is-panning");
+}
+
+function endNodeDrag(event) {
+  if (!dragSession || event.pointerId !== dragSession.pointerId) {
+    return;
+  }
+
+  const node = findNode(dragSession.nodeId);
+  const moved = dragSession.moved;
+
+  dragSession.element.classList.remove("is-dragging");
+  dragSession = null;
+
+  if (moved && node) {
+    saveState(`Moved ${node.title}.`);
+  }
 }
 
 function zoomAtPoint(clientX, clientY, deltaY) {
@@ -304,6 +419,9 @@ saveDraftButton.addEventListener("click", () => {
 
 newGraphButton.addEventListener("click", resetGraph);
 exportButton.addEventListener("click", exportGraph);
+addBlockToggleButton.addEventListener("click", () => {
+  setAddBlockState(!addBlockOpen);
+});
 sidebarToggleButton.addEventListener("click", () => {
   setSidebarState(!sidebarOpen);
 });
@@ -335,6 +453,8 @@ document.querySelectorAll(".node-card").forEach((button) => {
     state.nodes.push(newNode);
     state.selectedNodeId = newNode.id;
     render();
+    setInspectorState(true);
+    setAddBlockState(false);
     setStatus(`Added a ${nodeType} node to the graph.`);
   });
 });
@@ -345,4 +465,6 @@ function capitalize(value) {
 
 render();
 setSidebarState(true);
+setInspectorState(Boolean(state.selectedNodeId));
+setAddBlockState(false);
 setStatus("Visual editor scaffold ready. Drag empty space to move the canvas, and use the mouse wheel to zoom.");

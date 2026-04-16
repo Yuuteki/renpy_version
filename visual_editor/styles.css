@@ -17,6 +17,7 @@
   --shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
   --radius: 18px;
   --sidebar-width: 360px;
+  --inspector-width: 320px;
   --sidebar-offset: 16px;
 }
 
@@ -96,6 +97,79 @@ button.secondary {
   transition: transform 180ms ease, opacity 180ms ease;
 }
 
+.inspector-sidebar {
+  position: absolute;
+  top: var(--sidebar-offset);
+  right: var(--sidebar-offset);
+  bottom: var(--sidebar-offset);
+  width: min(var(--inspector-width), calc(100vw - 2 * var(--sidebar-offset)));
+  z-index: 18;
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.add-block-dock {
+  position: absolute;
+  right: var(--sidebar-offset);
+  bottom: var(--sidebar-offset);
+  z-index: 17;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  transition: right 180ms ease, transform 180ms ease, opacity 180ms ease;
+}
+
+.add-block-dock.is-offset-for-inspector {
+  right: calc(var(--inspector-width) + (2 * var(--sidebar-offset)));
+}
+
+.add-block-menu {
+  display: grid;
+  gap: 10px;
+  width: 180px;
+  padding: 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  transform-origin: bottom right;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.add-block-dock:not(.is-open) .add-block-menu {
+  transform: translateY(10px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.add-block-toggle {
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(244, 245, 247, 0.96);
+  color: #0b0c0f;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.add-block-toggle span {
+  font-size: 34px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.inspector-sidebar:not(.is-open) {
+  transform: translateX(calc(100% + 24px));
+  opacity: 0;
+  pointer-events: none;
+}
+
 .sidebar:not(.is-open) {
   transform: translateX(calc(-100% - 24px));
   opacity: 0;
@@ -112,7 +186,8 @@ button.secondary {
 }
 
 .sidebar-header,
-.sidebar-section {
+.sidebar-section,
+.inspector-panel {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px;
@@ -163,6 +238,16 @@ button.secondary {
 
 .sidebar-section {
   padding: 16px;
+}
+
+.inspector-panel {
+  height: 100%;
+  padding: 18px;
+  background: var(--panel);
+  border-color: var(--panel-border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  overflow: auto;
 }
 
 .sidebar-actions {
@@ -221,6 +306,19 @@ button.secondary {
 .node-card span {
   color: var(--muted);
   font-size: 13px;
+}
+
+.node-card-compact {
+  padding: 12px 14px;
+  min-height: 72px;
+}
+
+.node-card-compact strong {
+  font-size: 14px;
+}
+
+.node-card-compact span {
+  font-size: 12px;
 }
 
 .inspector-empty p {
@@ -327,13 +425,19 @@ button.secondary {
   background: linear-gradient(180deg, rgba(38, 40, 47, 0.98), rgba(26, 28, 34, 0.98));
   border: 1px solid var(--card-border);
   box-shadow: 0 18px 28px rgba(0, 0, 0, 0.28);
-  cursor: pointer;
+  cursor: grab;
   color: var(--text);
+  user-select: none;
+  touch-action: none;
 }
 
 .graph-node.is-selected {
   outline: 2px solid rgba(255, 255, 255, 0.5);
   border-color: rgba(255, 255, 255, 0.22);
+}
+
+.graph-node.is-dragging {
+  cursor: grabbing;
 }
 
 .graph-node .node-type {
@@ -359,12 +463,38 @@ button.secondary {
 @media (max-width: 900px) {
   :root {
     --sidebar-width: 320px;
+    --inspector-width: 300px;
     --sidebar-offset: 12px;
+  }
+
+  .add-block-dock {
+    gap: 10px;
   }
 }
 
 @media (max-width: 640px) {
   :root {
     --sidebar-width: calc(100vw - 24px);
+    --inspector-width: calc(100vw - 24px);
+  }
+
+  .add-block-dock,
+  .add-block-dock.is-offset-for-inspector {
+    left: 12px;
+    right: 12px;
+    align-items: flex-end;
+  }
+
+  .add-block-dock.is-offset-for-inspector {
+    bottom: calc(min(48vh, 360px) + 24px);
+  }
+
+  .add-block-menu {
+    width: min(220px, calc(100vw - 24px));
+  }
+
+  .inspector-sidebar {
+    top: auto;
+    height: min(48vh, 360px);
   }
 }

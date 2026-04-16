@@ -37,68 +37,6 @@
             <p id="projectFiles" class="project-files"></p>
           </section>
 
-          <section class="sidebar-section">
-            <div class="section-header">
-              <h2>Scene</h2>
-              <p>Blocks used to build the flow.</p>
-            </div>
-
-            <div class="node-list">
-              <button class="node-card" data-node-type="start">
-                <strong>Start</strong>
-                <span>Entry point of the visual flow.</span>
-              </button>
-
-              <button class="node-card" data-node-type="dialogue">
-                <strong>Dialogue</strong>
-                <span>Character line with text content.</span>
-              </button>
-
-              <button class="node-card" data-node-type="menu">
-                <strong>Choice</strong>
-                <span>Branch into multiple options.</span>
-              </button>
-
-              <button class="node-card" data-node-type="jump">
-                <strong>Jump</strong>
-                <span>Transfer execution to another node.</span>
-              </button>
-            </div>
-          </section>
-
-          <section class="sidebar-section">
-            <div class="section-header">
-              <h2>Inspector</h2>
-              <p>Details for the selected node.</p>
-            </div>
-
-            <div id="inspectorEmpty" class="inspector-empty">
-              <p>Select a node to inspect its properties.</p>
-            </div>
-
-            <form id="inspectorForm" class="inspector-form hidden">
-              <label>
-                Node Id
-                <input id="nodeIdInput" type="text" readonly />
-              </label>
-
-              <label>
-                Node Type
-                <input id="nodeTypeInput" type="text" readonly />
-              </label>
-
-              <label>
-                Title
-                <input id="nodeTitleInput" type="text" />
-              </label>
-
-              <label>
-                Content
-                <textarea id="nodeContentInput" rows="8"></textarea>
-              </label>
-            </form>
-          </section>
-
           <section class="sidebar-section status-section">
             <p class="section-label">Status</p>
             <p id="statusText" class="status-text">Visual editor scaffold ready.</p>
@@ -116,6 +54,76 @@
           <div id="graphNodes" class="graph-nodes"></div>
         </div>
       </main>
+
+      <section id="addBlockDock" class="add-block-dock is-offset-for-inspector">
+        <div id="addBlockMenu" class="add-block-menu">
+          <button class="node-card node-card-compact" data-node-type="start">
+            <strong>Start</strong>
+            <span>Entry</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="dialogue">
+            <strong>Dialogue</strong>
+            <span>Line</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="menu">
+            <strong>Choice</strong>
+            <span>Branch</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="jump">
+            <strong>Jump</strong>
+            <span>Goto</span>
+          </button>
+        </div>
+
+        <button
+          id="addBlockToggleButton"
+          class="add-block-toggle"
+          type="button"
+          aria-label="Add block"
+          aria-controls="addBlockMenu"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true">+</span>
+        </button>
+      </section>
+
+      <aside id="inspectorSidebar" class="inspector-sidebar is-open">
+        <section class="inspector-panel">
+          <div class="section-header">
+            <h2>Inspector</h2>
+            <p>Details for the selected node.</p>
+          </div>
+
+          <div id="inspectorEmpty" class="inspector-empty">
+            <p>Select a node to inspect its properties.</p>
+          </div>
+
+          <form id="inspectorForm" class="inspector-form hidden">
+            <label>
+              Node Id
+              <input id="nodeIdInput" type="text" readonly />
+            </label>
+
+            <label>
+              Node Type
+              <input id="nodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Title
+              <input id="nodeTitleInput" type="text" />
+            </label>
+
+            <label>
+              Content
+              <textarea id="nodeContentInput" rows="8"></textarea>
+            </label>
+          </form>
+        </section>
+      </aside>
     </div>
 
     <script src="./app.js"></script>
