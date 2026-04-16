@@ -118,6 +118,7 @@ button.secondary {
   flex-direction: column;
   align-items: flex-end;
   gap: 12px;
+  pointer-events: none;
   transition: right 180ms ease, transform 180ms ease, opacity 180ms ease;
 }
 
@@ -137,6 +138,7 @@ button.secondary {
   backdrop-filter: blur(18px);
   transform-origin: bottom right;
   transition: transform 160ms ease, opacity 160ms ease;
+  pointer-events: auto;
 }
 
 .add-block-dock:not(.is-open) .add-block-menu {
@@ -156,6 +158,7 @@ button.secondary {
   color: #0b0c0f;
   box-shadow: var(--shadow);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: auto;
 }
 
 .add-block-toggle span {
