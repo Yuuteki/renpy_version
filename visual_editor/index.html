@@ -18,11 +18,6 @@
           </header>
 
           <section id="projectOverviewSection" class="sidebar-section sidebar-panel is-active">
-            <div class="section-header">
-              <h2>Project</h2>
-              <p>Current Ren'Py project context.</p>
-            </div>
-
             <p class="section-label">Project Path</p>
             <p id="projectPath" class="project-path">No project path provided.</p>
 
@@ -31,13 +26,13 @@
           </section>
 
           <section id="labelGraphsSection" class="sidebar-section sidebar-panel">
-            <div class="section-header">
-              <h2>Label Graphs</h2>
-              <p>Each label keeps its own graph.</p>
-            </div>
-
             <button id="newLabelButton" class="secondary" type="button">New Label Graph</button>
             <div id="labelGraphList" class="label-graph-list"></div>
+          </section>
+
+          <section id="charactersSection" class="sidebar-section sidebar-panel">
+            <p class="section-label">Character Setup</p>
+            <p class="status-text">Character definition tools will live here. We can fill in fields and actions next.</p>
           </section>
 
           <section id="visualProjectSection" class="sidebar-section sidebar-panel status-section">
@@ -99,6 +94,19 @@
               <rect x="5" y="4" width="14" height="4" rx="1.5"></rect>
               <rect x="5" y="10" width="14" height="4" rx="1.5"></rect>
               <rect x="5" y="16" width="14" height="4" rx="1.5"></rect>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="charactersSection"
+            aria-label="Open character definitions"
+            title="Characters"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="3"></circle>
+              <path d="M6.5 19c.8-3 3.1-4.5 5.5-4.5s4.7 1.5 5.5 4.5"></path>
             </svg>
           </button>
 
