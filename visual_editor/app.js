@@ -8,7 +8,8 @@ const gridOverlayEl = canvasEl.querySelector(".grid-overlay");
 const graphNodesEl = document.getElementById("graphNodes");
 const statusTextEl = document.getElementById("statusText");
 const sidebarEl = document.getElementById("sidebar");
-const sidebarToggleButton = document.getElementById("sidebarToggleButton");
+const sidebarHideButton = document.getElementById("sidebarHideButton");
+const sidebarCollapsedRailEl = document.getElementById("sidebarCollapsedRail");
 const inspectorSidebarEl = document.getElementById("inspectorSidebar");
 const addBlockDockEl = document.getElementById("addBlockDock");
 const addBlockToggleButton = document.getElementById("addBlockToggleButton");
@@ -126,8 +127,18 @@ function setStatus(message) {
 function setSidebarState(nextOpen) {
   sidebarOpen = nextOpen;
   sidebarEl.classList.toggle("is-open", sidebarOpen);
-  sidebarToggleButton.setAttribute("aria-expanded", String(sidebarOpen));
-  sidebarToggleButton.querySelector(".sidebar-toggle-label").textContent = sidebarOpen ? "Hide" : "Tools";
+  sidebarHideButton.classList.toggle("is-hidden", !sidebarOpen);
+  sidebarHideButton.setAttribute("aria-expanded", String(sidebarOpen));
+  sidebarCollapsedRailEl.classList.toggle("is-visible", !sidebarOpen);
+}
+
+function openSidebarSection(sectionId) {
+  setSidebarState(true);
+
+  window.setTimeout(() => {
+    const target = document.getElementById(sectionId);
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 140);
 }
 
 function setInspectorState(nextOpen) {
@@ -512,8 +523,13 @@ contextDeleteButton.addEventListener("click", () => {
 
   deleteNode(contextMenuNodeId);
 });
-sidebarToggleButton.addEventListener("click", () => {
-  setSidebarState(!sidebarOpen);
+sidebarHideButton.addEventListener("click", () => {
+  setSidebarState(false);
+});
+sidebarCollapsedRailEl.querySelectorAll(".collapsed-rail-button").forEach((button) => {
+  button.addEventListener("click", () => {
+    openSidebarSection(button.dataset.sidebarSection);
+  });
 });
 canvasEl.addEventListener("pointerdown", beginPan);
 canvasEl.addEventListener("pointermove", updatePan);

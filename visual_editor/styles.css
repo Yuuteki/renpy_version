@@ -358,6 +358,81 @@ button.danger-button:hover {
   display: none;
 }
 
+.sidebar-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+}
+
+.sidebar-hide-button {
+  position: absolute;
+  top: 24px;
+  left: calc(var(--sidebar-offset) + var(--sidebar-width) - 20px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(12, 14, 18, 0.92);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.sidebar-hide-button.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+}
+
+.sidebar-collapsed-rail {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 54px;
+  padding: 8px;
+  display: grid;
+  gap: 8px;
+  background: rgba(14, 16, 21, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-8px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.sidebar-collapsed-rail.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.collapsed-rail-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 12px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.collapsed-rail-button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .node-context-menu {
   position: fixed;
   top: 0;
@@ -396,31 +471,6 @@ button.danger-button:hover {
 
 .danger-text {
   color: #f3b4b4;
-}
-
-.sidebar-toggle {
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  z-index: 25;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 14px;
-  background: rgba(12, 14, 18, 0.92);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--shadow);
-}
-
-.sidebar.is-open + .sidebar-toggle {
-  left: calc(var(--sidebar-offset) + var(--sidebar-width) - 20px);
-}
-
-.sidebar-toggle-label {
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .canvas-stage {
@@ -506,6 +556,10 @@ button.danger-button:hover {
     --sidebar-width: 320px;
     --inspector-width: 300px;
     --sidebar-offset: 12px;
+  }
+
+  .sidebar-hide-button {
+    left: calc(var(--sidebar-offset) + var(--sidebar-width) - 20px);
   }
 
   .add-block-dock {

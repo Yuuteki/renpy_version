@@ -17,7 +17,7 @@
             </div>
           </header>
 
-          <section class="sidebar-section">
+          <section id="quickActionsSection" class="sidebar-section">
             <p class="section-label">Quick Actions</p>
             <div class="sidebar-actions">
               <button id="newGraphButton" class="secondary">New Graph</button>
@@ -26,23 +26,73 @@
             </div>
           </section>
 
-          <section class="sidebar-section">
+          <section id="projectDetailsSection" class="sidebar-section">
             <p class="section-label">Current Project</p>
             <p id="projectPath" class="project-path">No project path provided.</p>
             <p class="section-label secondary-label">Expected Files</p>
             <p id="projectFiles" class="project-files"></p>
           </section>
 
-          <section class="sidebar-section status-section">
+          <section id="statusSection" class="sidebar-section status-section">
             <p class="section-label">Status</p>
             <p id="statusText" class="status-text">Visual editor scaffold ready.</p>
           </section>
         </div>
       </aside>
 
-      <button id="sidebarToggleButton" class="sidebar-toggle" type="button" aria-expanded="true">
-        <span class="sidebar-toggle-label">Tools</span>
-      </button>
+      <div class="sidebar-controls">
+        <button id="sidebarHideButton" class="sidebar-hide-button" type="button" aria-expanded="true">
+          Hide
+        </button>
+
+        <div id="sidebarCollapsedRail" class="sidebar-collapsed-rail" aria-label="Sidebar shortcuts">
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="quickActionsSection"
+            aria-label="Open quick actions"
+            title="Quick Actions"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="5" y1="6" x2="19" y2="6"></line>
+              <circle cx="9" cy="6" r="2"></circle>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <circle cx="15" cy="12" r="2"></circle>
+              <line x1="5" y1="18" x2="19" y2="18"></line>
+              <circle cx="11" cy="18" r="2"></circle>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="projectDetailsSection"
+            aria-label="Open details"
+            title="Details"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="5" y="4" width="14" height="16" rx="2"></rect>
+              <line x1="8" y1="9" x2="16" y2="9"></line>
+              <line x1="8" y1="13" x2="16" y2="13"></line>
+              <line x1="8" y1="17" x2="13" y2="17"></line>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="statusSection"
+            aria-label="Open status"
+            title="Status"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="8"></circle>
+              <line x1="12" y1="10" x2="12" y2="16"></line>
+              <circle cx="12" cy="7" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
 
       <main class="canvas-stage">
         <div id="canvas" class="canvas-surface">
