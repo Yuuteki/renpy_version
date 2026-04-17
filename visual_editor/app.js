@@ -36,10 +36,6 @@ const storageKey = projectPath
   ? `renpy-visual-editor:${projectPath}`
   : "renpy-visual-editor:default";
 
-const transparentDragImage = document.createElement("canvas");
-transparentDragImage.width = 1;
-transparentDragImage.height = 1;
-
 const defaultViewport = {
   x: 0,
   y: 0,
@@ -480,7 +476,6 @@ function renderLabelGraphList() {
       item.classList.add("is-dragging");
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", graph.id);
-      event.dataTransfer.setDragImage(transparentDragImage, 0, 0);
     });
     item.addEventListener("dragover", (event) => {
       if (!draggedLabelGraphId || draggedLabelGraphId === graph.id) {
