@@ -8,7 +8,7 @@ const gridOverlayEl = canvasEl.querySelector(".grid-overlay");
 const graphNodesEl = document.getElementById("graphNodes");
 const statusTextEl = document.getElementById("statusText");
 const sidebarEl = document.getElementById("sidebar");
-const sidebarHideButton = document.getElementById("sidebarHideButton");
+const sidebarToggleButton = document.getElementById("sidebarToggleButton");
 const sidebarCollapsedRailEl = document.getElementById("sidebarCollapsedRail");
 const sidebarPanelEls = Array.from(document.querySelectorAll(".sidebar-panel"));
 const collapsedRailButtonEls = Array.from(sidebarCollapsedRailEl.querySelectorAll(".collapsed-rail-button"));
@@ -170,8 +170,10 @@ function setStatus(message) {
 function setSidebarState(nextOpen) {
   sidebarOpen = nextOpen;
   sidebarEl.classList.toggle("is-open", sidebarOpen);
-  sidebarHideButton.classList.toggle("is-hidden", !sidebarOpen);
-  sidebarHideButton.setAttribute("aria-expanded", String(sidebarOpen));
+  sidebarToggleButton.classList.toggle("is-collapsed", !sidebarOpen);
+  sidebarToggleButton.setAttribute("aria-expanded", String(sidebarOpen));
+  sidebarToggleButton.setAttribute("aria-label", sidebarOpen ? "Collapse sidebar" : "Expand sidebar");
+  sidebarToggleButton.title = sidebarOpen ? "Collapse sidebar" : "Expand sidebar";
 }
 
 function setSidebarSection(sectionId) {
@@ -921,8 +923,8 @@ contextDeleteButton.addEventListener("click", () => {
 
   deleteNode(contextMenuNodeId);
 });
-sidebarHideButton.addEventListener("click", () => {
-  setSidebarState(false);
+sidebarToggleButton.addEventListener("click", () => {
+  setSidebarState(!sidebarOpen);
 });
 sidebarCollapsedRailEl.querySelectorAll(".collapsed-rail-button").forEach((button) => {
   button.addEventListener("click", () => {

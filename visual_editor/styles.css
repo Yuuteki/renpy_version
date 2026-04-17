@@ -212,10 +212,6 @@ button.danger-button:hover {
 
 .sidebar-header {
   padding: 18px;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
 }
 
 .sidebar-header h1 {
@@ -448,25 +444,6 @@ button.danger-button:hover {
   pointer-events: none;
 }
 
-.sidebar-hide-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  background: rgba(12, 14, 18, 0.92);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
-  pointer-events: auto;
-  transition: opacity 160ms ease, transform 160ms ease;
-}
-
-.sidebar-hide-button.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-6px);
-}
-
 .sidebar-collapsed-rail {
   position: absolute;
   top: 0;
@@ -498,12 +475,26 @@ button.danger-button:hover {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.sidebar-toggle-button {
+  width: 36px;
+  height: 36px;
+  margin-top: auto;
+  padding: 0;
+  border-radius: 12px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .collapsed-rail-button.is-active {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.18);
 }
 
-.collapsed-rail-button svg {
+.collapsed-rail-button svg,
+.sidebar-toggle-button svg {
   width: 18px;
   height: 18px;
   fill: none;
@@ -511,6 +502,11 @@ button.danger-button:hover {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform 160ms ease;
+}
+
+.sidebar-toggle-button.is-collapsed svg {
+  transform: rotate(180deg);
 }
 
 .node-context-menu {
