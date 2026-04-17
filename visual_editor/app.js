@@ -13,6 +13,9 @@ const sidebarCloseButton = document.getElementById("sidebarCloseButton");
 const inspectorSidebarEl = document.getElementById("inspectorSidebar");
 const addBlockDockEl = document.getElementById("addBlockDock");
 const addBlockToggleButton = document.getElementById("addBlockToggleButton");
+const deleteNodeButton = document.getElementById("deleteNodeButton");
+const nodeContextMenuEl = document.getElementById("nodeContextMenu");
+const contextDeleteButton = document.getElementById("contextDeleteButton");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
 const inspectorFormEl = document.getElementById("inspectorForm");
@@ -65,6 +68,7 @@ let inspectorOpen = true;
 let addBlockOpen = false;
 let panSession = null;
 let dragSession = null;
+let contextMenuNodeId = null;
 
 function loadState() {
   try {
@@ -82,6 +86,17 @@ function loadState() {
 }
 
 function normalizeState(rawState) {
+  const nodes = Array.isArray(rawState.nodes)
+    ? rawState.nodes
+    : structuredClone(defaultGraph.nodes);
+  const hasSelectedNodeId = Object.prototype.hasOwnProperty.call(rawState, "selectedNodeId");
+  const requestedSelectedNodeId = hasSelectedNodeId
+    ? rawState.selectedNodeId
+    : defaultGraph.selectedNodeId;
+  const selectedNodeId = nodes.some((node) => node.id === requestedSelectedNodeId)
+    ? requestedSelectedNodeId
+    : (nodes[0]?.id ?? null);
+
   return {
     meta: {
       ...defaultGraph.meta,
@@ -92,10 +107,8 @@ function normalizeState(rawState) {
       ...(rawState.viewport || {}),
       scale: clampScale(rawState.viewport?.scale ?? defaultGraph.viewport.scale),
     },
-    nodes: Array.isArray(rawState.nodes) && rawState.nodes.length
-      ? rawState.nodes
-      : structuredClone(defaultGraph.nodes),
-    selectedNodeId: rawState.selectedNodeId || defaultGraph.selectedNodeId,
+    nodes,
+    selectedNodeId,
   };
 }
 
@@ -128,6 +141,34 @@ function setAddBlockState(nextOpen) {
   addBlockOpen = nextOpen;
   addBlockDockEl.classList.toggle("is-open", addBlockOpen);
   addBlockToggleButton.setAttribute("aria-expanded", String(addBlockOpen));
+}
+
+function setContextMenuState(nextOpen, options = {}) {
+  if (!nextOpen) {
+    contextMenuNodeId = null;
+    nodeContextMenuEl.classList.remove("is-open");
+    return;
+  }
+
+  contextMenuNodeId = options.nodeId ?? contextMenuNodeId;
+  nodeContextMenuEl.classList.add("is-open");
+  nodeContextMenuEl.style.left = "0px";
+  nodeContextMenuEl.style.top = "0px";
+
+  const margin = 12;
+  const menuWidth = nodeContextMenuEl.offsetWidth;
+  const menuHeight = nodeContextMenuEl.offsetHeight;
+  const left = Math.min(
+    Math.max(margin, options.x ?? margin),
+    window.innerWidth - menuWidth - margin,
+  );
+  const top = Math.min(
+    Math.max(margin, options.y ?? margin),
+    window.innerHeight - menuHeight - margin,
+  );
+
+  nodeContextMenuEl.style.left = `${left}px`;
+  nodeContextMenuEl.style.top = `${top}px`;
 }
 
 function clampScale(value) {
@@ -188,6 +229,17 @@ function renderGraph() {
     el.addEventListener("pointerup", endNodeDrag);
     el.addEventListener("pointercancel", endNodeDrag);
     el.addEventListener("lostpointercapture", endNodeDrag);
+    el.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      selectNode(node.id, el);
+      setAddBlockState(false);
+      setContextMenuState(true, {
+        nodeId: node.id,
+        x: event.clientX,
+        y: event.clientY,
+      });
+    });
 
     graphNodesEl.appendChild(el);
   });
@@ -232,6 +284,9 @@ function updateSelectedNode(patch) {
 
 function resetGraph() {
   state = structuredClone(defaultGraph);
+  setContextMenuState(false);
+  setInspectorState(Boolean(state.selectedNodeId));
+  setAddBlockState(false);
   saveState("Created a fresh graph scaffold.");
   render();
 }
@@ -239,6 +294,25 @@ function resetGraph() {
 function exportGraph() {
   saveState("Stored local draft and prepared export placeholder.");
   setStatus("Export placeholder complete. Next step: write generated .rpy into the project.");
+}
+
+function deleteNode(nodeId) {
+  const node = findNode(nodeId);
+
+  if (!node) {
+    return;
+  }
+
+  state.nodes = state.nodes.filter((currentNode) => currentNode.id !== nodeId);
+
+  if (state.selectedNodeId === nodeId) {
+    state.selectedNodeId = state.nodes[0]?.id ?? null;
+  }
+
+  setContextMenuState(false);
+  render();
+  setInspectorState(Boolean(state.selectedNodeId));
+  saveState(`Deleted ${node.title}.`);
 }
 
 function findNode(nodeId) {
@@ -249,6 +323,7 @@ function selectNode(nodeId, element) {
   state.selectedNodeId = nodeId;
   setInspectorState(true);
   setAddBlockState(false);
+  setContextMenuState(false);
 
   graphNodesEl.querySelectorAll(".graph-node.is-selected").forEach((nodeEl) => {
     nodeEl.classList.remove("is-selected");
@@ -281,6 +356,7 @@ function beginPan(event) {
 
   setInspectorState(false);
   setAddBlockState(false);
+  setContextMenuState(false);
 
   panSession = {
     pointerId: event.pointerId,
@@ -420,7 +496,22 @@ saveDraftButton.addEventListener("click", () => {
 newGraphButton.addEventListener("click", resetGraph);
 exportButton.addEventListener("click", exportGraph);
 addBlockToggleButton.addEventListener("click", () => {
+  setContextMenuState(false);
   setAddBlockState(!addBlockOpen);
+});
+deleteNodeButton.addEventListener("click", () => {
+  if (!state.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(state.selectedNodeId);
+});
+contextDeleteButton.addEventListener("click", () => {
+  if (!contextMenuNodeId) {
+    return;
+  }
+
+  deleteNode(contextMenuNodeId);
 });
 sidebarToggleButton.addEventListener("click", () => {
   setSidebarState(!sidebarOpen);
@@ -435,8 +526,17 @@ canvasEl.addEventListener("pointercancel", endPan);
 canvasEl.addEventListener("lostpointercapture", endPan);
 canvasEl.addEventListener("wheel", (event) => {
   event.preventDefault();
+  setContextMenuState(false);
   zoomAtPoint(event.clientX, event.clientY, event.deltaY);
 }, { passive: false });
+
+document.addEventListener("pointerdown", (event) => {
+  if (nodeContextMenuEl.contains(event.target)) {
+    return;
+  }
+
+  setContextMenuState(false);
+});
 
 document.querySelectorAll(".node-card").forEach((button) => {
   button.addEventListener("click", () => {

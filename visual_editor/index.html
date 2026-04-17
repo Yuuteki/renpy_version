@@ -15,10 +15,6 @@
               <p class="eyebrow">Prototype</p>
               <h1>Ren'Py Visual Editor</h1>
             </div>
-
-            <button id="sidebarCloseButton" class="icon-button" type="button" aria-label="Hide sidebar">
-              <span aria-hidden="true">×</span>
-            </button>
           </header>
 
           <section class="sidebar-section">
@@ -121,9 +117,19 @@
               Content
               <textarea id="nodeContentInput" rows="8"></textarea>
             </label>
+
+            <div class="inspector-actions">
+              <button id="deleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
           </form>
         </section>
       </aside>
+
+      <div id="nodeContextMenu" class="node-context-menu" role="menu">
+        <button id="contextDeleteButton" class="node-context-menu-item danger-text" type="button" role="menuitem">
+          Delete Block
+        </button>
+      </div>
     </div>
 
     <script src="./app.js"></script>

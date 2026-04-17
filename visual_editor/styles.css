@@ -75,6 +75,16 @@ button.secondary {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+button.danger-button {
+  background: rgba(110, 18, 18, 0.32);
+  color: #f8d4d4;
+  border: 1px solid rgba(255, 140, 140, 0.18);
+}
+
+button.danger-button:hover {
+  background: rgba(130, 28, 28, 0.42);
+}
+
 .app-shell {
   position: relative;
   width: 100vw;
@@ -334,6 +344,11 @@ button.secondary {
   gap: 14px;
 }
 
+.inspector-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .inspector-form label {
   display: grid;
   gap: 8px;
@@ -358,6 +373,46 @@ button.secondary {
 
 .hidden {
   display: none;
+}
+
+.node-context-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 168px;
+  padding: 8px;
+  background: rgba(18, 20, 26, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 40;
+}
+
+.node-context-menu.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.node-context-menu-item {
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+}
+
+.node-context-menu-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.danger-text {
+  color: #f3b4b4;
 }
 
 .sidebar-toggle {
