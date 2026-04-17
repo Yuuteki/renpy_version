@@ -16,6 +16,9 @@ const addBlockToggleButton = document.getElementById("addBlockToggleButton");
 const deleteNodeButton = document.getElementById("deleteNodeButton");
 const nodeContextMenuEl = document.getElementById("nodeContextMenu");
 const contextDeleteButton = document.getElementById("contextDeleteButton");
+const newLabelButton = document.getElementById("newLabelButton");
+const labelGraphListEl = document.getElementById("labelGraphList");
+const visualProjectStatsEl = document.getElementById("visualProjectStats");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
 const inspectorFormEl = document.getElementById("inspectorForm");
@@ -26,40 +29,50 @@ const nodeContentInput = document.getElementById("nodeContentInput");
 
 const saveDraftButton = document.getElementById("saveDraftButton");
 const exportButton = document.getElementById("exportButton");
-const newGraphButton = document.getElementById("newGraphButton");
 
 const storageKey = projectPath
   ? `renpy-visual-editor:${projectPath}`
   : "renpy-visual-editor:default";
 
-const defaultGraph = {
+const defaultViewport = {
+  x: 0,
+  y: 0,
+  scale: 1,
+};
+
+const defaultStarterNodes = [
+  {
+    id: "start",
+    type: "start",
+    title: "Start",
+    content: "Entry point for this visual script.",
+    x: 48,
+    y: 48,
+  },
+  {
+    id: "dialogue_1",
+    type: "dialogue",
+    title: "Opening Dialogue",
+    content: "Welcome to the visual editor prototype.",
+    x: 320,
+    y: 176,
+  },
+];
+
+const defaultProjectState = {
   meta: {
-    name: "Main Flow",
+    name: "Ren'Py Visual Project",
   },
-  viewport: {
-    x: 0,
-    y: 0,
-    scale: 1,
-  },
-  nodes: [
+  graphs: [
     {
-      id: "start",
-      type: "start",
-      title: "Start",
-      content: "Entry point for this visual script.",
-      x: 48,
-      y: 48,
-    },
-    {
-      id: "dialogue_1",
-      type: "dialogue",
-      title: "Opening Dialogue",
-      content: "Welcome to the visual editor prototype.",
-      x: 320,
-      y: 176,
+      id: "label_start",
+      label: "start",
+      viewport: structuredClone(defaultViewport),
+      nodes: structuredClone(defaultStarterNodes),
+      selectedNodeId: "dialogue_1",
     },
   ],
-  selectedNodeId: "dialogue_1",
+  activeGraphId: "label_start",
 };
 
 let state = normalizeState(loadState());
@@ -75,41 +88,65 @@ function loadState() {
     const raw = window.localStorage.getItem(storageKey);
 
     if (!raw) {
-      return structuredClone(defaultGraph);
+      return structuredClone(defaultProjectState);
     }
 
     return JSON.parse(raw);
   } catch (error) {
     console.error(error);
-    return structuredClone(defaultGraph);
+    return structuredClone(defaultProjectState);
   }
 }
 
 function normalizeState(rawState) {
-  const nodes = Array.isArray(rawState.nodes)
-    ? rawState.nodes
-    : structuredClone(defaultGraph.nodes);
-  const hasSelectedNodeId = Object.prototype.hasOwnProperty.call(rawState, "selectedNodeId");
-  const requestedSelectedNodeId = hasSelectedNodeId
-    ? rawState.selectedNodeId
-    : defaultGraph.selectedNodeId;
-  const selectedNodeId = nodes.some((node) => node.id === requestedSelectedNodeId)
-    ? requestedSelectedNodeId
-    : (nodes[0]?.id ?? null);
+  const normalizedGraphs = Array.isArray(rawState.graphs) && rawState.graphs.length
+    ? rawState.graphs.map((graph, index) => normalizeGraph(graph, index))
+    : [normalizeLegacyGraph(rawState)];
+  const activeGraphId = normalizedGraphs.some((graph) => graph.id === rawState.activeGraphId)
+    ? rawState.activeGraphId
+    : normalizedGraphs[0]?.id ?? null;
 
   return {
     meta: {
-      ...defaultGraph.meta,
+      ...defaultProjectState.meta,
       ...(rawState.meta || {}),
     },
+    graphs: normalizedGraphs,
+    activeGraphId,
+  };
+}
+
+function normalizeGraph(graph, index) {
+  const nodes = Array.isArray(graph.nodes)
+    ? graph.nodes
+    : structuredClone(defaultStarterNodes);
+  const selectedNodeId = nodes.some((node) => node.id === graph.selectedNodeId)
+    ? graph.selectedNodeId
+    : (nodes[0]?.id ?? null);
+
+  return {
+    id: graph.id || `label_${index + 1}`,
+    label: graph.label || `label_${index + 1}`,
     viewport: {
-      ...defaultGraph.viewport,
-      ...(rawState.viewport || {}),
-      scale: clampScale(rawState.viewport?.scale ?? defaultGraph.viewport.scale),
+      ...defaultViewport,
+      ...(graph.viewport || {}),
+      scale: clampScale(graph.viewport?.scale ?? defaultViewport.scale),
     },
     nodes,
     selectedNodeId,
   };
+}
+
+function normalizeLegacyGraph(rawState) {
+  const graph = normalizeGraph({
+    id: "label_main",
+    label: rawState.meta?.name || "main",
+    viewport: rawState.viewport,
+    nodes: rawState.nodes,
+    selectedNodeId: rawState.selectedNodeId,
+  }, 0);
+
+  return graph;
 }
 
 function saveState(message) {
@@ -181,6 +218,29 @@ function setContextMenuState(nextOpen, options = {}) {
   nodeContextMenuEl.style.top = `${top}px`;
 }
 
+function getActiveGraph() {
+  return state.graphs.find((graph) => graph.id === state.activeGraphId) ?? null;
+}
+
+function createBlankGraph(label) {
+  return {
+    id: `label_${Date.now()}`,
+    label,
+    viewport: structuredClone(defaultViewport),
+    nodes: [
+      {
+        id: "start",
+        type: "start",
+        title: "Start",
+        content: `Entry point for ${label}.`,
+        x: 48,
+        y: 48,
+      },
+    ],
+    selectedNodeId: "start",
+  };
+}
+
 function clampScale(value) {
   return Math.min(2.5, Math.max(0.35, value));
 }
@@ -190,7 +250,8 @@ function formatZoom(scale) {
 }
 
 function renderViewport() {
-  const { x, y, scale } = state.viewport;
+  const graph = getActiveGraph();
+  const { x, y, scale } = graph?.viewport || defaultViewport;
   const gridSize = 28 * scale;
 
   graphNodesEl.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
@@ -211,15 +272,79 @@ function renderProjectInfo() {
     `${projectPath}/visual_editor/project.json | ${projectPath}/game/generated_visual_editor.rpy`;
 }
 
+function renderLabelGraphList() {
+  labelGraphListEl.innerHTML = "";
+
+  state.graphs.forEach((graph) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "label-graph-item";
+
+    if (graph.id === state.activeGraphId) {
+      button.classList.add("is-active");
+    }
+
+    button.innerHTML = `
+      <strong>${escapeHtml(graph.label)}</strong>
+      <span>${graph.nodes.length} blocks</span>
+    `;
+
+    button.addEventListener("click", () => {
+      state.activeGraphId = graph.id;
+      setContextMenuState(false);
+      setAddBlockState(false);
+      setInspectorState(Boolean(graph.selectedNodeId));
+      render();
+      setStatus(`Opened label graph "${graph.label}".`);
+    });
+
+    labelGraphListEl.appendChild(button);
+  });
+}
+
+function renderVisualProjectStats() {
+  const graph = getActiveGraph();
+  const stats = [
+    {
+      title: "Current Label",
+      value: graph?.label || "None",
+    },
+    {
+      title: "Total Label Graphs",
+      value: String(state.graphs.length),
+    },
+    {
+      title: "Blocks In Current Graph",
+      value: String(graph?.nodes.length || 0),
+    },
+    {
+      title: "Canvas Zoom",
+      value: formatZoom(graph?.viewport.scale ?? defaultViewport.scale),
+    },
+  ];
+
+  visualProjectStatsEl.innerHTML = stats.map((stat) => `
+    <div class="visual-stat-card">
+      <strong>${escapeHtml(stat.title)}</strong>
+      <span>${escapeHtml(stat.value)}</span>
+    </div>
+  `).join("");
+}
+
 function renderGraph() {
   graphNodesEl.innerHTML = "";
+  const graph = getActiveGraph();
 
-  state.nodes.forEach((node) => {
+  if (!graph) {
+    return;
+  }
+
+  graph.nodes.forEach((node) => {
     const el = document.createElement("button");
     el.type = "button";
     el.className = "graph-node";
 
-    if (node.id === state.selectedNodeId) {
+    if (node.id === graph.selectedNodeId) {
       el.classList.add("is-selected");
     }
 
@@ -256,7 +381,8 @@ function renderGraph() {
 }
 
 function renderInspector() {
-  const selectedNode = state.nodes.find((node) => node.id === state.selectedNodeId);
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
 
   if (!selectedNode) {
     inspectorEmptyEl.classList.remove("hidden");
@@ -275,14 +401,22 @@ function renderInspector() {
 
 function render() {
   renderProjectInfo();
+  renderLabelGraphList();
+  renderVisualProjectStats();
   renderGraph();
   renderInspector();
   renderViewport();
 }
 
 function updateSelectedNode(patch) {
-  state.nodes = state.nodes.map((node) => {
-    if (node.id !== state.selectedNodeId) {
+  const graph = getActiveGraph();
+
+  if (!graph || !graph.selectedNodeId) {
+    return;
+  }
+
+  graph.nodes = graph.nodes.map((node) => {
+    if (node.id !== graph.selectedNodeId) {
       return node;
     }
 
@@ -293,11 +427,19 @@ function updateSelectedNode(patch) {
 }
 
 function resetGraph() {
-  state = structuredClone(defaultGraph);
+  const graph = getActiveGraph();
+
+  if (!graph) {
+    return;
+  }
+
+  graph.viewport = structuredClone(defaultViewport);
+  graph.nodes = structuredClone(defaultStarterNodes);
+  graph.selectedNodeId = defaultStarterNodes[1].id;
   setContextMenuState(false);
-  setInspectorState(Boolean(state.selectedNodeId));
+  setInspectorState(Boolean(graph.selectedNodeId));
   setAddBlockState(false);
-  saveState("Created a fresh graph scaffold.");
+  saveState(`Reset label graph "${graph.label}".`);
   render();
 }
 
@@ -307,30 +449,37 @@ function exportGraph() {
 }
 
 function deleteNode(nodeId) {
+  const graph = getActiveGraph();
   const node = findNode(nodeId);
 
-  if (!node) {
+  if (!graph || !node) {
     return;
   }
 
-  state.nodes = state.nodes.filter((currentNode) => currentNode.id !== nodeId);
+  graph.nodes = graph.nodes.filter((currentNode) => currentNode.id !== nodeId);
 
-  if (state.selectedNodeId === nodeId) {
-    state.selectedNodeId = state.nodes[0]?.id ?? null;
+  if (graph.selectedNodeId === nodeId) {
+    graph.selectedNodeId = graph.nodes[0]?.id ?? null;
   }
 
   setContextMenuState(false);
   render();
-  setInspectorState(Boolean(state.selectedNodeId));
+  setInspectorState(Boolean(graph.selectedNodeId));
   saveState(`Deleted ${node.title}.`);
 }
 
 function findNode(nodeId) {
-  return state.nodes.find((node) => node.id === nodeId);
+  return getActiveGraph()?.nodes.find((node) => node.id === nodeId);
 }
 
 function selectNode(nodeId, element) {
-  state.selectedNodeId = nodeId;
+  const graph = getActiveGraph();
+
+  if (!graph) {
+    return;
+  }
+
+  graph.selectedNodeId = nodeId;
   setInspectorState(true);
   setAddBlockState(false);
   setContextMenuState(false);
@@ -356,11 +505,13 @@ function escapeHtml(value) {
 }
 
 function beginPan(event) {
+  const graph = getActiveGraph();
+
   if (event.button !== 0) {
     return;
   }
 
-  if (event.target.closest(".graph-node")) {
+  if (!graph || event.target.closest(".graph-node")) {
     return;
   }
 
@@ -372,8 +523,8 @@ function beginPan(event) {
     pointerId: event.pointerId,
     startX: event.clientX,
     startY: event.clientY,
-    originX: state.viewport.x,
-    originY: state.viewport.y,
+    originX: graph.viewport.x,
+    originY: graph.viewport.y,
   };
 
   canvasEl.classList.add("is-panning");
@@ -381,13 +532,15 @@ function beginPan(event) {
 }
 
 function beginNodeDrag(event, nodeId, element) {
+  const graph = getActiveGraph();
+
   if (event.button !== 0) {
     return;
   }
 
   event.stopPropagation();
 
-  const node = findNode(nodeId);
+  const node = graph?.nodes.find((currentNode) => currentNode.id === nodeId);
 
   if (!node) {
     return;
@@ -411,28 +564,36 @@ function beginNodeDrag(event, nodeId, element) {
 }
 
 function updatePan(event) {
+  const graph = getActiveGraph();
+
   if (!panSession || event.pointerId !== panSession.pointerId) {
     return;
   }
 
-  state.viewport.x = panSession.originX + (event.clientX - panSession.startX);
-  state.viewport.y = panSession.originY + (event.clientY - panSession.startY);
+  if (!graph) {
+    return;
+  }
+
+  graph.viewport.x = panSession.originX + (event.clientX - panSession.startX);
+  graph.viewport.y = panSession.originY + (event.clientY - panSession.startY);
   renderViewport();
 }
 
 function updateNodeDrag(event) {
+  const graph = getActiveGraph();
+
   if (!dragSession || event.pointerId !== dragSession.pointerId) {
     return;
   }
 
-  const node = findNode(dragSession.nodeId);
+  const node = graph?.nodes.find((currentNode) => currentNode.id === dragSession.nodeId);
 
   if (!node) {
     return;
   }
 
-  const deltaX = (event.clientX - dragSession.startX) / state.viewport.scale;
-  const deltaY = (event.clientY - dragSession.startY) / state.viewport.scale;
+  const deltaX = (event.clientX - dragSession.startX) / graph.viewport.scale;
+  const deltaY = (event.clientY - dragSession.startY) / graph.viewport.scale;
 
   if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
     dragSession.moved = true;
@@ -471,21 +632,27 @@ function endNodeDrag(event) {
 }
 
 function zoomAtPoint(clientX, clientY, deltaY) {
-  const rect = canvasEl.getBoundingClientRect();
-  const nextScale = clampScale(state.viewport.scale * Math.exp(-deltaY * 0.0015));
+  const graph = getActiveGraph();
 
-  if (nextScale === state.viewport.scale) {
+  if (!graph) {
+    return;
+  }
+
+  const rect = canvasEl.getBoundingClientRect();
+  const nextScale = clampScale(graph.viewport.scale * Math.exp(-deltaY * 0.0015));
+
+  if (nextScale === graph.viewport.scale) {
     return;
   }
 
   const surfaceX = clientX - rect.left;
   const surfaceY = clientY - rect.top;
-  const worldX = (surfaceX - state.viewport.x) / state.viewport.scale;
-  const worldY = (surfaceY - state.viewport.y) / state.viewport.scale;
+  const worldX = (surfaceX - graph.viewport.x) / graph.viewport.scale;
+  const worldY = (surfaceY - graph.viewport.y) / graph.viewport.scale;
 
-  state.viewport.scale = nextScale;
-  state.viewport.x = surfaceX - worldX * nextScale;
-  state.viewport.y = surfaceY - worldY * nextScale;
+  graph.viewport.scale = nextScale;
+  graph.viewport.x = surfaceX - worldX * nextScale;
+  graph.viewport.y = surfaceY - worldY * nextScale;
 
   renderViewport();
   setStatus(`Canvas zoom set to ${formatZoom(nextScale)}. Drag empty space to move the view.`);
@@ -503,18 +670,31 @@ saveDraftButton.addEventListener("click", () => {
   saveState("Saved graph draft to local browser storage.");
 });
 
-newGraphButton.addEventListener("click", resetGraph);
 exportButton.addEventListener("click", exportGraph);
 addBlockToggleButton.addEventListener("click", () => {
   setContextMenuState(false);
   setAddBlockState(!addBlockOpen);
 });
+newLabelButton.addEventListener("click", () => {
+  const nextIndex = state.graphs.length + 1;
+  const nextGraph = createBlankGraph(`label_${nextIndex}`);
+
+  state.graphs.push(nextGraph);
+  state.activeGraphId = nextGraph.id;
+  setContextMenuState(false);
+  setInspectorState(true);
+  setAddBlockState(false);
+  render();
+  saveState(`Created label graph "${nextGraph.label}".`);
+});
 deleteNodeButton.addEventListener("click", () => {
-  if (!state.selectedNodeId) {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
     return;
   }
 
-  deleteNode(state.selectedNodeId);
+  deleteNode(graph.selectedNodeId);
 });
 contextDeleteButton.addEventListener("click", () => {
   if (!contextMenuNodeId) {
@@ -552,22 +732,28 @@ document.addEventListener("pointerdown", (event) => {
 
 document.querySelectorAll(".node-card").forEach((button) => {
   button.addEventListener("click", () => {
+    const graph = getActiveGraph();
     const nodeType = button.dataset.nodeType;
+
+    if (!graph) {
+      return;
+    }
+
     const newNode = {
       id: `${nodeType}_${Date.now()}`,
       type: nodeType,
       title: `${capitalize(nodeType)} Node`,
       content: "New node content.",
-      x: 96 + state.nodes.length * 28,
-      y: 96 + state.nodes.length * 20,
+      x: 96 + graph.nodes.length * 28,
+      y: 96 + graph.nodes.length * 20,
     };
 
-    state.nodes.push(newNode);
-    state.selectedNodeId = newNode.id;
+    graph.nodes.push(newNode);
+    graph.selectedNodeId = newNode.id;
     render();
     setInspectorState(true);
     setAddBlockState(false);
-    setStatus(`Added a ${nodeType} node to the graph.`);
+    setStatus(`Added a ${nodeType} node to "${graph.label}".`);
   });
 });
 
@@ -577,6 +763,6 @@ function capitalize(value) {
 
 render();
 setSidebarState(true);
-setInspectorState(Boolean(state.selectedNodeId));
+setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
 setAddBlockState(false);
 setStatus("Visual editor scaffold ready. Drag empty space to move the canvas, and use the mouse wheel to zoom.");
