@@ -466,19 +466,28 @@ button.danger-button:hover {
   display: flex !important;
   align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 .character-checkbox input {
   width: 16px;
   height: 16px;
   margin: 0;
+  padding: 0;
+  flex: 0 0 auto;
+  accent-color: #4da3ff;
+  border: 0;
+  outline: none;
+  background: transparent;
 }
 
 .character-checkbox span {
   color: var(--text);
+  flex: 1;
+  line-height: 1.4;
 }
 
-.character-detail-form input,
+.character-detail-form input:not([type="checkbox"]),
 .character-detail-form select {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -488,7 +497,7 @@ button.danger-button:hover {
   color: var(--text);
 }
 
-.character-detail-form input:focus,
+.character-detail-form input:not([type="checkbox"]):focus,
 .character-detail-form select:focus {
   outline: 2px solid rgba(255, 255, 255, 0.16);
   border-color: rgba(255, 255, 255, 0.18);
