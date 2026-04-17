@@ -332,6 +332,11 @@ function animateLabelGraphDomOrder() {
       return;
     }
 
+    if (graph.id === draggedLabelGraphId) {
+      item.style.transform = "";
+      return;
+    }
+
     const lastRect = item.getBoundingClientRect();
     const deltaY = firstRect.top - lastRect.top;
 
@@ -498,15 +503,16 @@ function renderLabelGraphList() {
     item.addEventListener("dragend", () => {
       const movedGraph = state.graphs.find((currentGraph) => currentGraph.id === draggedLabelGraphId);
 
-      draggedLabelGraphId = null;
-      item.classList.remove("is-dragging");
+      labelGraphListEl.querySelectorAll(".label-graph-item").forEach((labelItem) => {
+        labelItem.classList.remove("is-dragging");
+      });
 
       if (labelOrderChangedDuringDrag && movedGraph) {
         saveState(`Reordered label graph "${movedGraph.label}".`);
       }
 
+      draggedLabelGraphId = null;
       labelOrderChangedDuringDrag = false;
-      renderLabelGraphList();
     });
 
     labelGraphListEl.appendChild(item);

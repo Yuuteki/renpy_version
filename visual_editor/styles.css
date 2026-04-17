@@ -292,6 +292,7 @@ button.danger-button:hover {
 .label-graph-item.is-dragging {
   opacity: 0.45;
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.18);
+  transition: none;
 }
 
 .label-graph-item.is-active {
