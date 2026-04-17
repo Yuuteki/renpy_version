@@ -172,7 +172,6 @@ function setSidebarState(nextOpen) {
   sidebarEl.classList.toggle("is-open", sidebarOpen);
   sidebarHideButton.classList.toggle("is-hidden", !sidebarOpen);
   sidebarHideButton.setAttribute("aria-expanded", String(sidebarOpen));
-  sidebarCollapsedRailEl.classList.toggle("is-visible", !sidebarOpen);
 }
 
 function setSidebarSection(sectionId) {
