@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>对话(dialogue)和旁白(narration) &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/dialogue.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="显示图像" href="displaying_images.html" />
+    <link rel="prev" title="脚本标签(label)和主控流程" href="label.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">对话(dialogue)和旁白(narration)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#say">say语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#character">定义角色(character)对象</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Character"><code class="docutils literal notranslate"><span class="pre">Character()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#attribute-say">带有图像属性(attribute)的say语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-characters">样例角色</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#special-characters">特殊角色</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dialogue-window-management">对话窗口管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#say-with-arguments">带有参数的say语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#monologue-mode">独白模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-character-store"><code class="docutils literal notranslate"><span class="pre">character</span></code> 存储区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#alternative-presentations">其他表现形式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">其他参考</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">对话(dialogue)和旁白(narration)</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/dialogue.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dialogue-narration">
+<span id="dialogue-and-narration"></span><h1>对话(dialogue)和旁白(narration)<a class="headerlink" href="#dialogue-narration" title="Link to this heading"> link</a></h1>
+<p>文本是视觉系小说的根本，对以故事情节为主的游戏来说更是重中之重。这里说的文本可能包括使用人物名字作为标签(label)的对话，以及不存在任何主体的旁白。(为了偷懒，我们把对话和旁白统称为对话，除非某些场合下两者有重大区别。)由于对话如此重要，创作者需要能够定制化对话的某些特性使其符合制作游戏的特色。</p>
+<p>在Ren’Py中，大多数对话使用say语句编写。通过使用角色(character)对象，对话外观可以针对每一个角色实行定制化。</p>
+<section id="say">
+<span id="say-statement"></span><h2>say语句<a class="headerlink" href="#say" title="Link to this heading"> link</a></h2>
+<p>say语句被用在对话和旁白场景中。由于在Ren’Py脚本中say语句出现如此之频繁，所以在编写say语句的语法是一个最小化后的语法结构。这是一些样例:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span>
+    <span class="s2">&quot;这是一句旁白。&quot;</span>
+
+    <span class="s2">&quot;艾琳&quot;</span> <span class="s2">&quot;这是一句对话，用了完整的角色名。&quot;</span>
+
+    <span class="n">e</span> <span class="s2">&quot;这是一句对话，使用了角色对象。&quot;</span>
+
+    <span class="s2">&quot;嘭!!&quot;</span> <span class="k">with</span> <span class="n">vpunch</span>
+</pre></div>
+</div>
+<p>say语句的第一种形式是一个其自身组成的整个字符串。这种形式用于陈述，陈述内容就是字符串内容。</p>
+<p>say语句的第二种形式是由两个字符串组成。第一个字符串是发言角色的名字，第二个字符串是该角色正在说的内容。</p>
+<p>say语句的第三种形式是一个简单表达式后接一个字符串。简单表达式应该等同于一个角色名字或者一个角色(character)对象。在后面的例子中，角色对象被用于控制对话展现。</p>
+<p>say语句的最后一种形式是一个字符串及with分句的一个转场(transition)效果。在上面的例子中，字符串会显示为对话内容，屏幕会同步抖动。</p>
+<p>尽管say语句所处理对话的具体细节实际是由角色(character)对象所控制，say语句的通常用处是在界面上展现一个对话，直到用户点击鼠标后取消对话，并在界面上移除对话内容。</p>
+<p>某些字符对Ren’Py有特殊含义，所以不能用在对话字符串中。左花括号 <code class="docutils literal notranslate"><span class="pre">{</span></code> 开启一个文本标签(tag)，左方括号 <code class="docutils literal notranslate"><span class="pre">[</span></code> 开启一个替换(substitution)。若需要在对话中使用这些字符，需要连续出现两次。而转移双引号则需要使用反斜杠符号，不然字符串会在那个引号处截断。应用举例</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;I walked past a sign saying, </span><span class="se">\&quot;</span><span class="s2">Let&#39;s give it 100</span><span class="si">%%</span><span class="s2">!</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>也可以使用代理函数代替角色对象。详见 <a class="reference internal" href="statement_equivalents.html#say-proxy"><span class="std std-ref">此章节</span></a>。</p>
+</section>
+<section id="character">
+<span id="defining-character-objects"></span><h2>定义角色(character)对象<a class="headerlink" href="#character" title="Link to this heading"> link</a></h2>
+<p>通过创建一个角色对象并在say语句中使用该角色对象，你可以定制化对话窗口外观(甚至行为)。角色对象通过使用define语句，将角色(character)声明为一个变量。举例:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">,</span> <span class="n">who_color</span><span class="o">=</span><span class="s2">&quot;#c8ffc8&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>完成了这步工作后，定义的角色就可以使用在say语句中。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="s2">&quot;Hello, world.&quot;</span>
+</pre></div>
+</div>
+<p>角色(Character)是一个python函数，该函数包含一大串的关键词参数。这些关键词参数控制着角色行为。</p>
+<p>define语句会计算其自身的表达式，并声明为一个给定的变量名。若 <code class="docutils literal notranslate"><span class="pre">define</span></code> 语句不在 <code class="docutils literal notranslate"><span class="pre">init</span></code> 语句块(block)中，其会自动以与初始化相同的最高优先级(0)运行。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="Character">
+<span class="sig-name descname"><span class="pre">Character</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">adv</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Character" title="Link to this definition"> link</a></dt>
+<dd><p>创建并返回了一个角色对象，其控制了对话和旁白的观感。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>如果该参数是一个字符串，则成为对话中角色的名字。如果 <em>name</em> 参数是 <code class="docutils literal notranslate"><span class="pre">None</span></code> ，名字不会显示，用于旁白。</p>
+</dd>
+<dt><cite>kind</cite></dt><dd><p>新建角色的基底角色。当使用该参数时，新建角色没有显示赋值的参数，均使用对应基底角色的属性作为默认值。这个设计常用来定义模板(template)角色，然后继承模板角色属性并修改。</p>
+</dd>
+</dl>
+<p><strong>链接图片</strong> 与某个角色关联的图像标签(tag)名。这种设计，允许一个包含角色的say语句使用标签(tag)名来展现角色图片，也同时允许角色说话时Ren’Py自动选择并展现一个头像。</p>
+<dl class="simple">
+<dt><cite>image</cite></dt><dd><p>与角色关联的图像标签(tag)名的字符串。</p>
+</dd>
+</dl>
+<p><strong>语音标签(tag)</strong> 若某个声音标签(tag)被指定为某个角色所有，标签下对应的声音文件将会与该角色关联，这些声音文件可以在自定义设置界面被静音或者被播放。</p>
+<dl class="simple">
+<dt><cite>voice_tag</cite></dt><dd><p>voice_tag是一个字符串，在“voice”频道内可以voice_tag可以控制关联角色声音文件的静音或者播放。</p>
+</dd>
+</dl>
+<p><strong>前缀和后缀</strong> 这个设计允许在角色名字或者展现文本上添加前缀和后缀。前缀和后缀可以用在每一行对话的前后添加引用内容。</p>
+<dl class="simple">
+<dt><cite>what_prefix</cite></dt><dd><p>显示对话内容之前，添加的前缀字符串。</p>
+</dd>
+<dt><cite>what_suffix</cite></dt><dd><p>显示对话内容之前，添加的后缀字符串。</p>
+</dd>
+<dt><cite>who_prefix</cite></dt><dd><p>显示角色名字之前，添加的前缀字符串。</p>
+</dd>
+<dt><cite>who_suffix</cite></dt><dd><p>显示角色名字之前，添加的后缀字符串。</p>
+</dd>
+</dl>
+<p><strong>改变角色显示名</strong> 该可选项用于控制显示角色名。</p>
+<dl class="simple">
+<dt><cite>dynamic</cite></dt><dd><p>该参数若为True，角色名 <cite>name</cite> 应是一个包含python表达式的字符串。该字符串会在每行对话执行前先演算，将演算结果用作角色名。</p>
+</dd>
+</dl>
+<p><strong>互动控制</strong> 这些可选项在“对话展示、发生互动、模式输入”情况下控制显示效果。</p>
+<dl class="simple">
+<dt><cite>condition</cite></dt><dd><p>若给定，该参数应是一个包含python表达式的字符串。若表达式结果为False，对话不会发生，即say语句不会执行。</p>
+</dd>
+<dt><cite>interact</cite></dt><dd><p>若该值为True，默认情况下无论对话何时被展现，都会发生一项互动。若该值为False，则互动不会发生，而一些额外元素可以被添加到界面上。</p>
+</dd>
+<dt><cite>advance</cite></dt><dd><p>若该值为True，默认情况下用户可以快进语句执行，还有一些其他的快进方式(比如跳过skip和auto-forward mode自动前进模式)也将生效。若该值为False，用户不能跳过say语句，除非脚本中出现某些替换方法(比如跳转超链接)。</p>
+</dd>
+<dt><cite>callback</cite></dt><dd><p>角色发言时，若有事件(event)发生则会被调用的函数。详见 <a class="reference internal" href="character_callbacks.html#character-callbacks"><span class="std std-ref">角色(character)回调(callback)</span></a> 章节。</p>
+</dd>
+</dl>
+<p><strong>点击继续</strong> “点击继续”提示是在(一段内容)所有文本均已展示完的情况下，通常出现一次，提醒用户进入下一部分内容。</p>
+<dl class="simple">
+<dt><cite>ctc</cite></dt><dd><p>一个用做“点击继续”提示的可展现部件，若有其他特殊提示被使用时可能不会展现。</p>
+</dd>
+<dt><cite>ctc_pause</cite></dt><dd><p>当文本显示被{p}或{w}标签(tag)暂停时，用作“点击继续”提示的一个可视组件。</p>
+</dd>
+<dt><cite>ctc_timedpause</cite></dt><dd><p>当文本显示被{p=}或{w=}标签(tag)暂停时，用作“点击继续”提示的一个可视组件。当该值为None时，会使用 <cite>ctc_pause</cite> 的值作为默认值。若你想要使用 <cite>ctc_pause</cite> 而不是 <cite>ctc_timedpause</cite> ，请使用 <code class="docutils literal notranslate"><span class="pre">Null()</span></code> 。</p>
+</dd>
+<dt><cite>ctc_position</cite></dt><dd><p>该参数控制“点击继续”提示的位置。若值为 <code class="docutils literal notranslate"><span class="pre">&quot;nestled&quot;</span></code> ，该提示会作为目前展示文本的一部分出现，在最后一个字符显示后立即出现相应提示。若值为 <code class="docutils literal notranslate"><span class="pre">&quot;fixed&quot;</span></code> ，提示会被直接添加到界面上，其在界面上的位置由位置样式属性控制。</p>
+</dd>
+</dl>
+<p><strong>界面</strong> 显示对话使用到一个 <a class="reference internal" href="screens.html#screens"><span class="std std-ref">界面</span></a> 。该入参允许你选择界面(screen)，并传入参数。</p>
+<dl class="simple">
+<dt><cite>screen</cite></dt><dd><p>显示对话时使用的界面名。</p>
+</dd>
+</dl>
+<p>关键词参数以前缀 <code class="docutils literal notranslate"><span class="pre">show_</span></code> 开头，去掉前缀后传参给界面(screen)。例如， <code class="docutils literal notranslate"><span class="pre">show_myflag</span></code> 的值会改为变量 <code class="docutils literal notranslate"><span class="pre">myflag</span></code> 并传参给界面(screen)。(myflag变量并不是默认会用参数，但可以被一个定制对话界面使用。)</p>
+<p>鉴于某些历史原因，show系列变量由Ren’Py引擎处理：</p>
+<dl class="simple">
+<dt><cite>show_layer</cite></dt><dd><p>若给定了这个参数，其应该是一个字符串，这个字符串给定了展现“说话”界面所在图层的名字。</p>
+</dd>
+</dl>
+<p><strong>样式化文本和窗口</strong> 以 <code class="docutils literal notranslate"><span class="pre">who_</span></code> 、 <code class="docutils literal notranslate"><span class="pre">what_</span></code> 和 <code class="docutils literal notranslate"><span class="pre">window_</span></code> 开头的关键词参数，会去掉前缀后分别用于 doc:<cite>样式 &lt;styles&gt;</cite> 角色名、对话文本和窗口内容。</p>
+<p>例如，若一个角色被给定了关键词参数 <code class="docutils literal notranslate"><span class="pre">who_color=&quot;#c8ffc8&quot;</span></code> ，角色名的颜色就被改变，这里的例子中会被改成绿色。 <code class="docutils literal notranslate"><span class="pre">window_background=&quot;frame.png&quot;</span></code> 是把包含该角色的对话窗口背景设置为图片frame.png。</p>
+<p>应用于角色名、对话文本和窗口的样式化，也可以使用这种方式进行设置：分别对应使用 <code class="docutils literal notranslate"><span class="pre">who_style</span></code> ， <code class="docutils literal notranslate"><span class="pre">what_style</span></code> 和 <code class="docutils literal notranslate"><span class="pre">window_style</span></code> 参数。</p>
+<p>设置 <a class="reference internal" href="config.html#var-config.character_id_prefixes"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.character_id_prefixes</span></code></a> 后，就可以样式化其他可视组件了。例如，如果使用了默认的GUI配置，带有前缀 <cite>namebox_</cite> 的样式将会应用在发言角色名上。</p>
+</dd></dl>
+
+</section>
+<section id="attribute-say">
+<span id="say-with-image-attributes"></span><h2>带有图像属性(attribute)的say语句<a class="headerlink" href="#attribute-say" title="Link to this heading"> link</a></h2>
+<p>当一个角色与一个图像标签(tab)关联，包含对应角色的say语句将在角色名和第二个字符串之间就可以插入图像属性(attribute)。</p>
+<p>在这中情况下，如果带有给定标签(tag)的某个图片需要显示，Ren’Py会定位一条包含角色标签(tag)和属性(attribute)的show命令。如果图片未显示，Ren’Py会保存属性(attribute)并用于头像，但依然不会显示图片。</p>
+<p>举例:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">,</span> <span class="k">image</span><span class="o">=</span><span class="s2">&quot;eileen&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">concerned</span>
+    <span class="n">e</span> <span class="s2">&quot;我对你有点失望。&quot;</span>
+
+    <span class="n">e</span> <span class="n">happy</span> <span class="s2">&quot;不过这都是过去的事了。&quot;</span>
+</pre></div>
+</div>
+<p>等价于:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">concerned</span>
+    <span class="n">e</span> <span class="s2">&quot;我对你有点失望。&quot;</span>
+
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span>
+    <span class="n">e</span> <span class="s2">&quot;不过这都是过去的事了。&quot;</span>
+</pre></div>
+</div>
+<p>在上面的例子中，<code class="docutils literal notranslate"><span class="pre">concerned</span></code> 和 <code class="docutils literal notranslate"><span class="pre">happy</span></code> 会互相替换。
+不过也可以可以直接从 <code class="docutils literal notranslate"><span class="pre">happy</span></code> 恢复而不用指定 <code class="docutils literal notranslate"><span class="pre">concerned</span></code> 属性。
+办法是使用减号(-)，具体请参考 <a class="reference internal" href="displaying_images.html#show-statement"><span class="std std-ref">show语句</span></a>。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+
+    <span class="k">show</span> <span class="n">eileen</span>
+    <span class="n">e</span> <span class="n">concerned</span> <span class="s2">&quot;我对你有点失望。&quot;</span>
+
+    <span class="n">e</span> <span class="n">happy</span> <span class="s2">&quot;虽然还挺有趣的。&quot;</span>
+
+    <span class="n">e</span> <span class="o">-</span><span class="n">happy</span> <span class="s2">&quot;我不清楚现在该怎么看了。&quot;</span>
+</pre></div>
+</div>
+<p>如果在图像属性前面加一个 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 符号，图像属性的改变将是临时性的，在执行完这行对话脚本后会恢复成上一个图像属性。</p>
+<p>举例：</p>
+<blockquote>
+<div><p>define e = Character(“艾琳”, image=”eileen”)</p>
+<p>label start:</p>
+<blockquote>
+<div><p>show eileen concerned
+e “我对你有点失望。”</p>
+<p>e &#64; happy “虽然还挺有趣的。”</p>
+<p>e “我不清楚现在该怎么看了。”</p>
+</div></blockquote>
+</div></blockquote>
+<p>两种语法可以混用，在 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 符号之前表示永久改变，符号后面表示临时改变一次。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="n">happy</span> <span class="o">@</span> <span class="n">vhappy</span> <span class="s2">&quot;真的！一切都改变了。&quot;</span>
+</pre></div>
+</div>
+<p>减号也可以与 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 符号混用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">@</span> <span class="n">right</span> <span class="o">-</span><span class="n">concerned</span> <span class="s2">&quot;我的怒火暂时得到了平息……&quot;</span>
+<span class="n">e</span> <span class="s2">&quot;但是！&quot;</span>
+</pre></div>
+</div>
+<p>使用这个方式，若需要在图片改变时触发一个转场(transition)效果的话，将config.say_attribute_transition设置为一种转场(transition)即可。
+若要设置更多控制项，可以使用 <a class="reference internal" href="config.html#var-config.say_attribute_transition_callback"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.say_attribute_transition_callback</span></code></a> 。</p>
+</section>
+<section id="example-characters">
+<span id="id1"></span><h2>样例角色<a class="headerlink" href="#example-characters" title="Link to this heading"> link</a></h2>
+<p>这是一些样例角色:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 角色的对话内容包含在一对圆括号中。</span>
+<span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">,</span> <span class="n">what_prefix</span><span class="o">=</span><span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="n">what_suffix</span><span class="o">=</span><span class="s1">&#39;)&#39;</span><span class="p">)</span>
+
+<span class="c1"># 从一个变量中获取角色名称。</span>
+<span class="k">define</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;player_name&quot;</span><span class="p">,</span> <span class="n">dynamic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="special-characters">
+<span id="id2"></span><h2>特殊角色<a class="headerlink" href="#special-characters" title="Link to this heading"> link</a></h2>
+<p>一些角色名是系统预定义的，并会在某些场合自动启动。有意地重定义这些角色可以改变Ren’Py引擎的行为，但意外使用的话很可能会引发问题。</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">adv</span></code></dt><dd><p>使用角色(character)定义生成的默认角色类型。这种类型的角色在界面上同一时间只能显示一行文本。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">nvl</span></code></dt><dd><p>在 <a class="reference internal" href="nvl_mode.html"><span class="doc">NVL模式教程</span></a> 下可以引发对话的角色类型。这种类型的角色可以在界面上一次显示多行文本。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">narrator</span></code></dt><dd><p>旁白角色，不需要角色名的say语句中使用。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">name_only</span></code></dt><dd><p>给定一个字符串，该字符串用作对话中显示角色名。这种角色可以被复制为一个给定名字的新角色，而新角色在显示的对话中使用同样的名字。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">centered</span></code></dt><dd><p>该类型角色的台词会显示在界面正中间，在所有窗口外面。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vcentered</span></code></dt><dd><p>该类型角色的台词会竖直显示在界面正中间，在所有窗口外面。</p>
+</dd>
+</dl>
+<dl id="extend">
+<dt><code class="docutils literal notranslate"><span class="pre">extend</span></code></dt><dd><p>使用最近一个发言角色，在原有对话内容后追加一行台词。快速扩展对话。这可以用于界面变更后的对话内容延续。</p>
+<p>扩展(extend)能识别NVL模式，并正确处理该模式下的内容。
+但在NVL模式下修改语言设置，则extend内容将无法正确显示。</p>
+</dd>
+</dl>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 展现对话的第一行台词，等待一个点击事件，变更角色表情，然后展示其余台词。</span>
+
+<span class="k">show</span> <span class="n">eileen</span> <span class="n">concerned</span>
+<span class="n">e</span> <span class="s2">&quot;有时候，我会感到忧伤。&quot;</span>
+<span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span>
+<span class="n">extend</span> <span class="s2">&quot; 但是我通常很快就能恢复过来！&quot;</span>
+
+<span class="c1"># 与上面类似，不同之处在于，当第一行台词结束后自动变更角色表情。</span>
+<span class="c1"># 只有当用户始终没有自己设置文本显示速度的情况下，这种设计才是合理的。</span>
+
+
+<span class="k">show</span> <span class="n">eileen</span> <span class="n">concerned</span>
+<span class="n">e</span> <span class="s2">&quot;有时候，我会感到忧伤。</span><span class="si">{nw}</span><span class="s2">&quot;</span>
+<span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span>
+<span class="n">extend</span> <span class="s2">&quot; 但是我通常很快就能恢复过来！&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="dialogue-window-management">
+<span id="id3"></span><h2>对话窗口管理<a class="headerlink" href="#dialogue-window-management" title="Link to this heading"> link</a></h2>
+<p>Ren’Py中包括几种语句，允许管理对话窗口。由于对话窗口在对话中一直是展现的，这些窗口控制语句在非对话互动的情况下控制窗口的出现或者消失。</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">show</span></code></dt><dd><p>window show语句触发窗口展现。该语句接受一个可选入参，入参为transition，用于窗口出现的转场效果。如果transition参数为空，将使用定义在  <a class="reference internal" href="config.html#var-config.window_show_transition"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.window_show_transition</span></code></a> 的值。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">hide</span></code></dt><dd><p>window hide语句触发窗口隐藏。该语句接受一个可选入参，入参为transition，用于窗口隐藏的转场效果。如果transition参数为空，将使用定义在  <a class="reference internal" href="config.html#var-config.window_hide_transition"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.window_hide_transition</span></code></a> 的值。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">auto</span> <span class="pre">True</span></code></dt><dd><p>该语句启用了窗口自动管理。在 <a class="reference internal" href="config.html#var-config.window_auto_show"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.window_auto_show</span></code></a> 中列出的语句——默认是say语句前，窗口会自动展现。在 <a class="reference internal" href="config.html#var-config.window_auto_hide"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.window_auto_hide</span></code></a> 中列出的语句——默认是 <code class="docutils literal notranslate"><span class="pre">scene</span></code> 和 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 以及带标题的 <code class="docutils literal notranslate"><span class="pre">menu</span></code> 语句前，窗口会自动隐藏。(只有直接显式使用该语句才有效，而函数返回该语句内容相同的字符串不生效。)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">auto</span> <span class="pre">False</span></code></dt><dd><p>该语句关闭自动管理对话窗口的功能。对话窗口不会自动显示或隐藏。</p>
+</dd>
+</dl>
+<p><code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">auto</span></code> 语句分别使用 <a class="reference internal" href="config.html#var-config.window_show_transition"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.window_show_transition</span></code></a> 和 <a class="reference internal" href="config.html#var-config.window_hide_transition"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.window_hide_transition</span></code></a> 作为显示和隐藏窗口的转场效果。 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">auto</span></code> 启用的自动化管理可以被 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">show</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">hide</span></code> 语句关闭。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">window</span> <span class="k">show</span> <span class="c1"># 使用默认转场效果显示窗口</span>
+<span class="k">pause</span>       <span class="c1"># 在暂停中依然显示窗口</span>
+<span class="k">window</span> <span class="k">hide</span> <span class="c1"># 隐藏窗口</span>
+<span class="k">pause</span>       <span class="c1"># 在暂停中依然隐藏窗口</span>
+
+<span class="k">window</span> <span class="k">show</span> <span class="n">dissolve</span> <span class="c1"># 使用融化(dissolve)效果显示窗口</span>
+<span class="k">pause</span>                <span class="c1"># 在暂停中依然显示窗口</span>
+<span class="k">window</span> <span class="k">hide</span> <span class="n">dissolve</span> <span class="c1"># 使用融化(dissolve)效果隐藏窗口</span>
+<span class="k">pause</span>                <span class="c1"># 在暂停中依然隐藏窗口</span>
+
+<span class="k">window</span> <span class="k">auto</span> <span class="kc">True</span>
+
+<span class="s2">&quot;The window is automatically shown before this line of dialogue.&quot;</span>
+<span class="k">pause</span>                <span class="c1"># 在暂停中依然显示窗口</span>
+
+<span class="k">scene</span> <span class="n">bg</span> <span class="n">washington</span>  <span class="c1"># 在场景(scene)切换前隐藏窗口</span>
+<span class="k">with</span> <span class="n">dissolve</span>
+
+<span class="k">window</span> <span class="k">show</span>     <span class="c1"># 在窗口自动显示之前强行要求显示</span>
+
+<span class="k">show</span> <span class="n">eileen</span>
+<span class="k">with</span> <span class="n">dissolve</span>
+
+<span class="s2">&quot;Without window show, the window would have been shown here.&quot;</span>
+</pre></div>
+</div>
+<p>对话窗口管理是
+<a class="reference internal" href="screen_actions.html#Preference" title="Preference"><code class="xref py py-func docutils literal notranslate"><span class="pre">Preference()</span></code></a> 特性构造器“show empty window”一项的主题。若“show empty window”特性被关闭，以上语句均不会产生任何效果。</p>
+</section>
+<section id="say-with-arguments">
+<span id="id4"></span><h2>带有参数的say语句<a class="headerlink" href="#say-with-arguments" title="Link to this heading"> link</a></h2>
+<p>使用语句后面圆括号包含的入参值可以传给say语句。举例:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="s2">&quot;Hello, world.&quot;</span> <span class="p">(</span><span class="n">what_color</span><span class="o">=</span><span class="s2">&quot;#8c8&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>传入say语句的参数首先会被 var:<cite>config.say_arguments_callback</cite> 回调函数处理，前提是入参不是None。若有回调函数无法处理的参数，将会被传给角色(character)，因为这些参数会被看作定义角色所需。上面的样例会将对话显示为绿色。</p>
+<p>特殊关键词 <cite>_with_node</cite> 将在本次互动中角色的 <cite>with_none</cite> 属性(attribute)。</p>
+<p><cite>interact</cite> 参数是个特殊情况：当定义角色对象时就把该参数设置为False后，即使后面再次传入 <code class="docutils literal notranslate"><span class="pre">interact=True</span></code> 也依然不能覆盖原设置，也就是说角色依然不会对互动有反应。</p>
+<p>注意，<a class="reference internal" href="config.html#var-config.say_arguments_callback"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.say_arguments_callback</span></code></a> 配置的回调函数并不会在传入参时调用，而且也并不是每条say语句执行时都被调用。
+该配置项可以用来实现角色面对不同情况时的不同反应。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">say_arguments_callback</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">colorblind_mode</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;what_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#000&quot;</span>
+        <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span>
+
+<span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">say_arguments_callback</span> <span class="o">=</span> <span class="n">say_arguments_callback</span>
+</pre></div>
+</div>
+</section>
+<section id="monologue-mode">
+<span id="id5"></span><h2>独白模式<a class="headerlink" href="#monologue-mode" title="Link to this heading"> link</a></h2>
+<p>某些视觉小说会有大段连续的旁白，或者同一个角色的多段会话内容。这种情况下，脚本里反复写入角色名称和引号就显得很累赘。</p>
+<p>为了应对这些情况，Ren’Py提供了独白模式。将对话内容放入成对的3个双引号中，Ren’Py会根据对话内容中的空行自动分段。
+分段后的每一段内容，都会创建自身的say语句。这里的一个样例，包含3段旁白，将分为3段对话。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">这是第一行旁白。第一行比其他两行都长，所以它将换行</span>
+<span class="sd">(补足字数补足字数补足字数补足字数)。</span>
+
+<span class="sd">这是第二行旁白。</span>
+
+<span class="sd">这是第三行旁白。</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">e</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">这是对话的第一行。第一行比其他两行都长，所以它将换行</span>
+<span class="s2">(补足字数补足字数补足字数补足字数)。</span>
+
+<span class="s2">这是对话的第二行。</span>
+
+<span class="s2">这是对话的第三行。</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>say语句后面可能会有分句，并带上入参或者属性(attribute)。这些入参或者属相将在独白中分配给每一行。</p>
+<p>如果创作者想要忽略段落之间的空行，可以在脚本文件最外层，并且第一行独白之前写一条 <code class="docutils literal notranslate"><span class="pre">rpy</span> <span class="pre">monologue</span> <span class="pre">single</span></code> 。
+(译者注：即，不使用空行自动分段。)</p>
+<p>如果想要禁用该设置，或者混用三重双引号与单条对话的形式，可以使用 <code class="docutils literal notranslate"><span class="pre">rpy</span> <span class="pre">monologue</span> <span class="pre">none</span></code> 标记独白模式的结尾位置。</p>
+</section>
+<section id="the-character-store">
+<span id="id6"></span><h2><code class="docutils literal notranslate"><span class="pre">character</span></code> 存储区<a class="headerlink" href="#the-character-store" title="Link to this heading"> link</a></h2>
+<p><em>主要内容在</em> <a class="reference internal" href="python.html#named-stores"><span class="std std-ref">其他的命名存储区</span></a> 。</p>
+<p>say语句会在默认存储区之前先搜索 <code class="docutils literal notranslate"><span class="pre">character</span></code> 命名存储区。
+如果你想要默认存储区中保存一个与角色名字相同的变量，需要这样定义：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">character</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;Eileen&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>该角色就可以在默认存储区中像一般变量一样使用了：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">default</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+
+    <span class="c1"># 这依然是一个糟糕的变量名。</span>
+    <span class="k">$</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="n">e</span> <span class="s2">&quot;我们现在还有 [e] 个单位的能量。&quot;</span>
+</pre></div>
+</div>
+<p>这在管理某个角色相关的变量信息方面很有用，不会跟say语句发生冲突。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">character</span><span class="o">.</span><span class="n">naomi</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;Naomi Nagata&quot;</span><span class="p">,</span> <span class="n">who_color</span><span class="o">=</span><span class="s2">&quot;#8c8&quot;</span><span class="p">)</span>
+<span class="k">default</span> <span class="n">naomi</span> <span class="o">=</span> <span class="n">PersonClass</span><span class="p">(</span><span class="n">engineering</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">max_g_force</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span> <span class="c1"># 可以是一个对象</span>
+<span class="k">define</span> <span class="n">character</span><span class="o">.</span><span class="n">fred</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;Fred Johnson&quot;</span><span class="p">,</span> <span class="n">who_color</span><span class="o">=</span><span class="s2">&quot;#72f&quot;</span><span class="p">)</span>
+<span class="k">default</span> <span class="n">fred</span><span class="o">.</span><span class="n">money</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># 可以是一个自定义命名空间中的变量</span>
+<span class="k">default</span> <span class="n">fred</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="s2">&quot;Colonel&quot;</span>
+
+<span class="k">label</span> <span class="n">traded</span><span class="p">:</span>
+    <span class="n">fred</span> <span class="s2">&quot;这个给你。&quot;</span>
+    <span class="k">$</span> <span class="n">fred</span><span class="o">.</span><span class="n">money</span> <span class="o">-=</span> <span class="mi">50</span>
+    <span class="k">$</span> <span class="n">naomi</span><span class="o">.</span><span class="n">money</span> <span class="o">+=</span> <span class="mi">50</span>
+    <span class="n">naomi</span> <span class="s2">&quot;Thanks ! I knew you would value my class-[naomi.engineering] engineering skills.&quot;</span>
+    <span class="n">naomi</span> <span class="s2">&quot;感谢！我就知道你会意识到我 [naomi.engineering] 级工程技能的价值。&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="alternative-presentations">
+<span id="id7"></span><h2>其他表现形式<a class="headerlink" href="#alternative-presentations" title="Link to this heading"> link</a></h2>
+<p><a class="reference internal" href="nvl_mode.html"><span class="doc">NVL模式教程</span></a> ：在整个屏幕显示对话内容的模式。</p>
+<p><a class="reference internal" href="bubble.html"><span class="doc">气泡式台词</span></a> ：使用台词气泡来显示对话内容，并且使用可互动的方式调整气泡位置。</p>
+</section>
+<section id="see-also">
+<span id="id8"></span><h2>其他参考<a class="headerlink" href="#see-also" title="Link to this heading"> link</a></h2>
+<p><a class="reference internal" href="statement_equivalents.html"><span class="doc">等效语句</span></a> ：如何在Python中使用本章节描述的大多数功能特性，虽然有一些制约条件。</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.last_say()</span></code> ：提供最后一条say语句的信息。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="label.html" class="btn btn-neutral float-left" title="脚本标签(label)和主控流程" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="displaying_images.html" class="btn btn-neutral float-right" title="显示图像" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
