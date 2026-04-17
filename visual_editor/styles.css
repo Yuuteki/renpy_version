@@ -204,7 +204,6 @@ button.danger-button:hover {
 }
 
 .sidebar-header,
-.sidebar-section,
 .inspector-panel {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -234,7 +233,11 @@ button.danger-button:hover {
 }
 
 .sidebar-section {
-  padding: 16px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .sidebar-panel {
@@ -251,6 +254,8 @@ button.danger-button:hover {
 }
 
 .characters-view {
+  display: flex;
+  flex-direction: column;
   min-height: 488px;
 }
 
@@ -390,33 +395,20 @@ button.danger-button:hover {
 }
 
 .characters-add-button {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  width: 54px;
-  height: 54px;
-  padding: 0;
-  border-radius: 999px;
-  display: inline-grid;
-  place-items: center;
-  background: rgba(244, 245, 247, 0.96);
-  color: #0b0c0f;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: var(--shadow);
-}
-
-.characters-add-button span {
-  font-size: 32px;
-  line-height: 1;
-  transform: translateY(-1px);
-}
-
-.characters-view:not(.hidden) {
-  position: relative;
+  width: 100%;
+  margin-top: auto;
+  padding: 12px 14px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: #eceef2;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .characters-view#charactersListView {
-  padding-bottom: 84px;
+  gap: 12px;
 }
 
 .character-detail-header {
