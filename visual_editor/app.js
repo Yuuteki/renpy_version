@@ -9,7 +9,6 @@ const graphNodesEl = document.getElementById("graphNodes");
 const statusTextEl = document.getElementById("statusText");
 const sidebarEl = document.getElementById("sidebar");
 const sidebarToggleButton = document.getElementById("sidebarToggleButton");
-const sidebarCloseButton = document.getElementById("sidebarCloseButton");
 const inspectorSidebarEl = document.getElementById("inspectorSidebar");
 const addBlockDockEl = document.getElementById("addBlockDock");
 const addBlockToggleButton = document.getElementById("addBlockToggleButton");
@@ -515,9 +514,6 @@ contextDeleteButton.addEventListener("click", () => {
 });
 sidebarToggleButton.addEventListener("click", () => {
   setSidebarState(!sidebarOpen);
-});
-sidebarCloseButton.addEventListener("click", () => {
-  setSidebarState(false);
 });
 canvasEl.addEventListener("pointerdown", beginPan);
 canvasEl.addEventListener("pointermove", updatePan);
