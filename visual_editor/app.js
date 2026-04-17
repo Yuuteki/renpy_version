@@ -85,6 +85,9 @@ let addBlockOpen = false;
 let panSession = null;
 let dragSession = null;
 let contextMenuNodeId = null;
+let draggedLabelGraphId = null;
+let labelDropPosition = "before";
+let renamingGraphId = null;
 
 function loadState() {
   try {
@@ -283,33 +286,202 @@ function renderProjectInfo() {
     `${projectPath}/visual_editor/project.json | ${projectPath}/game/generated_visual_editor.rpy`;
 }
 
+function clearLabelDropIndicators() {
+  labelGraphListEl.querySelectorAll(".label-graph-item").forEach((item) => {
+    item.classList.remove("is-drop-before", "is-drop-after");
+  });
+}
+
+function setLabelDropIndicator(graphId, position) {
+  clearLabelDropIndicators();
+
+  const item = labelGraphListEl.querySelector(`[data-graph-id="${graphId}"]`);
+
+  if (!item) {
+    return;
+  }
+
+  item.classList.add(position === "after" ? "is-drop-after" : "is-drop-before");
+}
+
+function reorderLabelGraphs(movedId, targetId, position) {
+  if (!movedId || !targetId || movedId === targetId) {
+    return false;
+  }
+
+  const movedGraph = state.graphs.find((graph) => graph.id === movedId);
+
+  if (!movedGraph) {
+    return false;
+  }
+
+  const remainingGraphs = state.graphs.filter((graph) => graph.id !== movedId);
+  const targetIndex = remainingGraphs.findIndex((graph) => graph.id === targetId);
+
+  if (targetIndex === -1) {
+    return false;
+  }
+
+  const insertIndex = position === "after" ? targetIndex + 1 : targetIndex;
+  remainingGraphs.splice(insertIndex, 0, movedGraph);
+  state.graphs = remainingGraphs;
+
+  return true;
+}
+
+function startLabelRename(graphId) {
+  renamingGraphId = graphId;
+  renderLabelGraphList();
+
+  window.requestAnimationFrame(() => {
+    const input = labelGraphListEl.querySelector(".label-graph-input");
+    input?.focus();
+    input?.select();
+  });
+}
+
+function finishLabelRename(graphId, nextLabel, { cancel = false } = {}) {
+  const graph = state.graphs.find((currentGraph) => currentGraph.id === graphId);
+
+  if (!graph) {
+    renamingGraphId = null;
+    render();
+    return;
+  }
+
+  if (!cancel) {
+    const normalizedLabel = nextLabel.trim() || graph.label;
+
+    if (normalizedLabel !== graph.label) {
+      graph.label = normalizedLabel;
+      saveState(`Renamed label graph to "${graph.label}".`);
+    }
+  }
+
+  renamingGraphId = null;
+  render();
+}
+
 function renderLabelGraphList() {
   labelGraphListEl.innerHTML = "";
 
   state.graphs.forEach((graph) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "label-graph-item";
+    const item = document.createElement("div");
+    item.className = "label-graph-item";
+    item.dataset.graphId = graph.id;
+    item.draggable = renamingGraphId !== graph.id;
 
     if (graph.id === state.activeGraphId) {
-      button.classList.add("is-active");
+      item.classList.add("is-active");
     }
 
-    button.innerHTML = `
-      <strong>${escapeHtml(graph.label)}</strong>
-      <span>${graph.nodes.length} blocks</span>
-    `;
+    if (graph.id === draggedLabelGraphId) {
+      item.classList.add("is-dragging");
+    }
 
-    button.addEventListener("click", () => {
-      state.activeGraphId = graph.id;
-      setContextMenuState(false);
-      setAddBlockState(false);
-      setInspectorState(Boolean(graph.selectedNodeId));
-      render();
-      setStatus(`Opened label graph "${graph.label}".`);
+    if (graph.id === renamingGraphId) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "label-graph-input";
+      input.value = graph.label;
+
+      const meta = document.createElement("span");
+      meta.textContent = `${graph.nodes.length} blocks`;
+
+      input.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          finishLabelRename(graph.id, input.value);
+        }
+
+        if (event.key === "Escape") {
+          event.preventDefault();
+          finishLabelRename(graph.id, graph.label, { cancel: true });
+        }
+      });
+      input.addEventListener("blur", () => {
+        if (renamingGraphId === graph.id) {
+          finishLabelRename(graph.id, input.value);
+        }
+      });
+
+      item.appendChild(input);
+      item.appendChild(meta);
+    } else {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "label-graph-select";
+      button.innerHTML = `
+        <strong>${escapeHtml(graph.label)}</strong>
+        <span>${graph.nodes.length} blocks</span>
+      `;
+
+      button.addEventListener("click", () => {
+        state.activeGraphId = graph.id;
+        setContextMenuState(false);
+        setAddBlockState(false);
+        setInspectorState(Boolean(graph.selectedNodeId));
+        render();
+        setStatus(`Opened label graph "${graph.label}".`);
+      });
+      button.addEventListener("dblclick", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        startLabelRename(graph.id);
+      });
+
+      item.appendChild(button);
+    }
+
+    item.addEventListener("dragstart", (event) => {
+      if (renamingGraphId === graph.id) {
+        event.preventDefault();
+        return;
+      }
+
+      draggedLabelGraphId = graph.id;
+      item.classList.add("is-dragging");
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", graph.id);
+    });
+    item.addEventListener("dragover", (event) => {
+      if (!draggedLabelGraphId || draggedLabelGraphId === graph.id) {
+        return;
+      }
+
+      event.preventDefault();
+      const rect = item.getBoundingClientRect();
+      const nextPosition = event.clientY >= rect.top + rect.height / 2 ? "after" : "before";
+      labelDropPosition = nextPosition;
+      setLabelDropIndicator(graph.id, nextPosition);
+    });
+    item.addEventListener("drop", (event) => {
+      if (!draggedLabelGraphId || draggedLabelGraphId === graph.id) {
+        return;
+      }
+
+      event.preventDefault();
+      const movedGraph = state.graphs.find((currentGraph) => currentGraph.id === draggedLabelGraphId);
+      const didReorder = reorderLabelGraphs(draggedLabelGraphId, graph.id, labelDropPosition);
+
+      draggedLabelGraphId = null;
+      clearLabelDropIndicators();
+
+      if (didReorder && movedGraph) {
+        renderLabelGraphList();
+        saveState(`Reordered label graph "${movedGraph.label}".`);
+      }
+    });
+    item.addEventListener("dragend", () => {
+      draggedLabelGraphId = null;
+      clearLabelDropIndicators();
+      item.classList.remove("is-dragging");
     });
 
-    labelGraphListEl.appendChild(button);
+    labelGraphListEl.appendChild(item);
   });
 }
 
