@@ -62,6 +62,19 @@
       <div class="sidebar-controls">
         <div id="sidebarCollapsedRail" class="sidebar-collapsed-rail" aria-label="Sidebar shortcuts">
           <button
+            id="sidebarToggleButton"
+            class="sidebar-toggle-button"
+            type="button"
+            aria-label="Collapse sidebar"
+            aria-expanded="true"
+            title="Collapse sidebar"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 6 9 12l6 6"></path>
+            </svg>
+          </button>
+
+          <button
             class="collapsed-rail-button"
             type="button"
             data-sidebar-section="projectOverviewSection"
@@ -101,19 +114,6 @@
               <path d="M9 9h6"></path>
               <path d="M9 13h6"></path>
               <path d="M9 17h3"></path>
-            </svg>
-          </button>
-
-          <button
-            id="sidebarToggleButton"
-            class="sidebar-toggle-button"
-            type="button"
-            aria-label="Collapse sidebar"
-            aria-expanded="true"
-            title="Collapse sidebar"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M15 6 9 12l6 6"></path>
             </svg>
           </button>
         </div>

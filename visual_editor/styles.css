@@ -478,7 +478,7 @@ button.danger-button:hover {
 .sidebar-toggle-button {
   width: 36px;
   height: 36px;
-  margin-top: auto;
+  margin-bottom: 10px;
   padding: 0;
   border-radius: 12px;
   display: inline-grid;
