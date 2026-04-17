@@ -236,6 +236,14 @@ button.danger-button:hover {
   padding: 16px;
 }
 
+.sidebar-panel {
+  display: none;
+}
+
+.sidebar-panel.is-active {
+  display: block;
+}
+
 .inspector-panel {
   height: 100%;
   padding: 18px;
@@ -457,6 +465,11 @@ button.danger-button:hover {
   background: rgba(255, 255, 255, 0.04);
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.collapsed-rail-button.is-active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .collapsed-rail-button svg {

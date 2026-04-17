@@ -10,6 +10,8 @@ const statusTextEl = document.getElementById("statusText");
 const sidebarEl = document.getElementById("sidebar");
 const sidebarHideButton = document.getElementById("sidebarHideButton");
 const sidebarCollapsedRailEl = document.getElementById("sidebarCollapsedRail");
+const sidebarPanelEls = Array.from(document.querySelectorAll(".sidebar-panel"));
+const collapsedRailButtonEls = Array.from(sidebarCollapsedRailEl.querySelectorAll(".collapsed-rail-button"));
 const inspectorSidebarEl = document.getElementById("inspectorSidebar");
 const addBlockDockEl = document.getElementById("addBlockDock");
 const addBlockToggleButton = document.getElementById("addBlockToggleButton");
@@ -77,6 +79,7 @@ const defaultProjectState = {
 
 let state = normalizeState(loadState());
 let sidebarOpen = true;
+let activeSidebarSectionId = "projectOverviewSection";
 let inspectorOpen = true;
 let addBlockOpen = false;
 let panSession = null;
@@ -169,13 +172,21 @@ function setSidebarState(nextOpen) {
   sidebarCollapsedRailEl.classList.toggle("is-visible", !sidebarOpen);
 }
 
-function openSidebarSection(sectionId) {
-  setSidebarState(true);
+function setSidebarSection(sectionId) {
+  activeSidebarSectionId = sectionId;
 
-  window.setTimeout(() => {
-    const target = document.getElementById(sectionId);
-    target?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 140);
+  sidebarPanelEls.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.id === activeSidebarSectionId);
+  });
+
+  collapsedRailButtonEls.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.sidebarSection === activeSidebarSectionId);
+  });
+}
+
+function openSidebarSection(sectionId) {
+  setSidebarSection(sectionId);
+  setSidebarState(true);
 }
 
 function setInspectorState(nextOpen) {
@@ -762,6 +773,7 @@ function capitalize(value) {
 }
 
 render();
+setSidebarSection(activeSidebarSectionId);
 setSidebarState(true);
 setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
 setAddBlockState(false);
