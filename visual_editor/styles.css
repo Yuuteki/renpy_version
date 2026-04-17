@@ -198,8 +198,8 @@ button.danger-button:hover {
   height: 100%;
   overflow: auto;
   padding: 20px;
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
@@ -245,18 +245,21 @@ button.danger-button:hover {
 }
 
 .sidebar-panel.is-active {
-  display: block;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
 }
 
 .characters-section {
-  position: relative;
-  min-height: 520px;
+  min-height: 0;
 }
 
 .characters-view {
   display: flex;
   flex-direction: column;
-  min-height: 488px;
+  flex: 1;
+  min-height: 0;
 }
 
 .inspector-panel {
@@ -280,6 +283,10 @@ button.danger-button:hover {
   display: grid;
   gap: 10px;
   margin-top: 12px;
+}
+
+.character-list {
+  align-content: start;
 }
 
 .label-graph-item,
@@ -395,8 +402,12 @@ button.danger-button:hover {
 }
 
 .characters-add-button {
-  width: 100%;
-  margin-top: auto;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  min-width: 168px;
+  margin-top: 0;
   padding: 12px 14px;
   border-radius: 14px;
   display: inline-flex;
@@ -408,7 +419,9 @@ button.danger-button:hover {
 }
 
 .characters-view#charactersListView {
+  position: relative;
   gap: 12px;
+  padding-bottom: 76px;
 }
 
 .character-detail-header {
