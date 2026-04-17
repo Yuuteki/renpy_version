@@ -29,6 +29,25 @@ const characterBackButton = document.getElementById("characterBackButton");
 const characterIdInput = document.getElementById("characterIdInput");
 const characterNameInput = document.getElementById("characterNameInput");
 const characterKindInput = document.getElementById("characterKindInput");
+const characterDynamicInput = document.getElementById("characterDynamicInput");
+const characterImageInput = document.getElementById("characterImageInput");
+const characterVoiceTagInput = document.getElementById("characterVoiceTagInput");
+const characterWhoColorInput = document.getElementById("characterWhoColorInput");
+const characterWhoStyleInput = document.getElementById("characterWhoStyleInput");
+const characterWhatStyleInput = document.getElementById("characterWhatStyleInput");
+const characterWindowStyleInput = document.getElementById("characterWindowStyleInput");
+const characterWindowBackgroundInput = document.getElementById("characterWindowBackgroundInput");
+const characterWhoPrefixInput = document.getElementById("characterWhoPrefixInput");
+const characterWhoSuffixInput = document.getElementById("characterWhoSuffixInput");
+const characterWhatPrefixInput = document.getElementById("characterWhatPrefixInput");
+const characterWhatSuffixInput = document.getElementById("characterWhatSuffixInput");
+const characterConditionInput = document.getElementById("characterConditionInput");
+const characterInteractInput = document.getElementById("characterInteractInput");
+const characterAdvanceInput = document.getElementById("characterAdvanceInput");
+const characterCtcInput = document.getElementById("characterCtcInput");
+const characterCtcPauseInput = document.getElementById("characterCtcPauseInput");
+const characterCtcTimedPauseInput = document.getElementById("characterCtcTimedPauseInput");
+const characterCtcPositionInput = document.getElementById("characterCtcPositionInput");
 const characterCodePreviewEl = document.getElementById("characterCodePreview");
 const visualProjectStatsEl = document.getElementById("visualProjectStats");
 
@@ -177,6 +196,25 @@ function normalizeCharacter(character, index) {
     id: character.id || `character_${index + 1}`,
     name: character.name || `Character ${index + 1}`,
     kind: character.kind || "adv",
+    dynamic: Boolean(character.dynamic),
+    image: character.image || "",
+    voiceTag: character.voiceTag || "",
+    whoColor: character.whoColor || "",
+    whoStyle: character.whoStyle || "",
+    whatStyle: character.whatStyle || "",
+    windowStyle: character.windowStyle || "",
+    windowBackground: character.windowBackground || "",
+    whoPrefix: character.whoPrefix || "",
+    whoSuffix: character.whoSuffix || "",
+    whatPrefix: character.whatPrefix || "",
+    whatSuffix: character.whatSuffix || "",
+    condition: character.condition || "",
+    interact: character.interact !== false,
+    advance: character.advance !== false,
+    ctc: character.ctc || "",
+    ctcPause: character.ctcPause || "",
+    ctcTimedPause: character.ctcTimedPause || "",
+    ctcPosition: character.ctcPosition || "",
   };
 }
 
@@ -288,6 +326,25 @@ function createBlankCharacter() {
     id: `character_${nextIndex}`,
     name: `Character ${nextIndex}`,
     kind: "adv",
+    dynamic: false,
+    image: "",
+    voiceTag: "",
+    whoColor: "",
+    whoStyle: "",
+    whatStyle: "",
+    windowStyle: "",
+    windowBackground: "",
+    whoPrefix: "",
+    whoSuffix: "",
+    whatPrefix: "",
+    whatSuffix: "",
+    condition: "",
+    interact: true,
+    advance: true,
+    ctc: "",
+    ctcPause: "",
+    ctcTimedPause: "",
+    ctcPosition: "",
   };
 }
 
@@ -583,9 +640,92 @@ function formatCharacterCode(character) {
   }
 
   const safeId = character.id.trim() || "character";
-  const nameValue = character.name.trim() ? `"${escapeRenpyString(character.name.trim())}"` : "None";
+  const args = [];
+  const trimmedName = character.name.trim();
 
-  return `define ${safeId} = Character(${nameValue}, kind=${character.kind})`;
+  args.push(trimmedName ? `"${escapeRenpyString(trimmedName)}"` : "None");
+
+  if (character.kind !== "adv") {
+    args.push(`kind=${character.kind}`);
+  }
+
+  if (character.dynamic) {
+    args.push("dynamic=True");
+  }
+
+  if (character.image.trim()) {
+    args.push(`image="${escapeRenpyString(character.image.trim())}"`);
+  }
+
+  if (character.voiceTag.trim()) {
+    args.push(`voice_tag="${escapeRenpyString(character.voiceTag.trim())}"`);
+  }
+
+  if (character.whoColor.trim()) {
+    args.push(`who_color="${escapeRenpyString(character.whoColor.trim())}"`);
+  }
+
+  if (character.whoStyle.trim()) {
+    args.push(`who_style="${escapeRenpyString(character.whoStyle.trim())}"`);
+  }
+
+  if (character.whatStyle.trim()) {
+    args.push(`what_style="${escapeRenpyString(character.whatStyle.trim())}"`);
+  }
+
+  if (character.windowStyle.trim()) {
+    args.push(`window_style="${escapeRenpyString(character.windowStyle.trim())}"`);
+  }
+
+  if (character.windowBackground.trim()) {
+    args.push(`window_background="${escapeRenpyString(character.windowBackground.trim())}"`);
+  }
+
+  if (character.whoPrefix.trim()) {
+    args.push(`who_prefix="${escapeRenpyString(character.whoPrefix.trim())}"`);
+  }
+
+  if (character.whoSuffix.trim()) {
+    args.push(`who_suffix="${escapeRenpyString(character.whoSuffix.trim())}"`);
+  }
+
+  if (character.whatPrefix.trim()) {
+    args.push(`what_prefix="${escapeRenpyString(character.whatPrefix.trim())}"`);
+  }
+
+  if (character.whatSuffix.trim()) {
+    args.push(`what_suffix="${escapeRenpyString(character.whatSuffix.trim())}"`);
+  }
+
+  if (character.condition.trim()) {
+    args.push(`condition="${escapeRenpyString(character.condition.trim())}"`);
+  }
+
+  if (!character.interact) {
+    args.push("interact=False");
+  }
+
+  if (!character.advance) {
+    args.push("advance=False");
+  }
+
+  if (character.ctc.trim()) {
+    args.push(`ctc=${character.ctc.trim()}`);
+  }
+
+  if (character.ctcPause.trim()) {
+    args.push(`ctc_pause=${character.ctcPause.trim()}`);
+  }
+
+  if (character.ctcTimedPause.trim()) {
+    args.push(`ctc_timedpause=${character.ctcTimedPause.trim()}`);
+  }
+
+  if (character.ctcPosition.trim()) {
+    args.push(`ctc_position="${escapeRenpyString(character.ctcPosition.trim())}"`);
+  }
+
+  return `define ${safeId} = Character(\n    ${args.join(",\n    ")}\n)`;
 }
 
 function escapeRenpyString(value) {
@@ -599,6 +739,25 @@ function syncCharacterDetailFields() {
     characterIdInput.value = "";
     characterNameInput.value = "";
     characterKindInput.value = "adv";
+    characterDynamicInput.checked = false;
+    characterImageInput.value = "";
+    characterVoiceTagInput.value = "";
+    characterWhoColorInput.value = "";
+    characterWhoStyleInput.value = "";
+    characterWhatStyleInput.value = "";
+    characterWindowStyleInput.value = "";
+    characterWindowBackgroundInput.value = "";
+    characterWhoPrefixInput.value = "";
+    characterWhoSuffixInput.value = "";
+    characterWhatPrefixInput.value = "";
+    characterWhatSuffixInput.value = "";
+    characterConditionInput.value = "";
+    characterInteractInput.checked = true;
+    characterAdvanceInput.checked = true;
+    characterCtcInput.value = "";
+    characterCtcPauseInput.value = "";
+    characterCtcTimedPauseInput.value = "";
+    characterCtcPositionInput.value = "";
     characterCodePreviewEl.textContent = "";
     return;
   }
@@ -606,6 +765,25 @@ function syncCharacterDetailFields() {
   characterIdInput.value = character.id;
   characterNameInput.value = character.name;
   characterKindInput.value = character.kind;
+  characterDynamicInput.checked = character.dynamic;
+  characterImageInput.value = character.image;
+  characterVoiceTagInput.value = character.voiceTag;
+  characterWhoColorInput.value = character.whoColor;
+  characterWhoStyleInput.value = character.whoStyle;
+  characterWhatStyleInput.value = character.whatStyle;
+  characterWindowStyleInput.value = character.windowStyle;
+  characterWindowBackgroundInput.value = character.windowBackground;
+  characterWhoPrefixInput.value = character.whoPrefix;
+  characterWhoSuffixInput.value = character.whoSuffix;
+  characterWhatPrefixInput.value = character.whatPrefix;
+  characterWhatSuffixInput.value = character.whatSuffix;
+  characterConditionInput.value = character.condition;
+  characterInteractInput.checked = character.interact;
+  characterAdvanceInput.checked = character.advance;
+  characterCtcInput.value = character.ctc;
+  characterCtcPauseInput.value = character.ctcPause;
+  characterCtcTimedPauseInput.value = character.ctcTimedPause;
+  characterCtcPositionInput.value = character.ctcPosition;
   characterCodePreviewEl.textContent = formatCharacterCode(character);
 }
 
@@ -1091,6 +1269,63 @@ characterNameInput.addEventListener("input", (event) => {
 });
 characterKindInput.addEventListener("change", (event) => {
   updateActiveCharacter({ kind: event.target.value });
+});
+characterDynamicInput.addEventListener("change", (event) => {
+  updateActiveCharacter({ dynamic: event.target.checked });
+});
+characterImageInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ image: event.target.value });
+});
+characterVoiceTagInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ voiceTag: event.target.value });
+});
+characterWhoColorInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ whoColor: event.target.value });
+});
+characterWhoStyleInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ whoStyle: event.target.value });
+});
+characterWhatStyleInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ whatStyle: event.target.value });
+});
+characterWindowStyleInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ windowStyle: event.target.value });
+});
+characterWindowBackgroundInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ windowBackground: event.target.value });
+});
+characterWhoPrefixInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ whoPrefix: event.target.value });
+});
+characterWhoSuffixInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ whoSuffix: event.target.value });
+});
+characterWhatPrefixInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ whatPrefix: event.target.value });
+});
+characterWhatSuffixInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ whatSuffix: event.target.value });
+});
+characterConditionInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ condition: event.target.value });
+});
+characterInteractInput.addEventListener("change", (event) => {
+  updateActiveCharacter({ interact: event.target.checked });
+});
+characterAdvanceInput.addEventListener("change", (event) => {
+  updateActiveCharacter({ advance: event.target.checked });
+});
+characterCtcInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ ctc: event.target.value });
+});
+characterCtcPauseInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ ctcPause: event.target.value });
+});
+characterCtcTimedPauseInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ ctcTimedPause: event.target.value });
+});
+characterCtcPositionInput.addEventListener("change", (event) => {
+  updateActiveCharacter({ ctcPosition: event.target.value });
 });
 deleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();

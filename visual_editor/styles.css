@@ -462,6 +462,22 @@ button.danger-button:hover {
   font-size: 14px;
 }
 
+.character-checkbox {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+}
+
+.character-checkbox input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.character-checkbox span {
+  color: var(--text);
+}
+
 .character-detail-form input,
 .character-detail-form select {
   width: 100%;

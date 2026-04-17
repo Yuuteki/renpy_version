@@ -53,6 +53,8 @@
               </div>
 
               <form id="characterDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
                 <label>
                   Variable Name
                   <input id="characterIdInput" type="text" />
@@ -72,6 +74,115 @@
                     <option value="centered">centered</option>
                     <option value="vcentered">vcentered</option>
                     <option value="name_only">name_only</option>
+                  </select>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="characterDynamicInput" type="checkbox" />
+                  <span>Dynamic Name</span>
+                </label>
+
+                <p class="section-label secondary-label">Resources</p>
+
+                <label>
+                  Image Tag
+                  <input id="characterImageInput" type="text" />
+                </label>
+
+                <label>
+                  Voice Tag
+                  <input id="characterVoiceTagInput" type="text" />
+                </label>
+
+                <p class="section-label secondary-label">Appearance</p>
+
+                <label>
+                  Name Color
+                  <input id="characterWhoColorInput" type="text" placeholder="#c8ffc8" />
+                </label>
+
+                <label>
+                  Name Style
+                  <input id="characterWhoStyleInput" type="text" />
+                </label>
+
+                <label>
+                  Text Style
+                  <input id="characterWhatStyleInput" type="text" />
+                </label>
+
+                <label>
+                  Window Style
+                  <input id="characterWindowStyleInput" type="text" />
+                </label>
+
+                <label>
+                  Window Background
+                  <input id="characterWindowBackgroundInput" type="text" />
+                </label>
+
+                <p class="section-label secondary-label">Prefixes And Suffixes</p>
+
+                <label>
+                  Name Prefix
+                  <input id="characterWhoPrefixInput" type="text" />
+                </label>
+
+                <label>
+                  Name Suffix
+                  <input id="characterWhoSuffixInput" type="text" />
+                </label>
+
+                <label>
+                  Text Prefix
+                  <input id="characterWhatPrefixInput" type="text" />
+                </label>
+
+                <label>
+                  Text Suffix
+                  <input id="characterWhatSuffixInput" type="text" />
+                </label>
+
+                <p class="section-label secondary-label">Behavior</p>
+
+                <label>
+                  Condition
+                  <input id="characterConditionInput" type="text" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="characterInteractInput" type="checkbox" />
+                  <span>Interact</span>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="characterAdvanceInput" type="checkbox" />
+                  <span>Advance / Allow Skip</span>
+                </label>
+
+                <p class="section-label secondary-label">Click-To-Continue</p>
+
+                <label>
+                  CTC Expression
+                  <input id="characterCtcInput" type="text" placeholder="ctc_indicator" />
+                </label>
+
+                <label>
+                  CTC Pause Expression
+                  <input id="characterCtcPauseInput" type="text" />
+                </label>
+
+                <label>
+                  CTC Timed Pause Expression
+                  <input id="characterCtcTimedPauseInput" type="text" />
+                </label>
+
+                <label>
+                  CTC Position
+                  <select id="characterCtcPositionInput">
+                    <option value="">Default</option>
+                    <option value="nestled">nestled</option>
+                    <option value="fixed">fixed</option>
                   </select>
                 </label>
 
