@@ -86,7 +86,7 @@ let panSession = null;
 let dragSession = null;
 let contextMenuNodeId = null;
 let draggedLabelGraphId = null;
-let labelDropPosition = "before";
+let labelOrderChangedDuringDrag = false;
 let renamingGraphId = null;
 
 function loadState() {
@@ -286,24 +286,6 @@ function renderProjectInfo() {
     `${projectPath}/visual_editor/project.json | ${projectPath}/game/generated_visual_editor.rpy`;
 }
 
-function clearLabelDropIndicators() {
-  labelGraphListEl.querySelectorAll(".label-graph-item").forEach((item) => {
-    item.classList.remove("is-drop-before", "is-drop-after");
-  });
-}
-
-function setLabelDropIndicator(graphId, position) {
-  clearLabelDropIndicators();
-
-  const item = labelGraphListEl.querySelector(`[data-graph-id="${graphId}"]`);
-
-  if (!item) {
-    return;
-  }
-
-  item.classList.add(position === "after" ? "is-drop-after" : "is-drop-before");
-}
-
 function reorderLabelGraphs(movedId, targetId, position) {
   if (!movedId || !targetId || movedId === targetId) {
     return false;
@@ -327,6 +309,45 @@ function reorderLabelGraphs(movedId, targetId, position) {
   state.graphs = remainingGraphs;
 
   return true;
+}
+
+function animateLabelGraphDomOrder() {
+  const items = Array.from(labelGraphListEl.querySelectorAll(".label-graph-item"));
+  const itemMap = new Map(items.map((item) => [item.dataset.graphId, item]));
+  const firstRects = new Map(items.map((item) => [item.dataset.graphId, item.getBoundingClientRect()]));
+
+  state.graphs.forEach((graph) => {
+    const item = itemMap.get(graph.id);
+
+    if (item) {
+      labelGraphListEl.appendChild(item);
+    }
+  });
+
+  state.graphs.forEach((graph) => {
+    const item = itemMap.get(graph.id);
+    const firstRect = firstRects.get(graph.id);
+
+    if (!item || !firstRect) {
+      return;
+    }
+
+    const lastRect = item.getBoundingClientRect();
+    const deltaY = firstRect.top - lastRect.top;
+
+    if (!deltaY) {
+      return;
+    }
+
+    item.style.transition = "none";
+    item.style.transform = `translateY(${deltaY}px)`;
+    item.getBoundingClientRect();
+
+    window.requestAnimationFrame(() => {
+      item.style.transition = "";
+      item.style.transform = "";
+    });
+  });
 }
 
 function startLabelRename(graphId) {
@@ -451,6 +472,7 @@ function renderLabelGraphList() {
       }
 
       draggedLabelGraphId = graph.id;
+      labelOrderChangedDuringDrag = false;
       item.classList.add("is-dragging");
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", graph.id);
@@ -463,30 +485,28 @@ function renderLabelGraphList() {
       event.preventDefault();
       const rect = item.getBoundingClientRect();
       const nextPosition = event.clientY >= rect.top + rect.height / 2 ? "after" : "before";
-      labelDropPosition = nextPosition;
-      setLabelDropIndicator(graph.id, nextPosition);
+      const didReorder = reorderLabelGraphs(draggedLabelGraphId, graph.id, nextPosition);
+
+      if (didReorder) {
+        labelOrderChangedDuringDrag = true;
+        animateLabelGraphDomOrder();
+      }
     });
     item.addEventListener("drop", (event) => {
-      if (!draggedLabelGraphId || draggedLabelGraphId === graph.id) {
-        return;
-      }
-
       event.preventDefault();
-      const movedGraph = state.graphs.find((currentGraph) => currentGraph.id === draggedLabelGraphId);
-      const didReorder = reorderLabelGraphs(draggedLabelGraphId, graph.id, labelDropPosition);
-
-      draggedLabelGraphId = null;
-      clearLabelDropIndicators();
-
-      if (didReorder && movedGraph) {
-        renderLabelGraphList();
-        saveState(`Reordered label graph "${movedGraph.label}".`);
-      }
     });
     item.addEventListener("dragend", () => {
+      const movedGraph = state.graphs.find((currentGraph) => currentGraph.id === draggedLabelGraphId);
+
       draggedLabelGraphId = null;
-      clearLabelDropIndicators();
       item.classList.remove("is-dragging");
+
+      if (labelOrderChangedDuringDrag && movedGraph) {
+        saveState(`Reordered label graph "${movedGraph.label}".`);
+      }
+
+      labelOrderChangedDuringDrag = false;
+      renderLabelGraphList();
     });
 
     labelGraphListEl.appendChild(item);
