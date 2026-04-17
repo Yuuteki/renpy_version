@@ -20,6 +20,13 @@ const nodeContextMenuEl = document.getElementById("nodeContextMenu");
 const contextDeleteButton = document.getElementById("contextDeleteButton");
 const newLabelButton = document.getElementById("newLabelButton");
 const labelGraphListEl = document.getElementById("labelGraphList");
+const labelListViewEl = document.getElementById("labelListView");
+const labelCodePreviewViewEl = document.getElementById("labelCodePreviewView");
+const labelPreviewBackButton = document.getElementById("labelPreviewBackButton");
+const labelCodePreviewTitleEl = document.getElementById("labelCodePreviewTitle");
+const labelCodePreviewEl = document.getElementById("labelCodePreview");
+const labelContextMenuEl = document.getElementById("labelContextMenu");
+const contextRenameLabelButton = document.getElementById("contextRenameLabelButton");
 const characterListEl = document.getElementById("characterList");
 const characterListEmptyEl = document.getElementById("characterListEmpty");
 const charactersListViewEl = document.getElementById("charactersListView");
@@ -115,9 +122,11 @@ let addBlockOpen = false;
 let panSession = null;
 let dragSession = null;
 let contextMenuNodeId = null;
+let contextMenuLabelGraphId = null;
 let draggedLabelGraphId = null;
 let labelOrderChangedDuringDrag = false;
 let renamingGraphId = null;
+let labelCodePreviewGraphId = null;
 let activeCharacterId = null;
 let characterDetailOpen = false;
 
@@ -296,8 +305,40 @@ function setContextMenuState(nextOpen, options = {}) {
   nodeContextMenuEl.style.top = `${top}px`;
 }
 
+function setLabelContextMenuState(nextOpen, options = {}) {
+  if (!nextOpen) {
+    contextMenuLabelGraphId = null;
+    labelContextMenuEl.classList.remove("is-open");
+    return;
+  }
+
+  contextMenuLabelGraphId = options.graphId ?? contextMenuLabelGraphId;
+  labelContextMenuEl.classList.add("is-open");
+  labelContextMenuEl.style.left = "0px";
+  labelContextMenuEl.style.top = "0px";
+
+  const margin = 12;
+  const menuWidth = labelContextMenuEl.offsetWidth;
+  const menuHeight = labelContextMenuEl.offsetHeight;
+  const left = Math.min(
+    Math.max(margin, options.x ?? margin),
+    window.innerWidth - menuWidth - margin,
+  );
+  const top = Math.min(
+    Math.max(margin, options.y ?? margin),
+    window.innerHeight - menuHeight - margin,
+  );
+
+  labelContextMenuEl.style.left = `${left}px`;
+  labelContextMenuEl.style.top = `${top}px`;
+}
+
 function getActiveGraph() {
   return state.graphs.find((graph) => graph.id === state.activeGraphId) ?? null;
+}
+
+function getGraphById(graphId) {
+  return state.graphs.find((graph) => graph.id === graphId) ?? null;
 }
 
 function createBlankGraph(label) {
@@ -447,8 +488,96 @@ function animateLabelGraphDomOrder() {
   });
 }
 
+function formatLabelGraphCode(graph) {
+  if (!graph) {
+    return "";
+  }
+
+  const safeLabel = ((graph.label || "label").trim() || "label").replace(/\s+/g, "_");
+  const lines = [`label ${safeLabel}:`];
+
+  if (!graph.nodes.length) {
+    lines.push("    pass");
+    return lines.join("\n");
+  }
+
+  graph.nodes.forEach((node) => {
+    if (node.type === "start") {
+      lines.push(`    # ${node.title || "Start"}`);
+      return;
+    }
+
+    if (node.type === "dialogue") {
+      const dialogueText = (node.content || node.title || "...").trim() || "...";
+      lines.push(`    "${escapeRenpyString(dialogueText)}"`);
+      return;
+    }
+
+    if (node.type === "menu") {
+      const menuText = (node.title || "Choice").trim() || "Choice";
+      lines.push("    menu:");
+      lines.push(`        "${escapeRenpyString(menuText)}":`);
+      lines.push("            pass");
+      return;
+    }
+
+    if (node.type === "jump") {
+      const jumpTarget = (node.content || "next_label").trim() || "next_label";
+      lines.push(`    jump ${jumpTarget}`);
+      return;
+    }
+
+    lines.push(`    # ${node.type}: ${node.title || "Untitled Node"}`);
+  });
+
+  return lines.join("\n");
+}
+
+function syncLabelCodePreview() {
+  const graph = getGraphById(labelCodePreviewGraphId);
+
+  if (!graph) {
+    labelCodePreviewTitleEl.textContent = "";
+    labelCodePreviewEl.textContent = "";
+    return;
+  }
+
+  labelCodePreviewTitleEl.textContent = graph.label;
+  labelCodePreviewEl.textContent = formatLabelGraphCode(graph);
+}
+
+function openLabelCodePreview(graphId) {
+  const graph = getGraphById(graphId);
+
+  if (!graph) {
+    return;
+  }
+
+  renamingGraphId = null;
+  labelCodePreviewGraphId = graphId;
+  state.activeGraphId = graphId;
+  setLabelContextMenuState(false);
+  labelListViewEl.classList.add("hidden");
+  labelCodePreviewViewEl.classList.remove("hidden");
+  syncLabelCodePreview();
+  setStatus(`Opened code preview for "${graph.label}".`);
+}
+
+function closeLabelCodePreview() {
+  labelCodePreviewGraphId = null;
+  setLabelContextMenuState(false);
+  labelCodePreviewViewEl.classList.add("hidden");
+  labelListViewEl.classList.remove("hidden");
+  setStatus("Returned to label list.");
+}
+
 function startLabelRename(graphId) {
+  state.activeGraphId = graphId;
   renamingGraphId = graphId;
+  setLabelContextMenuState(false);
+  labelCodePreviewGraphId = null;
+  labelCodePreviewViewEl.classList.add("hidden");
+  labelListViewEl.classList.remove("hidden");
   renderLabelGraphList();
 
   window.requestAnimationFrame(() => {
@@ -539,6 +668,7 @@ function renderLabelGraphList() {
       item.addEventListener("click", () => {
         state.activeGraphId = graph.id;
         setContextMenuState(false);
+        setLabelContextMenuState(false);
         setAddBlockState(false);
         setInspectorState(Boolean(graph.selectedNodeId));
         render();
@@ -547,18 +677,33 @@ function renderLabelGraphList() {
       item.addEventListener("dblclick", (event) => {
         event.preventDefault();
         event.stopPropagation();
-        startLabelRename(graph.id);
+        openLabelCodePreview(graph.id);
       });
       item.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           state.activeGraphId = graph.id;
           setContextMenuState(false);
+          setLabelContextMenuState(false);
           setAddBlockState(false);
           setInspectorState(Boolean(graph.selectedNodeId));
           render();
           setStatus(`Opened label graph "${graph.label}".`);
         }
+      });
+      item.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        state.activeGraphId = graph.id;
+        setContextMenuState(false);
+        setAddBlockState(false);
+        setInspectorState(Boolean(graph.selectedNodeId));
+        setLabelContextMenuState(true, {
+          graphId: graph.id,
+          x: event.clientX,
+          y: event.clientY,
+        });
+        renderLabelGraphList();
       });
     }
 
@@ -616,6 +761,22 @@ function renderLabelGraphList() {
 
     labelGraphListEl.appendChild(item);
   });
+}
+
+function renderLabelPanel() {
+  const showPreview = Boolean(labelCodePreviewGraphId) && !renamingGraphId;
+
+  labelListViewEl.classList.toggle("hidden", showPreview);
+  labelCodePreviewViewEl.classList.toggle("hidden", !showPreview);
+
+  if (showPreview) {
+    syncLabelCodePreview();
+  }
+
+  if (renamingGraphId) {
+    labelListViewEl.classList.remove("hidden");
+    labelCodePreviewViewEl.classList.add("hidden");
+  }
 }
 
 function openCharacterDetail(characterId) {
@@ -945,6 +1106,7 @@ function renderInspector() {
 function render() {
   renderProjectInfo();
   renderLabelGraphList();
+  renderLabelPanel();
   renderCharactersPanel();
   renderVisualProjectStats();
   renderGraph();
@@ -1243,10 +1405,21 @@ newLabelButton.addEventListener("click", () => {
   state.graphs.push(nextGraph);
   state.activeGraphId = nextGraph.id;
   setContextMenuState(false);
+  setLabelContextMenuState(false);
   setInspectorState(true);
   setAddBlockState(false);
   render();
   saveState(`Created label graph "${nextGraph.label}".`);
+});
+labelPreviewBackButton.addEventListener("click", () => {
+  closeLabelCodePreview();
+});
+contextRenameLabelButton.addEventListener("click", () => {
+  if (!contextMenuLabelGraphId) {
+    return;
+  }
+
+  startLabelRename(contextMenuLabelGraphId);
 });
 newCharacterButton.addEventListener("click", () => {
   const newCharacter = createBlankCharacter();
@@ -1359,6 +1532,7 @@ canvasEl.addEventListener("lostpointercapture", endPan);
 canvasEl.addEventListener("wheel", (event) => {
   event.preventDefault();
   setContextMenuState(false);
+  setLabelContextMenuState(false);
   zoomAtPoint(event.clientX, event.clientY, event.deltaY);
 }, { passive: false });
 
@@ -1367,7 +1541,12 @@ document.addEventListener("pointerdown", (event) => {
     return;
   }
 
+  if (labelContextMenuEl.contains(event.target)) {
+    return;
+  }
+
   setContextMenuState(false);
+  setLabelContextMenuState(false);
 });
 
 labelGraphListEl.addEventListener("dragover", (event) => {

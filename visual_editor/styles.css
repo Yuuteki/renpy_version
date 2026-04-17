@@ -251,15 +251,23 @@ button.danger-button:hover {
   flex-direction: column;
 }
 
+.label-view,
 .characters-section {
   min-height: 0;
 }
 
+.label-view,
 .characters-view {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
+}
+
+.label-preview-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .inspector-panel {
@@ -283,6 +291,10 @@ button.danger-button:hover {
   display: grid;
   gap: 10px;
   margin-top: 12px;
+}
+
+.label-graph-list {
+  align-content: start;
 }
 
 .character-list {

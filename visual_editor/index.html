@@ -19,8 +19,24 @@
           </section>
 
           <section id="labelGraphsSection" class="sidebar-section sidebar-panel">
-            <button id="newLabelButton" class="secondary" type="button">New Label Graph</button>
-            <div id="labelGraphList" class="label-graph-list"></div>
+            <div id="labelListView" class="label-view">
+              <button id="newLabelButton" class="secondary" type="button">New Label Graph</button>
+              <div id="labelGraphList" class="label-graph-list"></div>
+            </div>
+
+            <div id="labelCodePreviewView" class="label-view hidden">
+              <div class="label-preview-header">
+                <button id="labelPreviewBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <p id="labelCodePreviewTitle" class="section-label"></p>
+              <pre id="labelCodePreview" class="code-preview"></pre>
+            </div>
           </section>
 
           <section id="charactersSection" class="sidebar-section sidebar-panel characters-section">
@@ -368,6 +384,12 @@
       <div id="nodeContextMenu" class="node-context-menu" role="menu">
         <button id="contextDeleteButton" class="node-context-menu-item danger-text" type="button" role="menuitem">
           Delete Block
+        </button>
+      </div>
+
+      <div id="labelContextMenu" class="node-context-menu" role="menu">
+        <button id="contextRenameLabelButton" class="node-context-menu-item" type="button" role="menuitem">
+          Rename Label
         </button>
       </div>
     </div>
