@@ -411,15 +411,14 @@ function renderLabelGraphList() {
       item.appendChild(input);
       item.appendChild(meta);
     } else {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "label-graph-select";
-      button.innerHTML = `
+      item.setAttribute("role", "button");
+      item.tabIndex = 0;
+      item.innerHTML = `
         <strong>${escapeHtml(graph.label)}</strong>
         <span>${graph.nodes.length} blocks</span>
       `;
 
-      button.addEventListener("click", () => {
+      item.addEventListener("click", () => {
         state.activeGraphId = graph.id;
         setContextMenuState(false);
         setAddBlockState(false);
@@ -427,13 +426,22 @@ function renderLabelGraphList() {
         render();
         setStatus(`Opened label graph "${graph.label}".`);
       });
-      button.addEventListener("dblclick", (event) => {
+      item.addEventListener("dblclick", (event) => {
         event.preventDefault();
         event.stopPropagation();
         startLabelRename(graph.id);
       });
-
-      item.appendChild(button);
+      item.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          state.activeGraphId = graph.id;
+          setContextMenuState(false);
+          setAddBlockState(false);
+          setInspectorState(Boolean(graph.selectedNodeId));
+          render();
+          setStatus(`Opened label graph "${graph.label}".`);
+        }
+      });
     }
 
     item.addEventListener("dragstart", (event) => {

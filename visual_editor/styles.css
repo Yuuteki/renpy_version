@@ -312,22 +312,6 @@ button.danger-button:hover {
   bottom: -6px;
 }
 
-.label-graph-select {
-  width: 100%;
-  display: grid;
-  gap: 4px;
-  padding: 0;
-  text-align: left;
-  background: transparent;
-  color: inherit;
-  border: 0;
-  border-radius: 0;
-}
-
-.label-graph-select:hover {
-  transform: none;
-}
-
 .label-graph-input {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.14);
