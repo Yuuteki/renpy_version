@@ -20,6 +20,16 @@ const nodeContextMenuEl = document.getElementById("nodeContextMenu");
 const contextDeleteButton = document.getElementById("contextDeleteButton");
 const newLabelButton = document.getElementById("newLabelButton");
 const labelGraphListEl = document.getElementById("labelGraphList");
+const characterListEl = document.getElementById("characterList");
+const characterListEmptyEl = document.getElementById("characterListEmpty");
+const charactersListViewEl = document.getElementById("charactersListView");
+const characterDetailViewEl = document.getElementById("characterDetailView");
+const newCharacterButton = document.getElementById("newCharacterButton");
+const characterBackButton = document.getElementById("characterBackButton");
+const characterIdInput = document.getElementById("characterIdInput");
+const characterNameInput = document.getElementById("characterNameInput");
+const characterKindInput = document.getElementById("characterKindInput");
+const characterCodePreviewEl = document.getElementById("characterCodePreview");
 const visualProjectStatsEl = document.getElementById("visualProjectStats");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
@@ -74,6 +84,7 @@ const defaultProjectState = {
       selectedNodeId: "dialogue_1",
     },
   ],
+  characters: [],
   activeGraphId: "label_start",
 };
 
@@ -88,6 +99,8 @@ let contextMenuNodeId = null;
 let draggedLabelGraphId = null;
 let labelOrderChangedDuringDrag = false;
 let renamingGraphId = null;
+let activeCharacterId = null;
+let characterDetailOpen = false;
 
 function loadState() {
   try {
@@ -108,6 +121,9 @@ function normalizeState(rawState) {
   const normalizedGraphs = Array.isArray(rawState.graphs) && rawState.graphs.length
     ? rawState.graphs.map((graph, index) => normalizeGraph(graph, index))
     : [normalizeLegacyGraph(rawState)];
+  const normalizedCharacters = Array.isArray(rawState.characters)
+    ? rawState.characters.map((character, index) => normalizeCharacter(character, index))
+    : [];
   const activeGraphId = normalizedGraphs.some((graph) => graph.id === rawState.activeGraphId)
     ? rawState.activeGraphId
     : normalizedGraphs[0]?.id ?? null;
@@ -118,6 +134,7 @@ function normalizeState(rawState) {
       ...(rawState.meta || {}),
     },
     graphs: normalizedGraphs,
+    characters: normalizedCharacters,
     activeGraphId,
   };
 }
@@ -153,6 +170,14 @@ function normalizeLegacyGraph(rawState) {
   }, 0);
 
   return graph;
+}
+
+function normalizeCharacter(character, index) {
+  return {
+    id: character.id || `character_${index + 1}`,
+    name: character.name || `Character ${index + 1}`,
+    kind: character.kind || "adv",
+  };
 }
 
 function saveState(message) {
@@ -254,6 +279,20 @@ function createBlankGraph(label) {
     ],
     selectedNodeId: "start",
   };
+}
+
+function createBlankCharacter() {
+  const nextIndex = state.characters.length + 1;
+
+  return {
+    id: `character_${nextIndex}`,
+    name: `Character ${nextIndex}`,
+    kind: "adv",
+  };
+}
+
+function getActiveCharacter() {
+  return state.characters.find((character) => character.id === activeCharacterId) ?? null;
 }
 
 function clampScale(value) {
@@ -522,6 +561,112 @@ function renderLabelGraphList() {
   });
 }
 
+function openCharacterDetail(characterId) {
+  activeCharacterId = characterId;
+  characterDetailOpen = true;
+  renderCharactersPanel();
+  const character = getActiveCharacter();
+
+  if (character) {
+    setStatus(`Opened character "${character.name}".`);
+  }
+}
+
+function closeCharacterDetail() {
+  characterDetailOpen = false;
+  renderCharactersPanel();
+}
+
+function formatCharacterCode(character) {
+  if (!character) {
+    return "";
+  }
+
+  const safeId = character.id.trim() || "character";
+  const nameValue = character.name.trim() ? `"${escapeRenpyString(character.name.trim())}"` : "None";
+
+  return `define ${safeId} = Character(${nameValue}, kind=${character.kind})`;
+}
+
+function escapeRenpyString(value) {
+  return value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
+}
+
+function syncCharacterDetailFields() {
+  const character = getActiveCharacter();
+
+  if (!character) {
+    characterIdInput.value = "";
+    characterNameInput.value = "";
+    characterKindInput.value = "adv";
+    characterCodePreviewEl.textContent = "";
+    return;
+  }
+
+  characterIdInput.value = character.id;
+  characterNameInput.value = character.name;
+  characterKindInput.value = character.kind;
+  characterCodePreviewEl.textContent = formatCharacterCode(character);
+}
+
+function renderCharactersPanel() {
+  const hasCharacters = state.characters.length > 0;
+
+  if (!hasCharacters) {
+    activeCharacterId = null;
+    characterDetailOpen = false;
+  } else if (!getActiveCharacter()) {
+    activeCharacterId = state.characters[0].id;
+  }
+
+  if (characterDetailOpen && !getActiveCharacter()) {
+    characterDetailOpen = false;
+  }
+
+  characterListEmptyEl.classList.toggle("hidden", hasCharacters);
+  characterListEl.innerHTML = "";
+
+  state.characters.forEach((character) => {
+    const item = document.createElement("div");
+    item.className = "character-card";
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
+
+    if (character.id === activeCharacterId) {
+      item.classList.add("is-active");
+    }
+
+    item.innerHTML = `
+      <strong>${escapeHtml(character.name)}</strong>
+      <span>${escapeHtml(character.id)} · ${escapeHtml(character.kind)}</span>
+    `;
+
+    item.addEventListener("click", () => {
+      activeCharacterId = character.id;
+      characterListEl.querySelectorAll(".character-card").forEach((card) => {
+        card.classList.toggle("is-active", card === item);
+      });
+    });
+    item.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openCharacterDetail(character.id);
+    });
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openCharacterDetail(character.id);
+      }
+    });
+
+    characterListEl.appendChild(item);
+  });
+
+  charactersListViewEl.classList.toggle("hidden", characterDetailOpen);
+  characterDetailViewEl.classList.toggle("hidden", !characterDetailOpen);
+  syncCharacterDetailFields();
+}
+
 function renderVisualProjectStats() {
   const graph = getActiveGraph();
   const stats = [
@@ -622,6 +767,7 @@ function renderInspector() {
 function render() {
   renderProjectInfo();
   renderLabelGraphList();
+  renderCharactersPanel();
   renderVisualProjectStats();
   renderGraph();
   renderInspector();
@@ -644,6 +790,23 @@ function updateSelectedNode(patch) {
   });
 
   render();
+}
+
+function updateActiveCharacter(patch) {
+  const character = getActiveCharacter();
+
+  if (!character) {
+    return;
+  }
+
+  Object.assign(character, patch);
+
+  if (typeof patch.id === "string") {
+    activeCharacterId = patch.id;
+  }
+
+  syncCharacterDetailFields();
+  saveState();
 }
 
 function resetGraph() {
@@ -906,6 +1069,28 @@ newLabelButton.addEventListener("click", () => {
   setAddBlockState(false);
   render();
   saveState(`Created label graph "${nextGraph.label}".`);
+});
+newCharacterButton.addEventListener("click", () => {
+  const newCharacter = createBlankCharacter();
+
+  state.characters.push(newCharacter);
+  activeCharacterId = newCharacter.id;
+  characterDetailOpen = false;
+  renderCharactersPanel();
+  saveState(`Created character "${newCharacter.name}".`);
+});
+characterBackButton.addEventListener("click", () => {
+  closeCharacterDetail();
+  setStatus("Returned to character list.");
+});
+characterIdInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ id: event.target.value });
+});
+characterNameInput.addEventListener("input", (event) => {
+  updateActiveCharacter({ name: event.target.value });
+});
+characterKindInput.addEventListener("change", (event) => {
+  updateActiveCharacter({ kind: event.target.value });
 });
 deleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();

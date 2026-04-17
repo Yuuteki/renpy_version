@@ -23,9 +23,62 @@
             <div id="labelGraphList" class="label-graph-list"></div>
           </section>
 
-          <section id="charactersSection" class="sidebar-section sidebar-panel">
-            <p class="section-label">Character Setup</p>
-            <p class="status-text">Character definition tools will live here. We can fill in fields and actions next.</p>
+          <section id="charactersSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="charactersListView" class="characters-view">
+              <div id="characterListEmpty" class="panel-empty-state hidden">
+                No characters yet. Create one to get started.
+              </div>
+
+              <div id="characterList" class="character-list"></div>
+
+              <button
+                id="newCharacterButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create character"
+                title="Create character"
+              >
+                <span aria-hidden="true">+</span>
+              </button>
+            </div>
+
+            <div id="characterDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="characterBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="characterDetailForm" class="character-detail-form">
+                <label>
+                  Variable Name
+                  <input id="characterIdInput" type="text" />
+                </label>
+
+                <label>
+                  Display Name
+                  <input id="characterNameInput" type="text" />
+                </label>
+
+                <label>
+                  Character Type
+                  <select id="characterKindInput">
+                    <option value="adv">adv</option>
+                    <option value="nvl">nvl</option>
+                    <option value="narrator">narrator</option>
+                    <option value="centered">centered</option>
+                    <option value="vcentered">vcentered</option>
+                    <option value="name_only">name_only</option>
+                  </select>
+                </label>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="characterCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
           </section>
 
           <section id="visualProjectSection" class="sidebar-section sidebar-panel status-section">
