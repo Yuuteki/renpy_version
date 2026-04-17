@@ -36,6 +36,10 @@ const storageKey = projectPath
   ? `renpy-visual-editor:${projectPath}`
   : "renpy-visual-editor:default";
 
+const transparentDragImage = document.createElement("canvas");
+transparentDragImage.width = 1;
+transparentDragImage.height = 1;
+
 const defaultViewport = {
   x: 0,
   y: 0,
@@ -332,11 +336,6 @@ function animateLabelGraphDomOrder() {
       return;
     }
 
-    if (graph.id === draggedLabelGraphId) {
-      item.style.transform = "";
-      return;
-    }
-
     const lastRect = item.getBoundingClientRect();
     const deltaY = firstRect.top - lastRect.top;
 
@@ -481,6 +480,7 @@ function renderLabelGraphList() {
       item.classList.add("is-dragging");
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", graph.id);
+      event.dataTransfer.setDragImage(transparentDragImage, 0, 0);
     });
     item.addEventListener("dragover", (event) => {
       if (!draggedLabelGraphId || draggedLabelGraphId === graph.id) {
@@ -488,6 +488,7 @@ function renderLabelGraphList() {
       }
 
       event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
       const rect = item.getBoundingClientRect();
       const nextPosition = event.clientY >= rect.top + rect.height / 2 ? "after" : "before";
       const didReorder = reorderLabelGraphs(draggedLabelGraphId, graph.id, nextPosition);
@@ -503,6 +504,7 @@ function renderLabelGraphList() {
     item.addEventListener("dragend", () => {
       const movedGraph = state.graphs.find((currentGraph) => currentGraph.id === draggedLabelGraphId);
 
+      labelGraphListEl.classList.add("is-no-transition");
       labelGraphListEl.querySelectorAll(".label-graph-item").forEach((labelItem) => {
         labelItem.classList.remove("is-dragging");
       });
@@ -513,6 +515,11 @@ function renderLabelGraphList() {
 
       draggedLabelGraphId = null;
       labelOrderChangedDuringDrag = false;
+      renderLabelGraphList();
+
+      window.requestAnimationFrame(() => {
+        labelGraphListEl.classList.remove("is-no-transition");
+      });
     });
 
     labelGraphListEl.appendChild(item);
@@ -945,6 +952,23 @@ document.addEventListener("pointerdown", (event) => {
   }
 
   setContextMenuState(false);
+});
+
+labelGraphListEl.addEventListener("dragover", (event) => {
+  if (!draggedLabelGraphId) {
+    return;
+  }
+
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "move";
+});
+
+labelGraphListEl.addEventListener("drop", (event) => {
+  if (!draggedLabelGraphId) {
+    return;
+  }
+
+  event.preventDefault();
 });
 
 document.querySelectorAll(".node-card").forEach((button) => {
