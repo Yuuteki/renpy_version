@@ -105,6 +105,12 @@ const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
 const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
 const dialogueNodeContentInput = document.getElementById("dialogueNodeContentInput");
 const dialogueDeleteNodeButton = document.getElementById("dialogueDeleteNodeButton");
+const flowInspectorFormEl = document.getElementById("flowInspectorForm");
+const flowNodeTypeInput = document.getElementById("flowNodeTypeInput");
+const flowNodeModeInput = document.getElementById("flowNodeModeInput");
+const flowNodeTargetFieldEl = document.getElementById("flowNodeTargetField");
+const flowNodeTargetInput = document.getElementById("flowNodeTargetInput");
+const flowDeleteNodeButton = document.getElementById("flowDeleteNodeButton");
 const inspectorFormEl = document.getElementById("inspectorForm");
 const nodeIdInput = document.getElementById("nodeIdInput");
 const nodeTypeInput = document.getElementById("nodeTypeInput");
@@ -403,7 +409,7 @@ function normalizeState(rawState) {
 
 function normalizeGraph(graph, index) {
   const rawNodes = Array.isArray(graph.nodes)
-    ? graph.nodes
+    ? graph.nodes.map((node, nodeIndex) => normalizeGraphNode(node, index, nodeIndex))
     : structuredClone(defaultStarterNodes);
   const firstStartNode = rawNodes.find((node) => node?.type === "start") || null;
   const nodes = firstStartNode
@@ -428,6 +434,7 @@ function normalizeGraph(graph, index) {
         nodeIds.has(edge.fromNodeId)
         && nodeIds.has(edge.toNodeId)
         && edge.toNodeId !== startNodeId
+        && nodeAllowsOutgoingConnections(nodes.find((node) => node.id === edge.fromNodeId))
       ))
       .map((edge, edgeIndex) => ({
         id: edge.id || `edge_${index + 1}_${edgeIndex + 1}`,
@@ -451,6 +458,46 @@ function normalizeGraph(graph, index) {
     nodes,
     selectedNodeId,
   };
+}
+
+function normalizeGraphNode(node, graphIndex, nodeIndex) {
+  if (!node || typeof node !== "object") {
+    return {
+      id: `node_${graphIndex + 1}_${nodeIndex + 1}`,
+      type: "menu",
+      title: "Node",
+      content: "",
+      x: 96 + nodeIndex * 28,
+      y: 96 + nodeIndex * 20,
+    };
+  }
+
+  if (node.type === "jump") {
+    return {
+      ...node,
+      type: "flow",
+      title: "Jump",
+      flowMode: "jump",
+      flowTargetGraphId: node.flowTargetGraphId || "",
+      flowTargetLabel: node.flowTargetLabel || node.content || "next_label",
+      content: node.content || "",
+    };
+  }
+
+  if (node.type === "flow") {
+    const normalizedMode = ["jump", "call", "return"].includes(node.flowMode)
+      ? node.flowMode
+      : "jump";
+
+    return {
+      ...node,
+      flowMode: normalizedMode,
+      flowTargetGraphId: node.flowTargetGraphId || "",
+      flowTargetLabel: node.flowTargetLabel || node.content || "",
+    };
+  }
+
+  return node;
 }
 
 function normalizeLegacyGraph(rawState) {
@@ -900,6 +947,105 @@ function buildDialogueCharacterOptions(selectEl, node) {
   selectEl.value = "";
 }
 
+function isFlowNode(node) {
+  return node?.type === "flow" || node?.type === "jump";
+}
+
+function getFlowNodeMode(node) {
+  if (node?.type === "jump") {
+    return "jump";
+  }
+
+  if (node?.type !== "flow") {
+    return "";
+  }
+
+  return ["jump", "call", "return"].includes(node.flowMode)
+    ? node.flowMode
+    : "jump";
+}
+
+function getFlowNodeTarget(node) {
+  const targetGraph = getGraphById(node?.flowTargetGraphId || "");
+
+  if (targetGraph) {
+    return {
+      kind: "graph",
+      graphId: targetGraph.id,
+      label: (targetGraph.label || "").trim() || targetGraph.id,
+    };
+  }
+
+  const fallbackLabel = `${node?.flowTargetLabel || node?.content || ""}`.trim();
+
+  return {
+    kind: fallbackLabel ? "missing" : "empty",
+    graphId: "",
+    label: fallbackLabel,
+  };
+}
+
+function buildFlowTargetOptions(selectEl, node) {
+  if (!selectEl) {
+    return;
+  }
+
+  selectEl.innerHTML = "";
+
+  const placeholderOption = document.createElement("option");
+  placeholderOption.value = "";
+  placeholderOption.textContent = state.graphs.length ? "Select a label..." : "No labels available";
+  selectEl.appendChild(placeholderOption);
+
+  const target = getFlowNodeTarget(node);
+
+  if (target.kind === "missing" && target.label) {
+    const missingOption = document.createElement("option");
+    missingOption.value = `__missing__:${target.label}`;
+    missingOption.textContent = `${target.label} · Missing`;
+    selectEl.appendChild(missingOption);
+  }
+
+  state.graphs.forEach((graph) => {
+    const option = document.createElement("option");
+    option.value = graph.id;
+    option.textContent = graph.label;
+    selectEl.appendChild(option);
+  });
+
+  if (target.kind === "graph" && target.graphId) {
+    selectEl.value = target.graphId;
+    return;
+  }
+
+  if (target.kind === "missing" && target.label) {
+    selectEl.value = `__missing__:${target.label}`;
+    return;
+  }
+
+  selectEl.value = "";
+}
+
+function nodeAllowsIncomingConnections(node) {
+  return node?.type !== "start";
+}
+
+function nodeAllowsOutgoingConnections(node) {
+  if (!node) {
+    return false;
+  }
+
+  if (node.type === "start") {
+    return true;
+  }
+
+  if (isFlowNode(node)) {
+    return getFlowNodeMode(node) === "call";
+  }
+
+  return true;
+}
+
 function buildImageSourcePathFromSelection(fileName, category, currentValue = "") {
   const normalizedCurrent = `${currentValue}`.trim().replaceAll("\\", "/");
 
@@ -991,6 +1137,19 @@ function getNodeDisplay(node) {
       typeLabel: "dialogue",
       title: speaker.kind === "narrator" ? "Narration" : `Dialogue · ${speaker.name}`,
       content: summary || "Enter dialogue content.",
+    };
+  }
+
+  if (isFlowNode(node)) {
+    const flowMode = getFlowNodeMode(node);
+    const target = getFlowNodeTarget(node);
+
+    return {
+      typeLabel: "flow",
+      title: capitalize(flowMode || "flow"),
+      content: flowMode === "return"
+        ? "Return to caller."
+        : (target.label || "Select target label."),
     };
   }
 
@@ -1501,6 +1660,12 @@ function getReachableNodesInCodeOrder(graph) {
   const visited = new Set([startNode.id]);
 
   function visit(nodeId) {
+    const currentNode = nodeMap.get(nodeId);
+
+    if (currentNode && !nodeAllowsOutgoingConnections(currentNode)) {
+      return;
+    }
+
     const nextNodeIds = outgoingMap.get(nodeId) || [];
 
     nextNodeIds.forEach((nextNodeId) => {
@@ -1524,12 +1689,16 @@ function getReachableNodesInCodeOrder(graph) {
   return orderedNodes;
 }
 
+function getSafeLabelName(label) {
+  return ((label || "label").trim() || "label").replace(/\s+/g, "_");
+}
+
 function formatLabelGraphCode(graph) {
   if (!graph) {
     return "";
   }
 
-  const safeLabel = ((graph.label || "label").trim() || "label").replace(/\s+/g, "_");
+  const safeLabel = getSafeLabelName(graph.label);
   const lines = [`label ${safeLabel}:`];
   const orderedNodes = getReachableNodesInCodeOrder(graph);
 
@@ -1563,9 +1732,16 @@ function formatLabelGraphCode(graph) {
       return;
     }
 
-    if (node.type === "jump") {
-      const jumpTarget = (node.content || "next_label").trim() || "next_label";
-      lines.push(`    jump ${jumpTarget}`);
+    if (isFlowNode(node)) {
+      const flowMode = getFlowNodeMode(node);
+      const target = getSafeLabelName(getFlowNodeTarget(node).label || "next_label");
+
+      if (flowMode === "return") {
+        lines.push("    return");
+        return;
+      }
+
+      lines.push(`    ${flowMode} ${target}`);
       return;
     }
 
@@ -1705,6 +1881,20 @@ function finishLabelRename(graphId, nextLabel, { cancel = false } = {}) {
     const normalizedLabel = nextLabel.trim() || graph.label;
 
     if (normalizedLabel !== graph.label) {
+      state.graphs.forEach((currentGraph) => {
+        currentGraph.nodes = currentGraph.nodes.map((node) => {
+          if (!isFlowNode(node) || node.flowTargetGraphId !== graphId) {
+            return node;
+          }
+
+          return {
+            ...node,
+            flowTargetLabel: normalizedLabel,
+            content: normalizedLabel,
+          };
+        });
+      });
+
       graph.label = normalizedLabel;
       saveState(`Renamed label graph to "${graph.label}".`);
     }
@@ -2452,7 +2642,8 @@ function renderGraph() {
   }
 
   graph.nodes.forEach((node) => {
-    const isStart = node.type === "start";
+    const hasInputPort = nodeAllowsIncomingConnections(node);
+    const hasOutputPort = nodeAllowsOutgoingConnections(node);
     const display = getNodeDisplay(node);
     const el = document.createElement("button");
     el.type = "button";
@@ -2470,8 +2661,8 @@ function renderGraph() {
       <p class="node-type">${escapeHtml(display.typeLabel)}</p>
       <h3 class="node-title">${escapeHtml(display.title || "Untitled Node")}</h3>
       ${display.content ? `<p class="node-content">${escapeHtml(display.content)}</p>` : ""}
-      ${isStart ? "" : `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input"></span>`}
-      <span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output"></span>
+      ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input"></span>` : ""}
+      ${hasOutputPort ? `<span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output"></span>` : ""}
     `;
 
     el.addEventListener("pointerdown", (event) => {
@@ -2487,7 +2678,7 @@ function renderGraph() {
       selectNode(node.id, el);
       setAddBlockState(false);
 
-      if (isStart) {
+      if (!hasInputPort) {
         setContextMenuState(false);
         return;
       }
@@ -2543,6 +2734,7 @@ function renderInspector() {
     imageInspectorFormEl.classList.add("hidden");
     animationInspectorFormEl.classList.add("hidden");
     dialogueInspectorFormEl.classList.add("hidden");
+    flowInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
     return;
   }
@@ -2551,13 +2743,15 @@ function renderInspector() {
   const selectedIsImage = selectedNode.type === "image";
   const selectedIsAnimation = selectedNode.type === "animation";
   const selectedIsDialogue = selectedNode.type === "dialogue";
+  const selectedIsFlow = isFlowNode(selectedNode);
 
   inspectorEmptyEl.classList.add("hidden");
   startInspectorFormEl.classList.toggle("hidden", !selectedIsStart);
   imageInspectorFormEl.classList.toggle("hidden", !selectedIsImage);
   animationInspectorFormEl.classList.toggle("hidden", !selectedIsAnimation);
   dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue);
+  flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsFlow);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -2608,6 +2802,16 @@ function renderInspector() {
     return;
   }
 
+  if (selectedIsFlow) {
+    const flowMode = getFlowNodeMode(selectedNode);
+
+    flowNodeTypeInput.value = "Flow Control";
+    flowNodeModeInput.value = flowMode;
+    buildFlowTargetOptions(flowNodeTargetInput, selectedNode);
+    flowNodeTargetFieldEl.classList.toggle("hidden", flowMode === "return");
+    return;
+  }
+
   nodeIdInput.value = selectedNode.id;
   nodeTypeInput.value = selectedNode.type;
   nodeTitleInput.value = selectedNode.title;
@@ -2647,6 +2851,40 @@ function updateSelectedNode(patch) {
 
     return { ...node, ...patch };
   });
+
+  render();
+}
+
+function updateSelectedFlowNode(patch, { pruneOutput = false } = {}) {
+  const graph = getActiveGraph();
+
+  if (!graph || !graph.selectedNodeId) {
+    return;
+  }
+
+  const selectedNode = graph.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!selectedNode || !isFlowNode(selectedNode)) {
+    return;
+  }
+
+  const nextNode = {
+    ...selectedNode,
+    ...patch,
+    type: "flow",
+  };
+
+  graph.nodes = graph.nodes.map((node) => (
+    node.id === graph.selectedNodeId ? nextNode : node
+  ));
+
+  if (pruneOutput && !nodeAllowsOutgoingConnections(nextNode)) {
+    const outgoingEdges = getOutgoingEdges(graph, nextNode.id);
+
+    if (outgoingEdges.length) {
+      removeEdges(graph, outgoingEdges);
+    }
+  }
 
   render();
 }
@@ -3042,6 +3280,57 @@ dialogueCharacterInput.addEventListener("change", (event) => {
 dialogueNodeContentInput.addEventListener("input", (event) => {
   updateSelectedNode({ content: event.target.value });
 });
+flowNodeModeInput.addEventListener("change", (event) => {
+  const nextMode = event.target.value;
+  const nextTitle = capitalize(nextMode);
+
+  updateSelectedFlowNode({
+    flowMode: nextMode,
+    title: nextTitle,
+  }, {
+    pruneOutput: true,
+  });
+});
+flowNodeTargetInput.addEventListener("change", (event) => {
+  const selectedValue = event.target.value;
+
+  if (!selectedValue) {
+    updateSelectedFlowNode({
+      flowTargetGraphId: "",
+      flowTargetLabel: "",
+      content: "",
+    });
+    return;
+  }
+
+  if (selectedValue.startsWith("__missing__:")) {
+    const missingLabel = selectedValue.slice("__missing__:".length);
+
+    updateSelectedFlowNode({
+      flowTargetGraphId: "",
+      flowTargetLabel: missingLabel,
+      content: missingLabel,
+    });
+    return;
+  }
+
+  const targetGraph = getGraphById(selectedValue);
+
+  if (!targetGraph) {
+    updateSelectedFlowNode({
+      flowTargetGraphId: "",
+      flowTargetLabel: "",
+      content: "",
+    });
+    return;
+  }
+
+  updateSelectedFlowNode({
+    flowTargetGraphId: targetGraph.id,
+    flowTargetLabel: targetGraph.label,
+    content: targetGraph.label,
+  });
+});
 
 saveDraftButton.addEventListener("click", () => {
   saveState("Saved graph draft to local browser storage.");
@@ -3255,6 +3544,15 @@ dialogueDeleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+flowDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 contextDeleteButton.addEventListener("click", () => {
   if (!contextMenuNodeId) {
     return;
@@ -3404,11 +3702,14 @@ function createNodeForType(nodeType, graph) {
     };
   }
 
-  if (nodeType === "jump") {
+  if (nodeType === "flow") {
     return {
       ...baseNode,
       title: "Jump",
-      content: "next_label",
+      content: "",
+      flowMode: "jump",
+      flowTargetGraphId: "",
+      flowTargetLabel: "",
     };
   }
 

@@ -731,9 +731,9 @@
             <span>Branch</span>
           </button>
 
-          <button class="node-card node-card-compact" data-node-type="jump">
-            <strong>Jump</strong>
-            <span>Goto</span>
+          <button class="node-card node-card-compact" data-node-type="flow">
+            <strong>Flow</strong>
+            <span>Jump / Call / Return</span>
           </button>
         </div>
 
@@ -874,6 +874,33 @@
 
             <div class="inspector-actions">
               <button id="dialogueDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="flowInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="flowNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="flowNodeModeInput">
+                <option value="jump">Jump</option>
+                <option value="call">Call</option>
+                <option value="return">Return</option>
+              </select>
+            </label>
+
+            <label id="flowNodeTargetField">
+              Target Label
+              <select id="flowNodeTargetInput">
+                <option value="">Select a label...</option>
+              </select>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="flowDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 
