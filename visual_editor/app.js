@@ -42,6 +42,8 @@ const imageDefinitionBackButton = document.getElementById("imageDefinitionBackBu
 const imageDefinitionNameInput = document.getElementById("imageDefinitionNameInput");
 const imageDefinitionCategoryInput = document.getElementById("imageDefinitionCategoryInput");
 const imageDefinitionSourcePathInput = document.getElementById("imageDefinitionSourcePathInput");
+const imageDefinitionBrowseButton = document.getElementById("imageDefinitionBrowseButton");
+const imageDefinitionFileInput = document.getElementById("imageDefinitionFileInput");
 const imageDefinitionZoomInput = document.getElementById("imageDefinitionZoomInput");
 const imageDefinitionXAnchorInput = document.getElementById("imageDefinitionXAnchorInput");
 const imageDefinitionYAnchorInput = document.getElementById("imageDefinitionYAnchorInput");
@@ -600,6 +602,24 @@ function getImageNodeName(node) {
 
 function getAnimationNodeTransition(node) {
   return node.animationTransition || "dissolve";
+}
+
+function buildImageSourcePathFromSelection(fileName, category, currentValue = "") {
+  const normalizedCurrent = `${currentValue}`.trim().replaceAll("\\", "/");
+
+  if (normalizedCurrent.includes("/")) {
+    const segments = normalizedCurrent.split("/");
+    segments[segments.length - 1] = fileName;
+    return segments.join("/");
+  }
+
+  const baseDirectoryByCategory = {
+    background: "images/bg",
+    character: "images/characters",
+    others: "images",
+  };
+
+  return `${baseDirectoryByCategory[category] || "images"}/${fileName}`;
 }
 
 function getNodeDisplay(node) {
@@ -2660,6 +2680,32 @@ imageDefinitionCategoryInput.addEventListener("change", (event) => {
 });
 imageDefinitionSourcePathInput.addEventListener("input", (event) => {
   updateActiveImageDefinition({ sourcePath: event.target.value });
+});
+imageDefinitionBrowseButton.addEventListener("click", () => {
+  if (!getActiveImageDefinition()) {
+    setStatus("Create or select an image definition before browsing for a file.");
+    return;
+  }
+
+  imageDefinitionFileInput.value = "";
+  imageDefinitionFileInput.click();
+});
+imageDefinitionFileInput.addEventListener("change", (event) => {
+  const image = getActiveImageDefinition();
+  const file = event.target.files?.[0];
+
+  if (!image || !file) {
+    return;
+  }
+
+  const nextSourcePath = buildImageSourcePathFromSelection(
+    file.name,
+    image.category,
+    image.sourcePath,
+  );
+
+  updateActiveImageDefinition({ sourcePath: nextSourcePath });
+  setStatus(`Selected "${file.name}" for image source. Adjust the path if needed.`);
 });
 imageDefinitionZoomInput.addEventListener("input", (event) => {
   updateActiveImageDefinition({ zoom: event.target.value });

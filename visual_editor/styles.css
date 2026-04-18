@@ -569,6 +569,19 @@ button.danger-button:hover {
   font-size: 14px;
 }
 
+.field-with-action {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.field-action-button {
+  min-height: var(--field-height);
+  padding: 0 16px;
+  white-space: nowrap;
+}
+
 .character-checkbox {
   display: flex !important;
   align-items: center;

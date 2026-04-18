@@ -87,7 +87,13 @@
 
                 <label>
                   Source Path
-                  <input id="imageDefinitionSourcePathInput" type="text" placeholder="e.g. images/bg/classroom.png" />
+                  <div class="field-with-action">
+                    <input id="imageDefinitionSourcePathInput" type="text" placeholder="e.g. images/bg/classroom.png" />
+                    <button id="imageDefinitionBrowseButton" class="secondary field-action-button" type="button">
+                      Browse
+                    </button>
+                  </div>
+                  <input id="imageDefinitionFileInput" type="file" accept="image/*" hidden />
                 </label>
 
                 <p class="section-label secondary-label">Transform</p>
