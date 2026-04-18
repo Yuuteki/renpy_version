@@ -173,12 +173,33 @@ function normalizeState(rawState) {
 }
 
 function normalizeGraph(graph, index) {
-  const nodes = Array.isArray(graph.nodes)
+  const rawNodes = Array.isArray(graph.nodes)
     ? graph.nodes
     : structuredClone(defaultStarterNodes);
+  const firstStartNode = rawNodes.find((node) => node?.type === "start") || null;
+  const nodes = firstStartNode
+    ? rawNodes.filter((node) => node?.type !== "start" || node === firstStartNode)
+    : [
+      {
+        id: "start",
+        type: "start",
+        title: "Start",
+        content: "Entry point for this visual script.",
+        x: 48,
+        y: 48,
+      },
+      ...rawNodes,
+    ];
+  const startNodeId = nodes.find((node) => node?.type === "start")?.id ?? "start";
+  const nodeIds = new Set(nodes.map((node) => node.id));
   const edges = Array.isArray(graph.edges)
     ? graph.edges
       .filter((edge) => edge?.fromNodeId && edge?.toNodeId)
+      .filter((edge) => (
+        nodeIds.has(edge.fromNodeId)
+        && nodeIds.has(edge.toNodeId)
+        && edge.toNodeId !== startNodeId
+      ))
       .map((edge, edgeIndex) => ({
         id: edge.id || `edge_${index + 1}_${edgeIndex + 1}`,
         fromNodeId: edge.fromNodeId,
@@ -407,6 +428,18 @@ function createBlankCharacter() {
 
 function getActiveCharacter() {
   return state.characters.find((character) => character.id === activeCharacterId) ?? null;
+}
+
+function isStartNode(nodeOrNodeId, graph = getActiveGraph()) {
+  if (!graph || !nodeOrNodeId) {
+    return false;
+  }
+
+  if (typeof nodeOrNodeId === "object") {
+    return nodeOrNodeId.type === "start";
+  }
+
+  return graph.nodes.some((node) => node.id === nodeOrNodeId && node.type === "start");
 }
 
 function clampScale(value) {
@@ -1372,6 +1405,7 @@ function renderGraph() {
   }
 
   graph.nodes.forEach((node) => {
+    const isStart = node.type === "start";
     const el = document.createElement("button");
     el.type = "button";
     el.className = "graph-node";
@@ -1388,7 +1422,7 @@ function renderGraph() {
       <p class="node-type">${escapeHtml(node.type)}</p>
       <h3 class="node-title">${escapeHtml(node.title)}</h3>
       <p class="node-content">${escapeHtml(node.content)}</p>
-      <span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input"></span>
+      ${isStart ? "" : `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input"></span>`}
       <span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output"></span>
     `;
 
@@ -1404,6 +1438,12 @@ function renderGraph() {
       event.stopPropagation();
       selectNode(node.id, el);
       setAddBlockState(false);
+
+      if (isStart) {
+        setContextMenuState(false);
+        return;
+      }
+
       setContextMenuState(true, {
         nodeId: node.id,
         x: event.clientX,
@@ -1439,6 +1479,11 @@ function renderInspector() {
   nodeTypeInput.value = selectedNode.type;
   nodeTitleInput.value = selectedNode.title;
   nodeContentInput.value = selectedNode.content;
+  const selectedIsStart = selectedNode.type === "start";
+  nodeTitleInput.disabled = selectedIsStart;
+  nodeContentInput.disabled = selectedIsStart;
+  deleteNodeButton.disabled = selectedIsStart;
+  deleteNodeButton.hidden = selectedIsStart;
 }
 
 function render() {
@@ -1456,6 +1501,10 @@ function updateSelectedNode(patch) {
   const graph = getActiveGraph();
 
   if (!graph || !graph.selectedNodeId) {
+    return;
+  }
+
+  if (isStartNode(graph.selectedNodeId, graph)) {
     return;
   }
 
@@ -1515,6 +1564,12 @@ function deleteNode(nodeId) {
   const node = findNode(nodeId);
 
   if (!graph || !node) {
+    return;
+  }
+
+  if (node.type === "start") {
+    setContextMenuState(false);
+    setStatus("Start block is fixed for each label graph and cannot be deleted.");
     return;
   }
 
@@ -1919,6 +1974,11 @@ document.querySelectorAll(".node-card").forEach((button) => {
     const nodeType = button.dataset.nodeType;
 
     if (!graph) {
+      return;
+    }
+
+    if (nodeType === "start") {
+      setStatus("Each label graph already has one fixed Start block.");
       return;
     }
 
