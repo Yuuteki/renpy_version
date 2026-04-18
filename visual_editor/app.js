@@ -918,6 +918,21 @@ function buildImageSourcePathFromSelection(fileName, category, currentValue = ""
   return `${baseDirectoryByCategory[category] || "images"}/${fileName}`;
 }
 
+function getDialogueBlocks(node, { fallbackBlocks = ["..."] } = {}) {
+  const normalizedContent = `${node?.content || ""}`.replace(/\r\n?/g, "\n").trim();
+
+  if (!normalizedContent) {
+    return fallbackBlocks;
+  }
+
+  const blocks = normalizedContent
+    .split(/\n\s*\n+/)
+    .map((block) => block.split("\n").map((line) => line.trimEnd()).join("\n").trim())
+    .filter(Boolean);
+
+  return blocks.length ? blocks : fallbackBlocks;
+}
+
 function getNodeDisplay(node) {
   if (node.type === "start") {
     return {
@@ -964,12 +979,18 @@ function getNodeDisplay(node) {
 
   if (node.type === "dialogue") {
     const speaker = getDialogueSpeaker(node);
-    const dialogueText = (node.content || node.title || "").trim();
+    const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: [] });
+    const firstBlock = dialogueBlocks[0];
+    const previewText = firstBlock ? firstBlock.replace(/\n+/g, " / ") : "";
+    const moreLineCount = dialogueBlocks.length - 1;
+    const summary = moreLineCount > 0
+      ? `${previewText} (+${moreLineCount} more blocks)`
+      : previewText;
 
     return {
       typeLabel: "dialogue",
       title: speaker.kind === "narrator" ? "Narration" : `Dialogue · ${speaker.name}`,
-      content: dialogueText || "Enter dialogue content.",
+      content: summary || "Enter dialogue content.",
     };
   }
 
@@ -1520,15 +1541,17 @@ function formatLabelGraphCode(graph) {
   orderedNodes.forEach((node) => {
 
     if (node.type === "dialogue") {
-      const dialogueText = (node.content || node.title || "...").trim() || "...";
       const speaker = getDialogueSpeaker(node);
+      const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: ["..."] });
 
-      if (speaker.kind === "character" && speaker.id) {
-        lines.push(`    ${speaker.id} "${escapeRenpyString(dialogueText)}"`);
-        return;
-      }
+      dialogueBlocks.forEach((dialogueText) => {
+        if (speaker.kind === "character" && speaker.id) {
+          lines.push(`    ${speaker.id} "${escapeRenpyString(dialogueText)}"`);
+          return;
+        }
 
-      lines.push(`    "${escapeRenpyString(dialogueText)}"`);
+        lines.push(`    "${escapeRenpyString(dialogueText)}"`);
+      });
       return;
     }
 
@@ -2257,7 +2280,11 @@ function formatCharacterCode(character) {
 }
 
 function escapeRenpyString(value) {
-  return value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
+  return value
+    .replace(/\r\n?/g, "\n")
+    .replaceAll("\\", "\\\\")
+    .replaceAll("\n", "\\n")
+    .replaceAll('"', '\\"');
 }
 
 function syncCharacterDetailFields() {
