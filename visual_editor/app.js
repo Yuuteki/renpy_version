@@ -60,16 +60,13 @@ const characterCodePreviewEl = document.getElementById("characterCodePreview");
 const visualProjectStatsEl = document.getElementById("visualProjectStats");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
+const startInspectorFormEl = document.getElementById("startInspectorForm");
+const startNodeTypeInput = document.getElementById("startNodeTypeInput");
 const inspectorFormEl = document.getElementById("inspectorForm");
 const nodeIdInput = document.getElementById("nodeIdInput");
 const nodeTypeInput = document.getElementById("nodeTypeInput");
 const nodeTitleInput = document.getElementById("nodeTitleInput");
 const nodeContentInput = document.getElementById("nodeContentInput");
-const nodeIdFieldEl = nodeIdInput.closest("label");
-const nodeTypeFieldEl = nodeTypeInput.closest("label");
-const nodeTitleFieldEl = nodeTitleInput.closest("label");
-const nodeContentFieldEl = nodeContentInput.closest("label");
-const inspectorActionsEl = inspectorFormEl.querySelector(".inspector-actions");
 
 const saveDraftButton = document.getElementById("saveDraftButton");
 const exportButton = document.getElementById("exportButton");
@@ -1473,38 +1470,29 @@ function renderInspector() {
 
   if (!selectedNode) {
     inspectorEmptyEl.classList.remove("hidden");
+    startInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
-    nodeIdFieldEl.classList.remove("hidden");
-    nodeTypeFieldEl.classList.remove("hidden");
-    nodeTitleFieldEl.classList.remove("hidden");
-    nodeContentFieldEl.classList.remove("hidden");
-    inspectorActionsEl.classList.remove("hidden");
     return;
   }
 
-  inspectorEmptyEl.classList.add("hidden");
-  inspectorFormEl.classList.remove("hidden");
-  nodeIdFieldEl.classList.remove("hidden");
-  nodeTypeFieldEl.classList.remove("hidden");
-  nodeTitleFieldEl.classList.remove("hidden");
-  nodeContentFieldEl.classList.remove("hidden");
-  inspectorActionsEl.classList.remove("hidden");
-
-  nodeIdInput.value = selectedNode.id;
   const selectedIsStart = selectedNode.type === "start";
-  nodeTypeInput.value = selectedIsStart ? "Start" : selectedNode.type;
-  nodeTitleInput.value = selectedNode.title;
-  nodeContentInput.value = selectedNode.content;
-  nodeTitleInput.disabled = selectedIsStart;
-  nodeContentInput.disabled = selectedIsStart;
-  deleteNodeButton.disabled = selectedIsStart;
+
+  inspectorEmptyEl.classList.add("hidden");
+  startInspectorFormEl.classList.toggle("hidden", !selectedIsStart);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart);
 
   if (selectedIsStart) {
-    nodeIdFieldEl.classList.add("hidden");
-    nodeTitleFieldEl.classList.add("hidden");
-    nodeContentFieldEl.classList.add("hidden");
-    inspectorActionsEl.classList.add("hidden");
+    startNodeTypeInput.value = "Start";
+    return;
   }
+
+  nodeIdInput.value = selectedNode.id;
+  nodeTypeInput.value = selectedNode.type;
+  nodeTitleInput.value = selectedNode.title;
+  nodeContentInput.value = selectedNode.content;
+  nodeTitleInput.disabled = false;
+  nodeContentInput.disabled = false;
+  deleteNodeButton.disabled = false;
 }
 
 function render() {
