@@ -62,6 +62,21 @@ const visualProjectStatsEl = document.getElementById("visualProjectStats");
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
 const startInspectorFormEl = document.getElementById("startInspectorForm");
 const startNodeTypeInput = document.getElementById("startNodeTypeInput");
+const imageInspectorFormEl = document.getElementById("imageInspectorForm");
+const imageNodeTypeInput = document.getElementById("imageNodeTypeInput");
+const imageNodeModeInput = document.getElementById("imageNodeModeInput");
+const imageNodeNameLabelEl = document.getElementById("imageNodeNameLabel");
+const imageNodeNameInput = document.getElementById("imageNodeNameInput");
+const imageNodeLayerInput = document.getElementById("imageNodeLayerInput");
+const imageNodeAtInput = document.getElementById("imageNodeAtInput");
+const imageNodeAliasInput = document.getElementById("imageNodeAliasInput");
+const imageNodeBehindInput = document.getElementById("imageNodeBehindInput");
+const imageNodeZorderInput = document.getElementById("imageNodeZorderInput");
+const imageDeleteNodeButton = document.getElementById("imageDeleteNodeButton");
+const animationInspectorFormEl = document.getElementById("animationInspectorForm");
+const animationNodeTypeInput = document.getElementById("animationNodeTypeInput");
+const animationNodeTransitionInput = document.getElementById("animationNodeTransitionInput");
+const animationDeleteNodeButton = document.getElementById("animationDeleteNodeButton");
 const inspectorFormEl = document.getElementById("inspectorForm");
 const nodeIdInput = document.getElementById("nodeIdInput");
 const nodeTypeInput = document.getElementById("nodeTypeInput");
@@ -432,6 +447,69 @@ function getActiveCharacter() {
   return state.characters.find((character) => character.id === activeCharacterId) ?? null;
 }
 
+function getImageNodeMode(node) {
+  return node.imageMode || "show";
+}
+
+function getImageNodeName(node) {
+  return (node.imageName || "").trim();
+}
+
+function getAnimationNodeTransition(node) {
+  return node.animationTransition || "dissolve";
+}
+
+function getNodeDisplay(node) {
+  if (node.type === "start") {
+    return {
+      typeLabel: "start",
+      title: "Start",
+      content: "",
+    };
+  }
+
+  if (node.type === "image") {
+    const mode = getImageNodeMode(node);
+    const name = getImageNodeName(node);
+    const layer = (node.imageLayer || "").trim();
+    const at = (node.imageAt || "").trim();
+    const title = `${capitalize(mode)} Image`;
+    const detailParts = [];
+
+    if (name) {
+      detailParts.push(name);
+    }
+
+    if (layer) {
+      detailParts.push(`layer:${layer}`);
+    }
+
+    if (at && mode !== "hide") {
+      detailParts.push(`at:${at}`);
+    }
+
+    return {
+      typeLabel: "image",
+      title,
+      content: detailParts.join(" · ") || "Configure image action.",
+    };
+  }
+
+  if (node.type === "animation") {
+    return {
+      typeLabel: "animation",
+      title: "Animation",
+      content: getAnimationNodeTransition(node),
+    };
+  }
+
+  return {
+    typeLabel: node.type,
+    title: node.title,
+    content: node.content,
+  };
+}
+
 function isStartNode(nodeOrNodeId, graph = getActiveGraph()) {
   if (!graph || !nodeOrNodeId) {
     return false;
@@ -606,7 +684,52 @@ function hasConnection(graph, fromNodeId, toNodeId) {
   ));
 }
 
-function beginConnectionDrag(event, fromNodeId) {
+function getIncomingEdges(graph, nodeId) {
+  if (!graph) {
+    return [];
+  }
+
+  return graph.edges.filter((edge) => edge.toNodeId === nodeId);
+}
+
+function getOutgoingEdges(graph, nodeId) {
+  if (!graph) {
+    return [];
+  }
+
+  return graph.edges.filter((edge) => edge.fromNodeId === nodeId);
+}
+
+function removeEdges(graph, edgesToRemove) {
+  if (!graph || !edgesToRemove.length) {
+    return;
+  }
+
+  const edgeIds = new Set(edgesToRemove.map((edge) => edge.id));
+  graph.edges = graph.edges.filter((edge) => !edgeIds.has(edge.id));
+}
+
+function restoreDetachedEdges(graph, detachedEdges) {
+  if (!graph || !detachedEdges?.length) {
+    return;
+  }
+
+  const nodeIds = new Set(graph.nodes.map((node) => node.id));
+
+  detachedEdges.forEach((edge) => {
+    if (!nodeIds.has(edge.fromNodeId) || !nodeIds.has(edge.toNodeId)) {
+      return;
+    }
+
+    if (hasConnection(graph, edge.fromNodeId, edge.toNodeId)) {
+      return;
+    }
+
+    graph.edges.push(edge);
+  });
+}
+
+function beginConnectionDrag(event, fromNodeId, options = {}) {
   const graph = getActiveGraph();
 
   if (event.button !== 0 || !graph) {
@@ -633,6 +756,7 @@ function beginConnectionDrag(event, fromNodeId) {
     currentClientX: event.clientX,
     currentClientY: event.clientY,
     targetNodeId: null,
+    detachedEdges: options.detachedEdges || [],
   };
 
   updateConnectionTargetFromPointer(event.clientX, event.clientY);
@@ -678,15 +802,23 @@ function endConnectionDrag(event) {
   const { fromNodeId, targetNodeId } = completedSession;
 
   if (!targetNodeId || targetNodeId === fromNodeId) {
+    if (completedSession.detachedEdges.length) {
+      const sourceNode = graph.nodes.find((node) => node.id === fromNodeId);
+      saveState(`Disconnected ${getNodeDisplay(sourceNode || { type: "node", title: fromNodeId, content: "" }).title}.`);
+    }
     renderConnections();
     return;
   }
 
   if (hasConnection(graph, fromNodeId, targetNodeId)) {
+    restoreDetachedEdges(graph, completedSession.detachedEdges);
     setStatus("This connection already exists.");
     renderConnections();
     return;
   }
+
+  const replacedIncomingEdges = getIncomingEdges(graph, targetNodeId);
+  removeEdges(graph, replacedIncomingEdges);
 
   graph.edges.push({
     id: `edge_${Date.now()}_${graph.edges.length + 1}`,
@@ -696,8 +828,9 @@ function endConnectionDrag(event) {
 
   const sourceNode = graph.nodes.find((node) => node.id === fromNodeId);
   const targetNode = graph.nodes.find((node) => node.id === targetNodeId);
+  const wasReconnect = completedSession.detachedEdges.length > 0 || replacedIncomingEdges.length > 0;
 
-  saveState(`Connected ${sourceNode?.title || fromNodeId} to ${targetNode?.title || targetNodeId}.`);
+  saveState(`${wasReconnect ? "Reconnected" : "Connected"} ${getNodeDisplay(sourceNode || { type: "node", title: fromNodeId, content: "" }).title} to ${getNodeDisplay(targetNode || { type: "node", title: targetNodeId, content: "" }).title}.`);
   renderConnections();
 }
 
@@ -851,6 +984,55 @@ function animateLabelGraphDomOrder() {
   });
 }
 
+function getReachableNodesInCodeOrder(graph) {
+  if (!graph) {
+    return [];
+  }
+
+  const startNode = graph.nodes.find((node) => node.type === "start");
+
+  if (!startNode) {
+    return [];
+  }
+
+  const nodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
+  const outgoingMap = new Map();
+
+  graph.edges.forEach((edge) => {
+    if (!outgoingMap.has(edge.fromNodeId)) {
+      outgoingMap.set(edge.fromNodeId, []);
+    }
+
+    outgoingMap.get(edge.fromNodeId).push(edge.toNodeId);
+  });
+
+  const orderedNodes = [];
+  const visited = new Set([startNode.id]);
+
+  function visit(nodeId) {
+    const nextNodeIds = outgoingMap.get(nodeId) || [];
+
+    nextNodeIds.forEach((nextNodeId) => {
+      if (visited.has(nextNodeId)) {
+        return;
+      }
+
+      const nextNode = nodeMap.get(nextNodeId);
+
+      if (!nextNode) {
+        return;
+      }
+
+      visited.add(nextNodeId);
+      orderedNodes.push(nextNode);
+      visit(nextNodeId);
+    });
+  }
+
+  visit(startNode.id);
+  return orderedNodes;
+}
+
 function formatLabelGraphCode(graph) {
   if (!graph) {
     return "";
@@ -858,17 +1040,14 @@ function formatLabelGraphCode(graph) {
 
   const safeLabel = ((graph.label || "label").trim() || "label").replace(/\s+/g, "_");
   const lines = [`label ${safeLabel}:`];
+  const orderedNodes = getReachableNodesInCodeOrder(graph);
 
-  if (!graph.nodes.length) {
+  if (!orderedNodes.length) {
     lines.push("    pass");
     return lines.join("\n");
   }
 
-  graph.nodes.forEach((node) => {
-    if (node.type === "start") {
-      lines.push(`    # ${node.title || "Start"}`);
-      return;
-    }
+  orderedNodes.forEach((node) => {
 
     if (node.type === "dialogue") {
       const dialogueText = (node.content || node.title || "...").trim() || "...";
@@ -887,6 +1066,69 @@ function formatLabelGraphCode(graph) {
     if (node.type === "jump") {
       const jumpTarget = (node.content || "next_label").trim() || "next_label";
       lines.push(`    jump ${jumpTarget}`);
+      return;
+    }
+
+    if (node.type === "image") {
+      const mode = getImageNodeMode(node);
+      const imageName = getImageNodeName(node);
+      const layer = (node.imageLayer || "").trim();
+      const at = (node.imageAt || "").trim();
+      const alias = (node.imageAlias || "").trim();
+      const behind = (node.imageBehind || "").trim();
+      const zorder = `${node.imageZorder ?? ""}`.trim();
+      const parts = [];
+
+      if (mode === "scene") {
+        parts.push("scene");
+
+        if (imageName) {
+          parts.push(imageName);
+        }
+
+        if (at) {
+          parts.push("at", at);
+        }
+
+        if (layer) {
+          parts.push("onlayer", layer);
+        }
+      } else if (mode === "hide") {
+        parts.push("hide", imageName || "image_tag");
+
+        if (layer) {
+          parts.push("onlayer", layer);
+        }
+      } else {
+        parts.push("show", imageName || "image_name");
+
+        if (alias) {
+          parts.push("as", alias);
+        }
+
+        if (at) {
+          parts.push("at", at);
+        }
+
+        if (behind) {
+          parts.push("behind", behind);
+        }
+
+        if (layer) {
+          parts.push("onlayer", layer);
+        }
+
+        if (zorder) {
+          parts.push("zorder", zorder);
+        }
+      }
+
+      lines.push(`    ${parts.join(" ")}`);
+      return;
+    }
+
+    if (node.type === "animation") {
+      lines.push(`    with ${getAnimationNodeTransition(node)}`);
       return;
     }
 
@@ -1408,6 +1650,7 @@ function renderGraph() {
 
   graph.nodes.forEach((node) => {
     const isStart = node.type === "start";
+    const display = getNodeDisplay(node);
     const el = document.createElement("button");
     el.type = "button";
     el.className = "graph-node";
@@ -1421,9 +1664,9 @@ function renderGraph() {
     el.style.top = `${node.y}px`;
 
     el.innerHTML = `
-      <p class="node-type">${escapeHtml(node.type)}</p>
-      <h3 class="node-title">${escapeHtml(node.title)}</h3>
-      <p class="node-content">${escapeHtml(node.content)}</p>
+      <p class="node-type">${escapeHtml(display.typeLabel)}</p>
+      <h3 class="node-title">${escapeHtml(display.title || "Untitled Node")}</h3>
+      ${display.content ? `<p class="node-content">${escapeHtml(display.content)}</p>` : ""}
       ${isStart ? "" : `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input"></span>`}
       <span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output"></span>
     `;
@@ -1455,7 +1698,30 @@ function renderGraph() {
 
     const outputPort = el.querySelector(".node-port-output");
     outputPort?.addEventListener("pointerdown", (event) => {
-      beginConnectionDrag(event, node.id);
+      const outgoingEdges = getOutgoingEdges(graph, node.id);
+
+      if (outgoingEdges.length) {
+        removeEdges(graph, outgoingEdges);
+      }
+
+      beginConnectionDrag(event, node.id, {
+        detachedEdges: outgoingEdges,
+      });
+    });
+
+    const inputPort = el.querySelector(".node-port-input");
+    inputPort?.addEventListener("pointerdown", (event) => {
+      const incomingEdges = getIncomingEdges(graph, node.id);
+      const existingEdge = incomingEdges[0];
+
+      if (!existingEdge) {
+        return;
+      }
+
+      removeEdges(graph, [existingEdge]);
+      beginConnectionDrag(event, existingEdge.fromNodeId, {
+        detachedEdges: [existingEdge],
+      });
     });
 
     graphNodesEl.appendChild(el);
@@ -1471,18 +1737,61 @@ function renderInspector() {
   if (!selectedNode) {
     inspectorEmptyEl.classList.remove("hidden");
     startInspectorFormEl.classList.add("hidden");
+    imageInspectorFormEl.classList.add("hidden");
+    animationInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
     return;
   }
 
   const selectedIsStart = selectedNode.type === "start";
+  const selectedIsImage = selectedNode.type === "image";
+  const selectedIsAnimation = selectedNode.type === "animation";
 
   inspectorEmptyEl.classList.add("hidden");
   startInspectorFormEl.classList.toggle("hidden", !selectedIsStart);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart);
+  imageInspectorFormEl.classList.toggle("hidden", !selectedIsImage);
+  animationInspectorFormEl.classList.toggle("hidden", !selectedIsAnimation);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
+    return;
+  }
+
+  if (selectedIsImage) {
+    const imageMode = getImageNodeMode(selectedNode);
+    const imageNameFieldEl = imageNodeNameInput.closest("label");
+    const imageAtFieldEl = imageNodeAtInput.closest("label");
+    const imageAliasFieldEl = imageNodeAliasInput.closest("label");
+    const imageBehindFieldEl = imageNodeBehindInput.closest("label");
+    const imageZorderFieldEl = imageNodeZorderInput.closest("label");
+
+    imageNodeTypeInput.value = "Image";
+    imageNodeModeInput.value = imageMode;
+    imageNodeNameInput.value = selectedNode.imageName || "";
+    imageNodeLayerInput.value = selectedNode.imageLayer || "";
+    imageNodeAtInput.value = selectedNode.imageAt || "";
+    imageNodeAliasInput.value = selectedNode.imageAlias || "";
+    imageNodeBehindInput.value = selectedNode.imageBehind || "";
+    imageNodeZorderInput.value = selectedNode.imageZorder || "";
+
+    imageNodeNameLabelEl.textContent = imageMode === "hide"
+      ? "Target Tag"
+      : imageMode === "scene"
+        ? "Image Name (Optional)"
+        : "Image Name";
+
+    imageNameFieldEl.classList.remove("hidden");
+    imageAtFieldEl.classList.toggle("hidden", imageMode === "hide");
+    imageAliasFieldEl.classList.toggle("hidden", imageMode !== "show");
+    imageBehindFieldEl.classList.toggle("hidden", imageMode !== "show");
+    imageZorderFieldEl.classList.toggle("hidden", imageMode !== "show");
+    return;
+  }
+
+  if (selectedIsAnimation) {
+    animationNodeTypeInput.value = "Animation";
+    animationNodeTransitionInput.value = getAnimationNodeTransition(selectedNode);
     return;
   }
 
@@ -1594,7 +1903,7 @@ function deleteNode(nodeId) {
   setContextMenuState(false);
   render();
   setInspectorState(Boolean(graph.selectedNodeId));
-  saveState(`Deleted ${node.title}.`);
+  saveState(`Deleted ${getNodeDisplay(node).title}.`);
 }
 
 function findNode(nodeId) {
@@ -1757,7 +2066,7 @@ function endNodeDrag(event) {
   dragSession = null;
 
   if (moved && node) {
-    saveState(`Moved ${node.title}.`);
+    saveState(`Moved ${getNodeDisplay(node).title}.`);
   }
 }
 
@@ -1794,6 +2103,30 @@ nodeTitleInput.addEventListener("input", (event) => {
 
 nodeContentInput.addEventListener("input", (event) => {
   updateSelectedNode({ content: event.target.value });
+});
+imageNodeModeInput.addEventListener("change", (event) => {
+  updateSelectedNode({ imageMode: event.target.value });
+});
+imageNodeNameInput.addEventListener("input", (event) => {
+  updateSelectedNode({ imageName: event.target.value });
+});
+imageNodeLayerInput.addEventListener("input", (event) => {
+  updateSelectedNode({ imageLayer: event.target.value });
+});
+imageNodeAtInput.addEventListener("input", (event) => {
+  updateSelectedNode({ imageAt: event.target.value });
+});
+imageNodeAliasInput.addEventListener("input", (event) => {
+  updateSelectedNode({ imageAlias: event.target.value });
+});
+imageNodeBehindInput.addEventListener("input", (event) => {
+  updateSelectedNode({ imageBehind: event.target.value });
+});
+imageNodeZorderInput.addEventListener("input", (event) => {
+  updateSelectedNode({ imageZorder: event.target.value });
+});
+animationNodeTransitionInput.addEventListener("change", (event) => {
+  updateSelectedNode({ animationTransition: event.target.value });
 });
 
 saveDraftButton.addEventListener("click", () => {
@@ -1916,6 +2249,24 @@ deleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+imageDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
+animationDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 contextDeleteButton.addEventListener("click", () => {
   if (!contextMenuNodeId) {
     return;
@@ -1991,14 +2342,7 @@ document.querySelectorAll(".node-card").forEach((button) => {
       return;
     }
 
-    const newNode = {
-      id: `${nodeType}_${Date.now()}`,
-      type: nodeType,
-      title: `${capitalize(nodeType)} Node`,
-      content: "New node content.",
-      x: 96 + graph.nodes.length * 28,
-      y: 96 + graph.nodes.length * 20,
-    };
+    const newNode = createNodeForType(nodeType, graph);
 
     graph.nodes.push(newNode);
     graph.selectedNodeId = newNode.id;
@@ -2008,6 +2352,67 @@ document.querySelectorAll(".node-card").forEach((button) => {
     setStatus(`Added a ${nodeType} node to "${graph.label}".`);
   });
 });
+
+function createNodeForType(nodeType, graph) {
+  const baseNode = {
+    id: `${nodeType}_${Date.now()}`,
+    type: nodeType,
+    title: `${capitalize(nodeType)} Node`,
+    content: "New node content.",
+    x: 96 + graph.nodes.length * 28,
+    y: 96 + graph.nodes.length * 20,
+  };
+
+  if (nodeType === "image") {
+    return {
+      ...baseNode,
+      title: "Show Image",
+      content: "",
+      imageMode: "show",
+      imageName: "",
+      imageLayer: "",
+      imageAt: "",
+      imageAlias: "",
+      imageBehind: "",
+      imageZorder: "",
+    };
+  }
+
+  if (nodeType === "animation") {
+    return {
+      ...baseNode,
+      title: "Animation",
+      content: "",
+      animationTransition: "dissolve",
+    };
+  }
+
+  if (nodeType === "dialogue") {
+    return {
+      ...baseNode,
+      title: "Dialogue",
+      content: "New dialogue line.",
+    };
+  }
+
+  if (nodeType === "menu") {
+    return {
+      ...baseNode,
+      title: "Choice",
+      content: "Add menu choices here.",
+    };
+  }
+
+  if (nodeType === "jump") {
+    return {
+      ...baseNode,
+      title: "Jump",
+      content: "next_label",
+    };
+  }
+
+  return baseNode;
+}
 
 function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);

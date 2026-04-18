@@ -310,6 +310,16 @@
 
       <section id="addBlockDock" class="add-block-dock is-offset-for-inspector">
         <div id="addBlockMenu" class="add-block-menu">
+          <button class="node-card node-card-compact" data-node-type="image">
+            <strong>Image</strong>
+            <span>Scene / Show / Hide</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="animation">
+            <strong>Animation</strong>
+            <span>With Transition</span>
+          </button>
+
           <button class="node-card node-card-compact" data-node-type="dialogue">
             <strong>Dialogue</strong>
             <span>Line</span>
@@ -354,6 +364,91 @@
               Node Type
               <input id="startNodeTypeInput" type="text" readonly />
             </label>
+          </form>
+
+          <form id="imageInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="imageNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="imageNodeModeInput">
+                <option value="show">Show</option>
+                <option value="scene">Scene</option>
+                <option value="hide">Hide</option>
+              </select>
+            </label>
+
+            <label>
+              <span id="imageNodeNameLabel">Image Name</span>
+              <input id="imageNodeNameInput" type="text" placeholder="eileen happy" />
+            </label>
+
+            <label>
+              Layer
+              <input id="imageNodeLayerInput" type="text" placeholder="master" />
+            </label>
+
+            <label>
+              At Transform
+              <input id="imageNodeAtInput" type="text" placeholder="left" />
+            </label>
+
+            <label>
+              Alias
+              <input id="imageNodeAliasInput" type="text" placeholder="mary2" />
+            </label>
+
+            <label>
+              Behind Tags
+              <input id="imageNodeBehindInput" type="text" placeholder="mary, mary2" />
+            </label>
+
+            <label>
+              Z-Order
+              <input id="imageNodeZorderInput" type="number" placeholder="0" />
+            </label>
+
+            <div class="inspector-actions">
+              <button id="imageDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="animationInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="animationNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Preset
+              <select id="animationNodeTransitionInput">
+                <option value="None">None</option>
+                <option value="dissolve">dissolve</option>
+                <option value="fade">fade</option>
+                <option value="pixellate">pixellate</option>
+                <option value="move">move</option>
+                <option value="ease">ease</option>
+                <option value="hpunch">hpunch</option>
+                <option value="vpunch">vpunch</option>
+                <option value="wiperight">wiperight</option>
+                <option value="wipeleft">wipeleft</option>
+                <option value="wipeup">wipeup</option>
+                <option value="wipedown">wipedown</option>
+                <option value="slideright">slideright</option>
+                <option value="slideleft">slideleft</option>
+                <option value="slideup">slideup</option>
+                <option value="slidedown">slidedown</option>
+                <option value="irisin">irisin</option>
+                <option value="irisout">irisout</option>
+              </select>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="animationDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
           </form>
 
           <form id="inspectorForm" class="inspector-form hidden">

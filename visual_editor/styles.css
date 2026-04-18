@@ -592,6 +592,7 @@ button.danger-button:hover {
 }
 
 .inspector-form input,
+.inspector-form select,
 .inspector-form textarea {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -602,6 +603,7 @@ button.danger-button:hover {
 }
 
 .inspector-form input:focus,
+.inspector-form select:focus,
 .inspector-form textarea:focus {
   outline: 2px solid rgba(255, 255, 255, 0.16);
   border-color: rgba(255, 255, 255, 0.18);
