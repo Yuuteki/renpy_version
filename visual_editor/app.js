@@ -37,6 +37,7 @@ const imageDefinitionListEl = document.getElementById("imageDefinitionList");
 const imageDefinitionEmptyEl = document.getElementById("imageDefinitionEmpty");
 const imagesListViewEl = document.getElementById("imagesListView");
 const imageDefinitionDetailViewEl = document.getElementById("imageDefinitionDetailView");
+const imageDefinitionDetailFormEl = document.getElementById("imageDefinitionDetailForm");
 const newImageDefinitionButton = document.getElementById("newImageDefinitionButton");
 const imageDefinitionBackButton = document.getElementById("imageDefinitionBackButton");
 const imageDefinitionNameInput = document.getElementById("imageDefinitionNameInput");
@@ -132,6 +133,161 @@ const imageCategoryMeta = {
     empty: "No other images yet.",
   },
 };
+
+const imageDefinitionFieldDefaults = {
+  category: "others",
+  sourcePath: "",
+  pos: "",
+  xpos: "",
+  ypos: "",
+  anchor: "",
+  xanchor: "",
+  yanchor: "",
+  align: "",
+  alignaround: "",
+  xalign: "",
+  yalign: "",
+  offset: "",
+  xoffset: "",
+  yoffset: "",
+  xycenter: "",
+  xcenter: "",
+  ycenter: "",
+  around: "",
+  angle: "",
+  radius: "",
+  anchoraround: "",
+  anchorangle: "",
+  anchorradius: "",
+  zoom: "",
+  xzoom: "",
+  yzoom: "",
+  size: "",
+  xsize: "",
+  ysize: "",
+  xysize: "",
+  maxsize: "",
+  fit: "",
+  xtile: "",
+  ytile: "",
+  rotate: "",
+  rotate_pad: false,
+  transform_anchor: false,
+  orientation: "",
+  xrotate: "",
+  yrotate: "",
+  zrotate: "",
+  zpos: "",
+  zzoom: "",
+  alpha: "",
+  additive: "",
+  blur: "",
+  nearest: false,
+  subpixel: false,
+  blend: "",
+  matrixcolor: "",
+  matrixtransform: "",
+  matrixanchor: "",
+  crop: "",
+  crop_relative: false,
+  corner1: "",
+  corner2: "",
+  shader: "",
+  mesh: false,
+  mesh_pad: "",
+  perspective: "",
+  xpan: "",
+  ypan: "",
+  fps: "",
+  point_to: "",
+  delay: "",
+  events: false,
+  show_cancels_hide: false,
+};
+
+const imageDefinitionBooleanFields = new Set([
+  "rotate_pad",
+  "transform_anchor",
+  "nearest",
+  "subpixel",
+  "crop_relative",
+  "mesh",
+  "events",
+  "show_cancels_hide",
+]);
+
+const imageDefinitionCodePropertyOrder = [
+  "pos",
+  "xpos",
+  "ypos",
+  "anchor",
+  "xanchor",
+  "yanchor",
+  "align",
+  "alignaround",
+  "xalign",
+  "yalign",
+  "offset",
+  "xoffset",
+  "yoffset",
+  "xycenter",
+  "xcenter",
+  "ycenter",
+  "around",
+  "angle",
+  "radius",
+  "anchoraround",
+  "anchorangle",
+  "anchorradius",
+  "zoom",
+  "xzoom",
+  "yzoom",
+  "size",
+  "xsize",
+  "ysize",
+  "xysize",
+  "maxsize",
+  "fit",
+  "xtile",
+  "ytile",
+  "rotate",
+  "rotate_pad",
+  "transform_anchor",
+  "orientation",
+  "xrotate",
+  "yrotate",
+  "zrotate",
+  "zpos",
+  "zzoom",
+  "alpha",
+  "additive",
+  "blur",
+  "nearest",
+  "subpixel",
+  "blend",
+  "matrixcolor",
+  "matrixtransform",
+  "matrixanchor",
+  "crop",
+  "crop_relative",
+  "corner1",
+  "corner2",
+  "shader",
+  "mesh",
+  "mesh_pad",
+  "perspective",
+  "xpan",
+  "ypan",
+  "fps",
+  "point_to",
+  "delay",
+  "events",
+  "show_cancels_hide",
+];
+
+const imageDefinitionFieldEls = Array.from(
+  imageDefinitionDetailFormEl.querySelectorAll("[data-image-field]"),
+);
 
 const defaultStarterNodes = [
   {
@@ -332,20 +488,28 @@ function normalizeCharacter(character, index) {
 }
 
 function normalizeImageDefinition(image, index) {
-  const category = Object.prototype.hasOwnProperty.call(imageCategoryMeta, image.category)
-    ? image.category
-    : "others";
+  const normalizedFields = {};
+
+  Object.entries(imageDefinitionFieldDefaults).forEach(([field, defaultValue]) => {
+    if (field === "category") {
+      normalizedFields.category = Object.prototype.hasOwnProperty.call(imageCategoryMeta, image.category)
+        ? image.category
+        : defaultValue;
+      return;
+    }
+
+    if (typeof defaultValue === "boolean") {
+      normalizedFields[field] = Boolean(image[field]);
+      return;
+    }
+
+    normalizedFields[field] = image[field] || "";
+  });
 
   return {
     id: image.id || `image_${index + 1}`,
     name: image.name || `image_${index + 1}`,
-    category,
-    sourcePath: image.sourcePath || "",
-    zoom: image.zoom || "",
-    xanchor: image.xanchor || "",
-    yanchor: image.yanchor || "",
-    xpos: image.xpos || "",
-    ypos: image.ypos || "",
+    ...normalizedFields,
   };
 }
 
@@ -574,13 +738,7 @@ function createBlankImageDefinition() {
   return {
     id: `image_${nextIndex}`,
     name: `image_${nextIndex}`,
-    category: "others",
-    sourcePath: "",
-    zoom: "",
-    xanchor: "",
-    yanchor: "",
-    xpos: "",
-    ypos: "",
+    ...structuredClone(imageDefinitionFieldDefaults),
   };
 }
 
@@ -1645,25 +1803,22 @@ function formatImageDefinitionCode(image) {
     `    "${escapeRenpyString(sourcePath)}"`,
   ];
 
-  if (`${image.zoom}`.trim()) {
-    lines.push(`    zoom ${`${image.zoom}`.trim()}`);
-  }
+  imageDefinitionCodePropertyOrder.forEach((field) => {
+    const value = image[field];
 
-  if (`${image.xanchor}`.trim()) {
-    lines.push(`    xanchor ${`${image.xanchor}`.trim()}`);
-  }
+    if (imageDefinitionBooleanFields.has(field)) {
+      if (value) {
+        lines.push(`    ${field} True`);
+      }
+      return;
+    }
 
-  if (`${image.yanchor}`.trim()) {
-    lines.push(`    yanchor ${`${image.yanchor}`.trim()}`);
-  }
+    const normalizedValue = `${value ?? ""}`.trim();
 
-  if (`${image.xpos}`.trim()) {
-    lines.push(`    xpos ${`${image.xpos}`.trim()}`);
-  }
-
-  if (`${image.ypos}`.trim()) {
-    lines.push(`    ypos ${`${image.ypos}`.trim()}`);
-  }
+    if (normalizedValue) {
+      lines.push(`    ${field} ${normalizedValue}`);
+    }
+  });
 
   return lines.join("\n");
 }
@@ -1672,26 +1827,31 @@ function syncImageDefinitionDetailFields() {
   const image = getActiveImageDefinition();
 
   if (!image) {
-    imageDefinitionNameInput.value = "";
-    imageDefinitionCategoryInput.value = "others";
-    imageDefinitionSourcePathInput.value = "";
-    imageDefinitionZoomInput.value = "";
-    imageDefinitionXAnchorInput.value = "";
-    imageDefinitionYAnchorInput.value = "";
-    imageDefinitionXPosInput.value = "";
-    imageDefinitionYPosInput.value = "";
+    imageDefinitionFieldEls.forEach((fieldEl) => {
+      const field = fieldEl.dataset.imageField;
+      const defaultValue = imageDefinitionFieldDefaults[field];
+
+      if (imageDefinitionBooleanFields.has(field)) {
+        fieldEl.checked = Boolean(defaultValue);
+        return;
+      }
+
+      fieldEl.value = `${defaultValue ?? ""}`;
+    });
     imageDefinitionCodePreviewEl.textContent = "";
     return;
   }
 
-  imageDefinitionNameInput.value = image.name;
-  imageDefinitionCategoryInput.value = image.category || "others";
-  imageDefinitionSourcePathInput.value = image.sourcePath;
-  imageDefinitionZoomInput.value = image.zoom;
-  imageDefinitionXAnchorInput.value = image.xanchor;
-  imageDefinitionYAnchorInput.value = image.yanchor;
-  imageDefinitionXPosInput.value = image.xpos;
-  imageDefinitionYPosInput.value = image.ypos;
+  imageDefinitionFieldEls.forEach((fieldEl) => {
+    const field = fieldEl.dataset.imageField;
+
+    if (imageDefinitionBooleanFields.has(field)) {
+      fieldEl.checked = Boolean(image[field]);
+      return;
+    }
+
+    fieldEl.value = `${image[field] ?? ""}`;
+  });
   imageDefinitionCodePreviewEl.textContent = formatImageDefinitionCode(image);
 }
 
@@ -2328,6 +2488,24 @@ function updateActiveImageDefinition(patch) {
   saveState();
 }
 
+function handleImageDefinitionFieldChange(event) {
+  const field = event.target.dataset.imageField;
+
+  if (!field) {
+    return;
+  }
+
+  const nextValue = imageDefinitionBooleanFields.has(field)
+    ? event.target.checked
+    : event.target.value;
+
+  if (field === "category") {
+    imageCategorySectionState[nextValue] = true;
+  }
+
+  updateActiveImageDefinition({ [field]: nextValue });
+}
+
 function resetGraph() {
   const graph = getActiveGraph();
 
@@ -2671,16 +2849,8 @@ imageDefinitionBackButton.addEventListener("click", () => {
   closeImageDefinitionDetail();
   setStatus("Returned to image list.");
 });
-imageDefinitionNameInput.addEventListener("input", (event) => {
-  updateActiveImageDefinition({ name: event.target.value });
-});
-imageDefinitionCategoryInput.addEventListener("change", (event) => {
-  imageCategorySectionState[event.target.value] = true;
-  updateActiveImageDefinition({ category: event.target.value });
-});
-imageDefinitionSourcePathInput.addEventListener("input", (event) => {
-  updateActiveImageDefinition({ sourcePath: event.target.value });
-});
+imageDefinitionDetailFormEl.addEventListener("input", handleImageDefinitionFieldChange);
+imageDefinitionDetailFormEl.addEventListener("change", handleImageDefinitionFieldChange);
 imageDefinitionBrowseButton.addEventListener("click", () => {
   if (!getActiveImageDefinition()) {
     setStatus("Create or select an image definition before browsing for a file.");
@@ -2706,21 +2876,6 @@ imageDefinitionFileInput.addEventListener("change", (event) => {
 
   updateActiveImageDefinition({ sourcePath: nextSourcePath });
   setStatus(`Selected "${file.name}" for image source. Adjust the path if needed.`);
-});
-imageDefinitionZoomInput.addEventListener("input", (event) => {
-  updateActiveImageDefinition({ zoom: event.target.value });
-});
-imageDefinitionXAnchorInput.addEventListener("input", (event) => {
-  updateActiveImageDefinition({ xanchor: event.target.value });
-});
-imageDefinitionYAnchorInput.addEventListener("input", (event) => {
-  updateActiveImageDefinition({ yanchor: event.target.value });
-});
-imageDefinitionXPosInput.addEventListener("input", (event) => {
-  updateActiveImageDefinition({ xpos: event.target.value });
-});
-imageDefinitionYPosInput.addEventListener("input", (event) => {
-  updateActiveImageDefinition({ ypos: event.target.value });
 });
 newCharacterButton.addEventListener("click", () => {
   const newCharacter = createBlankCharacter();

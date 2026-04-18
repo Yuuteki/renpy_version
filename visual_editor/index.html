@@ -73,12 +73,12 @@
 
                 <label>
                   Image Name
-                  <input id="imageDefinitionNameInput" type="text" placeholder="e.g. bg_classroom" />
+                  <input id="imageDefinitionNameInput" data-image-field="name" type="text" placeholder="e.g. bg_classroom" />
                 </label>
 
                 <label>
                   Category
-                  <select id="imageDefinitionCategoryInput">
+                  <select id="imageDefinitionCategoryInput" data-image-field="category">
                     <option value="background">Background</option>
                     <option value="character">Character</option>
                     <option value="others">Others</option>
@@ -88,7 +88,7 @@
                 <label>
                   Source Path
                   <div class="field-with-action">
-                    <input id="imageDefinitionSourcePathInput" type="text" placeholder="e.g. images/bg/classroom.png" />
+                    <input id="imageDefinitionSourcePathInput" data-image-field="sourcePath" type="text" placeholder="e.g. images/bg/classroom.png" />
                     <button id="imageDefinitionBrowseButton" class="secondary field-action-button" type="button">
                       Browse
                     </button>
@@ -96,31 +96,328 @@
                   <input id="imageDefinitionFileInput" type="file" accept="image/*" hidden />
                 </label>
 
-                <p class="section-label secondary-label">Transform</p>
+                <p class="section-label secondary-label">Position</p>
+
+                <label>
+                  pos
+                  <input id="imageDefinitionPosInput" data-image-field="pos" type="text" placeholder="e.g. (960, 540)" />
+                </label>
+
+                <label>
+                  anchor
+                  <input id="imageDefinitionAnchorInput" data-image-field="anchor" type="text" placeholder="e.g. (0.5, 0.5)" />
+                </label>
+
+                <label>
+                  align
+                  <input id="imageDefinitionAlignInput" data-image-field="align" type="text" placeholder="e.g. (0.5, 1.0)" />
+                </label>
+
+                <label>
+                  alignaround
+                  <input id="imageDefinitionAlignAroundInput" data-image-field="alignaround" type="text" placeholder="e.g. (0.5, 0.5)" />
+                </label>
+
+                <label>
+                  xalign
+                  <input id="imageDefinitionXAlignInput" data-image-field="xalign" type="text" placeholder="e.g. 0.5" />
+                </label>
+
+                <label>
+                  yalign
+                  <input id="imageDefinitionYAlignInput" data-image-field="yalign" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label>
+                  offset
+                  <input id="imageDefinitionOffsetInput" data-image-field="offset" type="text" placeholder="e.g. (0, -20)" />
+                </label>
+
+                <label>
+                  xoffset
+                  <input id="imageDefinitionXOffsetInput" data-image-field="xoffset" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  yoffset
+                  <input id="imageDefinitionYOffsetInput" data-image-field="yoffset" type="text" placeholder="e.g. -20" />
+                </label>
+
+                <label>
+                  xycenter
+                  <input id="imageDefinitionXYCenterInput" data-image-field="xycenter" type="text" placeholder="e.g. (960, 540)" />
+                </label>
+
+                <label>
+                  xcenter
+                  <input id="imageDefinitionXCenterInput" data-image-field="xcenter" type="text" placeholder="e.g. 960" />
+                </label>
+
+                <label>
+                  ycenter
+                  <input id="imageDefinitionYCenterInput" data-image-field="ycenter" type="text" placeholder="e.g. 540" />
+                </label>
+
+                <p class="section-label secondary-label">Polar</p>
+
+                <label>
+                  around
+                  <input id="imageDefinitionAroundInput" data-image-field="around" type="text" placeholder="e.g. (960, 540)" />
+                </label>
+
+                <label>
+                  angle
+                  <input id="imageDefinitionAngleInput" data-image-field="angle" type="text" placeholder="e.g. 45" />
+                </label>
+
+                <label>
+                  radius
+                  <input id="imageDefinitionRadiusInput" data-image-field="radius" type="text" placeholder="e.g. 240" />
+                </label>
+
+                <label>
+                  anchoraround
+                  <input id="imageDefinitionAnchorAroundInput" data-image-field="anchoraround" type="text" placeholder="e.g. (0.5, 0.5)" />
+                </label>
+
+                <label>
+                  anchorangle
+                  <input id="imageDefinitionAnchorAngleInput" data-image-field="anchorangle" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  anchorradius
+                  <input id="imageDefinitionAnchorRadiusInput" data-image-field="anchorradius" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <p class="section-label secondary-label">Scale And Size</p>
 
                 <label>
                   zoom
-                  <input id="imageDefinitionZoomInput" type="text" placeholder="e.g. 1.0" />
+                  <input id="imageDefinitionZoomInput" data-image-field="zoom" type="text" placeholder="e.g. 1.0" />
                 </label>
 
                 <label>
-                  xanchor
-                  <input id="imageDefinitionXAnchorInput" type="text" placeholder="e.g. 0.5" />
+                  xzoom
+                  <input id="imageDefinitionXZoomInput" data-image-field="xzoom" type="text" placeholder="e.g. 1.0" />
                 </label>
 
                 <label>
-                  yanchor
-                  <input id="imageDefinitionYAnchorInput" type="text" placeholder="e.g. 0.5" />
+                  yzoom
+                  <input id="imageDefinitionYZoomInput" data-image-field="yzoom" type="text" placeholder="e.g. 1.0" />
                 </label>
 
                 <label>
-                  xpos
-                  <input id="imageDefinitionXPosInput" type="text" placeholder="e.g. 960" />
+                  size
+                  <input id="imageDefinitionSizeInput" data-image-field="size" type="text" placeholder="e.g. (1920, 1080)" />
                 </label>
 
                 <label>
-                  ypos
-                  <input id="imageDefinitionYPosInput" type="text" placeholder="e.g. 1080" />
+                  xsize
+                  <input id="imageDefinitionXSizeInput" data-image-field="xsize" type="text" placeholder="e.g. 1920" />
+                </label>
+
+                <label>
+                  ysize
+                  <input id="imageDefinitionYSizeInput" data-image-field="ysize" type="text" placeholder="e.g. 1080" />
+                </label>
+
+                <label>
+                  xysize
+                  <input id="imageDefinitionXYSizeInput" data-image-field="xysize" type="text" placeholder="e.g. (1920, 1080)" />
+                </label>
+
+                <label>
+                  maxsize
+                  <input id="imageDefinitionMaxSizeInput" data-image-field="maxsize" type="text" placeholder="e.g. (1920, 1080)" />
+                </label>
+
+                <label>
+                  fit
+                  <input id="imageDefinitionFitInput" data-image-field="fit" type="text" placeholder="e.g. contain" />
+                </label>
+
+                <label>
+                  xtile
+                  <input id="imageDefinitionXTileInput" data-image-field="xtile" type="text" placeholder="e.g. 1" />
+                </label>
+
+                <label>
+                  ytile
+                  <input id="imageDefinitionYTileInput" data-image-field="ytile" type="text" placeholder="e.g. 1" />
+                </label>
+
+                <p class="section-label secondary-label">Rotation And Depth</p>
+
+                <label>
+                  rotate
+                  <input id="imageDefinitionRotateInput" data-image-field="rotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionRotatePadInput" data-image-field="rotate_pad" type="checkbox" />
+                  <span>rotate_pad</span>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionTransformAnchorInput" data-image-field="transform_anchor" type="checkbox" />
+                  <span>transform_anchor</span>
+                </label>
+
+                <label>
+                  orientation
+                  <input id="imageDefinitionOrientationInput" data-image-field="orientation" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  xrotate
+                  <input id="imageDefinitionXRotateInput" data-image-field="xrotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  yrotate
+                  <input id="imageDefinitionYRotateInput" data-image-field="yrotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  zrotate
+                  <input id="imageDefinitionZRotateInput" data-image-field="zrotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  zpos
+                  <input id="imageDefinitionZPosInput" data-image-field="zpos" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  zzoom
+                  <input id="imageDefinitionZZoomInput" data-image-field="zzoom" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <p class="section-label secondary-label">Appearance</p>
+
+                <label>
+                  alpha
+                  <input id="imageDefinitionAlphaInput" data-image-field="alpha" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label>
+                  additive
+                  <input id="imageDefinitionAdditiveInput" data-image-field="additive" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  blur
+                  <input id="imageDefinitionBlurInput" data-image-field="blur" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionNearestInput" data-image-field="nearest" type="checkbox" />
+                  <span>nearest</span>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionSubpixelInput" data-image-field="subpixel" type="checkbox" />
+                  <span>subpixel</span>
+                </label>
+
+                <label>
+                  blend
+                  <input id="imageDefinitionBlendInput" data-image-field="blend" type="text" placeholder="e.g. additive" />
+                </label>
+
+                <label>
+                  matrixcolor
+                  <input id="imageDefinitionMatrixColorInput" data-image-field="matrixcolor" type="text" placeholder="e.g. SaturationMatrix(0.0)" />
+                </label>
+
+                <label>
+                  matrixtransform
+                  <input id="imageDefinitionMatrixTransformInput" data-image-field="matrixtransform" type="text" placeholder="e.g. RotateMatrix(0.0)" />
+                </label>
+
+                <label>
+                  matrixanchor
+                  <input id="imageDefinitionMatrixAnchorInput" data-image-field="matrixanchor" type="text" placeholder="e.g. (0.5, 0.5)" />
+                </label>
+
+                <p class="section-label secondary-label">Crop And Shader</p>
+
+                <label>
+                  crop
+                  <input id="imageDefinitionCropInput" data-image-field="crop" type="text" placeholder="e.g. (0, 0, 1920, 1080)" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionCropRelativeInput" data-image-field="crop_relative" type="checkbox" />
+                  <span>crop_relative</span>
+                </label>
+
+                <label>
+                  corner1
+                  <input id="imageDefinitionCorner1Input" data-image-field="corner1" type="text" placeholder="e.g. (0, 0)" />
+                </label>
+
+                <label>
+                  corner2
+                  <input id="imageDefinitionCorner2Input" data-image-field="corner2" type="text" placeholder="e.g. (1920, 1080)" />
+                </label>
+
+                <label>
+                  shader
+                  <input id="imageDefinitionShaderInput" data-image-field="shader" type="text" placeholder="e.g. renpy.texture" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionMeshInput" data-image-field="mesh" type="checkbox" />
+                  <span>mesh</span>
+                </label>
+
+                <label>
+                  mesh_pad
+                  <input id="imageDefinitionMeshPadInput" data-image-field="mesh_pad" type="text" placeholder="e.g. 8" />
+                </label>
+
+                <label>
+                  perspective
+                  <input id="imageDefinitionPerspectiveInput" data-image-field="perspective" type="text" placeholder="e.g. 1000" />
+                </label>
+
+                <p class="section-label secondary-label">Motion And Advanced</p>
+
+                <label>
+                  xpan
+                  <input id="imageDefinitionXPanInput" data-image-field="xpan" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  ypan
+                  <input id="imageDefinitionYPanInput" data-image-field="ypan" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  fps
+                  <input id="imageDefinitionFpsInput" data-image-field="fps" type="text" placeholder="e.g. 30" />
+                </label>
+
+                <label>
+                  point_to
+                  <input id="imageDefinitionPointToInput" data-image-field="point_to" type="text" placeholder="e.g. (960, 540)" />
+                </label>
+
+                <label>
+                  delay
+                  <input id="imageDefinitionDelayInput" data-image-field="delay" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionEventsInput" data-image-field="events" type="checkbox" />
+                  <span>events</span>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionShowCancelsHideInput" data-image-field="show_cancels_hide" type="checkbox" />
+                  <span>show_cancels_hide</span>
                 </label>
 
                 <p class="section-label secondary-label">Generated Code</p>
