@@ -525,10 +525,17 @@ button.danger-button:hover {
 }
 
 .characters-view#imagesListView,
-.characters-view#charactersListView {
+.characters-view#charactersListView,
+.characters-view#variablesListView,
+.characters-view#definitionsListView {
   position: relative;
   gap: 12px;
   padding-bottom: 76px;
+}
+
+.definition-fields {
+  display: grid;
+  gap: 14px;
 }
 
 .character-detail-header {

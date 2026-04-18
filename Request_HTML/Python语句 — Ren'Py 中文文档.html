@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python语句 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/python.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="条件语句" href="conditional.html" />
+    <link rel="prev" title="游戏内菜单" href="menus.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python语句</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python-statement">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#one-line-python-statement">单行Python语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#init-python">init python语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define">define语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default">default语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#names-in-the-store">存储区变量名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-stores">其他的命名存储区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constant-stores">常量存储区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jsondb">JSONDB</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#JSONDB"><code class="docutils literal notranslate"><span class="pre">JSONDB</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#python-module-package">第一方和第三方Python模块(module)和包(package)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#isinstance">回滚和isinstance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python_dict"><code class="docutils literal notranslate"><span class="pre">python_dict</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python_list"><code class="docutils literal notranslate"><span class="pre">python_list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python_set"><code class="docutils literal notranslate"><span class="pre">python_set</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Python语句</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/python.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="python">
+<span id="id1"></span><h1>Python语句<a class="headerlink" href="#python" title="Link to this heading"> link</a></h1>
+<p>Ren’Py使用Python程序语言编写，并且支持在Ren’Py脚本中包含Python语句。对Python的支持可以用在很多方面，从立一个flag到创建新的可视组件等。本节内容主要涵盖Ren’Py脚本如何通过各种python语句直接调用Python的方法。</p>
+<p>从Ren’Py 8.4版本开始，Ren’Py支持Python 3.12。Ren’Py使用的Python版本可能会在未来的版本中更新。Ren’Py脚本应该兼容Python 3.12及更高版本。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果你熟悉Python，将会是一项优势。
+但并不是任何关于Python的东西都可以直接使用。
+例如，Ren’Py中没有带的Python包(package)都不能在Ren’Py中使用。</p>
+<p>Python中还有几种数据结构，在存档时可能会有问题。
+详细信息请阅读 <a class="reference internal" href="save_load_rollback.html"><span class="doc">存档、读档和回滚</span></a> 页面，尤其是 <a class="reference internal" href="save_load_rollback.html#cant-save"><span class="std std-ref">不保存什么</span></a> 部分。
+(对待文件、socket端口、迭代器、task、future线程和generator生成器需要特别小心。)</p>
+<p>最后，虽然很多语句都有等效的Python代码，但等效Python往往不如直接用Ren’Py语句。
+例如，使用Ren’Py中的 <code class="docutils literal notranslate"><span class="pre">show</span></code> 语句时，图像可以提前预加载，但如果用 <code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.show`()</span></code> 函数则不能预加载。</p>
+</div>
+<section id="python-statement">
+<span id="id2"></span><h2>Python<a class="headerlink" href="#python-statement" title="Link to this heading"> link</a></h2>
+<p>python语句包含一个Python的语句块(block)，当主控流程达到该语句时就会执行对应的语句块。一条基本的python语句非常简练：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span><span class="p">:</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>在必要时，python语句可以更复杂：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span><span class="p">:</span>
+    <span class="n">player_health</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">player_health</span> <span class="o">-</span> <span class="n">damage</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enemy_vampire</span><span class="p">:</span>
+        <span class="n">enemy_health</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">enemy_health</span> <span class="o">+</span> <span class="n">damage</span><span class="p">,</span> <span class="n">enemy_max_health</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这里有两个标识符可以改变python语句的表现：</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">hide</span></code></dt><dd><p>若出现了 <code class="docutils literal notranslate"><span class="pre">hide</span></code> 标识符，python语句将会以匿名者视角运行Python语句块。在该python语句块执行完毕后，匿名者视角就会丢失。</p>
+<p>hide标识符允许Python使用不能保存的临时变量——但也意味着存储(store)对象不能直接接入存储区(store)，而必须以字段(field)的形式接入。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">in</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">in</span></code> 标识符包含一个变量名。Python会使用那个变量名所代表的存储区(store)，而非默认存储区。</p>
+</dd>
+</dl>
+</section>
+<section id="one-line-python-statement">
+<span id="dollar-line"></span><span id="id3"></span><h2>单行Python语句<a class="headerlink" href="#one-line-python-statement" title="Link to this heading"> link</a></h2>
+<p>最常见的情况就是只有一行Python语句，运行在默认存储区内。例如，一行Python可以用来初始化或者更新一个flag。为了让编写只有一行的Python更精炼，这里提供了单行Python语句。</p>
+<p>单行Python语句以美元符号($)开头，一行语句内容可以包罗万象。这是一些单行Python语句样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 立一个flag。</span>
+<span class="k">$</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># 初始化一个变量。</span>
+<span class="k">$</span> <span class="n">romance_points</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># 变量自增。</span>
+<span class="k">$</span> <span class="n">romance_points</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># 调用Ren&#39;Py函数。</span>
+<span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="n">movie_cutscene</span><span class="p">(</span><span class="s2">&quot;opening.ogv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>单行Python通常运行在默认的存储区。</p>
+</section>
+<section id="init-python">
+<span id="init-python-statement"></span><h2>init python语句<a class="headerlink" href="#init-python" title="Link to this heading"> link</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> 语句在初始化阶段运行，早于其他游戏资源加载。在其他方面，这种功能可以用于定义类(class)和函数(function)，或者初始化样式(style)、配置变量、持久化数据。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">auto_voice_function</span><span class="p">(</span><span class="n">ident</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;voice/&quot;</span> <span class="o">+</span> <span class="n">ident</span> <span class="o">+</span> <span class="s2">&quot;.ogg&quot;</span>
+
+    <span class="n">config</span><span class="o">.</span><span class="n">auto_voice</span> <span class="o">=</span> <span class="n">auto_voice_function</span>
+
+    <span class="k">if</span> <span class="n">persistent</span><span class="o">.</span><span class="n">endings</span> <span class="k">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">persistent</span><span class="o">.</span><span class="n">endings</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<span class="k">init</span> <span class="mi">1</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="c1"># bad ending始终是解锁状态。</span>
+    <span class="n">persistent</span><span class="o">.</span><span class="n">endings</span><span class="o">.</span><span class="k">add</span><span class="p">(</span><span class="s2">&quot;bad_ending&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">init</span></code> 和 <code class="docutils literal notranslate"><span class="pre">python</span></code> 之间可以放一个运行优先级数值。如果没有指定优先级，默认使用0。init语句按照优先级数值从低到高的顺序运行。优先级相同的情况下，按照文件名的unicode字符顺序。文件内，从头到尾顺序运行。</p>
+<p>为了避免与Ren’Py引擎产生冲突，创作者最好选用-999到999范围内作为优先级。负整数的优先级主要用在库(library)和主题设置。普通的init语句应该使用0或者正整数作为优先级。</p>
+<p>init python语句也可以使用 <code class="docutils literal notranslate"><span class="pre">hide</span></code> 或 <code class="docutils literal notranslate"><span class="pre">in</span></code> 分句。</p>
+<p>在init python语句中被赋值的变量不会用于存档、读档，且不接受回滚。因此，在初始化完成后，这些变量值就不该改动。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>在Ren’Py内创建的类，没有继承自任何类或显式继承自 <code class="docutils literal notranslate"><span class="pre">object</span></code> 类，及其以上类的所有子类，都不支持 <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> 属性。
+在旧版本Ren’Py中回滚以上类的实例会出现奇怪的表现，在新版本中则会报错。</p>
+<p>如果要定义可以存档的类，创作者需要显式继承 <code class="docutils literal notranslate"><span class="pre">python_object</span></code>，不过那个类不支持回滚。</p>
+</div>
+</section>
+<section id="define">
+<span id="define-statement"></span><h2>define语句<a class="headerlink" href="#define" title="Link to this heading"> link</a></h2>
+<p>define语句在初始化时将一个变量赋值。此变量视为一个常量，初始化之后不应再改变。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>等价于(但会丢失一些好处，详见下文)：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>define语句可以选择使用一个命名存储区(详见下面的例子)，将存储区名放在变量前面，用英文句号(.)连接。举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">character</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>define语句可选择带一个索引值，使其可以在一个字典中设置元素：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">tag_layer</span><span class="p">[</span><span class="s2">&quot;eileen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;master&quot;</span>
+</pre></div>
+</div>
+<p>除了使用等号 <code class="docutils literal notranslate"><span class="pre">=</span></code> ，define语句还可以使用另外两个运算符。
+<code class="docutils literal notranslate"><span class="pre">+=</span></code> 运算符用于添加元素，还主要用于列表合并。
+<code class="docutils literal notranslate"><span class="pre">|=</span></code> 运算符主要用于集合合并。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span><span class="s2">&quot;dismiss&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span> <span class="s2">&quot;K_KP_PLUS&quot;</span> <span class="p">]</span>
+<span class="k">define</span> <span class="n">endings</span> <span class="o">|=</span> <span class="p">{</span> <span class="s2">&quot;best_ending&quot;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>define语句可以选择使用一个优先级数值，放在 <code class="docutils literal notranslate"><span class="pre">define</span></code> 和变量名之间。如果没有指定优先级，默认使用0。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="o">-</span><span class="mi">1</span> <span class="n">config</span><span class="o">.</span><span class="n">image_directories</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;dlc/images&quot;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>使用define语句的一个优点是，在声明时它会记录下文件名和该行脚本编号，供启动器(launcher)的导航(navigation)特性使用。
+另一个优点是，<a class="reference internal" href="developer_tools.html#lint"><span class="std std-ref">Lint</span></a> 可以检查define后面的值，例如是否重复定义为不同的值。</p>
+<p>通过define语句定义的变量会被当作一个常数，不会保存或读取，也不该被修改。
+(Ren’Py不做强制要求，但修改那些参数会导致不可预见的情况出现。)</p>
+</section>
+<section id="default">
+<span id="default-statement"></span><h2>default语句<a class="headerlink" href="#default" title="Link to this heading"> link</a></h2>
+<p>default语句给一个变量赋值，前提是该变量在游戏启动或者新游戏加载时未定义。举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">default</span> <span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>如果变量 <code class="docutils literal notranslate"><span class="pre">points</span></code> 在游戏启动时未定义，这条default语句等价于：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>如果变量 <code class="docutils literal notranslate"><span class="pre">points</span></code> 在游戏加载时未定义，这条default语句等价于：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">after_load</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>default语句可以选择使用一个命名存储区(详见下面的例子)，将存储区名放在变量前面，用英文句号(.)连接。
+如果存储区名称不存在，则创建该名称的存储区。
+举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">default</span> <span class="n">schedule</span><span class="o">.</span><span class="n">day</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>与 <code class="docutils literal notranslate"><span class="pre">define</span></code> 语句相同，<a class="reference internal" href="developer_tools.html#lint"><span class="std std-ref">Lint</span></a> 会对 <code class="docutils literal notranslate"><span class="pre">default</span></code> 语句进行检查和优化。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>强烈推荐使用 <code class="docutils literal notranslate"><span class="pre">default</span></code> 设置游戏中可能发生变化的每一个变量。
+如果使用 <code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> 或 <code class="docutils literal notranslate"><span class="pre">define</span></code> 定义某个变量，玩家在游戏过程中该变量发生了变化，
+如果回到主菜单或开启新游戏后，该变量与 <code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> 中的设置不一致，可能会导致一些游戏内容提前“泄漏”。
+若有在start脚本标签(label)中定义变量，又出现读档后某些变量不存在的问题。</p>
+</div>
+</section>
+<section id="names-in-the-store">
+<span id="id4"></span><h2>存储区变量名<a class="headerlink" href="#names-in-the-store" title="Link to this heading"> link</a></h2>
+<p>Ren’Py存储Python变量的地方称作存储区(store)。请务必保证你使用的存储区名没有冲突。</p>
+<p>define语句将一个值声明为一个变量，也可用作定义一个角色对象。这也意味着角色和flag不能同名。</p>
+<p>下面这段有问题的脚本：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+
+    <span class="k">$</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">e</span> <span class="s2">&quot;你好，世界。&quot;</span>
+
+    <span class="k">$</span> <span class="n">e</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">e</span> <span class="s2">&quot;你得了一分！&quot;</span>
+</pre></div>
+</div>
+<p>无法运行，因为变量 <cite>e</cite> 同时用作角色和flag。</p>
+<p>其他也常常需要放入存储区的对象是转场(transition)和变换(transform)。</p>
+<p>以下划线 (_) 开头的变量名是预留给Ren’Py内部使用。详情可以查看 <a class="reference internal" href="reserved.html"><span class="doc">预留变量名目录</span></a> 。</p>
+</section>
+<section id="named-stores">
+<span id="id5"></span><h2>其他的命名存储区<a class="headerlink" href="#named-stores" title="Link to this heading"> link</a></h2>
+<p>命名存储区提供了一种将Python函数和变量有效组织成模块(module)的方法。利用Python的模块化功能，你可以将命名冲突的可能性降到最小。
+每个存储区都对应一个Python模块。默认的存储区名为 <code class="docutils literal notranslate"><span class="pre">store</span></code>，使用 <code class="docutils literal notranslate"><span class="pre">store.named</span></code> 可以访问对应名称的存储区。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">in</span></code> (<code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> 或 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">early</span></code>) 语句块，
+或者 <code class="docutils literal notranslate"><span class="pre">default</span></code>、<code class="docutils literal notranslate"><span class="pre">define</span></code> 及 <a class="reference internal" href="transforms.html#transform-statement"><span class="std std-ref">transform</span></a> 语句，都可以创建命名存储区。
+使用 <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">store.named</span> <span class="pre">import</span> <span class="pre">variable</span></code> 可以将变量导入存储区。
+存储区自身可以使用 <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">store</span> <span class="pre">import</span> <span class="pre">named</span></code> 导入脚本中。</p>
+<p>命名存储区可以通过 <code class="docutils literal notranslate"><span class="pre">python</span></code> 或 <code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">early</span></code>) 语句中的 <code class="docutils literal notranslate"><span class="pre">in</span></code> 分句读取，
+使对应的python语句都在该命名存储区内运行Python。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span> <span class="k">in</span> <span class="n">mystore</span><span class="p">:</span>
+
+    <span class="n">serial_number</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">serial</span><span class="p">():</span>
+
+        <span class="k">global</span> <span class="n">serial_number</span>
+        <span class="n">serial_number</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">serial_number</span>
+
+<span class="k">default</span> <span class="n">character_stats</span><span class="o">.</span><span class="n">chloe_substore</span><span class="o">.</span><span class="n">friends</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Eileen&quot;</span><span class="p">,}</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">serial</span> <span class="o">=</span> <span class="n">mystore</span><span class="o">.</span><span class="n">serial</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;Lucy&quot;</span> <span class="k">in</span> <span class="n">character_stats</span><span class="o">.</span><span class="n">chloe_substore</span><span class="o">.</span><span class="n">friends</span><span class="p">:</span>
+        <span class="n">chloe</span> <span class="s2">&quot;露西是我的朋友！&quot;</span>
+    <span class="k">elif</span> <span class="n">character_stats</span><span class="o">.</span><span class="n">chloe_substore</span><span class="o">.</span><span class="n">friends</span><span class="p">:</span>
+        <span class="n">chloe</span> <span class="s2">&quot;我有很多朋友，但露西并不是其中之一。&quot;</span>
+
+    <span class="k">python</span> <span class="k">in</span> <span class="n">character_stats</span><span class="o">.</span><span class="n">chloe_substore</span><span class="p">:</span>
+        <span class="n">friends</span><span class="o">.</span><span class="k">add</span><span class="p">(</span><span class="s2">&quot;Jeremy&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">in</span></code> 语句块中，默认的“outer”存储区可以使用 <code class="docutils literal notranslate"><span class="pre">renpy.store</span></code> 或 <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">store</span></code> 读写数据。</p>
+<p>命名存储区与默认存储区在存档、读档和回滚方面的情况一样。
+特殊命名空间，比如 <code class="docutils literal notranslate"><span class="pre">persistent</span></code>、<code class="docutils literal notranslate"><span class="pre">config</span></code>、<code class="docutils literal notranslate"><span class="pre">renpy</span></code> 等，不支持在其内部再创建子存储空间。</p>
+</section>
+<section id="constant-stores">
+<span id="id6"></span><h2>常量存储区<a class="headerlink" href="#constant-stores" title="Link to this heading"> link</a></h2>
+<p>定义存储区时，可以将内置变量 <code class="docutils literal notranslate"><span class="pre">_constan</span></code> 设置为True，这样存储区就会变成常量存储区：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span> <span class="k">in</span> <span class="n">mystore</span><span class="p">:</span>
+    <span class="n">_constant</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>存储区为常量时，其内部存储的所有变量都不会存档时保存，并且不参与回滚。</p>
+<p>常量存储区中的变量仅能在初始化阶段修改。
+在init语句块(包括 <code class="docutils literal notranslate"><span class="pre">define</span></code>、<code class="docutils literal notranslate"><span class="pre">transform</span></code> 等语句)中完成初始化后，存储区内所有数据都被当作常量。</p>
+<p>Ren’Py没有办法强制保证常量存储区内的数据不会发生改变，所以创作者需要自己想办法确保初始化阶段之后不再会修改常量存储区的数据。</p>
+<p>定义和使用常量存储区，可以将部分不会变化的数据分离出来，减少存档、读档和回滚时的数据操作，降低系统开销。</p>
+<p>以下存储区默认为常量存储区：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">_errorhandling</span>
+<span class="n">_gamepad</span>
+<span class="n">_renpysteam</span>
+<span class="n">_warper</span>
+<span class="n">audio</span>
+<span class="n">achievement</span>
+<span class="n">build</span>
+<span class="n">director</span>
+<span class="n">iap</span>
+<span class="k">layeredimage</span>
+<span class="n">updater</span>
+</pre></div>
+</div>
+</section>
+<section id="jsondb">
+<span id="id7"></span><h2>JSONDB<a class="headerlink" href="#jsondb" title="Link to this heading"> link</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="JSONDB">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">JSONDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#JSONDB" title="Link to this definition"> link</a></dt>
+<dd><p>JSONDB是一个两级数据库，使用Json存储数据。
+其可以被游戏开发者在数据库中存储数据，用于游戏脚本的版本控制。
+例如，可以存储每一条say语句的相关信息，控制对应say语句显示的内容。</p>
+<p>JSONDB不适合存储用户行为导致的数据变化。 <a class="reference internal" href="persistent.html"><span class="doc">持久化数据</span></a> 或普通存档文件更适合那种需求。</p>
+<p>数据库应该只包含在Python中可以序列化为Json的数据类型，包括列表、字典(字符串作为键)、字符串、数值、True、False和None。
+请参阅 <a class="reference external" href="https://docs.python.org/3/library/json.html#encoders-and-decoders">Python文档</a> ，
+了解不同数据类型间的可互操性(interoperability)，以及数据格式转换的方法和各种可能遇到的坑。</p>
+<p>两级数据库即使用字符串作为键(key)的字典结构。
+第一级字典是只读的，当使用某个键查询第一级字典时，第二级字典才会被创建，创建时可以选择默认的内容。
+第二级字典是可读写的，当第二级字典的某个键发生改变时，游戏中对应的内容会在数据库中保存。</p>
+<p>与其他持久化数据类似，JSONDB不受回滚操作的影响。</p>
+<p>JSONDB实例应该在初始化阶段(在init python语句库或使用define语句)创建，并自动保存在硬盘上。
+该实例创建后是至少包含一个键值对的字典。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">balloonData</span> <span class="o">=</span> <span class="n">JSONDB</span><span class="p">(</span><span class="s2">&quot;balloon.json&quot;</span><span class="p">,</span> <span class="k">default</span><span class="o">=</span><span class="p">{</span> <span class="s2">&quot;enabled&quot;</span> <span class="p">:</span> <span class="kc">False</span> <span class="p">})</span>
+</pre></div>
+</div>
+<p>以上代码创建了一个JSONDB实例，并以默认值存储在文件balloon.json中。
+第二级字典的数据能直接作为普通字典使用。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">say</span><span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+
+    <span class="k">default</span> <span class="n">bd</span> <span class="o">=</span> <span class="n">balloonData</span><span class="p">[</span><span class="n">renpy</span><span class="o">.</span><span class="n">get_translation_identifier</span><span class="p">()]</span>
+
+    <span class="k">if</span> <span class="n">bd</span><span class="p">[</span><span class="s2">&quot;enabled&quot;</span><span class="p">]:</span>
+        <span class="k">use</span> <span class="n">balloon_say</span><span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">what</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">use</span> <span class="n">adv_say</span><span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">what</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">developer</span><span class="p">:</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Dialogue Balloon Mode&quot;</span><span class="p">:</span>
+            <span class="na">action</span> <span class="n">ToggleDict</span><span class="p">(</span><span class="n">bd</span><span class="p">,</span> <span class="s2">&quot;enabled&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>JSONDB构造器使用以下入参：</p>
+<dl class="simple">
+<dt><cite>filename</cite></dt><dd><p>数据库实际存储的对应文件名。默认以game目录作为基础路径。
+推荐文件扩展名为“.json”。</p>
+</dd>
+<dt><cite>default</cite></dt><dd><p>若该入参不是None，其应该是一个字典性数据。当第二级字典创建时，该入参的数据会浅拷贝作为新字典的初始值。
+仅当至少有一个键值对发生改变时，新字典才会作为整个数据库的一部分而保存。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="python-module-package">
+<span id="python-modules"></span><h2>第一方和第三方Python模块(module)和包(package)<a class="headerlink" href="#python-module-package" title="Link to this heading"> link</a></h2>
+<p>Ren’Py可以导入(import)纯python的模块和包。创作者需要用在游戏中的第一方的模块和包，可以直接放置在game文件夹里。第三方的包可以放在game/python-packages文件夹里。</p>
+<p>例如，如果要安装requests包，创作者可以用命令行进入游戏所在目录，然后运行如下命令：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">target</span> <span class="n">game</span><span class="o">/</span><span class="k">python</span><span class="o">-</span><span class="n">packages</span> <span class="k">python</span><span class="o">-</span><span class="n">dateutil</span>
+</pre></div>
+</div>
+<p>无论何种情况，模块和包都可以导入(import)一个init python语句块(block)中:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">dateutil.parser</span>
+</pre></div>
+</div>
+<p>并非所有的Python包都与Ren’Py兼容。创作者需要自己先安装并确保对应的包可以正常工作。</p>
+</section>
+<section id="isinstance">
+<span id="rollback-and-isinstance"></span><h2>回滚和isinstance<a class="headerlink" href="#isinstance" title="Link to this heading"> link</a></h2>
+<p>在.rpy文件里定义的Python语句会格式转换，使其允许回滚。从.py文件导入(import)的文件则不会发生这种格式转换。因此，在Python中创建的对象无法使用回滚(rollback)操作，且在创建之后就最好不要更改。
+作为变换的一部分，Ren’Py将dict、list和set类替换为支持回滚的版本。这些类是内置类的子类，所以所有方法都会工作。然而，这些类无法使用isinstance函数检测其是否为python内置的dict、list和set类的实例。
+为了解决这个问题，Ren’Py提供了Python内置的dict、list和set类的异名。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="python_dict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">python_dict</span></span><a class="headerlink" href="#python_dict" title="Link to this definition"> link</a></dt>
+<dd><p>python_dict类是Python内置的dict类。</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="python_list">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">python_list</span></span><a class="headerlink" href="#python_list" title="Link to this definition"> link</a></dt>
+<dd><p>python_list类是Python内置的list类。</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="python_set">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">python_set</span></span><a class="headerlink" href="#python_set" title="Link to this definition"> link</a></dt>
+<dd><p>python_set类是Python内置的set类。</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="menus.html" class="btn btn-neutral float-left" title="游戏内菜单" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="conditional.html" class="btn btn-neutral float-right" title="条件语句" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

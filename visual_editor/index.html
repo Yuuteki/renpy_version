@@ -595,6 +595,168 @@
             </div>
           </section>
 
+          <section id="variablesSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="variablesListView" class="characters-view">
+              <div id="variableListEmpty" class="panel-empty-state hidden">
+                No default variables yet. Create one to define game state.
+              </div>
+
+              <div id="variableList" class="character-list"></div>
+
+              <button
+                id="newVariableButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create variable"
+                title="Create variable"
+              >
+                New Variable
+              </button>
+            </div>
+
+            <div id="variableDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="variableBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="variableDetailForm" class="character-detail-form">
+                <p class="section-label">Default Statement</p>
+
+                <label>
+                  Statement Type
+                  <input id="variableTypeInput" type="text" value="default" readonly />
+                </label>
+
+                <label>
+                  Store Path
+                  <input id="variableStoreInput" type="text" placeholder="e.g. schedule" />
+                </label>
+
+                <label>
+                  Variable Name
+                  <input id="variableNameInput" type="text" placeholder="e.g. points" />
+                </label>
+
+                <label>
+                  Initial Value
+                  <textarea id="variableValueInput" rows="5" placeholder="e.g. 0"></textarea>
+                </label>
+
+                <div class="inspector-actions">
+                  <button id="variableDeleteButton" class="danger-button" type="button">Delete Variable</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="variableCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="definitionsSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="definitionsListView" class="characters-view">
+              <div id="definitionListEmpty" class="panel-empty-state hidden">
+                No definitions yet. Create one for define or init python setup.
+              </div>
+
+              <div id="definitionList" class="character-list"></div>
+
+              <button
+                id="newDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create definition"
+                title="Create definition"
+              >
+                New Definition
+              </button>
+            </div>
+
+            <div id="definitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="definitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="definitionDetailForm" class="character-detail-form">
+                <label>
+                  Definition Type
+                  <select id="definitionModeInput">
+                    <option value="define">define</option>
+                    <option value="init_python">init python</option>
+                  </select>
+                </label>
+
+                <div id="definitionDefineFields" class="definition-fields">
+                  <p class="section-label">Define</p>
+
+                  <label>
+                    Target
+                    <input id="definitionTargetInput" type="text" placeholder="e.g. config.tag_layer[&quot;eileen&quot;]" />
+                  </label>
+
+                  <label>
+                    Operator
+                    <select id="definitionOperatorInput">
+                      <option value="=">=</option>
+                      <option value="+=">+=</option>
+                      <option value="|=">|=</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    Priority
+                    <input id="definitionPriorityInput" type="text" placeholder="e.g. -1" />
+                  </label>
+
+                  <label>
+                    Value Expression
+                    <textarea id="definitionValueInput" rows="5" placeholder="e.g. [ &quot;images&quot;, &quot;dlc/images&quot; ]"></textarea>
+                  </label>
+                </div>
+
+                <div id="definitionInitPythonFields" class="definition-fields hidden">
+                  <p class="section-label">Init Python</p>
+
+                  <label>
+                    Priority
+                    <input id="definitionInitPriorityInput" type="text" placeholder="e.g. 10" />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="definitionInitHideInput" type="checkbox" />
+                    <span>Hide Store Variables</span>
+                  </label>
+
+                  <label>
+                    Store Path
+                    <input id="definitionInitStoreInput" type="text" placeholder="e.g. mystore" />
+                  </label>
+
+                  <label>
+                    Python Code
+                    <textarea id="definitionCodeInput" rows="9" placeholder="e.g. import random&#10;serial = random.randint(1, 99)"></textarea>
+                  </label>
+                </div>
+
+                <div class="inspector-actions">
+                  <button id="definitionDeleteButton" class="danger-button" type="button">Delete Definition</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="definitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
           <section id="visualProjectSection" class="sidebar-section sidebar-panel status-section">
             <div class="section-header">
               <h2>Visual Project</h2>
@@ -687,6 +849,37 @@
           <button
             class="collapsed-rail-button"
             type="button"
+            data-sidebar-section="variablesSection"
+            aria-label="Open variables"
+            title="Variables"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 6h10"></path>
+              <path d="M7 12h10"></path>
+              <path d="M7 18h10"></path>
+              <circle cx="5" cy="6" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+              <circle cx="5" cy="18" r="1"></circle>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="definitionsSection"
+            aria-label="Open definitions"
+            title="Definitions"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 5 4 12l5 7"></path>
+              <path d="M15 5 20 12l-5 7"></path>
+              <path d="M11 19 13 5"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
             data-sidebar-section="visualProjectSection"
             aria-label="Open visual project info"
             title="Visual Project"
@@ -734,6 +927,11 @@
           <button class="node-card node-card-compact" data-node-type="flow">
             <strong>Flow</strong>
             <span>Jump / Call / Return</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="python">
+            <strong>Python</strong>
+            <span>$ / python:</span>
           </button>
         </div>
 
@@ -926,6 +1124,40 @@
 
             <div class="inspector-actions">
               <button id="flowDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="pythonInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="pythonNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Statement
+              <select id="pythonNodeModeInput">
+                <option value="line">$</option>
+                <option value="block">python:</option>
+              </select>
+            </label>
+
+            <label id="pythonNodeStoreField" class="hidden">
+              Store Path
+              <input id="pythonNodeStoreInput" type="text" placeholder="e.g. mystore" />
+            </label>
+
+            <label id="pythonNodeHideField" class="character-checkbox hidden">
+              <input id="pythonNodeHideInput" type="checkbox" />
+              <span>Hide Store Variables</span>
+            </label>
+
+            <label>
+              Code
+              <textarea id="pythonNodeCodeInput" rows="8" placeholder="e.g. points += 1"></textarea>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="pythonDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 

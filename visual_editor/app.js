@@ -80,6 +80,37 @@ const characterCtcPauseInput = document.getElementById("characterCtcPauseInput")
 const characterCtcTimedPauseInput = document.getElementById("characterCtcTimedPauseInput");
 const characterCtcPositionInput = document.getElementById("characterCtcPositionInput");
 const characterCodePreviewEl = document.getElementById("characterCodePreview");
+const variableListEl = document.getElementById("variableList");
+const variableListEmptyEl = document.getElementById("variableListEmpty");
+const variablesListViewEl = document.getElementById("variablesListView");
+const variableDetailViewEl = document.getElementById("variableDetailView");
+const newVariableButton = document.getElementById("newVariableButton");
+const variableBackButton = document.getElementById("variableBackButton");
+const variableTypeInput = document.getElementById("variableTypeInput");
+const variableStoreInput = document.getElementById("variableStoreInput");
+const variableNameInput = document.getElementById("variableNameInput");
+const variableValueInput = document.getElementById("variableValueInput");
+const variableDeleteButton = document.getElementById("variableDeleteButton");
+const variableCodePreviewEl = document.getElementById("variableCodePreview");
+const definitionListEl = document.getElementById("definitionList");
+const definitionListEmptyEl = document.getElementById("definitionListEmpty");
+const definitionsListViewEl = document.getElementById("definitionsListView");
+const definitionDetailViewEl = document.getElementById("definitionDetailView");
+const newDefinitionButton = document.getElementById("newDefinitionButton");
+const definitionBackButton = document.getElementById("definitionBackButton");
+const definitionModeInput = document.getElementById("definitionModeInput");
+const definitionDefineFieldsEl = document.getElementById("definitionDefineFields");
+const definitionInitPythonFieldsEl = document.getElementById("definitionInitPythonFields");
+const definitionTargetInput = document.getElementById("definitionTargetInput");
+const definitionOperatorInput = document.getElementById("definitionOperatorInput");
+const definitionPriorityInput = document.getElementById("definitionPriorityInput");
+const definitionValueInput = document.getElementById("definitionValueInput");
+const definitionInitPriorityInput = document.getElementById("definitionInitPriorityInput");
+const definitionInitHideInput = document.getElementById("definitionInitHideInput");
+const definitionInitStoreInput = document.getElementById("definitionInitStoreInput");
+const definitionCodeInput = document.getElementById("definitionCodeInput");
+const definitionDeleteButton = document.getElementById("definitionDeleteButton");
+const definitionCodePreviewEl = document.getElementById("definitionCodePreview");
 const visualProjectStatsEl = document.getElementById("visualProjectStats");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
@@ -117,6 +148,15 @@ const flowNodeModeInput = document.getElementById("flowNodeModeInput");
 const flowNodeTargetFieldEl = document.getElementById("flowNodeTargetField");
 const flowNodeTargetInput = document.getElementById("flowNodeTargetInput");
 const flowDeleteNodeButton = document.getElementById("flowDeleteNodeButton");
+const pythonInspectorFormEl = document.getElementById("pythonInspectorForm");
+const pythonNodeTypeInput = document.getElementById("pythonNodeTypeInput");
+const pythonNodeModeInput = document.getElementById("pythonNodeModeInput");
+const pythonNodeStoreFieldEl = document.getElementById("pythonNodeStoreField");
+const pythonNodeStoreInput = document.getElementById("pythonNodeStoreInput");
+const pythonNodeHideFieldEl = document.getElementById("pythonNodeHideField");
+const pythonNodeHideInput = document.getElementById("pythonNodeHideInput");
+const pythonNodeCodeInput = document.getElementById("pythonNodeCodeInput");
+const pythonDeleteNodeButton = document.getElementById("pythonDeleteNodeButton");
 const inspectorFormEl = document.getElementById("inspectorForm");
 const nodeIdInput = document.getElementById("nodeIdInput");
 const nodeTypeInput = document.getElementById("nodeTypeInput");
@@ -343,6 +383,8 @@ const defaultProjectState = {
   ],
   images: [],
   characters: [],
+  variables: [],
+  definitions: [],
   activeGraphId: "label_start",
 };
 
@@ -371,6 +413,10 @@ let imageCategorySectionState = {
 };
 let activeCharacterId = null;
 let characterDetailOpen = false;
+let activeVariableId = null;
+let variableDetailOpen = false;
+let activeDefinitionId = null;
+let definitionDetailOpen = false;
 
 function loadState() {
   try {
@@ -397,6 +443,12 @@ function normalizeState(rawState) {
   const normalizedImageDefinitions = Array.isArray(rawState.images)
     ? rawState.images.map((image, index) => normalizeImageDefinition(image, index))
     : [];
+  const normalizedVariables = Array.isArray(rawState.variables)
+    ? rawState.variables.map((variable, index) => normalizeVariable(variable, index))
+    : [];
+  const normalizedDefinitions = Array.isArray(rawState.definitions)
+    ? rawState.definitions.map((definition, index) => normalizeDefinition(definition, index))
+    : [];
   const activeGraphId = normalizedGraphs.some((graph) => graph.id === rawState.activeGraphId)
     ? rawState.activeGraphId
     : normalizedGraphs[0]?.id ?? null;
@@ -409,6 +461,8 @@ function normalizeState(rawState) {
     graphs: normalizedGraphs,
     images: normalizedImageDefinitions,
     characters: normalizedCharacters,
+    variables: normalizedVariables,
+    definitions: normalizedDefinitions,
     activeGraphId,
   };
 }
@@ -534,6 +588,17 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
     };
   }
 
+  if (node.type === "python") {
+    return {
+      ...node,
+      title: node.title || "Python",
+      pythonMode: node.pythonMode === "block" ? "block" : "line",
+      pythonCode: node.pythonCode || node.content || "",
+      pythonStore: node.pythonStore || "",
+      pythonHide: Boolean(node.pythonHide),
+    };
+  }
+
   return node;
 }
 
@@ -541,6 +606,7 @@ function createMenuChoice(index = 1) {
   return {
     id: `menu_choice_${Date.now()}_${index}`,
     text: `Choice ${index}`,
+    condition: "",
   };
 }
 
@@ -561,6 +627,7 @@ function normalizeMenuChoices(rawChoices) {
     return {
       id: choice.id || `menu_choice_${Date.now()}_${index + 1}`,
       text: `${choice.text || ""}`.trim() || `Choice ${index + 1}`,
+      condition: `${choice.condition || ""}`.trim(),
     };
   });
 
@@ -629,6 +696,32 @@ function normalizeImageDefinition(image, index) {
     id: image.id || `image_${index + 1}`,
     name: image.name || `image_${index + 1}`,
     ...normalizedFields,
+  };
+}
+
+function normalizeVariable(variable, index) {
+  return {
+    id: variable.id || `variable_${index + 1}`,
+    store: variable.store || "",
+    name: variable.name || `flag_${index + 1}`,
+    value: variable.value || "0",
+  };
+}
+
+function normalizeDefinition(definition, index) {
+  const mode = definition.mode === "init_python" ? "init_python" : "define";
+
+  return {
+    id: definition.id || `definition_${index + 1}`,
+    mode,
+    target: definition.target || `value_${index + 1}`,
+    operator: ["=", "+=", "|="].includes(definition.operator) ? definition.operator : "=",
+    priority: definition.priority || "",
+    value: definition.value || "",
+    initPriority: definition.initPriority || "",
+    initHide: Boolean(definition.initHide),
+    initStore: definition.initStore || "",
+    code: definition.code || "",
   };
 }
 
@@ -861,6 +954,34 @@ function createBlankImageDefinition() {
   };
 }
 
+function createBlankVariable() {
+  const nextIndex = state.variables.length + 1;
+
+  return {
+    id: `variable_${nextIndex}`,
+    store: "",
+    name: `flag_${nextIndex}`,
+    value: "0",
+  };
+}
+
+function createBlankDefinition() {
+  const nextIndex = state.definitions.length + 1;
+
+  return {
+    id: `definition_${nextIndex}`,
+    mode: "define",
+    target: `value_${nextIndex}`,
+    operator: "=",
+    priority: "",
+    value: "",
+    initPriority: "",
+    initHide: false,
+    initStore: "",
+    code: "",
+  };
+}
+
 function getActiveCharacter() {
   return state.characters.find((character) => character.id === activeCharacterId) ?? null;
 }
@@ -875,6 +996,14 @@ function getActiveImageDefinition() {
 
 function getImageDefinitionById(imageId) {
   return state.images.find((image) => image.id === imageId) ?? null;
+}
+
+function getActiveVariable() {
+  return state.variables.find((variable) => variable.id === activeVariableId) ?? null;
+}
+
+function getActiveDefinition() {
+  return state.definitions.find((definition) => definition.id === activeDefinitionId) ?? null;
 }
 
 function getImageNodeMode(node) {
@@ -1166,6 +1295,14 @@ function renderMenuChoiceList(node) {
         value="${escapeHtml(choice.text)}"
         placeholder="e.g. Go left"
         data-menu-choice-id="${escapeHtml(choice.id)}"
+        data-menu-choice-field="text"
+      />
+      <input
+        type="text"
+        value="${escapeHtml(choice.condition || "")}"
+        placeholder="e.g. points > 3"
+        data-menu-choice-id="${escapeHtml(choice.id)}"
+        data-menu-choice-field="condition"
       />
     </div>
   `).join("");
@@ -1287,6 +1424,18 @@ function getNodeDisplay(node) {
       content: flowMode === "return"
         ? "Return to caller."
         : (target.label || "Select target label."),
+    };
+  }
+
+  if (node.type === "python") {
+    const mode = node.pythonMode === "block" ? "block" : "line";
+    const code = `${node.pythonCode || ""}`.trim();
+    const firstLine = code.split(/\r?\n/, 1)[0] || "";
+
+    return {
+      typeLabel: "python",
+      title: mode === "block" ? "Python Block" : "Python Line",
+      content: firstLine || (mode === "block" ? "Add python block code." : "Add a single python statement."),
     };
   }
 
@@ -1875,11 +2024,16 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
     menuChoices.forEach((choice, index) => {
       const choiceText = `${choice.text || ""}`.trim() || `Choice ${index + 1}`;
+      const choiceCondition = `${choice.condition || ""}`.trim();
       const branchEdge = getPrimaryOutgoingEdge(graph, node.id, {
         fromPortId: getMenuChoicePortId(choice.id),
       });
 
-      appendIndentedLine(lines, indentLevel + 1, `"${escapeRenpyString(choiceText)}":`);
+      appendIndentedLine(
+        lines,
+        indentLevel + 1,
+        `"${escapeRenpyString(choiceText)}"${choiceCondition ? ` if ${choiceCondition}` : ""}:`,
+      );
 
       if (!branchEdge) {
         appendIndentedLine(lines, indentLevel + 2, "pass");
@@ -1961,6 +2115,29 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
     appendIndentedLine(lines, indentLevel, parts.join(" "));
   } else if (node.type === "animation") {
     appendIndentedLine(lines, indentLevel, `with ${getAnimationNodeTransition(node)}`);
+  } else if (node.type === "python") {
+    const pythonMode = node.pythonMode === "block" ? "block" : "line";
+    const pythonCode = `${node.pythonCode || ""}`.trim();
+    const pythonLine = pythonCode.split(/\r?\n/, 1)[0]?.trim() || "";
+
+    if (pythonMode === "block") {
+      const storeText = `${node.pythonStore || ""}`.trim();
+      const hideText = node.pythonHide ? " hide" : "";
+      const storeClause = storeText ? ` in ${storeText}` : "";
+      appendIndentedLine(lines, indentLevel, `python${hideText}${storeClause}:`);
+
+      if (pythonCode) {
+        pythonCode.split(/\r?\n/).forEach((line) => {
+          appendIndentedLine(lines, indentLevel + 1, line);
+        });
+      } else {
+        appendIndentedLine(lines, indentLevel + 1, "pass");
+      }
+    } else if (pythonLine) {
+      appendIndentedLine(lines, indentLevel, `$ ${pythonLine}`);
+    } else {
+      appendIndentedLine(lines, indentLevel, "# Empty python line");
+    }
   } else {
     appendIndentedLine(lines, indentLevel, `# ${node.type}: ${node.title || "Untitled Node"}`);
   }
@@ -2782,6 +2959,280 @@ function renderCharactersPanel() {
   syncCharacterDetailFields();
 }
 
+function getVariableTarget(variable) {
+  const storePath = `${variable?.store || ""}`.trim();
+  const variableName = `${variable?.name || ""}`.trim() || "flag";
+
+  return storePath ? `${storePath}.${variableName}` : variableName;
+}
+
+function formatIndentedCodeBlock(code, indentLevel = 1) {
+  const normalizedCode = `${code || ""}`.replace(/\r\n?/g, "\n").trim();
+
+  if (!normalizedCode) {
+    return `${"    ".repeat(indentLevel)}pass`;
+  }
+
+  return normalizedCode
+    .split("\n")
+    .map((line) => `${"    ".repeat(indentLevel)}${line}`)
+    .join("\n");
+}
+
+function formatVariableCode(variable) {
+  if (!variable) {
+    return "";
+  }
+
+  const target = getVariableTarget(variable);
+  const value = `${variable.value || ""}`.trim() || "0";
+  return `default ${target} = ${value}`;
+}
+
+function syncVariableDetailFields() {
+  const variable = getActiveVariable();
+
+  variableTypeInput.value = "default";
+
+  if (!variable) {
+    variableStoreInput.value = "";
+    variableNameInput.value = "";
+    variableValueInput.value = "";
+    variableCodePreviewEl.textContent = "";
+    return;
+  }
+
+  variableStoreInput.value = variable.store;
+  variableNameInput.value = variable.name;
+  variableValueInput.value = variable.value;
+  variableCodePreviewEl.textContent = formatVariableCode(variable);
+}
+
+function renderVariablesPanel() {
+  const hasVariables = state.variables.length > 0;
+
+  if (!hasVariables) {
+    activeVariableId = null;
+    variableDetailOpen = false;
+  } else if (!getActiveVariable()) {
+    activeVariableId = state.variables[0].id;
+  }
+
+  if (variableDetailOpen && !getActiveVariable()) {
+    variableDetailOpen = false;
+  }
+
+  variableListEmptyEl.classList.toggle("hidden", hasVariables);
+  variableListEl.innerHTML = "";
+
+  state.variables.forEach((variable) => {
+    const item = document.createElement("div");
+    item.className = "character-card";
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
+
+    if (variable.id === activeVariableId) {
+      item.classList.add("is-active");
+    }
+
+    item.innerHTML = `
+      <strong>${escapeHtml(getVariableTarget(variable))}</strong>
+      <span>${escapeHtml(`${variable.value || "0"}`.trim() || "0")}</span>
+    `;
+
+    item.addEventListener("click", () => {
+      activeVariableId = variable.id;
+      renderVariablesPanel();
+    });
+    item.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      activeVariableId = variable.id;
+      variableDetailOpen = true;
+      renderVariablesPanel();
+      setStatus(`Opened variable "${getVariableTarget(variable)}".`);
+    });
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activeVariableId = variable.id;
+        variableDetailOpen = true;
+        renderVariablesPanel();
+        setStatus(`Opened variable "${getVariableTarget(variable)}".`);
+      }
+    });
+
+    variableListEl.appendChild(item);
+  });
+
+  variablesListViewEl.classList.toggle("hidden", variableDetailOpen);
+  variableDetailViewEl.classList.toggle("hidden", !variableDetailOpen);
+  syncVariableDetailFields();
+}
+
+function formatDefinitionCode(definition) {
+  if (!definition) {
+    return "";
+  }
+
+  if (definition.mode === "init_python") {
+    const priorityText = `${definition.initPriority || ""}`.trim();
+    const hideText = definition.initHide ? " hide" : "";
+    const storeText = `${definition.initStore || ""}`.trim() ? ` in ${definition.initStore.trim()}` : "";
+    const prioritySegment = priorityText ? ` ${priorityText}` : "";
+
+    return `init${prioritySegment} python${hideText}${storeText}:\n${formatIndentedCodeBlock(definition.code, 1)}`;
+  }
+
+  const priorityText = `${definition.priority || ""}`.trim();
+  const operator = definition.operator || "=";
+  const target = `${definition.target || ""}`.trim() || "value";
+  const value = `${definition.value || ""}`.trim() || "None";
+  const prioritySegment = priorityText ? ` ${priorityText}` : "";
+
+  return `define${prioritySegment} ${target} ${operator} ${value}`;
+}
+
+function syncDefinitionDetailFields() {
+  const definition = getActiveDefinition();
+
+  if (!definition) {
+    definitionModeInput.value = "define";
+    definitionTargetInput.value = "";
+    definitionOperatorInput.value = "=";
+    definitionPriorityInput.value = "";
+    definitionValueInput.value = "";
+    definitionInitPriorityInput.value = "";
+    definitionInitHideInput.checked = false;
+    definitionInitStoreInput.value = "";
+    definitionCodeInput.value = "";
+    definitionDefineFieldsEl.classList.remove("hidden");
+    definitionInitPythonFieldsEl.classList.add("hidden");
+    definitionCodePreviewEl.textContent = "";
+    return;
+  }
+
+  definitionModeInput.value = definition.mode;
+  definitionTargetInput.value = definition.target;
+  definitionOperatorInput.value = definition.operator;
+  definitionPriorityInput.value = definition.priority;
+  definitionValueInput.value = definition.value;
+  definitionInitPriorityInput.value = definition.initPriority;
+  definitionInitHideInput.checked = definition.initHide;
+  definitionInitStoreInput.value = definition.initStore;
+  definitionCodeInput.value = definition.code;
+  definitionDefineFieldsEl.classList.toggle("hidden", definition.mode !== "define");
+  definitionInitPythonFieldsEl.classList.toggle("hidden", definition.mode !== "init_python");
+  definitionCodePreviewEl.textContent = formatDefinitionCode(definition);
+}
+
+function getDefinitionLabel(definition) {
+  if (definition.mode === "init_python") {
+    const store = `${definition.initStore || ""}`.trim();
+    return store ? `init python in ${store}` : "init python";
+  }
+
+  return `${definition.target || ""}`.trim() || "define";
+}
+
+function renderDefinitionsPanel() {
+  const hasDefinitions = state.definitions.length > 0;
+
+  if (!hasDefinitions) {
+    activeDefinitionId = null;
+    definitionDetailOpen = false;
+  } else if (!getActiveDefinition()) {
+    activeDefinitionId = state.definitions[0].id;
+  }
+
+  if (definitionDetailOpen && !getActiveDefinition()) {
+    definitionDetailOpen = false;
+  }
+
+  definitionListEmptyEl.classList.toggle("hidden", hasDefinitions);
+  definitionListEl.innerHTML = "";
+
+  state.definitions.forEach((definition) => {
+    const item = document.createElement("div");
+    item.className = "character-card";
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
+
+    if (definition.id === activeDefinitionId) {
+      item.classList.add("is-active");
+    }
+
+    item.innerHTML = `
+      <strong>${escapeHtml(getDefinitionLabel(definition))}</strong>
+      <span>${escapeHtml(definition.mode === "define" ? "define" : "init python")}</span>
+    `;
+
+    item.addEventListener("click", () => {
+      activeDefinitionId = definition.id;
+      renderDefinitionsPanel();
+    });
+    item.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      activeDefinitionId = definition.id;
+      definitionDetailOpen = true;
+      renderDefinitionsPanel();
+      setStatus(`Opened definition "${getDefinitionLabel(definition)}".`);
+    });
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activeDefinitionId = definition.id;
+        definitionDetailOpen = true;
+        renderDefinitionsPanel();
+        setStatus(`Opened definition "${getDefinitionLabel(definition)}".`);
+      }
+    });
+
+    definitionListEl.appendChild(item);
+  });
+
+  definitionsListViewEl.classList.toggle("hidden", definitionDetailOpen);
+  definitionDetailViewEl.classList.toggle("hidden", !definitionDetailOpen);
+  syncDefinitionDetailFields();
+}
+
+function deleteActiveVariable() {
+  const variable = getActiveVariable();
+
+  if (!variable) {
+    return;
+  }
+
+  state.variables = state.variables.filter((currentVariable) => currentVariable.id !== variable.id);
+  activeVariableId = state.variables[0]?.id ?? null;
+
+  if (!state.variables.length) {
+    variableDetailOpen = false;
+  }
+
+  render();
+  saveState(`Deleted variable "${getVariableTarget(variable)}".`);
+}
+
+function deleteActiveDefinition() {
+  const definition = getActiveDefinition();
+
+  if (!definition) {
+    return;
+  }
+
+  state.definitions = state.definitions.filter((currentDefinition) => currentDefinition.id !== definition.id);
+  activeDefinitionId = state.definitions[0]?.id ?? null;
+
+  if (!state.definitions.length) {
+    definitionDetailOpen = false;
+  }
+
+  render();
+  saveState(`Deleted definition "${getDefinitionLabel(definition)}".`);
+}
+
 function renderVisualProjectStats() {
   const graph = getActiveGraph();
   const stats = [
@@ -2796,6 +3247,14 @@ function renderVisualProjectStats() {
     {
       title: "Blocks In Current Graph",
       value: String(graph?.nodes.length || 0),
+    },
+    {
+      title: "Default Variables",
+      value: String(state.variables.length),
+    },
+    {
+      title: "Definitions",
+      value: String(state.definitions.length),
     },
     {
       title: "Canvas Zoom",
@@ -2946,6 +3405,7 @@ function renderInspector() {
     dialogueInspectorFormEl.classList.add("hidden");
     menuInspectorFormEl.classList.add("hidden");
     flowInspectorFormEl.classList.add("hidden");
+    pythonInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
     return;
   }
@@ -2956,6 +3416,7 @@ function renderInspector() {
   const selectedIsDialogue = selectedNode.type === "dialogue";
   const selectedIsMenu = selectedNode.type === "menu";
   const selectedIsFlow = isFlowNode(selectedNode);
+  const selectedIsPython = selectedNode.type === "python";
 
   inspectorEmptyEl.classList.add("hidden");
   startInspectorFormEl.classList.toggle("hidden", !selectedIsStart);
@@ -2964,7 +3425,8 @@ function renderInspector() {
   dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
   menuInspectorFormEl.classList.toggle("hidden", !selectedIsMenu);
   flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsMenu || selectedIsFlow);
+  pythonInspectorFormEl.classList.toggle("hidden", !selectedIsPython);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsMenu || selectedIsFlow || selectedIsPython);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -3032,6 +3494,22 @@ function renderInspector() {
     return;
   }
 
+  if (selectedIsPython) {
+    const pythonMode = selectedNode.pythonMode === "block" ? "block" : "line";
+
+    pythonNodeTypeInput.value = "Python";
+    pythonNodeModeInput.value = pythonMode;
+    pythonNodeStoreFieldEl.classList.toggle("hidden", pythonMode !== "block");
+    pythonNodeHideFieldEl.classList.toggle("hidden", pythonMode !== "block");
+    pythonNodeStoreInput.value = selectedNode.pythonStore || "";
+    pythonNodeHideInput.checked = Boolean(selectedNode.pythonHide);
+    pythonNodeCodeInput.value = selectedNode.pythonCode || "";
+    pythonNodeCodeInput.placeholder = pythonMode === "block"
+      ? "e.g. import random\npoints += 1"
+      : "e.g. points += 1";
+    return;
+  }
+
   nodeIdInput.value = selectedNode.id;
   nodeTypeInput.value = selectedNode.type;
   nodeTitleInput.value = selectedNode.title;
@@ -3047,6 +3525,8 @@ function render() {
   renderLabelPanel();
   renderImagesPanel();
   renderCharactersPanel();
+  renderVariablesPanel();
+  renderDefinitionsPanel();
   renderVisualProjectStats();
   renderGraph();
   renderInspector();
@@ -3170,6 +3650,32 @@ function updateActiveImageDefinition(patch) {
   Object.assign(image, patch);
   syncImageDefinitionDetailFields();
   render();
+  saveState();
+}
+
+function updateActiveVariable(patch) {
+  const variable = getActiveVariable();
+
+  if (!variable) {
+    return;
+  }
+
+  Object.assign(variable, patch);
+  syncVariableDetailFields();
+  renderVisualProjectStats();
+  saveState();
+}
+
+function updateActiveDefinition(patch) {
+  const definition = getActiveDefinition();
+
+  if (!definition) {
+    return;
+  }
+
+  Object.assign(definition, patch);
+  syncDefinitionDetailFields();
+  renderVisualProjectStats();
   saveState();
 }
 
@@ -3548,8 +4054,9 @@ menuAddChoiceButton.addEventListener("click", () => {
 });
 menuChoiceListEl.addEventListener("input", (event) => {
   const choiceId = event.target.dataset.menuChoiceId;
+  const choiceField = event.target.dataset.menuChoiceField;
 
-  if (!choiceId) {
+  if (!choiceId || !choiceField) {
     return;
   }
 
@@ -3562,7 +4069,7 @@ menuChoiceListEl.addEventListener("input", (event) => {
 
   selectedNode.menuChoices = getMenuChoices(selectedNode).map((choice) => (
     choice.id === choiceId
-      ? { ...choice, text: event.target.value }
+      ? { ...choice, [choiceField]: event.target.value }
       : choice
   ));
 
@@ -3639,6 +4146,21 @@ flowNodeTargetInput.addEventListener("change", (event) => {
     flowTargetGraphId: targetGraph.id,
     flowTargetLabel: targetGraph.label,
     content: targetGraph.label,
+  });
+});
+pythonNodeModeInput.addEventListener("change", (event) => {
+  updateSelectedNode({ pythonMode: event.target.value });
+});
+pythonNodeStoreInput.addEventListener("input", (event) => {
+  updateSelectedNode({ pythonStore: event.target.value });
+});
+pythonNodeHideInput.addEventListener("change", (event) => {
+  updateSelectedNode({ pythonHide: event.target.checked });
+});
+pythonNodeCodeInput.addEventListener("input", (event) => {
+  updateSelectedNode({
+    pythonCode: event.target.value,
+    content: event.target.value,
   });
 });
 
@@ -3752,6 +4274,76 @@ characterBackButton.addEventListener("click", () => {
   closeCharacterDetail();
   setStatus("Returned to character list.");
 });
+newVariableButton.addEventListener("click", () => {
+  const newVariable = createBlankVariable();
+
+  state.variables.push(newVariable);
+  activeVariableId = newVariable.id;
+  variableDetailOpen = true;
+  render();
+  saveState(`Created variable "${getVariableTarget(newVariable)}".`);
+});
+variableBackButton.addEventListener("click", () => {
+  variableDetailOpen = false;
+  renderVariablesPanel();
+  setStatus("Returned to variable list.");
+});
+variableStoreInput.addEventListener("input", (event) => {
+  updateActiveVariable({ store: event.target.value });
+});
+variableNameInput.addEventListener("input", (event) => {
+  updateActiveVariable({ name: event.target.value });
+});
+variableValueInput.addEventListener("input", (event) => {
+  updateActiveVariable({ value: event.target.value });
+});
+variableDeleteButton.addEventListener("click", () => {
+  deleteActiveVariable();
+});
+newDefinitionButton.addEventListener("click", () => {
+  const newDefinition = createBlankDefinition();
+
+  state.definitions.push(newDefinition);
+  activeDefinitionId = newDefinition.id;
+  definitionDetailOpen = true;
+  render();
+  saveState(`Created definition "${getDefinitionLabel(newDefinition)}".`);
+});
+definitionBackButton.addEventListener("click", () => {
+  definitionDetailOpen = false;
+  renderDefinitionsPanel();
+  setStatus("Returned to definition list.");
+});
+definitionModeInput.addEventListener("change", (event) => {
+  updateActiveDefinition({ mode: event.target.value });
+});
+definitionTargetInput.addEventListener("input", (event) => {
+  updateActiveDefinition({ target: event.target.value });
+});
+definitionOperatorInput.addEventListener("change", (event) => {
+  updateActiveDefinition({ operator: event.target.value });
+});
+definitionPriorityInput.addEventListener("input", (event) => {
+  updateActiveDefinition({ priority: event.target.value });
+});
+definitionValueInput.addEventListener("input", (event) => {
+  updateActiveDefinition({ value: event.target.value });
+});
+definitionInitPriorityInput.addEventListener("input", (event) => {
+  updateActiveDefinition({ initPriority: event.target.value });
+});
+definitionInitHideInput.addEventListener("change", (event) => {
+  updateActiveDefinition({ initHide: event.target.checked });
+});
+definitionInitStoreInput.addEventListener("input", (event) => {
+  updateActiveDefinition({ initStore: event.target.value });
+});
+definitionCodeInput.addEventListener("input", (event) => {
+  updateActiveDefinition({ code: event.target.value });
+});
+definitionDeleteButton.addEventListener("click", () => {
+  deleteActiveDefinition();
+});
 characterIdInput.addEventListener("input", (event) => {
   updateActiveCharacter({ id: event.target.value });
 });
@@ -3864,6 +4456,15 @@ menuDeleteNodeButton.addEventListener("click", () => {
   deleteNode(graph.selectedNodeId);
 });
 flowDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
+pythonDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
   if (!graph?.selectedNodeId) {
@@ -4031,6 +4632,18 @@ function createNodeForType(nodeType, graph) {
       flowMode: "jump",
       flowTargetGraphId: "",
       flowTargetLabel: "",
+    };
+  }
+
+  if (nodeType === "python") {
+    return {
+      ...baseNode,
+      title: "Python",
+      content: "",
+      pythonMode: "line",
+      pythonCode: "",
+      pythonStore: "",
+      pythonHide: false,
     };
   }
 
