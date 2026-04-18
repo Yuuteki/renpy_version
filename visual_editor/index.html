@@ -784,7 +784,9 @@
 
             <label>
               <span id="imageNodeNameLabel">Image Name</span>
-              <input id="imageNodeNameInput" type="text" placeholder="e.g. eileen happy" />
+              <select id="imageNodeNameInput">
+                <option value="">No imported images</option>
+              </select>
             </label>
 
             <label>
@@ -849,6 +851,29 @@
 
             <div class="inspector-actions">
               <button id="animationDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="dialogueInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="dialogueNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Speaker
+              <select id="dialogueCharacterInput">
+                <option value="">Narrator</option>
+              </select>
+            </label>
+
+            <label>
+              Content
+              <textarea id="dialogueNodeContentInput" rows="8" placeholder="Enter dialogue content..."></textarea>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="dialogueDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 

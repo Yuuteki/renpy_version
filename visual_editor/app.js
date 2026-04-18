@@ -100,6 +100,11 @@ const animationInspectorFormEl = document.getElementById("animationInspectorForm
 const animationNodeTypeInput = document.getElementById("animationNodeTypeInput");
 const animationNodeTransitionInput = document.getElementById("animationNodeTransitionInput");
 const animationDeleteNodeButton = document.getElementById("animationDeleteNodeButton");
+const dialogueInspectorFormEl = document.getElementById("dialogueInspectorForm");
+const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
+const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
+const dialogueNodeContentInput = document.getElementById("dialogueNodeContentInput");
+const dialogueDeleteNodeButton = document.getElementById("dialogueDeleteNodeButton");
 const inspectorFormEl = document.getElementById("inspectorForm");
 const nodeIdInput = document.getElementById("nodeIdInput");
 const nodeTypeInput = document.getElementById("nodeTypeInput");
@@ -746,8 +751,16 @@ function getActiveCharacter() {
   return state.characters.find((character) => character.id === activeCharacterId) ?? null;
 }
 
+function getCharacterById(characterId) {
+  return state.characters.find((character) => character.id === characterId) ?? null;
+}
+
 function getActiveImageDefinition() {
   return state.images.find((image) => image.id === activeImageDefinitionId) ?? null;
+}
+
+function getImageDefinitionById(imageId) {
+  return state.images.find((image) => image.id === imageId) ?? null;
 }
 
 function getImageNodeMode(node) {
@@ -755,11 +768,136 @@ function getImageNodeMode(node) {
 }
 
 function getImageNodeName(node) {
+  const selectedImage = getImageDefinitionById(node.imageDefinitionId);
+
+  if (selectedImage) {
+    return (selectedImage.name || "").trim();
+  }
+
   return (node.imageName || "").trim();
+}
+
+function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
+  if (!selectEl) {
+    return;
+  }
+
+  const placeholderText = state.images.length
+    ? (mode === "scene" ? "Optional imported image" : "Select imported image")
+    : "No imported images";
+  const currentLegacyName = !node?.imageDefinitionId && (node?.imageName || "").trim();
+  const legacyValue = currentLegacyName ? `__legacy__:${currentLegacyName}` : "";
+
+  selectEl.innerHTML = "";
+
+  const placeholderOption = document.createElement("option");
+  placeholderOption.value = "";
+  placeholderOption.textContent = placeholderText;
+  selectEl.appendChild(placeholderOption);
+
+  if (currentLegacyName) {
+    const legacyOption = document.createElement("option");
+    legacyOption.value = legacyValue;
+    legacyOption.textContent = `Legacy / Missing: ${currentLegacyName}`;
+    selectEl.appendChild(legacyOption);
+  }
+
+  state.images.forEach((image) => {
+    const option = document.createElement("option");
+    option.value = image.id;
+    option.textContent = `${image.name} · ${imageCategoryMeta[image.category]?.label || "Others"}`;
+    selectEl.appendChild(option);
+  });
+
+  if (node?.imageDefinitionId && getImageDefinitionById(node.imageDefinitionId)) {
+    selectEl.value = node.imageDefinitionId;
+    return;
+  }
+
+  if (legacyValue) {
+    selectEl.value = legacyValue;
+    return;
+  }
+
+  selectEl.value = "";
 }
 
 function getAnimationNodeTransition(node) {
   return node.animationTransition || "dissolve";
+}
+
+function getDialogueSpeaker(node) {
+  const selectedCharacter = getCharacterById(node.dialogueCharacterId);
+
+  if (selectedCharacter) {
+    return {
+      kind: "character",
+      id: selectedCharacter.id,
+      name: selectedCharacter.name || selectedCharacter.id,
+    };
+  }
+
+  if (node.dialogueCharacterId) {
+    return {
+      kind: "character",
+      id: node.dialogueCharacterId,
+      name: node.dialogueSpeaker || node.dialogueCharacterId,
+    };
+  }
+
+  return {
+    kind: "narrator",
+    id: null,
+    name: "Narrator",
+  };
+}
+
+function buildDialogueCharacterOptions(selectEl, node) {
+  if (!selectEl) {
+    return;
+  }
+
+  const speaker = getDialogueSpeaker(node);
+  const hasMissingCharacter = Boolean(node?.dialogueCharacterId) && !getCharacterById(node.dialogueCharacterId);
+  const missingValue = hasMissingCharacter ? `__missing__:${node.dialogueCharacterId}` : "";
+
+  selectEl.innerHTML = "";
+
+  const narratorOption = document.createElement("option");
+  narratorOption.value = "";
+  narratorOption.textContent = "Narrator";
+  selectEl.appendChild(narratorOption);
+
+  if (hasMissingCharacter) {
+    const missingOption = document.createElement("option");
+    missingOption.value = missingValue;
+    missingOption.textContent = `Legacy / Missing: ${speaker.name}`;
+    selectEl.appendChild(missingOption);
+  }
+
+  state.characters.forEach((character) => {
+    const option = document.createElement("option");
+    option.value = character.id;
+    option.textContent = `${character.name} · ${character.id}`;
+    selectEl.appendChild(option);
+  });
+
+  if (speaker.kind === "narrator") {
+    selectEl.value = "";
+    return;
+  }
+
+  if (getCharacterById(speaker.id)) {
+    selectEl.value = speaker.id;
+    return;
+  }
+
+  if (missingValue) {
+    selectEl.value = missingValue;
+    return;
+  }
+
+  selectEl.value = "";
 }
 
 function buildImageSourcePathFromSelection(fileName, category, currentValue = "") {
@@ -821,6 +959,17 @@ function getNodeDisplay(node) {
       typeLabel: "animation",
       title: "Animation",
       content: getAnimationNodeTransition(node),
+    };
+  }
+
+  if (node.type === "dialogue") {
+    const speaker = getDialogueSpeaker(node);
+    const dialogueText = (node.content || node.title || "").trim();
+
+    return {
+      typeLabel: "dialogue",
+      title: speaker.kind === "narrator" ? "Narration" : `Dialogue · ${speaker.name}`,
+      content: dialogueText || "Enter dialogue content.",
     };
   }
 
@@ -1372,6 +1521,13 @@ function formatLabelGraphCode(graph) {
 
     if (node.type === "dialogue") {
       const dialogueText = (node.content || node.title || "...").trim() || "...";
+      const speaker = getDialogueSpeaker(node);
+
+      if (speaker.kind === "character" && speaker.id) {
+        lines.push(`    ${speaker.id} "${escapeRenpyString(dialogueText)}"`);
+        return;
+      }
+
       lines.push(`    "${escapeRenpyString(dialogueText)}"`);
       return;
     }
@@ -1787,7 +1943,7 @@ function deleteImageDefinition(imageId) {
   }
 
   setImageContextMenuState(false);
-  renderImagesPanel();
+  render();
   saveState(`Deleted image "${image.name}".`);
 }
 
@@ -2002,7 +2158,7 @@ function deleteCharacter(characterId) {
   }
 
   setCharacterContextMenuState(false);
-  renderCharactersPanel();
+  render();
   saveState(`Deleted character "${character.name}".`);
 }
 
@@ -2359,6 +2515,7 @@ function renderInspector() {
     startInspectorFormEl.classList.add("hidden");
     imageInspectorFormEl.classList.add("hidden");
     animationInspectorFormEl.classList.add("hidden");
+    dialogueInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
     return;
   }
@@ -2366,12 +2523,14 @@ function renderInspector() {
   const selectedIsStart = selectedNode.type === "start";
   const selectedIsImage = selectedNode.type === "image";
   const selectedIsAnimation = selectedNode.type === "animation";
+  const selectedIsDialogue = selectedNode.type === "dialogue";
 
   inspectorEmptyEl.classList.add("hidden");
   startInspectorFormEl.classList.toggle("hidden", !selectedIsStart);
   imageInspectorFormEl.classList.toggle("hidden", !selectedIsImage);
   animationInspectorFormEl.classList.toggle("hidden", !selectedIsAnimation);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation);
+  dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -2388,7 +2547,7 @@ function renderInspector() {
 
     imageNodeTypeInput.value = "Image";
     imageNodeModeInput.value = imageMode;
-    imageNodeNameInput.value = selectedNode.imageName || "";
+    buildImageNodeResourceOptions(imageNodeNameInput, selectedNode, { mode: imageMode });
     imageNodeLayerInput.value = selectedNode.imageLayer || "";
     imageNodeAtInput.value = selectedNode.imageAt || "";
     imageNodeAliasInput.value = selectedNode.imageAlias || "";
@@ -2412,6 +2571,13 @@ function renderInspector() {
   if (selectedIsAnimation) {
     animationNodeTypeInput.value = "Animation";
     animationNodeTransitionInput.value = getAnimationNodeTransition(selectedNode);
+    return;
+  }
+
+  if (selectedIsDialogue) {
+    dialogueNodeTypeInput.value = "Dialogue";
+    buildDialogueCharacterOptions(dialogueCharacterInput, selectedNode);
+    dialogueNodeContentInput.value = selectedNode.content || "";
     return;
   }
 
@@ -2472,6 +2638,8 @@ function updateActiveCharacter(patch) {
   }
 
   syncCharacterDetailFields();
+  renderGraph();
+  renderInspector();
   saveState();
 }
 
@@ -2484,7 +2652,7 @@ function updateActiveImageDefinition(patch) {
 
   Object.assign(image, patch);
   syncImageDefinitionDetailFields();
-  renderImagesPanel();
+  render();
   saveState();
 }
 
@@ -2759,8 +2927,33 @@ nodeContentInput.addEventListener("input", (event) => {
 imageNodeModeInput.addEventListener("change", (event) => {
   updateSelectedNode({ imageMode: event.target.value });
 });
-imageNodeNameInput.addEventListener("input", (event) => {
-  updateSelectedNode({ imageName: event.target.value });
+imageNodeNameInput.addEventListener("change", (event) => {
+  const selectedValue = event.target.value;
+
+  if (!selectedValue) {
+    updateSelectedNode({ imageDefinitionId: "", imageName: "" });
+    return;
+  }
+
+  if (selectedValue.startsWith("__legacy__:")) {
+    updateSelectedNode({
+      imageDefinitionId: "",
+      imageName: selectedValue.slice("__legacy__:".length),
+    });
+    return;
+  }
+
+  const selectedImage = getImageDefinitionById(selectedValue);
+
+  if (!selectedImage) {
+    updateSelectedNode({ imageDefinitionId: "", imageName: "" });
+    return;
+  }
+
+  updateSelectedNode({
+    imageDefinitionId: selectedImage.id,
+    imageName: selectedImage.name,
+  });
 });
 imageNodeLayerInput.addEventListener("input", (event) => {
   updateSelectedNode({ imageLayer: event.target.value });
@@ -2779,6 +2972,48 @@ imageNodeZorderInput.addEventListener("input", (event) => {
 });
 animationNodeTransitionInput.addEventListener("change", (event) => {
   updateSelectedNode({ animationTransition: event.target.value });
+});
+dialogueCharacterInput.addEventListener("change", (event) => {
+  const selectedValue = event.target.value;
+
+  if (!selectedValue) {
+    updateSelectedNode({
+      dialogueCharacterId: "",
+      dialogueSpeaker: "Narrator",
+    });
+    return;
+  }
+
+  if (selectedValue.startsWith("__missing__:")) {
+    const missingId = selectedValue.slice("__missing__:".length);
+    const graph = getActiveGraph();
+    const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+    const currentSpeaker = getDialogueSpeaker(selectedNode || {});
+
+    updateSelectedNode({
+      dialogueCharacterId: missingId,
+      dialogueSpeaker: currentSpeaker.name,
+    });
+    return;
+  }
+
+  const selectedCharacter = getCharacterById(selectedValue);
+
+  if (!selectedCharacter) {
+    updateSelectedNode({
+      dialogueCharacterId: "",
+      dialogueSpeaker: "Narrator",
+    });
+    return;
+  }
+
+  updateSelectedNode({
+    dialogueCharacterId: selectedCharacter.id,
+    dialogueSpeaker: selectedCharacter.name,
+  });
+});
+dialogueNodeContentInput.addEventListener("input", (event) => {
+  updateSelectedNode({ content: event.target.value });
 });
 
 saveDraftButton.addEventListener("click", () => {
@@ -2842,7 +3077,7 @@ newImageDefinitionButton.addEventListener("click", () => {
   imageCategorySectionState[newImage.category] = true;
   imageDefinitionDetailOpen = false;
   setImageContextMenuState(false);
-  renderImagesPanel();
+  render();
   saveState(`Created image definition "${newImage.name}".`);
 });
 imageDefinitionBackButton.addEventListener("click", () => {
@@ -2884,7 +3119,7 @@ newCharacterButton.addEventListener("click", () => {
   activeCharacterId = newCharacter.id;
   characterDetailOpen = false;
   setCharacterContextMenuState(false);
-  renderCharactersPanel();
+  render();
   saveState(`Created character "${newCharacter.name}".`);
 });
 characterBackButton.addEventListener("click", () => {
@@ -2976,6 +3211,15 @@ imageDeleteNodeButton.addEventListener("click", () => {
   deleteNode(graph.selectedNodeId);
 });
 animationDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
+dialogueDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
   if (!graph?.selectedNodeId) {
@@ -3096,6 +3340,7 @@ function createNodeForType(nodeType, graph) {
       title: "Show Image",
       content: "",
       imageMode: "show",
+      imageDefinitionId: "",
       imageName: "",
       imageLayer: "",
       imageAt: "",
@@ -3119,6 +3364,8 @@ function createNodeForType(nodeType, graph) {
       ...baseNode,
       title: "Dialogue",
       content: "New dialogue line.",
+      dialogueCharacterId: "",
+      dialogueSpeaker: "Narrator",
     };
   }
 
