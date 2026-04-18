@@ -1474,16 +1474,21 @@ function renderInspector() {
   if (!selectedNode) {
     inspectorEmptyEl.classList.remove("hidden");
     inspectorFormEl.classList.add("hidden");
+    nodeIdFieldEl.classList.remove("hidden");
+    nodeTypeFieldEl.classList.remove("hidden");
+    nodeTitleFieldEl.classList.remove("hidden");
+    nodeContentFieldEl.classList.remove("hidden");
+    inspectorActionsEl.classList.remove("hidden");
     return;
   }
 
   inspectorEmptyEl.classList.add("hidden");
   inspectorFormEl.classList.remove("hidden");
-  nodeIdFieldEl.hidden = false;
-  nodeTypeFieldEl.hidden = false;
-  nodeTitleFieldEl.hidden = false;
-  nodeContentFieldEl.hidden = false;
-  inspectorActionsEl.hidden = false;
+  nodeIdFieldEl.classList.remove("hidden");
+  nodeTypeFieldEl.classList.remove("hidden");
+  nodeTitleFieldEl.classList.remove("hidden");
+  nodeContentFieldEl.classList.remove("hidden");
+  inspectorActionsEl.classList.remove("hidden");
 
   nodeIdInput.value = selectedNode.id;
   const selectedIsStart = selectedNode.type === "start";
@@ -1493,13 +1498,12 @@ function renderInspector() {
   nodeTitleInput.disabled = selectedIsStart;
   nodeContentInput.disabled = selectedIsStart;
   deleteNodeButton.disabled = selectedIsStart;
-  deleteNodeButton.hidden = selectedIsStart;
 
   if (selectedIsStart) {
-    nodeIdFieldEl.hidden = true;
-    nodeTitleFieldEl.hidden = true;
-    nodeContentFieldEl.hidden = true;
-    inspectorActionsEl.hidden = true;
+    nodeIdFieldEl.classList.add("hidden");
+    nodeTitleFieldEl.classList.add("hidden");
+    nodeContentFieldEl.classList.add("hidden");
+    inspectorActionsEl.classList.add("hidden");
   }
 }
 

@@ -611,6 +611,10 @@ button.danger-button:hover {
   display: none;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .sidebar-controls {
   position: absolute;
   inset: 0;
