@@ -5,6 +5,7 @@ const projectPathEl = document.getElementById("projectPath");
 const projectFilesEl = document.getElementById("projectFiles");
 const canvasEl = document.getElementById("canvas");
 const gridOverlayEl = canvasEl.querySelector(".grid-overlay");
+const graphConnectionsEl = document.getElementById("graphConnections");
 const graphNodesEl = document.getElementById("graphNodes");
 const statusTextEl = document.getElementById("statusText");
 const sidebarEl = document.getElementById("sidebar");
@@ -97,6 +98,8 @@ const defaultStarterNodes = [
   },
 ];
 
+const nodePortOffset = 8;
+
 const defaultProjectState = {
   meta: {
     name: "Ren'Py Visual Project",
@@ -106,6 +109,7 @@ const defaultProjectState = {
       id: "label_start",
       label: "start",
       viewport: structuredClone(defaultViewport),
+      edges: [],
       nodes: structuredClone(defaultStarterNodes),
       selectedNodeId: "dialogue_1",
     },
@@ -121,6 +125,7 @@ let inspectorOpen = true;
 let addBlockOpen = false;
 let panSession = null;
 let dragSession = null;
+let connectionSession = null;
 let contextMenuNodeId = null;
 let contextMenuLabelGraphId = null;
 let draggedLabelGraphId = null;
@@ -171,6 +176,15 @@ function normalizeGraph(graph, index) {
   const nodes = Array.isArray(graph.nodes)
     ? graph.nodes
     : structuredClone(defaultStarterNodes);
+  const edges = Array.isArray(graph.edges)
+    ? graph.edges
+      .filter((edge) => edge?.fromNodeId && edge?.toNodeId)
+      .map((edge, edgeIndex) => ({
+        id: edge.id || `edge_${index + 1}_${edgeIndex + 1}`,
+        fromNodeId: edge.fromNodeId,
+        toNodeId: edge.toNodeId,
+      }))
+    : [];
   const selectedNodeId = nodes.some((node) => node.id === graph.selectedNodeId)
     ? graph.selectedNodeId
     : (nodes[0]?.id ?? null);
@@ -183,6 +197,7 @@ function normalizeGraph(graph, index) {
       ...(graph.viewport || {}),
       scale: clampScale(graph.viewport?.scale ?? defaultViewport.scale),
     },
+    edges,
     nodes,
     selectedNodeId,
   };
@@ -346,6 +361,7 @@ function createBlankGraph(label) {
     id: `label_${Date.now()}`,
     label,
     viewport: structuredClone(defaultViewport),
+    edges: [],
     nodes: [
       {
         id: "start",
@@ -401,6 +417,317 @@ function formatZoom(scale) {
   return `${Math.round(scale * 100)}%`;
 }
 
+function resizeConnectionCanvas() {
+  const rect = canvasEl.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.round(rect.width * dpr));
+  const height = Math.max(1, Math.round(rect.height * dpr));
+
+  if (graphConnectionsEl.width !== width || graphConnectionsEl.height !== height) {
+    graphConnectionsEl.width = width;
+    graphConnectionsEl.height = height;
+  }
+
+  const context = graphConnectionsEl.getContext("2d");
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { context, rect };
+}
+
+function worldToCanvasPoint(x, y, viewport) {
+  return {
+    x: x * viewport.scale + viewport.x,
+    y: y * viewport.scale + viewport.y,
+  };
+}
+
+function getNodeMetrics(nodeId, graph = getActiveGraph()) {
+  if (!graph) {
+    return null;
+  }
+
+  const node = graph.nodes.find((currentNode) => currentNode.id === nodeId);
+
+  if (!node) {
+    return null;
+  }
+
+  const nodeElement = graphNodesEl.querySelector(`[data-node-id="${CSS.escape(nodeId)}"]`);
+  const width = nodeElement?.offsetWidth ?? 220;
+  const height = nodeElement?.offsetHeight ?? 110;
+
+  return { node, width, height };
+}
+
+function getNodePortWorldPosition(nodeId, side, graph = getActiveGraph()) {
+  const metrics = getNodeMetrics(nodeId, graph);
+
+  if (!metrics) {
+    return null;
+  }
+
+  const { node, width, height } = metrics;
+  return {
+    x: side === "input" ? node.x - nodePortOffset : node.x + width + nodePortOffset,
+    y: node.y + height / 2,
+  };
+}
+
+function createConnectionPath(startX, startY, endX, endY) {
+  const curve = Math.max(60, Math.abs(endX - startX) * 0.5);
+  const cp1X = startX + curve;
+  const cp1Y = startY;
+  const cp2X = endX - curve;
+  const cp2Y = endY;
+
+  return {
+    cp1X,
+    cp1Y,
+    cp2X,
+    cp2Y,
+  };
+}
+
+function drawArrowHead(context, angle, x, y, size, color) {
+  context.save();
+  context.translate(x, y);
+  context.rotate(angle);
+  context.beginPath();
+  context.moveTo(0, 0);
+  context.lineTo(-size, size * 0.55);
+  context.lineTo(-size, -size * 0.55);
+  context.closePath();
+  context.fillStyle = color;
+  context.fill();
+  context.restore();
+}
+
+function drawConnection(context, startX, startY, endX, endY, options = {}) {
+  const path = createConnectionPath(startX, startY, endX, endY);
+  const color = options.color || "rgba(206, 220, 241, 0.88)";
+
+  context.save();
+  context.beginPath();
+  context.moveTo(startX, startY);
+  context.bezierCurveTo(path.cp1X, path.cp1Y, path.cp2X, path.cp2Y, endX, endY);
+  context.lineWidth = options.lineWidth || 2.4;
+  context.strokeStyle = color;
+  context.lineCap = "round";
+  context.lineJoin = "round";
+
+  if (options.dashed) {
+    context.setLineDash([8, 8]);
+  }
+
+  context.stroke();
+  context.restore();
+
+  const arrowAngle = Math.atan2(endY - path.cp2Y, endX - path.cp2X);
+  drawArrowHead(context, arrowAngle, endX, endY, options.arrowSize || 10, color);
+}
+
+function getConnectionPreviewEndpoint(viewport) {
+  if (!connectionSession) {
+    return null;
+  }
+
+  if (connectionSession.targetNodeId) {
+    const targetPort = getNodePortWorldPosition(connectionSession.targetNodeId, "input");
+
+    if (targetPort) {
+      return worldToCanvasPoint(targetPort.x, targetPort.y, viewport);
+    }
+  }
+
+  const rect = canvasEl.getBoundingClientRect();
+  return {
+    x: connectionSession.currentClientX - rect.left,
+    y: connectionSession.currentClientY - rect.top,
+  };
+}
+
+function updateConnectionTargetFromPointer(clientX, clientY) {
+  if (!connectionSession) {
+    return;
+  }
+
+  const inputPort = document.elementFromPoint(clientX, clientY)?.closest(".node-port-input");
+  const targetNodeId = inputPort?.dataset.nodeId || null;
+
+  if (targetNodeId === connectionSession.fromNodeId) {
+    connectionSession.targetNodeId = null;
+    return;
+  }
+
+  connectionSession.targetNodeId = targetNodeId;
+}
+
+function hasConnection(graph, fromNodeId, toNodeId) {
+  if (!graph) {
+    return false;
+  }
+
+  return graph.edges.some((edge) => (
+    edge.fromNodeId === fromNodeId && edge.toNodeId === toNodeId
+  ));
+}
+
+function beginConnectionDrag(event, fromNodeId) {
+  const graph = getActiveGraph();
+
+  if (event.button !== 0 || !graph) {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const sourceNode = graph.nodes.find((node) => node.id === fromNodeId);
+
+  if (!sourceNode) {
+    return;
+  }
+
+  setAddBlockState(false);
+  setContextMenuState(false);
+  setLabelContextMenuState(false);
+
+  connectionSession = {
+    pointerId: event.pointerId,
+    graphId: graph.id,
+    fromNodeId,
+    currentClientX: event.clientX,
+    currentClientY: event.clientY,
+    targetNodeId: null,
+  };
+
+  updateConnectionTargetFromPointer(event.clientX, event.clientY);
+  renderConnections();
+}
+
+function updateConnectionDrag(event) {
+  if (!connectionSession || event.pointerId !== connectionSession.pointerId) {
+    return;
+  }
+
+  const graph = getGraphById(connectionSession.graphId);
+
+  if (!graph || graph.id !== state.activeGraphId) {
+    connectionSession = null;
+    renderConnections();
+    return;
+  }
+
+  connectionSession.currentClientX = event.clientX;
+  connectionSession.currentClientY = event.clientY;
+  updateConnectionTargetFromPointer(event.clientX, event.clientY);
+  renderConnections();
+}
+
+function endConnectionDrag(event) {
+  if (!connectionSession || event.pointerId !== connectionSession.pointerId) {
+    return;
+  }
+
+  updateConnectionTargetFromPointer(event.clientX, event.clientY);
+
+  const completedSession = connectionSession;
+  connectionSession = null;
+
+  const graph = getGraphById(completedSession.graphId);
+
+  if (!graph || graph.id !== state.activeGraphId) {
+    renderConnections();
+    return;
+  }
+
+  const { fromNodeId, targetNodeId } = completedSession;
+
+  if (!targetNodeId || targetNodeId === fromNodeId) {
+    renderConnections();
+    return;
+  }
+
+  if (hasConnection(graph, fromNodeId, targetNodeId)) {
+    setStatus("This connection already exists.");
+    renderConnections();
+    return;
+  }
+
+  graph.edges.push({
+    id: `edge_${Date.now()}_${graph.edges.length + 1}`,
+    fromNodeId,
+    toNodeId: targetNodeId,
+  });
+
+  const sourceNode = graph.nodes.find((node) => node.id === fromNodeId);
+  const targetNode = graph.nodes.find((node) => node.id === targetNodeId);
+
+  saveState(`Connected ${sourceNode?.title || fromNodeId} to ${targetNode?.title || targetNodeId}.`);
+  renderConnections();
+}
+
+function renderConnections() {
+  const graph = getActiveGraph();
+  const viewport = graph?.viewport || defaultViewport;
+  const { context, rect } = resizeConnectionCanvas();
+
+  context.clearRect(0, 0, rect.width, rect.height);
+
+  graphNodesEl.querySelectorAll(".node-port").forEach((port) => {
+    port.classList.remove("is-highlighted", "is-connecting");
+  });
+
+  if (!graph) {
+    return;
+  }
+
+  if (connectionSession && connectionSession.graphId !== graph.id) {
+    connectionSession = null;
+  }
+
+  graph.edges.forEach((edge) => {
+    const start = getNodePortWorldPosition(edge.fromNodeId, "output", graph);
+    const end = getNodePortWorldPosition(edge.toNodeId, "input", graph);
+
+    if (!start || !end) {
+      return;
+    }
+
+    const startCanvas = worldToCanvasPoint(start.x, start.y, viewport);
+    const endCanvas = worldToCanvasPoint(end.x, end.y, viewport);
+    drawConnection(context, startCanvas.x, startCanvas.y, endCanvas.x, endCanvas.y);
+  });
+
+  if (!connectionSession || connectionSession.graphId !== graph.id) {
+    return;
+  }
+
+  const start = getNodePortWorldPosition(connectionSession.fromNodeId, "output", graph);
+  const end = getConnectionPreviewEndpoint(viewport);
+
+  if (!start || !end) {
+    return;
+  }
+
+  const startCanvas = worldToCanvasPoint(start.x, start.y, viewport);
+  drawConnection(context, startCanvas.x, startCanvas.y, end.x, end.y, {
+    color: connectionSession.targetNodeId
+      ? "rgba(97, 179, 255, 0.95)"
+      : "rgba(166, 176, 191, 0.7)",
+    dashed: !connectionSession.targetNodeId,
+    lineWidth: 2.2,
+    arrowSize: 9,
+  });
+
+  const sourcePort = graphNodesEl.querySelector(`.node-port-output[data-node-id="${CSS.escape(connectionSession.fromNodeId)}"]`);
+  sourcePort?.classList.add("is-connecting");
+
+  if (connectionSession.targetNodeId) {
+    const targetPort = graphNodesEl.querySelector(`.node-port-input[data-node-id="${CSS.escape(connectionSession.targetNodeId)}"]`);
+    targetPort?.classList.add("is-highlighted");
+  }
+}
+
 function renderViewport() {
   const graph = getActiveGraph();
   const { x, y, scale } = graph?.viewport || defaultViewport;
@@ -409,6 +736,7 @@ function renderViewport() {
   graphNodesEl.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
   gridOverlayEl.style.backgroundSize = `${gridSize}px ${gridSize}px`;
   gridOverlayEl.style.backgroundPosition = `${x}px ${y}px`;
+  renderConnections();
 }
 
 function renderProjectInfo() {
@@ -1047,6 +1375,7 @@ function renderGraph() {
     const el = document.createElement("button");
     el.type = "button";
     el.className = "graph-node";
+    el.dataset.nodeId = node.id;
 
     if (node.id === graph.selectedNodeId) {
       el.classList.add("is-selected");
@@ -1059,6 +1388,8 @@ function renderGraph() {
       <p class="node-type">${escapeHtml(node.type)}</p>
       <h3 class="node-title">${escapeHtml(node.title)}</h3>
       <p class="node-content">${escapeHtml(node.content)}</p>
+      <span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input"></span>
+      <span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output"></span>
     `;
 
     el.addEventListener("pointerdown", (event) => {
@@ -1080,8 +1411,15 @@ function renderGraph() {
       });
     });
 
+    const outputPort = el.querySelector(".node-port-output");
+    outputPort?.addEventListener("pointerdown", (event) => {
+      beginConnectionDrag(event, node.id);
+    });
+
     graphNodesEl.appendChild(el);
   });
+
+  renderConnections();
 }
 
 function renderInspector() {
@@ -1157,6 +1495,7 @@ function resetGraph() {
   }
 
   graph.viewport = structuredClone(defaultViewport);
+  graph.edges = [];
   graph.nodes = structuredClone(defaultStarterNodes);
   graph.selectedNodeId = defaultStarterNodes[1].id;
   setContextMenuState(false);
@@ -1180,6 +1519,9 @@ function deleteNode(nodeId) {
   }
 
   graph.nodes = graph.nodes.filter((currentNode) => currentNode.id !== nodeId);
+  graph.edges = graph.edges.filter((edge) => (
+    edge.fromNodeId !== nodeId && edge.toNodeId !== nodeId
+  ));
 
   if (graph.selectedNodeId === nodeId) {
     graph.selectedNodeId = graph.nodes[0]?.id ?? null;
@@ -1327,6 +1669,7 @@ function updateNodeDrag(event) {
 
   dragSession.element.style.left = `${node.x}px`;
   dragSession.element.style.top = `${node.y}px`;
+  renderConnections();
 }
 
 function endPan(event) {
@@ -1535,6 +1878,10 @@ canvasEl.addEventListener("wheel", (event) => {
   setLabelContextMenuState(false);
   zoomAtPoint(event.clientX, event.clientY, event.deltaY);
 }, { passive: false });
+document.addEventListener("pointermove", updateConnectionDrag);
+document.addEventListener("pointerup", endConnectionDrag);
+document.addEventListener("pointercancel", endConnectionDrag);
+window.addEventListener("resize", renderConnections);
 
 document.addEventListener("pointerdown", (event) => {
   if (nodeContextMenuEl.contains(event.target)) {

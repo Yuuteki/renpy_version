@@ -751,6 +751,14 @@ button.danger-button:hover {
   pointer-events: none;
 }
 
+.graph-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .graph-nodes {
   position: absolute;
   inset: 0;
@@ -770,6 +778,7 @@ button.danger-button:hover {
   color: var(--text);
   user-select: none;
   touch-action: none;
+  overflow: visible;
 }
 
 .graph-node.is-selected {
@@ -799,6 +808,45 @@ button.danger-button:hover {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.45;
+}
+
+.node-port {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.38);
+  background: rgba(12, 14, 18, 0.96);
+  transform: translateY(-50%);
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.node-port:hover {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(245, 246, 248, 0.92);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+}
+
+.node-port-input {
+  left: -10px;
+  cursor: default;
+}
+
+.node-port-output {
+  right: -10px;
+  cursor: crosshair;
+}
+
+.node-port.is-highlighted,
+.node-port.is-connecting {
+  border-color: rgba(97, 179, 255, 0.95);
+  background: rgba(97, 179, 255, 0.92);
+  box-shadow: 0 0 0 5px rgba(97, 179, 255, 0.14);
 }
 
 @media (max-width: 900px) {
