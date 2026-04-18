@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>变换特性 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/transform_properties.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="转场(transition)" href="transitions.html" />
+    <link rel="prev" title="变换" href="transforms.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">变换特性</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#transform">transform特性列表</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#positioning">坐标</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rotation">旋转</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zoom-and-flip">缩放与翻转</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pixel-effects">像素效果</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#polay-positioning">极坐标</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#polar-positioning-of-the-anchor">极坐标系的锚点</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cropping-and-resizing">剪裁与重新调整尺寸</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#panning-and-tiling">全景图和平铺</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atl-transition">转场</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other">其他</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#property-order">特性生效顺序</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deprecated-transform-properties">过期的变换特性</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">变换特性</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/transform_properties.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="transform-properties">
+<span id="id1"></span><h1>变换特性<a class="headerlink" href="#transform-properties" title="Link to this heading"> link</a></h1>
+<p>变换特性(transform property)可以被 <a class="reference internal" href="transforms.html"><span class="doc">变换</span></a> 使用，影响可视组件的绘制。
+变换特性常用于 <a class="reference internal" href="transforms.html#atl"><span class="std std-ref">ATL</span></a> 和 <a class="reference internal" href="transforms.html#Transform" title="Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a> 类中。</p>
+<section id="transform">
+<span id="list-of-transform-properties"></span><h2>transform特性列表<a class="headerlink" href="#transform" title="Link to this heading"> link</a></h2>
+<p>transform存在以下特性(property)。</p>
+<p>当给定的数据类型当作一个坐标 <a class="reference internal" href="style_properties.html#term-position"><span class="xref std std-term">position</span></a> 时，其可能是一个整型、 <a class="reference internal" href="style_properties.html#term-position"><span class="xref std std-term">absolute</span></a> 类型或者浮点型。
+如果是一个浮点型，其可以用作某块区域(用作坐标 <a class="reference internal" href="style_properties.html#style-property-pos"><code class="xref std std-propref docutils literal notranslate"><span class="pre">pos</span></code></a> )或者可视组件(用作锚点 <a class="reference internal" href="style_properties.html#style-property-anchor"><code class="xref std std-propref docutils literal notranslate"><span class="pre">anchor</span></code></a> )的比例值。</p>
+<p>需要注意的是，并非所有特性都是完全独立的。例如， <a class="reference internal" href="style_properties.html#style-property-xalign"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xalign</span></code></a> 和 <a class="reference internal" href="style_properties.html#style-property-xpos"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xpos</span></code></a> 都会更新同一批底层数据。
+在parallel语句中，对相同的数据，最多只允许一个语句块进行调整。
+(这些可能都是在同一个语句块中。)angle和radius特性同时设置水平和垂直坐标。</p>
+<section id="positioning">
+<span id="id2"></span><h3>坐标<a class="headerlink" href="#positioning" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-pos">
+<span class="sig-name descname"><span class="pre">pos</span></span><a class="headerlink" href="#transform-property-pos" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>(0, 0)</p>
+</dd>
+</dl>
+<p>相对坐标，以整个区域左上角为原点。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xpos">
+<span class="sig-name descname"><span class="pre">xpos</span></span><a class="headerlink" href="#transform-property-xpos" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+<p>水平坐标，以整个区域的最左端为坐标零点。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-ypos">
+<span class="sig-name descname"><span class="pre">ypos</span></span><a class="headerlink" href="#transform-property-ypos" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+<p>垂直坐标，以整个区域的最上端为坐标零点。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-anchor">
+<span class="sig-name descname"><span class="pre">anchor</span></span><a class="headerlink" href="#transform-property-anchor" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>(0, 0)</p>
+</dd>
+</dl>
+<p>锚点坐标，以可视组件左上角为原点。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xanchor">
+<span class="sig-name descname"><span class="pre">xanchor</span></span><a class="headerlink" href="#transform-property-xanchor" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+<p>锚点的水平坐标，以可视组件最左端为坐标零点。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-yanchor">
+<span class="sig-name descname"><span class="pre">yanchor</span></span><a class="headerlink" href="#transform-property-yanchor" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+<p>锚点的垂直位置，以可视组件最上端为坐标零点。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-align">
+<span class="sig-name descname"><span class="pre">align</span></span><a class="headerlink" href="#transform-property-align" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>(0.0, 0.0)</p>
+</dd>
+</dl>
+<p>将pos和anchor设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xalign">
+<span class="sig-name descname"><span class="pre">xalign</span></span><a class="headerlink" href="#transform-property-xalign" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0.0</p>
+</dd>
+</dl>
+<p>将xpos和xanchor设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-yalign">
+<span class="sig-name descname"><span class="pre">yalign</span></span><a class="headerlink" href="#transform-property-yalign" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0.0</p>
+</dd>
+</dl>
+<p>将ypos和yanchor设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#transform-property-offset" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(absolute, absolute)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>(0, 0)</p>
+</dd>
+</dl>
+<p>可视组件在两个方向偏离的像素数。向右和向下偏离时是正数。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xoffset">
+<span class="sig-name descname"><span class="pre">xoffset</span></span><a class="headerlink" href="#transform-property-xoffset" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>absolute</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+<p>可视组件在水平方向偏离的像素数。向右偏离时是正数。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-yoffset">
+<span class="sig-name descname"><span class="pre">yoffset</span></span><a class="headerlink" href="#transform-property-yoffset" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>absolute</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0</p>
+</dd>
+</dl>
+<p>可视组件在垂直方向偏离的像素数。向下偏离时是正数。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xycenter">
+<span class="sig-name descname"><span class="pre">xycenter</span></span><a class="headerlink" href="#transform-property-xycenter" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>(0.0, 0.0)</p>
+</dd>
+</dl>
+<p>等效于将pos的值设置为该特性的值，并同时将anchor设置为(0.5, 0.5)。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xcenter">
+<span class="sig-name descname"><span class="pre">xcenter</span></span><a class="headerlink" href="#transform-property-xcenter" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0.0</p>
+</dd>
+</dl>
+<p>等效于将pos的值设置为该特性的值，并同时将xanchor设置为0.5。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-ycenter">
+<span class="sig-name descname"><span class="pre">ycenter</span></span><a class="headerlink" href="#transform-property-ycenter" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0.0</p>
+</dd>
+</dl>
+<p>等效于将pos的值设置为该特性的值，并同时将yanchor设置为0.5。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-subpixel">
+<span class="sig-name descname"><span class="pre">subpixel</span></span><a class="headerlink" href="#transform-property-subpixel" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>False</p>
+</dd>
+</dl>
+<p>若为True，子组件将根据子像素(subpixel)确定位置。</p>
+<p>子像素位置还影响写入最终像素的颜色(包括不透明度)，但具体写入哪个像素依然是不变的。
+如果子像素位置还会发生移动(很常见的情况)，移动方向上的即将进入的界面图像应该包含带透明度混合的边界。</p>
+<p>例如，某个角色立绘在水平方向移动，最好在左右两侧设置半透明的边界。
+对于实际大小超过整个可视区域的背景图就没必要使用该特性，反正边界部分是看不到的。</p>
+<p>(译者注：subpixel往往跟MSAA相关。具体内容请借助搜索引擎学习。)</p>
+</dd></dl>
+
+</section>
+<section id="rotation">
+<span id="id3"></span><h3>旋转<a class="headerlink" href="#rotation" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><a class="headerlink" href="#transform-property-rotate" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若值为None，不会进行旋转。否则，图像会按指定的角度顺时针旋转。
+根据下面会提到的rotate_pad的配置值，旋转可视组件会导致组件尺寸改变。
+xanchor和yanchor不为0.5的情况下，旋转整个可视组件会让组件相对整个界面的坐标发生变化。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-rotate_pad">
+<span class="sig-name descname"><span class="pre">rotate_pad</span></span><a class="headerlink" href="#transform-property-rotate_pad" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>True</p>
+</dd>
+</dl>
+<p>若该值为True，一个可以旋转的可视组件就会使用原本的宽度和高度填充旋转矩形，并确保旋转时不会改变组件的尺寸。
+若该值为False，transform会给定某个能应用于可视组件的最小尺寸，更适合用于自动匹配的旋转。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-transform_anchor">
+<span class="sig-name descname"><span class="pre">transform_anchor</span></span><a class="headerlink" href="#transform-property-transform_anchor" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>False</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>若该值为True，锚点会定位在关联的子组件上，当子组件发生变换时拉伸并旋转。</dt><dd><p>实际效果是，当子组件拉伸或旋转时，这项值可以指定子组件以指定的锚点拉伸或旋转。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="zoom-and-flip">
+<span id="id4"></span><h3>缩放与翻转<a class="headerlink" href="#zoom-and-flip" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-zoom">
+<span class="sig-name descname"><span class="pre">zoom</span></span><a class="headerlink" href="#transform-property-zoom" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1.0</p>
+</dd>
+</dl>
+<p>该值根据系数对可视组件进行缩放。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xzoom">
+<span class="sig-name descname"><span class="pre">xzoom</span></span><a class="headerlink" href="#transform-property-xzoom" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1.0</p>
+</dd>
+</dl>
+<p>该值根据系数对可视组件在水平方向进行缩放。负值可以让图像水平翻转(即与原图像互为左右镜像)。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-yzoom">
+<span class="sig-name descname"><span class="pre">yzoom</span></span><a class="headerlink" href="#transform-property-yzoom" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1.0</p>
+</dd>
+</dl>
+<p>该值根据系数对可视组件在垂直方向进行缩放。负值可以让图像垂直翻转(即与原图像互为上下镜像)。</p>
+</dd></dl>
+
+</section>
+<section id="pixel-effects">
+<span id="id5"></span><h3>像素效果<a class="headerlink" href="#pixel-effects" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-nearest">
+<span class="sig-name descname"><span class="pre">nearest</span></span><a class="headerlink" href="#transform-property-nearest" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值为True，可视组件及其子组件会使用近邻取样(nearest-neighbor)过滤绘制。
+若该值为False，可视组件及其子组件使用双线性(bilinear)过滤绘制。
+若该值为None，绘制方式从父组件继承，或者采用 <a class="reference internal" href="config.html#var-config.nearest_neighbor"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.nearest_neighbor</span></code></a> 配置(默认值是False)。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#transform-property-alpha" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1.0</p>
+</dd>
+</dl>
+<p>该值控制可视组件的不透明度。</p>
+<p>alpha变换(transform)会分别作用于每个图像所包含的子组件。
+在子组件存在重叠部门的情况，这可能会导致一些不期望出现的结果，比如透过衣服看到角色之类的。
+<a class="reference internal" href="displayables.html#Flatten" title="Flatten"><code class="xref py py-func docutils literal notranslate"><span class="pre">Flatten()</span></code></a> 类可视组件可以解决这些问题。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-additive">
+<span class="sig-name descname"><span class="pre">additive</span></span><a class="headerlink" href="#transform-property-additive" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0.0</p>
+</dd>
+</dl>
+<p>该值控制Ren’Py加性混合后的表现效果。该值为1.0时，Ren’Py使用ADD操作器(operator)绘制；该值为0.0时，Ren’Py使用OVER操作器(operator)绘制。</p>
+<p>加性混合会分别作用于transform的每一个子组件。</p>
+<p>完全的加性混合不会改变目标图像的alpha通道值，并且添加上去的图像可能不是可见的，
+前提是那些图像没有直接绘制在某个不透明的表面上。
+(某些复杂的操作，像 <a class="reference internal" href="displayables.html#Flatten" title="Flatten"><code class="xref py py-func docutils literal notranslate"><span class="pre">Flatten()</span></code></a>， <a class="reference internal" href="displayables.html#Frame" title="Frame"><code class="xref py py-func docutils literal notranslate"><span class="pre">Frame()</span></code></a> 和某些转场，使用加性混合可能会出现问题。)</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-matrixcolor">
+<span class="sig-name descname"><span class="pre">matrixcolor</span></span><a class="headerlink" href="#transform-property-matrixcolor" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 矩阵 或 MatrixColor对象</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若非None，该特性值将应用到所有子组件并重新计算颜色。只有使用MatrixColor并且满足结构性相似的前提下，才能进行插值计算。
+详见 <a class="reference internal" href="matrixcolor.html"><span class="doc">Matrixcolor</span></a> 。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-blur">
+<span class="sig-name descname"><span class="pre">blur</span></span><a class="headerlink" href="#transform-property-blur" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>使用 <cite>blur</cite> 像素数模糊图像的子组件， <cite>blur</cite> 数值不超过可视组件的边长。
+Ren’Py不同版本的模糊细节可能存在差异。模糊的结果可能存在瑕疵，尤其是模糊数值不断发生修改的情况下。</p>
+<p>模糊效果会先在一张透明背景上渲染子组件，也就是使子组件变平(flatten)。</p>
+</dd></dl>
+
+</section>
+<section id="polay-positioning">
+<span id="id6"></span><h3>极坐标<a class="headerlink" href="#polay-positioning" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-around">
+<span class="sig-name descname"><span class="pre">around</span></span><a class="headerlink" href="#transform-property-around" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>(0.0, 0.0)</p>
+</dd>
+</dl>
+<p>该特性指定了一个起点坐标，以整个区域左上角做原点。(根据 <a class="reference internal" href="#transform-property-angle"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">angle</span></code></a> 和 <a class="reference internal" href="#transform-property-radius"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">radius</span></code></a> 计算出的)极向量范围内的区域将被绘制。
+以上两者共同决定了 <a class="reference internal" href="#transform-property-pos"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">pos</span></code></a> 的值。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-angle">
+<span class="sig-name descname"><span class="pre">angle</span></span><a class="headerlink" href="#transform-property-angle" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>该特性给出极坐标系下某个坐标的角度信息。角度的单位是度(degree)，0度时在屏幕正上方，90度时在屏幕右方。</p>
+<p>Ren’Py会将角度的值控制在0到360度的区间内，有0度不包含360度。
+当数值超过这个区间范围时，Ren’Py使用前会处理成等效角度。(角度值设置为-10度，等效于将角度设置为350度。)</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-radius">
+<span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#transform-property-radius" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>position</p>
+</dd>
+</dl>
+<p>极坐标系下坐标的半径。</p>
+<p>如果值是浮点数，会被自动缩小到刚好能适用于宽度和高度的某个值。</p>
+</dd></dl>
+
+</section>
+<section id="polar-positioning-of-the-anchor">
+<span id="id7"></span><h3>极坐标系的锚点<a class="headerlink" href="#polar-positioning-of-the-anchor" title="Link to this heading"> link</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>使用极坐标系时同时也启用了锚点。通常最简单的处理就是将 <a class="reference internal" href="#transform-property-anchor"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">anchor</span></code></a> 设置为(0.5, 0.5)，即可视组件的中心。</p>
+</div>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-anchoraround">
+<span class="sig-name descname"><span class="pre">anchoraround</span></span><a class="headerlink" href="#transform-property-anchoraround" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(position, position)</p>
+</dd>
+</dl>
+<p>该特性指定了一个起点坐标，以整个区域左上角做原点。(根据 <a class="reference internal" href="#transform-property-anchorangle"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">anchorangle</span></code></a> 和 <a class="reference internal" href="#transform-property-anchorradius"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">anchorradius</span></code></a> 计算出的)极向量范围内的区域将被绘制。
+以上两者共同决定了 <a class="reference internal" href="#transform-property-anchor"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">anchor</span></code></a> 的值。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-anchorangle">
+<span class="sig-name descname"><span class="pre">anchorangle</span></span><a class="headerlink" href="#transform-property-anchorangle" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float)</p>
+</dd>
+</dl>
+<p>极坐标系下锚点坐标的角度。角度的单位是度(degree)，0度表示正上方，90度表示右方。</p>
+<p>Ren’Py会将角度的值控制在0到360度的区间内，有0度不包含360度。
+当数值超过这个区间范围时，Ren’Py使用前会处理成等效角度。(角度值设置为-10度，等效于将角度设置为350度。)</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-anchorradius">
+<span class="sig-name descname"><span class="pre">anchorradius</span></span><a class="headerlink" href="#transform-property-anchorradius" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(position)</p>
+</dd>
+</dl>
+<p>极坐标系下锚点坐标的半径。
+若该值是浮点数，将乘以可视组件的宽和高，计算得到结果。如果可视组件的高和宽不相等，计算结果不是absolute类型，最终会沿椭圆旋转。
+因此，推荐将该特性设置为 <code class="docutils literal notranslate"><span class="pre">int</span></code> 或 <code class="docutils literal notranslate"><span class="pre">absolute</span></code> 类型的值。</p>
+</dd></dl>
+
+</section>
+<section id="cropping-and-resizing">
+<span id="id8"></span><h3>剪裁与重新调整尺寸<a class="headerlink" href="#cropping-and-resizing" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-crop">
+<span class="sig-name descname"><span class="pre">crop</span></span><a class="headerlink" href="#transform-property-crop" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 (position, position, position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，会使用给定的矩形剪裁可视组件。指定的矩形是一个(x, y, width, height)形式的元组。</p>
+<p>如果各种corner特性与crop特性同时出现，crop的优先级高于各种corner特性。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-corner1">
+<span class="sig-name descname"><span class="pre">corner1</span></span><a class="headerlink" href="#transform-property-corner1" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 (position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，指定剪裁框的左上角坐标。剪裁时优先使用各corner特性值。
+若crop_relative为启用状态，且该值为浮点型与子组件的尺寸相关。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-corner2">
+<span class="sig-name descname"><span class="pre">corner2</span></span><a class="headerlink" href="#transform-property-corner2" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 (position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，指定剪裁框的右下角坐标。剪裁时优先使用各corner特性值。
+若crop_relative为启用状态，且该值为浮点型与子组件的尺寸相关。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xysize">
+<span class="sig-name descname"><span class="pre">xysize</span></span><a class="headerlink" href="#transform-property-xysize" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 (position, position)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，将可视组件伸缩至给定的尺寸。等效于，将入参元组的第一元素赋值给 <a class="reference internal" href="#transform-property-xsize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xsize</span></code></a>，将入参元祖的第二元素赋值给 <a class="reference internal" href="#transform-property-ysize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">ysize</span></code></a>。</p>
+<p>该值受到 <a class="reference internal" href="#transform-property-fit"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">fit</span></code></a> 影响。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xsize">
+<span class="sig-name descname"><span class="pre">xsize</span></span><a class="headerlink" href="#transform-property-xsize" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，可是组件会按照给定的宽度缩放。</p>
+<p>该值受到 <a class="reference internal" href="#transform-property-fit"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">fit</span></code></a> 影响。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-ysize">
+<span class="sig-name descname"><span class="pre">ysize</span></span><a class="headerlink" href="#transform-property-ysize" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 position</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，可是组件会按照给定的高度缩放。</p>
+<p>该值受到 <a class="reference internal" href="#transform-property-fit"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">fit</span></code></a> 影响。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><a class="headerlink" href="#transform-property-fit" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 string</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，会按下面表格的方式调整尺寸。表格中的“维度”分别为：</p>
+<ul class="simple">
+<li><p>若 <a class="reference internal" href="#transform-property-xsize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xsize</span></code></a> 和 <a class="reference internal" href="#transform-property-ysize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">ysize</span></code></a> 都不为None，这两项都会用作维度。</p></li>
+<li><p>若 <a class="reference internal" href="#transform-property-xsize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xsize</span></code></a> 和 <a class="reference internal" href="#transform-property-ysize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">ysize</span></code></a> 只有其中一项不是None，则两个维度都使用非None项的值。</p></li>
+<li><p>若 <a class="reference internal" href="#transform-property-xsize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xsize</span></code></a> 和 <a class="reference internal" href="#transform-property-ysize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">ysize</span></code></a> 都为None，且fit项不是None，则根据Transform中的宽度和高度作为两个维度的值。</p></li>
+</ul>
+<p>若fit、xsize和ysize都是None，则该特性不生效。</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 85%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>值</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contain</span></code></p></td>
+<td><p>在不超过任何维度尺寸的原则下近可能大。保持宽高比。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cover</span></code></p></td>
+<td><p>在不超过任何维持尺寸的原则下尽可能小。保持宽高比。</p></td>
+</tr>
+<tr class="row-even"><td><p>None 或 <code class="docutils literal notranslate"><span class="pre">fill</span></code></p></td>
+<td><p>将可视组件拉伸/挤压，以匹配各维度指定大小。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">scale-down</span></code></p></td>
+<td><p>类似 <code class="docutils literal notranslate"><span class="pre">contain</span></code>，但不会增加可视组件的尺寸。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">scale-up</span></code></p></td>
+<td><p>类似 <code class="docutils literal notranslate"><span class="pre">cover</span></code>，但不会减小可视组件的尺寸。</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+<section id="panning-and-tiling">
+<span id="id9"></span><h3>全景图和平铺<a class="headerlink" href="#panning-and-tiling" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xpan">
+<span class="sig-name descname"><span class="pre">xpan</span></span><a class="headerlink" href="#transform-property-xpan" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，其被看作某个360度全景图中的经度。图像中央是0度，图像左端和右端分别是-180度和180度。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-ypan">
+<span class="sig-name descname"><span class="pre">ypan</span></span><a class="headerlink" href="#transform-property-ypan" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None 或 float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，其被看作某个360度全景图中的纬度。图像中央是0度，图像顶部和底部分别是-180度和180度。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-xtile">
+<span class="sig-name descname"><span class="pre">xtile</span></span><a class="headerlink" href="#transform-property-xtile" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1</p>
+</dd>
+</dl>
+<p>图像水平方向使用图像平铺的次数。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-ytile">
+<span class="sig-name descname"><span class="pre">ytile</span></span><a class="headerlink" href="#transform-property-ytile" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>1</p>
+</dd>
+</dl>
+<p>图像垂直方向使用图像平铺的次数。</p>
+</dd></dl>
+
+</section>
+<section id="atl-transition">
+<span id="id10"></span><h3>转场<a class="headerlink" href="#atl-transition" title="Link to this heading"> link</a></h3>
+<p>详见 <a class="reference internal" href="transitions.html#atl-transitions"><span class="std std-ref">ATL转场</span></a> 。</p>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-delay">
+<span class="sig-name descname"><span class="pre">delay</span></span><a class="headerlink" href="#transform-property-delay" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>0.0</p>
+</dd>
+</dl>
+<p>如果该变换(transform)用作转场(transition)，这个值定义了转场时间。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-events">
+<span class="sig-name descname"><span class="pre">events</span></span><a class="headerlink" href="#transform-property-events" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>True</p>
+</dd>
+</dl>
+<p>若该值为True，事件消息会传给该变换(transform)的子组件。若该值为False，事件消息会被屏蔽。
+(这个机制可以用在ATL变换中，放置事件消息达到某些old_widget。)</p>
+</dd></dl>
+
+</section>
+<section id="other">
+<span id="id11"></span><h3>其他<a class="headerlink" href="#other" title="Link to this heading"> link</a></h3>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-fps">
+<span class="sig-name descname"><span class="pre">fps</span></span><a class="headerlink" href="#transform-property-fps" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若非None，该特性会更该其所在变换的最小时间颗粒。
+例如某个变换的fps为10，那么变换的时间最小值至少为0.1秒。
+该特性可以用于模拟低刷新率。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-show_cancels_hide">
+<span class="sig-name descname"><span class="pre">show_cancels_hide</span></span><a class="headerlink" href="#transform-property-show_cancels_hide" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>True</p>
+</dd>
+</dl>
+<p>通常，某个同名或带同名标签(tag)的可视组件或界面，从隐藏状态转为显示状态时，将移除组件或界面的隐藏属性，变换中hide部分的效果将取消。
+如果该特性为False，则不会中断和取消hide变换，而是会将hide变换的效果处理完。</p>
+</dd></dl>
+
+<p>此外，其他几组变换特性可以在文档其他地方找到：</p>
+<dl class="simple">
+<dt>3D舞台特性：</dt><dd><p><a class="reference internal" href="3dstage.html#transform-property-perspective"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">perspective</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-point_to"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">point_to</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-orientation"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">orientation</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-xrotate"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xrotate</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-yrotate"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">yrotate</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-zrotate"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">zrotate</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-matrixanchor"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">matrixanchor</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-matrixtransform"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">matrixtransform</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-zpos"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">zpos</span></code></a>、<a class="reference internal" href="3dstage.html#transform-property-zzoom"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">zzoom</span></code></a></p>
+</dd>
+<dt>基于模型渲染特性：</dt><dd><p><a class="reference internal" href="model.html#transform-property-blend"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">blend</span></code></a>、 <a class="reference internal" href="model.html#transform-property-mesh"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">mesh</span></code></a>、 <a class="reference internal" href="model.html#transform-property-mesh_pad"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">mesh_pad</span></code></a>、 <a class="reference internal" href="model.html#transform-property-shader"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">shader</span></code></a></p>
+</dd>
+<dt>GL特性：</dt><dd><p><a class="reference internal" href="model.html#gl-properties"><span class="std std-ref">GL特性</span></a></p>
+</dd>
+<dt>uniforms：</dt><dd><p>以 <code class="docutils literal notranslate"><span class="pre">u_</span></code> 开头的特性可以用于 <a class="reference internal" href="model.html#custom-shaders"><span class="std std-ref">自定义着色器</span></a> 中的uniform变量。</p>
+</dd>
+</dl>
+</section>
+<section id="property-order">
+<span id="id12"></span><h3>特性生效顺序<a class="headerlink" href="#property-order" title="Link to this heading"> link</a></h3>
+<p>这些特性按照以下顺序生效：</p>
+<ol class="arabic simple">
+<li><p>fps</p></li>
+<li><p>mesh, blur</p></li>
+<li><p>tile</p></li>
+<li><p>pan</p></li>
+<li><p>crop, corner1, corner2</p></li>
+<li><p>xysize, size, maxsize</p></li>
+<li><p>zoom, xzoom, yzoom</p></li>
+<li><p>point_to</p></li>
+<li><p>orientation</p></li>
+<li><p>xrotate, yrotate, zrotate</p></li>
+<li><p>rotate</p></li>
+<li><p>zpos</p></li>
+<li><p>matrixtransform, matrixanchor</p></li>
+<li><p>zzoom</p></li>
+<li><p>perspective</p></li>
+<li><p>nearest, blend, alpha, additive, shader</p></li>
+<li><p>matrixcolor</p></li>
+<li><p>GL Properties, Uniforms</p></li>
+<li><p>position properties</p></li>
+<li><p>show_cancels_hide</p></li>
+</ol>
+</section>
+</section>
+<section id="deprecated-transform-properties">
+<span id="id13"></span><h2>过期的变换特性<a class="headerlink" href="#deprecated-transform-properties" title="Link to this heading"> link</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>下列特性不应再使用近期开发的游戏中，可能会与其他功能特性发生冲突。
+暂时保留这些特性是考虑到兼容性。</p>
+</div>
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-alignaround">
+<span class="sig-name descname"><span class="pre">alignaround</span></span><a class="headerlink" href="#transform-property-alignaround" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+<p>将 <a class="reference internal" href="#transform-property-anchor"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">anchor</span></code></a>、 <a class="reference internal" href="#transform-property-around"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">around</span></code></a> 和 <a class="reference internal" href="#transform-property-anchoraround"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">anchoraround</span></code></a> 设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-crop_relative">
+<span class="sig-name descname"><span class="pre">crop_relative</span></span><a class="headerlink" href="#transform-property-crop_relative" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>True</p>
+</dd>
+</dl>
+<p>若为False，<a class="reference internal" href="#transform-property-crop"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">crop</span></code></a> 的值将作为像素数的值，而不再是原图像的宽度或高度的比例。</p>
+<p>如果计算结果是某个绝对数值像素数，应该将 <a class="reference internal" href="style_properties.html#absolute" title="absolute"><code class="xref py py-func docutils literal notranslate"><span class="pre">absolute()</span></code></a> 实例应用到 <a class="reference internal" href="#transform-property-crop"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">crop</span></code></a> 特性，而不使用crop_relative特性。
+必要时，不确定类型的数值可以传给 <a class="reference internal" href="style_properties.html#absolute" title="absolute"><code class="xref py py-func docutils literal notranslate"><span class="pre">absolute()</span></code></a> 函数处理。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#transform-property-size" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None or (int, int)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p><a class="reference internal" href="#transform-property-xysize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xysize</span></code></a> 的一个旧版本，将浮点值作为像素数的值进行插值操作。</p>
+</dd></dl>
+
+<dl class="std transform-property">
+<dt class="sig sig-object std" id="transform-property-maxsize">
+<span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#transform-property-maxsize" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None or (int, int)</p>
+</dd>
+<dt class="field-even">Default<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>若该值非None，可以使可视组件在box当中以合适的尺寸放大或缩小显示，同时保持横纵比。（请注意，这意味着长或宽其中一个尺寸可能小于此box的尺寸。）</p>
+<p>若要实现同样结果，可以将 <a class="reference internal" href="#transform-property-xysize"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xysize</span></code></a> 设定为同样的值，并把 <a class="reference internal" href="#transform-property-fit"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">fit</span></code></a> 设置为“contain”。</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="transforms.html" class="btn btn-neutral float-left" title="变换" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="transitions.html" class="btn btn-neutral float-right" title="转场(transition)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
