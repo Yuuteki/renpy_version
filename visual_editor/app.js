@@ -28,6 +28,7 @@ const labelCodePreviewTitleEl = document.getElementById("labelCodePreviewTitle")
 const labelCodePreviewEl = document.getElementById("labelCodePreview");
 const labelContextMenuEl = document.getElementById("labelContextMenu");
 const contextRenameLabelButton = document.getElementById("contextRenameLabelButton");
+const contextDeleteLabelButton = document.getElementById("contextDeleteLabelButton");
 const imageContextMenuEl = document.getElementById("imageContextMenu");
 const contextDeleteImageButton = document.getElementById("contextDeleteImageButton");
 const characterContextMenuEl = document.getElementById("characterContextMenu");
@@ -1356,6 +1357,52 @@ function finishLabelRename(graphId, nextLabel, { cancel = false } = {}) {
   render();
 }
 
+function deleteLabelGraph(graphId) {
+  const graph = getGraphById(graphId);
+
+  if (!graph) {
+    setLabelContextMenuState(false);
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete label "${graph.label}"? This cannot be undone.`);
+
+  if (!confirmed) {
+    setLabelContextMenuState(false);
+    setStatus(`Kept label graph "${graph.label}".`);
+    return;
+  }
+
+  state.graphs = state.graphs.filter((currentGraph) => currentGraph.id !== graphId);
+
+  if (state.activeGraphId === graphId) {
+    state.activeGraphId = state.graphs[0]?.id ?? null;
+  }
+
+  if (labelCodePreviewGraphId === graphId) {
+    labelCodePreviewGraphId = null;
+  }
+
+  if (renamingGraphId === graphId) {
+    renamingGraphId = null;
+  }
+
+  if (draggedLabelGraphId === graphId) {
+    draggedLabelGraphId = null;
+    labelOrderChangedDuringDrag = false;
+  }
+
+  if (connectionSession?.graphId === graphId) {
+    connectionSession = null;
+  }
+
+  setLabelContextMenuState(false);
+  setAddBlockState(false);
+  setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
+  render();
+  saveState(`Deleted label graph "${graph.label}".`);
+}
+
 function renderLabelGraphList() {
   labelGraphListEl.innerHTML = "";
 
@@ -2567,6 +2614,13 @@ contextRenameLabelButton.addEventListener("click", () => {
   }
 
   startLabelRename(contextMenuLabelGraphId);
+});
+contextDeleteLabelButton.addEventListener("click", () => {
+  if (!contextMenuLabelGraphId) {
+    return;
+  }
+
+  deleteLabelGraph(contextMenuLabelGraphId);
 });
 contextDeleteImageButton.addEventListener("click", () => {
   if (!contextMenuImageDefinitionId) {
