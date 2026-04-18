@@ -39,6 +39,90 @@
             </div>
           </section>
 
+          <section id="imagesSection" class="sidebar-section sidebar-panel">
+            <div id="imagesListView" class="characters-view">
+              <div id="imageDefinitionEmpty" class="panel-empty-state hidden">
+                No images yet. Create one to define an image resource.
+              </div>
+
+              <div id="imageDefinitionList" class="character-list"></div>
+
+              <button
+                id="newImageDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create image definition"
+                title="Create image definition"
+              >
+                New Image
+              </button>
+            </div>
+
+            <div id="imageDefinitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="imageDefinitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="imageDefinitionDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
+                <label>
+                  Image Name
+                  <input id="imageDefinitionNameInput" type="text" placeholder="e.g. bg_classroom" />
+                </label>
+
+                <label>
+                  Category
+                  <select id="imageDefinitionCategoryInput">
+                    <option value="background">Background</option>
+                    <option value="character">Character</option>
+                    <option value="others">Others</option>
+                  </select>
+                </label>
+
+                <label>
+                  Source Path
+                  <input id="imageDefinitionSourcePathInput" type="text" placeholder="e.g. images/bg/classroom.png" />
+                </label>
+
+                <p class="section-label secondary-label">Transform</p>
+
+                <label>
+                  zoom
+                  <input id="imageDefinitionZoomInput" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label>
+                  xanchor
+                  <input id="imageDefinitionXAnchorInput" type="text" placeholder="e.g. 0.5" />
+                </label>
+
+                <label>
+                  yanchor
+                  <input id="imageDefinitionYAnchorInput" type="text" placeholder="e.g. 0.5" />
+                </label>
+
+                <label>
+                  xpos
+                  <input id="imageDefinitionXPosInput" type="text" placeholder="e.g. 960" />
+                </label>
+
+                <label>
+                  ypos
+                  <input id="imageDefinitionYPosInput" type="text" placeholder="e.g. 1080" />
+                </label>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="imageDefinitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
           <section id="charactersSection" class="sidebar-section sidebar-panel characters-section">
             <div id="charactersListView" class="characters-view">
               <div id="characterListEmpty" class="panel-empty-state hidden">
@@ -73,12 +157,12 @@
 
                 <label>
                   Variable Name
-                  <input id="characterIdInput" type="text" />
+                  <input id="characterIdInput" type="text" placeholder="e.g. eileen" />
                 </label>
 
                 <label>
                   Display Name
-                  <input id="characterNameInput" type="text" />
+                  <input id="characterNameInput" type="text" placeholder="e.g. Eileen" />
                 </label>
 
                 <label>
@@ -102,68 +186,68 @@
 
                 <label>
                   Image Tag
-                  <input id="characterImageInput" type="text" />
+                  <input id="characterImageInput" type="text" placeholder="e.g. eileen" />
                 </label>
 
                 <label>
                   Voice Tag
-                  <input id="characterVoiceTagInput" type="text" />
+                  <input id="characterVoiceTagInput" type="text" placeholder="e.g. eileen" />
                 </label>
 
                 <p class="section-label secondary-label">Appearance</p>
 
                 <label>
                   Name Color
-                  <input id="characterWhoColorInput" type="text" placeholder="#c8ffc8" />
+                  <input id="characterWhoColorInput" type="text" placeholder="e.g. #c8ffc8" />
                 </label>
 
                 <label>
                   Name Style
-                  <input id="characterWhoStyleInput" type="text" />
+                  <input id="characterWhoStyleInput" type="text" placeholder="e.g. name_text" />
                 </label>
 
                 <label>
                   Text Style
-                  <input id="characterWhatStyleInput" type="text" />
+                  <input id="characterWhatStyleInput" type="text" placeholder="e.g. dialogue_text" />
                 </label>
 
                 <label>
                   Window Style
-                  <input id="characterWindowStyleInput" type="text" />
+                  <input id="characterWindowStyleInput" type="text" placeholder="e.g. say_window" />
                 </label>
 
                 <label>
                   Window Background
-                  <input id="characterWindowBackgroundInput" type="text" />
+                  <input id="characterWindowBackgroundInput" type="text" placeholder="e.g. gui/textbox.png" />
                 </label>
 
                 <p class="section-label secondary-label">Prefixes And Suffixes</p>
 
                 <label>
                   Name Prefix
-                  <input id="characterWhoPrefixInput" type="text" />
+                  <input id="characterWhoPrefixInput" type="text" placeholder="e.g. [" />
                 </label>
 
                 <label>
                   Name Suffix
-                  <input id="characterWhoSuffixInput" type="text" />
+                  <input id="characterWhoSuffixInput" type="text" placeholder="e.g. ]" />
                 </label>
 
                 <label>
                   Text Prefix
-                  <input id="characterWhatPrefixInput" type="text" />
+                  <input id="characterWhatPrefixInput" type="text" placeholder="e.g. &quot;" />
                 </label>
 
                 <label>
                   Text Suffix
-                  <input id="characterWhatSuffixInput" type="text" />
+                  <input id="characterWhatSuffixInput" type="text" placeholder="e.g. &quot;" />
                 </label>
 
                 <p class="section-label secondary-label">Behavior</p>
 
                 <label>
                   Condition
-                  <input id="characterConditionInput" type="text" />
+                  <input id="characterConditionInput" type="text" placeholder="e.g. persistent.route_unlocked" />
                 </label>
 
                 <label class="character-checkbox">
@@ -180,17 +264,17 @@
 
                 <label>
                   CTC Expression
-                  <input id="characterCtcInput" type="text" placeholder="ctc_indicator" />
+                  <input id="characterCtcInput" type="text" placeholder="e.g. ctc_indicator" />
                 </label>
 
                 <label>
                   CTC Pause Expression
-                  <input id="characterCtcPauseInput" type="text" />
+                  <input id="characterCtcPauseInput" type="text" placeholder="e.g. ctc_pause_indicator" />
                 </label>
 
                 <label>
                   CTC Timed Pause Expression
-                  <input id="characterCtcTimedPauseInput" type="text" />
+                  <input id="characterCtcTimedPauseInput" type="text" placeholder="e.g. ctc_timed_indicator" />
                 </label>
 
                 <label>
@@ -267,6 +351,20 @@
               <rect x="5" y="4" width="14" height="4" rx="1.5"></rect>
               <rect x="5" y="10" width="14" height="4" rx="1.5"></rect>
               <rect x="5" y="16" width="14" height="4" rx="1.5"></rect>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="imagesSection"
+            aria-label="Open image definitions"
+            title="Images"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+              <circle cx="9" cy="10" r="1.5"></circle>
+              <path d="M6.5 16 11 12l2.5 2.2L16 11.5 18 16"></path>
             </svg>
           </button>
 
@@ -383,32 +481,32 @@
 
             <label>
               <span id="imageNodeNameLabel">Image Name</span>
-              <input id="imageNodeNameInput" type="text" placeholder="eileen happy" />
+              <input id="imageNodeNameInput" type="text" placeholder="e.g. eileen happy" />
             </label>
 
             <label>
               Layer
-              <input id="imageNodeLayerInput" type="text" placeholder="master" />
+              <input id="imageNodeLayerInput" type="text" placeholder="e.g. master" />
             </label>
 
             <label>
               At Transform
-              <input id="imageNodeAtInput" type="text" placeholder="left" />
+              <input id="imageNodeAtInput" type="text" placeholder="e.g. left" />
             </label>
 
             <label>
               Alias
-              <input id="imageNodeAliasInput" type="text" placeholder="mary2" />
+              <input id="imageNodeAliasInput" type="text" placeholder="e.g. eileen2" />
             </label>
 
             <label>
               Behind Tags
-              <input id="imageNodeBehindInput" type="text" placeholder="mary, mary2" />
+              <input id="imageNodeBehindInput" type="text" placeholder="e.g. teacher, eileen" />
             </label>
 
             <label>
               Z-Order
-              <input id="imageNodeZorderInput" type="number" placeholder="0" />
+              <input id="imageNodeZorderInput" type="number" placeholder="e.g. 0" />
             </label>
 
             <div class="inspector-actions">
@@ -464,12 +562,12 @@
 
             <label>
               Title
-              <input id="nodeTitleInput" type="text" />
+              <input id="nodeTitleInput" type="text" placeholder="e.g. Opening Dialogue" />
             </label>
 
             <label>
               Content
-              <textarea id="nodeContentInput" rows="8"></textarea>
+              <textarea id="nodeContentInput" rows="8" placeholder="Enter node content..."></textarea>
             </label>
 
             <div class="inspector-actions">
@@ -488,6 +586,28 @@
       <div id="labelContextMenu" class="node-context-menu" role="menu">
         <button id="contextRenameLabelButton" class="node-context-menu-item" type="button" role="menuitem">
           Rename Label
+        </button>
+      </div>
+
+      <div id="imageContextMenu" class="node-context-menu" role="menu">
+        <button
+          id="contextDeleteImageButton"
+          class="node-context-menu-item danger-text"
+          type="button"
+          role="menuitem"
+        >
+          Delete Image
+        </button>
+      </div>
+
+      <div id="characterContextMenu" class="node-context-menu" role="menu">
+        <button
+          id="contextDeleteCharacterButton"
+          class="node-context-menu-item danger-text"
+          type="button"
+          role="menuitem"
+        >
+          Delete Character
         </button>
       </div>
     </div>

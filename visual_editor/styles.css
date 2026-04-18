@@ -14,6 +14,12 @@
   --card: rgba(31, 34, 41, 0.96);
   --card-border: rgba(255, 255, 255, 0.1);
   --input: rgba(14, 16, 21, 0.96);
+  --field-border: rgba(255, 255, 255, 0.12);
+  --field-border-focus: rgba(255, 255, 255, 0.18);
+  --field-border-readonly: rgba(255, 255, 255, 0.08);
+  --field-bg-readonly: rgba(255, 255, 255, 0.035);
+  --field-radius: 12px;
+  --field-height: 44px;
   --shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
   --radius: 18px;
   --sidebar-width: 360px;
@@ -252,7 +258,8 @@ button.danger-button:hover {
 }
 
 .label-view,
-.characters-section {
+.characters-section,
+#imagesSection {
   min-height: 0;
 }
 
@@ -291,6 +298,85 @@ button.danger-button:hover {
   display: grid;
   gap: 10px;
   margin-top: 12px;
+}
+
+.image-category-list {
+  display: grid;
+  gap: 10px;
+}
+
+.image-category-group {
+  display: grid;
+  gap: 10px;
+}
+
+.image-category-toggle {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.image-category-toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.image-category-toggle-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.image-category-toggle-caret {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 140ms ease;
+}
+
+.image-category-group.is-collapsed .image-category-toggle-caret {
+  transform: rotate(-90deg);
+}
+
+.image-category-toggle-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.image-category-toggle-count {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.image-category-items {
+  display: grid;
+  gap: 10px;
+  padding-left: 10px;
+}
+
+.image-category-group.is-collapsed .image-category-items {
+  display: none;
+}
+
+.image-category-empty {
+  margin: 0;
+  padding: 2px 2px 2px 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .label-graph-list {
@@ -355,16 +441,24 @@ button.danger-button:hover {
 
 .label-graph-input {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
-  padding: 9px 10px;
+  min-height: var(--field-height);
+  border: 1px solid var(--field-border);
+  border-radius: var(--field-radius);
+  padding: 11px 12px;
   background: var(--input);
   color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
   outline: none;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease,
+    color 140ms ease;
 }
 
 .label-graph-input:focus {
-  border-color: rgba(255, 255, 255, 0.22);
+  border-color: var(--field-border-focus);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
@@ -430,6 +524,7 @@ button.danger-button:hover {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.characters-view#imagesListView,
 .characters-view#charactersListView {
   position: relative;
   gap: 12px;
@@ -500,19 +595,33 @@ button.danger-button:hover {
 }
 
 .character-detail-form input:not([type="checkbox"]),
-.character-detail-form select {
+.character-detail-form select,
+.inspector-form input,
+.inspector-form select,
+.inspector-form textarea {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 10px 12px;
+  min-height: var(--field-height);
+  border: 1px solid var(--field-border);
+  border-radius: var(--field-radius);
+  padding: 11px 12px;
   background: var(--input);
   color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease,
+    color 140ms ease;
 }
 
 .character-detail-form input:not([type="checkbox"]):focus,
-.character-detail-form select:focus {
+.character-detail-form select:focus,
+.inspector-form input:focus,
+.inspector-form select:focus,
+.inspector-form textarea:focus {
   outline: 2px solid rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: var(--field-border-focus);
 }
 
 .code-preview {
@@ -591,22 +700,42 @@ button.danger-button:hover {
   font-size: 14px;
 }
 
-.inspector-form input,
-.inspector-form select,
+.character-detail-form textarea,
 .inspector-form textarea {
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 10px 12px;
-  background: var(--input);
-  color: var(--text);
+  min-height: 124px;
+  resize: vertical;
 }
 
-.inspector-form input:focus,
-.inspector-form select:focus,
-.inspector-form textarea:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.18);
+.character-detail-form input::placeholder,
+.character-detail-form textarea::placeholder,
+.inspector-form input::placeholder,
+.inspector-form textarea::placeholder,
+.label-graph-input::placeholder {
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.character-detail-form select,
+.inspector-form select {
+  padding-right: 40px;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255, 255, 255, 0.7) 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.7) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 2px),
+    calc(100% - 12px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.character-detail-form input[readonly],
+.character-detail-form textarea[readonly],
+.inspector-form input[readonly],
+.inspector-form textarea[readonly] {
+  border-color: var(--field-border-readonly);
+  background: var(--field-bg-readonly);
+  color: rgba(255, 255, 255, 0.72);
+  cursor: default;
 }
 
 .hidden {

@@ -28,6 +28,25 @@ const labelCodePreviewTitleEl = document.getElementById("labelCodePreviewTitle")
 const labelCodePreviewEl = document.getElementById("labelCodePreview");
 const labelContextMenuEl = document.getElementById("labelContextMenu");
 const contextRenameLabelButton = document.getElementById("contextRenameLabelButton");
+const imageContextMenuEl = document.getElementById("imageContextMenu");
+const contextDeleteImageButton = document.getElementById("contextDeleteImageButton");
+const characterContextMenuEl = document.getElementById("characterContextMenu");
+const contextDeleteCharacterButton = document.getElementById("contextDeleteCharacterButton");
+const imageDefinitionListEl = document.getElementById("imageDefinitionList");
+const imageDefinitionEmptyEl = document.getElementById("imageDefinitionEmpty");
+const imagesListViewEl = document.getElementById("imagesListView");
+const imageDefinitionDetailViewEl = document.getElementById("imageDefinitionDetailView");
+const newImageDefinitionButton = document.getElementById("newImageDefinitionButton");
+const imageDefinitionBackButton = document.getElementById("imageDefinitionBackButton");
+const imageDefinitionNameInput = document.getElementById("imageDefinitionNameInput");
+const imageDefinitionCategoryInput = document.getElementById("imageDefinitionCategoryInput");
+const imageDefinitionSourcePathInput = document.getElementById("imageDefinitionSourcePathInput");
+const imageDefinitionZoomInput = document.getElementById("imageDefinitionZoomInput");
+const imageDefinitionXAnchorInput = document.getElementById("imageDefinitionXAnchorInput");
+const imageDefinitionYAnchorInput = document.getElementById("imageDefinitionYAnchorInput");
+const imageDefinitionXPosInput = document.getElementById("imageDefinitionXPosInput");
+const imageDefinitionYPosInput = document.getElementById("imageDefinitionYPosInput");
+const imageDefinitionCodePreviewEl = document.getElementById("imageDefinitionCodePreview");
 const characterListEl = document.getElementById("characterList");
 const characterListEmptyEl = document.getElementById("characterListEmpty");
 const charactersListViewEl = document.getElementById("charactersListView");
@@ -96,6 +115,21 @@ const defaultViewport = {
   scale: 1,
 };
 
+const imageCategoryMeta = {
+  background: {
+    label: "Background",
+    empty: "No background images yet.",
+  },
+  character: {
+    label: "Character",
+    empty: "No character images yet.",
+  },
+  others: {
+    label: "Others",
+    empty: "No other images yet.",
+  },
+};
+
 const defaultStarterNodes = [
   {
     id: "start",
@@ -131,6 +165,7 @@ const defaultProjectState = {
       selectedNodeId: "dialogue_1",
     },
   ],
+  images: [],
   characters: [],
   activeGraphId: "label_start",
 };
@@ -145,10 +180,19 @@ let dragSession = null;
 let connectionSession = null;
 let contextMenuNodeId = null;
 let contextMenuLabelGraphId = null;
+let contextMenuImageDefinitionId = null;
+let contextMenuCharacterId = null;
 let draggedLabelGraphId = null;
 let labelOrderChangedDuringDrag = false;
 let renamingGraphId = null;
 let labelCodePreviewGraphId = null;
+let activeImageDefinitionId = null;
+let imageDefinitionDetailOpen = false;
+let imageCategorySectionState = {
+  background: true,
+  character: true,
+  others: true,
+};
 let activeCharacterId = null;
 let characterDetailOpen = false;
 
@@ -174,6 +218,9 @@ function normalizeState(rawState) {
   const normalizedCharacters = Array.isArray(rawState.characters)
     ? rawState.characters.map((character, index) => normalizeCharacter(character, index))
     : [];
+  const normalizedImageDefinitions = Array.isArray(rawState.images)
+    ? rawState.images.map((image, index) => normalizeImageDefinition(image, index))
+    : [];
   const activeGraphId = normalizedGraphs.some((graph) => graph.id === rawState.activeGraphId)
     ? rawState.activeGraphId
     : normalizedGraphs[0]?.id ?? null;
@@ -184,6 +231,7 @@ function normalizeState(rawState) {
       ...(rawState.meta || {}),
     },
     graphs: normalizedGraphs,
+    images: normalizedImageDefinitions,
     characters: normalizedCharacters,
     activeGraphId,
   };
@@ -277,6 +325,24 @@ function normalizeCharacter(character, index) {
     ctcPause: character.ctcPause || "",
     ctcTimedPause: character.ctcTimedPause || "",
     ctcPosition: character.ctcPosition || "",
+  };
+}
+
+function normalizeImageDefinition(image, index) {
+  const category = Object.prototype.hasOwnProperty.call(imageCategoryMeta, image.category)
+    ? image.category
+    : "others";
+
+  return {
+    id: image.id || `image_${index + 1}`,
+    name: image.name || `image_${index + 1}`,
+    category,
+    sourcePath: image.sourcePath || "",
+    zoom: image.zoom || "",
+    xanchor: image.xanchor || "",
+    yanchor: image.yanchor || "",
+    xpos: image.xpos || "",
+    ypos: image.ypos || "",
   };
 }
 
@@ -386,6 +452,62 @@ function setLabelContextMenuState(nextOpen, options = {}) {
   labelContextMenuEl.style.top = `${top}px`;
 }
 
+function setImageContextMenuState(nextOpen, options = {}) {
+  if (!nextOpen) {
+    contextMenuImageDefinitionId = null;
+    imageContextMenuEl.classList.remove("is-open");
+    return;
+  }
+
+  contextMenuImageDefinitionId = options.imageId ?? contextMenuImageDefinitionId;
+  imageContextMenuEl.classList.add("is-open");
+  imageContextMenuEl.style.left = "0px";
+  imageContextMenuEl.style.top = "0px";
+
+  const margin = 12;
+  const menuWidth = imageContextMenuEl.offsetWidth;
+  const menuHeight = imageContextMenuEl.offsetHeight;
+  const left = Math.min(
+    Math.max(margin, options.x ?? margin),
+    window.innerWidth - menuWidth - margin,
+  );
+  const top = Math.min(
+    Math.max(margin, options.y ?? margin),
+    window.innerHeight - menuHeight - margin,
+  );
+
+  imageContextMenuEl.style.left = `${left}px`;
+  imageContextMenuEl.style.top = `${top}px`;
+}
+
+function setCharacterContextMenuState(nextOpen, options = {}) {
+  if (!nextOpen) {
+    contextMenuCharacterId = null;
+    characterContextMenuEl.classList.remove("is-open");
+    return;
+  }
+
+  contextMenuCharacterId = options.characterId ?? contextMenuCharacterId;
+  characterContextMenuEl.classList.add("is-open");
+  characterContextMenuEl.style.left = "0px";
+  characterContextMenuEl.style.top = "0px";
+
+  const margin = 12;
+  const menuWidth = characterContextMenuEl.offsetWidth;
+  const menuHeight = characterContextMenuEl.offsetHeight;
+  const left = Math.min(
+    Math.max(margin, options.x ?? margin),
+    window.innerWidth - menuWidth - margin,
+  );
+  const top = Math.min(
+    Math.max(margin, options.y ?? margin),
+    window.innerHeight - menuHeight - margin,
+  );
+
+  characterContextMenuEl.style.left = `${left}px`;
+  characterContextMenuEl.style.top = `${top}px`;
+}
+
 function getActiveGraph() {
   return state.graphs.find((graph) => graph.id === state.activeGraphId) ?? null;
 }
@@ -443,8 +565,28 @@ function createBlankCharacter() {
   };
 }
 
+function createBlankImageDefinition() {
+  const nextIndex = state.images.length + 1;
+
+  return {
+    id: `image_${nextIndex}`,
+    name: `image_${nextIndex}`,
+    category: "others",
+    sourcePath: "",
+    zoom: "",
+    xanchor: "",
+    yanchor: "",
+    xpos: "",
+    ypos: "",
+  };
+}
+
 function getActiveCharacter() {
   return state.characters.find((character) => character.id === activeCharacterId) ?? null;
+}
+
+function getActiveImageDefinition() {
+  return state.images.find((image) => image.id === activeImageDefinitionId) ?? null;
 }
 
 function getImageNodeMode(node) {
@@ -1384,9 +1526,223 @@ function renderLabelPanel() {
   }
 }
 
+function openImageDefinitionDetail(imageId) {
+  activeImageDefinitionId = imageId;
+  imageDefinitionDetailOpen = true;
+  setImageContextMenuState(false);
+  renderImagesPanel();
+  const image = getActiveImageDefinition();
+
+  if (image) {
+    setStatus(`Opened image definition "${image.name}".`);
+  }
+}
+
+function closeImageDefinitionDetail() {
+  imageDefinitionDetailOpen = false;
+  setImageContextMenuState(false);
+  renderImagesPanel();
+}
+
+function deleteImageDefinition(imageId) {
+  const image = state.images.find((currentImage) => currentImage.id === imageId);
+
+  if (!image) {
+    return;
+  }
+
+  state.images = state.images.filter((currentImage) => currentImage.id !== imageId);
+
+  if (activeImageDefinitionId === imageId) {
+    activeImageDefinitionId = state.images[0]?.id ?? null;
+  }
+
+  if (imageDefinitionDetailOpen && !getActiveImageDefinition()) {
+    imageDefinitionDetailOpen = false;
+  }
+
+  setImageContextMenuState(false);
+  renderImagesPanel();
+  saveState(`Deleted image "${image.name}".`);
+}
+
+function formatImageDefinitionCode(image) {
+  if (!image) {
+    return "";
+  }
+
+  const safeName = image.name.trim() || "image_name";
+  const sourcePath = image.sourcePath.trim() || "images/example.png";
+  const lines = [
+    `image ${safeName}:`,
+    `    "${escapeRenpyString(sourcePath)}"`,
+  ];
+
+  if (`${image.zoom}`.trim()) {
+    lines.push(`    zoom ${`${image.zoom}`.trim()}`);
+  }
+
+  if (`${image.xanchor}`.trim()) {
+    lines.push(`    xanchor ${`${image.xanchor}`.trim()}`);
+  }
+
+  if (`${image.yanchor}`.trim()) {
+    lines.push(`    yanchor ${`${image.yanchor}`.trim()}`);
+  }
+
+  if (`${image.xpos}`.trim()) {
+    lines.push(`    xpos ${`${image.xpos}`.trim()}`);
+  }
+
+  if (`${image.ypos}`.trim()) {
+    lines.push(`    ypos ${`${image.ypos}`.trim()}`);
+  }
+
+  return lines.join("\n");
+}
+
+function syncImageDefinitionDetailFields() {
+  const image = getActiveImageDefinition();
+
+  if (!image) {
+    imageDefinitionNameInput.value = "";
+    imageDefinitionCategoryInput.value = "others";
+    imageDefinitionSourcePathInput.value = "";
+    imageDefinitionZoomInput.value = "";
+    imageDefinitionXAnchorInput.value = "";
+    imageDefinitionYAnchorInput.value = "";
+    imageDefinitionXPosInput.value = "";
+    imageDefinitionYPosInput.value = "";
+    imageDefinitionCodePreviewEl.textContent = "";
+    return;
+  }
+
+  imageDefinitionNameInput.value = image.name;
+  imageDefinitionCategoryInput.value = image.category || "others";
+  imageDefinitionSourcePathInput.value = image.sourcePath;
+  imageDefinitionZoomInput.value = image.zoom;
+  imageDefinitionXAnchorInput.value = image.xanchor;
+  imageDefinitionYAnchorInput.value = image.yanchor;
+  imageDefinitionXPosInput.value = image.xpos;
+  imageDefinitionYPosInput.value = image.ypos;
+  imageDefinitionCodePreviewEl.textContent = formatImageDefinitionCode(image);
+}
+
+function renderImagesPanel() {
+  const hasImages = state.images.length > 0;
+
+  if (!hasImages) {
+    activeImageDefinitionId = null;
+    imageDefinitionDetailOpen = false;
+  } else if (!getActiveImageDefinition()) {
+    activeImageDefinitionId = state.images[0].id;
+  }
+
+  if (imageDefinitionDetailOpen && !getActiveImageDefinition()) {
+    imageDefinitionDetailOpen = false;
+  }
+
+  imageDefinitionEmptyEl.classList.add("hidden");
+  imageDefinitionListEl.innerHTML = "";
+
+  Object.entries(imageCategoryMeta).forEach(([categoryKey, categoryInfo]) => {
+    const categoryGroup = document.createElement("section");
+    const isExpanded = imageCategorySectionState[categoryKey] !== false;
+    const categoryImages = state.images.filter((image) => image.category === categoryKey);
+    categoryGroup.className = "image-category-group";
+    categoryGroup.classList.toggle("is-collapsed", !isExpanded);
+
+    const toggleButton = document.createElement("button");
+    toggleButton.type = "button";
+    toggleButton.className = "image-category-toggle";
+    toggleButton.setAttribute("aria-expanded", String(isExpanded));
+    toggleButton.innerHTML = `
+      <span class="image-category-toggle-main">
+        <svg class="image-category-toggle-caret" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 6.5 8 11l5-4.5"></path>
+        </svg>
+        <span class="image-category-toggle-label">${escapeHtml(categoryInfo.label)}</span>
+      </span>
+      <span class="image-category-toggle-count">${categoryImages.length}</span>
+    `;
+
+    toggleButton.addEventListener("click", () => {
+      imageCategorySectionState[categoryKey] = !isExpanded;
+      renderImagesPanel();
+    });
+
+    const itemsEl = document.createElement("div");
+    itemsEl.className = "image-category-items";
+
+    if (!categoryImages.length) {
+      const emptyEl = document.createElement("p");
+      emptyEl.className = "image-category-empty";
+      emptyEl.textContent = categoryInfo.empty;
+      itemsEl.appendChild(emptyEl);
+    }
+
+    categoryImages.forEach((image) => {
+      const item = document.createElement("div");
+      item.className = "character-card";
+      item.setAttribute("role", "button");
+      item.tabIndex = 0;
+
+      if (image.id === activeImageDefinitionId) {
+        item.classList.add("is-active");
+      }
+
+      item.innerHTML = `
+        <strong>${escapeHtml(image.name)}</strong>
+        <span>${escapeHtml(image.sourcePath || "No source path yet")}</span>
+      `;
+
+      item.addEventListener("click", () => {
+        activeImageDefinitionId = image.id;
+        setImageContextMenuState(false);
+        renderImagesPanel();
+      });
+      item.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        activeImageDefinitionId = image.id;
+        renderImagesPanel();
+        setContextMenuState(false);
+        setLabelContextMenuState(false);
+        setCharacterContextMenuState(false);
+        setImageContextMenuState(true, {
+          imageId: image.id,
+          x: event.clientX,
+          y: event.clientY,
+        });
+      });
+      item.addEventListener("dblclick", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openImageDefinitionDetail(image.id);
+      });
+      item.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openImageDefinitionDetail(image.id);
+        }
+      });
+
+      itemsEl.appendChild(item);
+    });
+
+    categoryGroup.appendChild(toggleButton);
+    categoryGroup.appendChild(itemsEl);
+    imageDefinitionListEl.appendChild(categoryGroup);
+  });
+
+  imagesListViewEl.classList.toggle("hidden", imageDefinitionDetailOpen);
+  imageDefinitionDetailViewEl.classList.toggle("hidden", !imageDefinitionDetailOpen);
+  syncImageDefinitionDetailFields();
+}
+
 function openCharacterDetail(characterId) {
   activeCharacterId = characterId;
   characterDetailOpen = true;
+  setCharacterContextMenuState(false);
   renderCharactersPanel();
   const character = getActiveCharacter();
 
@@ -1397,7 +1753,30 @@ function openCharacterDetail(characterId) {
 
 function closeCharacterDetail() {
   characterDetailOpen = false;
+  setCharacterContextMenuState(false);
   renderCharactersPanel();
+}
+
+function deleteCharacter(characterId) {
+  const character = state.characters.find((currentCharacter) => currentCharacter.id === characterId);
+
+  if (!character) {
+    return;
+  }
+
+  state.characters = state.characters.filter((currentCharacter) => currentCharacter.id !== characterId);
+
+  if (activeCharacterId === characterId) {
+    activeCharacterId = state.characters[0]?.id ?? null;
+  }
+
+  if (characterDetailOpen && !getActiveCharacter()) {
+    characterDetailOpen = false;
+  }
+
+  setCharacterContextMenuState(false);
+  renderCharactersPanel();
+  saveState(`Deleted character "${character.name}".`);
 }
 
 function formatCharacterCode(character) {
@@ -1587,8 +1966,22 @@ function renderCharactersPanel() {
 
     item.addEventListener("click", () => {
       activeCharacterId = character.id;
+      setCharacterContextMenuState(false);
       characterListEl.querySelectorAll(".character-card").forEach((card) => {
         card.classList.toggle("is-active", card === item);
+      });
+    });
+    item.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      activeCharacterId = character.id;
+      renderCharactersPanel();
+      setContextMenuState(false);
+      setLabelContextMenuState(false);
+      setImageContextMenuState(false);
+      setCharacterContextMenuState(true, {
+        characterId: character.id,
+        x: event.clientX,
+        y: event.clientY,
       });
     });
     item.addEventListener("dblclick", (event) => {
@@ -1808,6 +2201,7 @@ function render() {
   renderProjectInfo();
   renderLabelGraphList();
   renderLabelPanel();
+  renderImagesPanel();
   renderCharactersPanel();
   renderVisualProjectStats();
   renderGraph();
@@ -1851,6 +2245,19 @@ function updateActiveCharacter(patch) {
   }
 
   syncCharacterDetailFields();
+  saveState();
+}
+
+function updateActiveImageDefinition(patch) {
+  const image = getActiveImageDefinition();
+
+  if (!image) {
+    return;
+  }
+
+  Object.assign(image, patch);
+  syncImageDefinitionDetailFields();
+  renderImagesPanel();
   saveState();
 }
 
@@ -2161,12 +2568,67 @@ contextRenameLabelButton.addEventListener("click", () => {
 
   startLabelRename(contextMenuLabelGraphId);
 });
+contextDeleteImageButton.addEventListener("click", () => {
+  if (!contextMenuImageDefinitionId) {
+    return;
+  }
+
+  deleteImageDefinition(contextMenuImageDefinitionId);
+});
+contextDeleteCharacterButton.addEventListener("click", () => {
+  if (!contextMenuCharacterId) {
+    return;
+  }
+
+  deleteCharacter(contextMenuCharacterId);
+});
+newImageDefinitionButton.addEventListener("click", () => {
+  const newImage = createBlankImageDefinition();
+
+  state.images.push(newImage);
+  activeImageDefinitionId = newImage.id;
+  imageCategorySectionState[newImage.category] = true;
+  imageDefinitionDetailOpen = false;
+  setImageContextMenuState(false);
+  renderImagesPanel();
+  saveState(`Created image definition "${newImage.name}".`);
+});
+imageDefinitionBackButton.addEventListener("click", () => {
+  closeImageDefinitionDetail();
+  setStatus("Returned to image list.");
+});
+imageDefinitionNameInput.addEventListener("input", (event) => {
+  updateActiveImageDefinition({ name: event.target.value });
+});
+imageDefinitionCategoryInput.addEventListener("change", (event) => {
+  imageCategorySectionState[event.target.value] = true;
+  updateActiveImageDefinition({ category: event.target.value });
+});
+imageDefinitionSourcePathInput.addEventListener("input", (event) => {
+  updateActiveImageDefinition({ sourcePath: event.target.value });
+});
+imageDefinitionZoomInput.addEventListener("input", (event) => {
+  updateActiveImageDefinition({ zoom: event.target.value });
+});
+imageDefinitionXAnchorInput.addEventListener("input", (event) => {
+  updateActiveImageDefinition({ xanchor: event.target.value });
+});
+imageDefinitionYAnchorInput.addEventListener("input", (event) => {
+  updateActiveImageDefinition({ yanchor: event.target.value });
+});
+imageDefinitionXPosInput.addEventListener("input", (event) => {
+  updateActiveImageDefinition({ xpos: event.target.value });
+});
+imageDefinitionYPosInput.addEventListener("input", (event) => {
+  updateActiveImageDefinition({ ypos: event.target.value });
+});
 newCharacterButton.addEventListener("click", () => {
   const newCharacter = createBlankCharacter();
 
   state.characters.push(newCharacter);
   activeCharacterId = newCharacter.id;
   characterDetailOpen = false;
+  setCharacterContextMenuState(false);
   renderCharactersPanel();
   saveState(`Created character "${newCharacter.name}".`);
 });
@@ -2307,8 +2769,18 @@ document.addEventListener("pointerdown", (event) => {
     return;
   }
 
+  if (imageContextMenuEl.contains(event.target)) {
+    return;
+  }
+
+  if (characterContextMenuEl.contains(event.target)) {
+    return;
+  }
+
   setContextMenuState(false);
   setLabelContextMenuState(false);
+  setImageContextMenuState(false);
+  setCharacterContextMenuState(false);
 });
 
 labelGraphListEl.addEventListener("dragover", (event) => {
