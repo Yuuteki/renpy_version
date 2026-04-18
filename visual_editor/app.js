@@ -2823,27 +2823,28 @@ function renderGraph() {
     const hasInputPort = nodeAllowsIncomingConnections(node);
     const hasOutputPort = nodeAllowsOutgoingConnections(node);
     const display = getNodeDisplay(node);
-    const menuChoicesMarkup = node.type === "menu"
-      ? `
-        <div class="menu-node-choice-list">
-          ${getMenuChoices(node).map((choice) => `
-            <div class="menu-node-choice">
-              <span class="menu-node-choice-text">${escapeHtml(choice.text)}</span>
-              <span
-                class="node-port node-port-output node-port-output-choice"
-                data-node-id="${escapeHtml(node.id)}"
-                data-port="output"
-                data-port-id="${escapeHtml(getMenuChoicePortId(choice.id))}"
-              ></span>
-            </div>
-          `).join("")}
-        </div>
-      `
+    const isMenuNode = node.type === "menu";
+    const menuChoicesMarkup = isMenuNode
+      ? getMenuChoices(node).map((choice) => `
+          <div class="menu-node-choice">
+            <span class="menu-node-choice-text">${escapeHtml(choice.text)}</span>
+            <span
+              class="node-port node-port-output node-port-output-choice"
+              data-node-id="${escapeHtml(node.id)}"
+              data-port="output"
+              data-port-id="${escapeHtml(getMenuChoicePortId(choice.id))}"
+            ></span>
+          </div>
+        `).join("")
       : "";
     const el = document.createElement("button");
     el.type = "button";
     el.className = "graph-node";
     el.dataset.nodeId = node.id;
+
+    if (isMenuNode) {
+      el.classList.add("graph-node-menu");
+    }
 
     if (node.id === graph.selectedNodeId) {
       el.classList.add("is-selected");
@@ -2852,16 +2853,22 @@ function renderGraph() {
     el.style.left = `${node.x}px`;
     el.style.top = `${node.y}px`;
 
-    el.innerHTML = `
-      <p class="node-type">${escapeHtml(display.typeLabel)}</p>
-      <h3 class="node-title">${escapeHtml(display.title || "Untitled Node")}</h3>
-      ${display.content ? `<p class="node-content">${escapeHtml(display.content)}</p>` : ""}
-      ${node.type === "menu" ? menuChoicesMarkup : ""}
-      ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input" data-port-id="input"></span>` : ""}
-      ${hasOutputPort && node.type !== "menu"
-        ? `<span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output" data-port-id="output"></span>`
-        : ""}
-    `;
+    el.innerHTML = isMenuNode
+      ? `
+        <div class="menu-node-choice-list">
+          ${menuChoicesMarkup}
+        </div>
+        ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input" data-port-id="input"></span>` : ""}
+      `
+      : `
+        <p class="node-type">${escapeHtml(display.typeLabel)}</p>
+        <h3 class="node-title">${escapeHtml(display.title || "Untitled Node")}</h3>
+        ${display.content ? `<p class="node-content">${escapeHtml(display.content)}</p>` : ""}
+        ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input" data-port-id="input"></span>` : ""}
+        ${hasOutputPort
+          ? `<span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output" data-port-id="output"></span>`
+          : ""}
+      `;
 
     el.addEventListener("pointerdown", (event) => {
       beginNodeDrag(event, node.id, el);

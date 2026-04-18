@@ -1013,8 +1013,13 @@ button.danger-button:hover {
 
 .menu-node-choice-list {
   display: grid;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 0;
+  overflow: visible;
+}
+
+.graph-node-menu {
+  width: 248px;
+  padding: 8px 0;
 }
 
 .menu-node-choice {
@@ -1022,16 +1027,19 @@ button.danger-button:hover {
   display: flex;
   align-items: center;
   min-height: 34px;
-  padding: 8px 30px 8px 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 12px 34px 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
 }
 
 .menu-node-choice-text {
   color: var(--text);
   font-size: 13px;
   line-height: 1.35;
+}
+
+.menu-node-choice:first-child {
+  border-top: 0;
 }
 
 .menu-node-choice .node-port-output-choice {
