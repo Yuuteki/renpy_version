@@ -105,6 +105,12 @@ const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
 const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
 const dialogueNodeContentInput = document.getElementById("dialogueNodeContentInput");
 const dialogueDeleteNodeButton = document.getElementById("dialogueDeleteNodeButton");
+const menuInspectorFormEl = document.getElementById("menuInspectorForm");
+const menuNodeTypeInput = document.getElementById("menuNodeTypeInput");
+const menuNodePromptInput = document.getElementById("menuNodePromptInput");
+const menuChoiceListEl = document.getElementById("menuChoiceList");
+const menuAddChoiceButton = document.getElementById("menuAddChoiceButton");
+const menuDeleteNodeButton = document.getElementById("menuDeleteNodeButton");
 const flowInspectorFormEl = document.getElementById("flowInspectorForm");
 const flowNodeTypeInput = document.getElementById("flowNodeTypeInput");
 const flowNodeModeInput = document.getElementById("flowNodeModeInput");
@@ -430,17 +436,8 @@ function normalizeGraph(graph, index) {
   const edges = Array.isArray(graph.edges)
     ? graph.edges
       .filter((edge) => edge?.fromNodeId && edge?.toNodeId)
-      .filter((edge) => (
-        nodeIds.has(edge.fromNodeId)
-        && nodeIds.has(edge.toNodeId)
-        && edge.toNodeId !== startNodeId
-        && nodeAllowsOutgoingConnections(nodes.find((node) => node.id === edge.fromNodeId))
-      ))
-      .map((edge, edgeIndex) => ({
-        id: edge.id || `edge_${index + 1}_${edgeIndex + 1}`,
-        fromNodeId: edge.fromNodeId,
-        toNodeId: edge.toNodeId,
-      }))
+      .map((edge, edgeIndex) => normalizeGraphEdge(edge, nodes, index, edgeIndex))
+      .filter(Boolean)
     : [];
   const selectedNodeId = nodes.some((node) => node.id === graph.selectedNodeId)
     ? graph.selectedNodeId
@@ -457,6 +454,33 @@ function normalizeGraph(graph, index) {
     edges,
     nodes,
     selectedNodeId,
+  };
+}
+
+function normalizeGraphEdge(edge, nodes, graphIndex, edgeIndex) {
+  const sourceNode = nodes.find((node) => node.id === edge.fromNodeId);
+  const targetNode = nodes.find((node) => node.id === edge.toNodeId);
+  const startNodeId = nodes.find((node) => node?.type === "start")?.id ?? "start";
+
+  if (!sourceNode || !targetNode) {
+    return null;
+  }
+
+  if (
+    targetNode.id === startNodeId
+    || !nodeAllowsOutgoingConnections(sourceNode)
+    || !nodeAllowsIncomingConnections(targetNode)
+  ) {
+    return null;
+  }
+
+  const fromPortId = normalizeOutputPortId(sourceNode, edge.fromPortId);
+
+  return {
+    id: edge.id || `edge_${graphIndex + 1}_${edgeIndex + 1}`,
+    fromNodeId: edge.fromNodeId,
+    fromPortId,
+    toNodeId: edge.toNodeId,
   };
 }
 
@@ -497,7 +521,50 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
     };
   }
 
+  if (node.type === "menu") {
+    const fallbackPrompt = node.menuPrompt
+      || (node.content && node.content !== "Add menu choices here." ? node.content : "")
+      || "";
+
+    return {
+      ...node,
+      title: node.title || "Choice",
+      menuPrompt: fallbackPrompt,
+      menuChoices: normalizeMenuChoices(node.menuChoices),
+    };
+  }
+
   return node;
+}
+
+function createMenuChoice(index = 1) {
+  return {
+    id: `menu_choice_${Date.now()}_${index}`,
+    text: `Choice ${index}`,
+  };
+}
+
+function getMenuChoicePortId(choiceId) {
+  return `choice:${choiceId}`;
+}
+
+function normalizeMenuChoices(rawChoices) {
+  if (!Array.isArray(rawChoices) || !rawChoices.length) {
+    return [createMenuChoice(1)];
+  }
+
+  const normalizedChoices = rawChoices.map((choice, index) => {
+    if (!choice || typeof choice !== "object") {
+      return createMenuChoice(index + 1);
+    }
+
+    return {
+      id: choice.id || `menu_choice_${Date.now()}_${index + 1}`,
+      text: `${choice.text || ""}`.trim() || `Choice ${index + 1}`,
+    };
+  });
+
+  return normalizedChoices.length ? normalizedChoices : [createMenuChoice(1)];
 }
 
 function normalizeLegacyGraph(rawState) {
@@ -1046,6 +1113,64 @@ function nodeAllowsOutgoingConnections(node) {
   return true;
 }
 
+function getMenuChoices(node) {
+  return normalizeMenuChoices(node?.menuChoices);
+}
+
+function getDefaultOutputPortId(node) {
+  if (node?.type === "menu") {
+    const firstChoice = getMenuChoices(node)[0];
+    return firstChoice ? getMenuChoicePortId(firstChoice.id) : "output";
+  }
+
+  return "output";
+}
+
+function normalizeOutputPortId(node, fromPortId) {
+  const normalizedPortId = fromPortId || getDefaultOutputPortId(node);
+
+  if (node?.type !== "menu") {
+    return "output";
+  }
+
+  const validPortIds = new Set(
+    getMenuChoices(node).map((choice) => getMenuChoicePortId(choice.id)),
+  );
+
+  return validPortIds.has(normalizedPortId)
+    ? normalizedPortId
+    : getDefaultOutputPortId(node);
+}
+
+function renderMenuChoiceList(node) {
+  if (!menuChoiceListEl) {
+    return;
+  }
+
+  const choices = getMenuChoices(node);
+
+  menuChoiceListEl.innerHTML = choices.map((choice, index) => `
+    <div class="menu-choice-item">
+      <div class="menu-choice-item-header">
+        <span>Choice ${index + 1}</span>
+        <button
+          class="danger-button menu-choice-remove-button"
+          type="button"
+          data-remove-menu-choice-id="${escapeHtml(choice.id)}"
+        >
+          Remove
+        </button>
+      </div>
+      <input
+        type="text"
+        value="${escapeHtml(choice.text)}"
+        placeholder="e.g. Go left"
+        data-menu-choice-id="${escapeHtml(choice.id)}"
+      />
+    </div>
+  `).join("");
+}
+
 function buildImageSourcePathFromSelection(fileName, category, currentValue = "") {
   const normalizedCurrent = `${currentValue}`.trim().replaceAll("\\", "/");
 
@@ -1140,6 +1265,18 @@ function getNodeDisplay(node) {
     };
   }
 
+  if (node.type === "menu") {
+    const menuPrompt = `${node.menuPrompt || ""}`.trim();
+    const choiceCount = getMenuChoices(node).length;
+    const choiceLabel = choiceCount === 1 ? "1 choice" : `${choiceCount} choices`;
+
+    return {
+      typeLabel: "menu",
+      title: "Choice",
+      content: menuPrompt ? `${menuPrompt} · ${choiceLabel}` : choiceLabel,
+    };
+  }
+
   if (isFlowNode(node)) {
     const flowMode = getFlowNodeMode(node);
     const target = getFlowNodeTarget(node);
@@ -1221,7 +1358,29 @@ function getNodeMetrics(nodeId, graph = getActiveGraph()) {
   return { node, width, height };
 }
 
-function getNodePortWorldPosition(nodeId, side, graph = getActiveGraph()) {
+function getPortSelector(nodeId, side, portId = null) {
+  let selector = `.node-port-${side}[data-node-id="${CSS.escape(nodeId)}"]`;
+
+  if (portId) {
+    selector += `[data-port-id="${CSS.escape(portId)}"]`;
+  }
+
+  return selector;
+}
+
+function getNodePortCanvasPosition(nodeId, side, graph = getActiveGraph(), { portId = null } = {}) {
+  const portEl = graphNodesEl.querySelector(getPortSelector(nodeId, side, portId));
+
+  if (portEl) {
+    const canvasRect = canvasEl.getBoundingClientRect();
+    const portRect = portEl.getBoundingClientRect();
+
+    return {
+      x: portRect.left + (portRect.width / 2) - canvasRect.left,
+      y: portRect.top + (portRect.height / 2) - canvasRect.top,
+    };
+  }
+
   const metrics = getNodeMetrics(nodeId, graph);
 
   if (!metrics) {
@@ -1229,10 +1388,12 @@ function getNodePortWorldPosition(nodeId, side, graph = getActiveGraph()) {
   }
 
   const { node, width, height } = metrics;
-  return {
+  const worldPosition = {
     x: side === "input" ? node.x - nodePortOffset : node.x + width + nodePortOffset,
     y: node.y + height / 2,
   };
+
+  return worldToCanvasPoint(worldPosition.x, worldPosition.y, graph?.viewport || defaultViewport);
 }
 
 function createConnectionPath(startX, startY, endX, endY) {
@@ -1288,16 +1449,16 @@ function drawConnection(context, startX, startY, endX, endY, options = {}) {
   drawArrowHead(context, arrowAngle, endX, endY, options.arrowSize || 10, color);
 }
 
-function getConnectionPreviewEndpoint(viewport) {
+function getConnectionPreviewEndpoint() {
   if (!connectionSession) {
     return null;
   }
 
   if (connectionSession.targetNodeId) {
-    const targetPort = getNodePortWorldPosition(connectionSession.targetNodeId, "input");
+    const targetPort = getNodePortCanvasPosition(connectionSession.targetNodeId, "input");
 
     if (targetPort) {
-      return worldToCanvasPoint(targetPort.x, targetPort.y, viewport);
+      return targetPort;
     }
   }
 
@@ -1324,13 +1485,15 @@ function updateConnectionTargetFromPointer(clientX, clientY) {
   connectionSession.targetNodeId = targetNodeId;
 }
 
-function hasConnection(graph, fromNodeId, toNodeId) {
+function hasConnection(graph, fromNodeId, toNodeId, fromPortId = "output") {
   if (!graph) {
     return false;
   }
 
   return graph.edges.some((edge) => (
-    edge.fromNodeId === fromNodeId && edge.toNodeId === toNodeId
+    edge.fromNodeId === fromNodeId
+    && edge.toNodeId === toNodeId
+    && (edge.fromPortId || "output") === fromPortId
   ));
 }
 
@@ -1342,12 +1505,22 @@ function getIncomingEdges(graph, nodeId) {
   return graph.edges.filter((edge) => edge.toNodeId === nodeId);
 }
 
-function getOutgoingEdges(graph, nodeId) {
+function getOutgoingEdges(graph, nodeId, { fromPortId = null } = {}) {
   if (!graph) {
     return [];
   }
 
-  return graph.edges.filter((edge) => edge.fromNodeId === nodeId);
+  return graph.edges.filter((edge) => {
+    if (edge.fromNodeId !== nodeId) {
+      return false;
+    }
+
+    if (!fromPortId) {
+      return true;
+    }
+
+    return (edge.fromPortId || "output") === fromPortId;
+  });
 }
 
 function removeEdges(graph, edgesToRemove) {
@@ -1371,11 +1544,14 @@ function restoreDetachedEdges(graph, detachedEdges) {
       return;
     }
 
-    if (hasConnection(graph, edge.fromNodeId, edge.toNodeId)) {
+    if (hasConnection(graph, edge.fromNodeId, edge.toNodeId, edge.fromPortId || "output")) {
       return;
     }
 
-    graph.edges.push(edge);
+    graph.edges.push({
+      ...edge,
+      fromPortId: edge.fromPortId || "output",
+    });
   });
 }
 
@@ -1403,6 +1579,7 @@ function beginConnectionDrag(event, fromNodeId, options = {}) {
     pointerId: event.pointerId,
     graphId: graph.id,
     fromNodeId,
+    fromPortId: options.fromPortId || getDefaultOutputPortId(sourceNode),
     currentClientX: event.clientX,
     currentClientY: event.clientY,
     targetNodeId: null,
@@ -1449,7 +1626,7 @@ function endConnectionDrag(event) {
     return;
   }
 
-  const { fromNodeId, targetNodeId } = completedSession;
+  const { fromNodeId, fromPortId, targetNodeId } = completedSession;
 
   if (!targetNodeId || targetNodeId === fromNodeId) {
     if (completedSession.detachedEdges.length) {
@@ -1460,7 +1637,7 @@ function endConnectionDrag(event) {
     return;
   }
 
-  if (hasConnection(graph, fromNodeId, targetNodeId)) {
+  if (hasConnection(graph, fromNodeId, targetNodeId, fromPortId)) {
     restoreDetachedEdges(graph, completedSession.detachedEdges);
     setStatus("This connection already exists.");
     renderConnections();
@@ -1473,6 +1650,7 @@ function endConnectionDrag(event) {
   graph.edges.push({
     id: `edge_${Date.now()}_${graph.edges.length + 1}`,
     fromNodeId,
+    fromPortId,
     toNodeId: targetNodeId,
   });
 
@@ -1486,7 +1664,6 @@ function endConnectionDrag(event) {
 
 function renderConnections() {
   const graph = getActiveGraph();
-  const viewport = graph?.viewport || defaultViewport;
   const { context, rect } = resizeConnectionCanvas();
 
   context.clearRect(0, 0, rect.width, rect.height);
@@ -1504,31 +1681,32 @@ function renderConnections() {
   }
 
   graph.edges.forEach((edge) => {
-    const start = getNodePortWorldPosition(edge.fromNodeId, "output", graph);
-    const end = getNodePortWorldPosition(edge.toNodeId, "input", graph);
+    const start = getNodePortCanvasPosition(edge.fromNodeId, "output", graph, {
+      portId: edge.fromPortId || "output",
+    });
+    const end = getNodePortCanvasPosition(edge.toNodeId, "input", graph);
 
     if (!start || !end) {
       return;
     }
 
-    const startCanvas = worldToCanvasPoint(start.x, start.y, viewport);
-    const endCanvas = worldToCanvasPoint(end.x, end.y, viewport);
-    drawConnection(context, startCanvas.x, startCanvas.y, endCanvas.x, endCanvas.y);
+    drawConnection(context, start.x, start.y, end.x, end.y);
   });
 
   if (!connectionSession || connectionSession.graphId !== graph.id) {
     return;
   }
 
-  const start = getNodePortWorldPosition(connectionSession.fromNodeId, "output", graph);
-  const end = getConnectionPreviewEndpoint(viewport);
+  const start = getNodePortCanvasPosition(connectionSession.fromNodeId, "output", graph, {
+    portId: connectionSession.fromPortId || "output",
+  });
+  const end = getConnectionPreviewEndpoint();
 
   if (!start || !end) {
     return;
   }
 
-  const startCanvas = worldToCanvasPoint(start.x, start.y, viewport);
-  drawConnection(context, startCanvas.x, startCanvas.y, end.x, end.y, {
+  drawConnection(context, start.x, start.y, end.x, end.y, {
     color: connectionSession.targetNodeId
       ? "rgba(97, 179, 255, 0.95)"
       : "rgba(166, 176, 191, 0.7)",
@@ -1537,7 +1715,11 @@ function renderConnections() {
     arrowSize: 9,
   });
 
-  const sourcePort = graphNodesEl.querySelector(`.node-port-output[data-node-id="${CSS.escape(connectionSession.fromNodeId)}"]`);
+  const sourcePort = graphNodesEl.querySelector(getPortSelector(
+    connectionSession.fromNodeId,
+    "output",
+    connectionSession.fromPortId || "output",
+  ));
   sourcePort?.classList.add("is-connecting");
 
   if (connectionSession.targetNodeId) {
@@ -1634,63 +1816,160 @@ function animateLabelGraphDomOrder() {
   });
 }
 
-function getReachableNodesInCodeOrder(graph) {
-  if (!graph) {
-    return [];
+function getSafeLabelName(label) {
+  return ((label || "label").trim() || "label").replace(/\s+/g, "_");
+}
+
+function getPrimaryOutgoingEdge(graph, nodeId, { fromPortId = null } = {}) {
+  return getOutgoingEdges(graph, nodeId, { fromPortId })[0] || null;
+}
+
+function appendIndentedLine(lines, indentLevel, text) {
+  lines.push(`${"    ".repeat(indentLevel)}${text}`);
+}
+
+function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) {
+  if (!graph || !nodeId || visited.has(nodeId)) {
+    return;
   }
 
-  const startNode = graph.nodes.find((node) => node.type === "start");
+  const node = graph.nodes.find((currentNode) => currentNode.id === nodeId);
 
-  if (!startNode) {
-    return [];
+  if (!node) {
+    return;
   }
 
-  const nodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
-  const outgoingMap = new Map();
+  visited.add(nodeId);
 
-  graph.edges.forEach((edge) => {
-    if (!outgoingMap.has(edge.fromNodeId)) {
-      outgoingMap.set(edge.fromNodeId, []);
+  if (node.type === "start") {
+    const nextEdge = getPrimaryOutgoingEdge(graph, node.id);
+
+    if (nextEdge) {
+      appendNodeCode(graph, nextEdge.toNodeId, lines, indentLevel, visited);
     }
 
-    outgoingMap.get(edge.fromNodeId).push(edge.toNodeId);
-  });
+    return;
+  }
 
-  const orderedNodes = [];
-  const visited = new Set([startNode.id]);
+  if (node.type === "dialogue") {
+    const speaker = getDialogueSpeaker(node);
+    const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: ["..."] });
 
-  function visit(nodeId) {
-    const currentNode = nodeMap.get(nodeId);
+    dialogueBlocks.forEach((dialogueText) => {
+      if (speaker.kind === "character" && speaker.id) {
+        appendIndentedLine(lines, indentLevel, `${speaker.id} "${escapeRenpyString(dialogueText)}"`);
+        return;
+      }
 
-    if (currentNode && !nodeAllowsOutgoingConnections(currentNode)) {
+      appendIndentedLine(lines, indentLevel, `"${escapeRenpyString(dialogueText)}"`);
+    });
+  } else if (node.type === "menu") {
+    const menuPrompt = `${node.menuPrompt || ""}`.trim();
+    const menuChoices = getMenuChoices(node);
+
+    appendIndentedLine(lines, indentLevel, "menu:");
+
+    if (menuPrompt) {
+      appendIndentedLine(lines, indentLevel + 1, `"${escapeRenpyString(menuPrompt)}"`);
+    }
+
+    menuChoices.forEach((choice, index) => {
+      const choiceText = `${choice.text || ""}`.trim() || `Choice ${index + 1}`;
+      const branchEdge = getPrimaryOutgoingEdge(graph, node.id, {
+        fromPortId: getMenuChoicePortId(choice.id),
+      });
+
+      appendIndentedLine(lines, indentLevel + 1, `"${escapeRenpyString(choiceText)}":`);
+
+      if (!branchEdge) {
+        appendIndentedLine(lines, indentLevel + 2, "pass");
+        return;
+      }
+
+      appendNodeCode(graph, branchEdge.toNodeId, lines, indentLevel + 2, new Set(visited));
+    });
+
+    return;
+  } else if (isFlowNode(node)) {
+    const flowMode = getFlowNodeMode(node);
+    const target = getSafeLabelName(getFlowNodeTarget(node).label || "next_label");
+
+    if (flowMode === "return") {
+      appendIndentedLine(lines, indentLevel, "return");
       return;
     }
 
-    const nextNodeIds = outgoingMap.get(nodeId) || [];
+    appendIndentedLine(lines, indentLevel, `${flowMode} ${target}`);
 
-    nextNodeIds.forEach((nextNodeId) => {
-      if (visited.has(nextNodeId)) {
-        return;
+    if (flowMode !== "call") {
+      return;
+    }
+  } else if (node.type === "image") {
+    const mode = getImageNodeMode(node);
+    const imageName = getImageNodeName(node);
+    const layer = (node.imageLayer || "").trim();
+    const at = (node.imageAt || "").trim();
+    const alias = (node.imageAlias || "").trim();
+    const behind = (node.imageBehind || "").trim();
+    const zorder = `${node.imageZorder ?? ""}`.trim();
+    const parts = [];
+
+    if (mode === "scene") {
+      parts.push("scene");
+
+      if (imageName) {
+        parts.push(imageName);
       }
 
-      const nextNode = nodeMap.get(nextNodeId);
-
-      if (!nextNode) {
-        return;
+      if (at) {
+        parts.push("at", at);
       }
 
-      visited.add(nextNodeId);
-      orderedNodes.push(nextNode);
-      visit(nextNodeId);
-    });
+      if (layer) {
+        parts.push("onlayer", layer);
+      }
+    } else if (mode === "hide") {
+      parts.push("hide", imageName || "image_tag");
+
+      if (layer) {
+        parts.push("onlayer", layer);
+      }
+    } else {
+      parts.push("show", imageName || "image_name");
+
+      if (alias) {
+        parts.push("as", alias);
+      }
+
+      if (at) {
+        parts.push("at", at);
+      }
+
+      if (behind) {
+        parts.push("behind", behind);
+      }
+
+      if (layer) {
+        parts.push("onlayer", layer);
+      }
+
+      if (zorder) {
+        parts.push("zorder", zorder);
+      }
+    }
+
+    appendIndentedLine(lines, indentLevel, parts.join(" "));
+  } else if (node.type === "animation") {
+    appendIndentedLine(lines, indentLevel, `with ${getAnimationNodeTransition(node)}`);
+  } else {
+    appendIndentedLine(lines, indentLevel, `# ${node.type}: ${node.title || "Untitled Node"}`);
   }
 
-  visit(startNode.id);
-  return orderedNodes;
-}
+  const nextEdge = getPrimaryOutgoingEdge(graph, node.id);
 
-function getSafeLabelName(label) {
-  return ((label || "label").trim() || "label").replace(/\s+/g, "_");
+  if (nextEdge) {
+    appendNodeCode(graph, nextEdge.toNodeId, lines, indentLevel, visited);
+  }
 }
 
 function formatLabelGraphCode(graph) {
@@ -1700,116 +1979,15 @@ function formatLabelGraphCode(graph) {
 
   const safeLabel = getSafeLabelName(graph.label);
   const lines = [`label ${safeLabel}:`];
-  const orderedNodes = getReachableNodesInCodeOrder(graph);
+  const startNode = graph.nodes.find((node) => node.type === "start");
+  const startEdge = startNode ? getPrimaryOutgoingEdge(graph, startNode.id) : null;
 
-  if (!orderedNodes.length) {
+  if (!startEdge) {
     lines.push("    pass");
     return lines.join("\n");
   }
 
-  orderedNodes.forEach((node) => {
-
-    if (node.type === "dialogue") {
-      const speaker = getDialogueSpeaker(node);
-      const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: ["..."] });
-
-      dialogueBlocks.forEach((dialogueText) => {
-        if (speaker.kind === "character" && speaker.id) {
-          lines.push(`    ${speaker.id} "${escapeRenpyString(dialogueText)}"`);
-          return;
-        }
-
-        lines.push(`    "${escapeRenpyString(dialogueText)}"`);
-      });
-      return;
-    }
-
-    if (node.type === "menu") {
-      const menuText = (node.title || "Choice").trim() || "Choice";
-      lines.push("    menu:");
-      lines.push(`        "${escapeRenpyString(menuText)}":`);
-      lines.push("            pass");
-      return;
-    }
-
-    if (isFlowNode(node)) {
-      const flowMode = getFlowNodeMode(node);
-      const target = getSafeLabelName(getFlowNodeTarget(node).label || "next_label");
-
-      if (flowMode === "return") {
-        lines.push("    return");
-        return;
-      }
-
-      lines.push(`    ${flowMode} ${target}`);
-      return;
-    }
-
-    if (node.type === "image") {
-      const mode = getImageNodeMode(node);
-      const imageName = getImageNodeName(node);
-      const layer = (node.imageLayer || "").trim();
-      const at = (node.imageAt || "").trim();
-      const alias = (node.imageAlias || "").trim();
-      const behind = (node.imageBehind || "").trim();
-      const zorder = `${node.imageZorder ?? ""}`.trim();
-      const parts = [];
-
-      if (mode === "scene") {
-        parts.push("scene");
-
-        if (imageName) {
-          parts.push(imageName);
-        }
-
-        if (at) {
-          parts.push("at", at);
-        }
-
-        if (layer) {
-          parts.push("onlayer", layer);
-        }
-      } else if (mode === "hide") {
-        parts.push("hide", imageName || "image_tag");
-
-        if (layer) {
-          parts.push("onlayer", layer);
-        }
-      } else {
-        parts.push("show", imageName || "image_name");
-
-        if (alias) {
-          parts.push("as", alias);
-        }
-
-        if (at) {
-          parts.push("at", at);
-        }
-
-        if (behind) {
-          parts.push("behind", behind);
-        }
-
-        if (layer) {
-          parts.push("onlayer", layer);
-        }
-
-        if (zorder) {
-          parts.push("zorder", zorder);
-        }
-      }
-
-      lines.push(`    ${parts.join(" ")}`);
-      return;
-    }
-
-    if (node.type === "animation") {
-      lines.push(`    with ${getAnimationNodeTransition(node)}`);
-      return;
-    }
-
-    lines.push(`    # ${node.type}: ${node.title || "Untitled Node"}`);
-  });
+  appendNodeCode(graph, startEdge.toNodeId, lines, 1);
 
   return lines.join("\n");
 }
@@ -2645,6 +2823,23 @@ function renderGraph() {
     const hasInputPort = nodeAllowsIncomingConnections(node);
     const hasOutputPort = nodeAllowsOutgoingConnections(node);
     const display = getNodeDisplay(node);
+    const menuChoicesMarkup = node.type === "menu"
+      ? `
+        <div class="menu-node-choice-list">
+          ${getMenuChoices(node).map((choice) => `
+            <div class="menu-node-choice">
+              <span class="menu-node-choice-text">${escapeHtml(choice.text)}</span>
+              <span
+                class="node-port node-port-output node-port-output-choice"
+                data-node-id="${escapeHtml(node.id)}"
+                data-port="output"
+                data-port-id="${escapeHtml(getMenuChoicePortId(choice.id))}"
+              ></span>
+            </div>
+          `).join("")}
+        </div>
+      `
+      : "";
     const el = document.createElement("button");
     el.type = "button";
     el.className = "graph-node";
@@ -2661,8 +2856,11 @@ function renderGraph() {
       <p class="node-type">${escapeHtml(display.typeLabel)}</p>
       <h3 class="node-title">${escapeHtml(display.title || "Untitled Node")}</h3>
       ${display.content ? `<p class="node-content">${escapeHtml(display.content)}</p>` : ""}
-      ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input"></span>` : ""}
-      ${hasOutputPort ? `<span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output"></span>` : ""}
+      ${node.type === "menu" ? menuChoicesMarkup : ""}
+      ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input" data-port-id="input"></span>` : ""}
+      ${hasOutputPort && node.type !== "menu"
+        ? `<span class="node-port node-port-output" data-node-id="${escapeHtml(node.id)}" data-port="output" data-port-id="output"></span>`
+        : ""}
     `;
 
     el.addEventListener("pointerdown", (event) => {
@@ -2690,16 +2888,20 @@ function renderGraph() {
       });
     });
 
-    const outputPort = el.querySelector(".node-port-output");
-    outputPort?.addEventListener("pointerdown", (event) => {
-      const outgoingEdges = getOutgoingEdges(graph, node.id);
+    const outputPorts = Array.from(el.querySelectorAll(".node-port-output"));
+    outputPorts.forEach((outputPort) => {
+      outputPort.addEventListener("pointerdown", (event) => {
+        const fromPortId = outputPort.dataset.portId || getDefaultOutputPortId(node);
+        const outgoingEdges = getOutgoingEdges(graph, node.id, { fromPortId });
 
-      if (outgoingEdges.length) {
-        removeEdges(graph, outgoingEdges);
-      }
+        if (outgoingEdges.length) {
+          removeEdges(graph, outgoingEdges);
+        }
 
-      beginConnectionDrag(event, node.id, {
-        detachedEdges: outgoingEdges,
+        beginConnectionDrag(event, node.id, {
+          fromPortId,
+          detachedEdges: outgoingEdges,
+        });
       });
     });
 
@@ -2714,6 +2916,7 @@ function renderGraph() {
 
       removeEdges(graph, [existingEdge]);
       beginConnectionDrag(event, existingEdge.fromNodeId, {
+        fromPortId: existingEdge.fromPortId || "output",
         detachedEdges: [existingEdge],
       });
     });
@@ -2734,6 +2937,7 @@ function renderInspector() {
     imageInspectorFormEl.classList.add("hidden");
     animationInspectorFormEl.classList.add("hidden");
     dialogueInspectorFormEl.classList.add("hidden");
+    menuInspectorFormEl.classList.add("hidden");
     flowInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
     return;
@@ -2743,6 +2947,7 @@ function renderInspector() {
   const selectedIsImage = selectedNode.type === "image";
   const selectedIsAnimation = selectedNode.type === "animation";
   const selectedIsDialogue = selectedNode.type === "dialogue";
+  const selectedIsMenu = selectedNode.type === "menu";
   const selectedIsFlow = isFlowNode(selectedNode);
 
   inspectorEmptyEl.classList.add("hidden");
@@ -2750,8 +2955,9 @@ function renderInspector() {
   imageInspectorFormEl.classList.toggle("hidden", !selectedIsImage);
   animationInspectorFormEl.classList.toggle("hidden", !selectedIsAnimation);
   dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
+  menuInspectorFormEl.classList.toggle("hidden", !selectedIsMenu);
   flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsFlow);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsMenu || selectedIsFlow);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -2799,6 +3005,13 @@ function renderInspector() {
     dialogueNodeTypeInput.value = "Dialogue";
     buildDialogueCharacterOptions(dialogueCharacterInput, selectedNode);
     dialogueNodeContentInput.value = selectedNode.content || "";
+    return;
+  }
+
+  if (selectedIsMenu) {
+    menuNodeTypeInput.value = "Choice";
+    menuNodePromptInput.value = selectedNode.menuPrompt || "";
+    renderMenuChoiceList(selectedNode);
     return;
   }
 
@@ -2885,6 +3098,38 @@ function updateSelectedFlowNode(patch, { pruneOutput = false } = {}) {
       removeEdges(graph, outgoingEdges);
     }
   }
+
+  render();
+}
+
+function updateSelectedMenuNode(updater) {
+  const graph = getActiveGraph();
+
+  if (!graph || !graph.selectedNodeId) {
+    return;
+  }
+
+  const selectedNode = graph.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!selectedNode || selectedNode.type !== "menu") {
+    return;
+  }
+
+  const nextNode = typeof updater === "function"
+    ? updater(selectedNode)
+    : { ...selectedNode, ...updater };
+
+  graph.nodes = graph.nodes.map((node) => (
+    node.id === graph.selectedNodeId ? nextNode : node
+  ));
+
+  graph.edges = graph.edges.filter((edge) => {
+    if (edge.fromNodeId !== nextNode.id) {
+      return true;
+    }
+
+    return normalizeOutputPortId(nextNode, edge.fromPortId) === (edge.fromPortId || "output");
+  });
 
   render();
 }
@@ -3280,6 +3525,64 @@ dialogueCharacterInput.addEventListener("change", (event) => {
 dialogueNodeContentInput.addEventListener("input", (event) => {
   updateSelectedNode({ content: event.target.value });
 });
+menuNodePromptInput.addEventListener("input", (event) => {
+  updateSelectedMenuNode({ menuPrompt: event.target.value });
+});
+menuAddChoiceButton.addEventListener("click", () => {
+  updateSelectedMenuNode((node) => {
+    const currentChoices = getMenuChoices(node);
+    const nextChoices = [...currentChoices, createMenuChoice(currentChoices.length + 1)];
+
+    return {
+      ...node,
+      menuChoices: nextChoices,
+    };
+  });
+});
+menuChoiceListEl.addEventListener("input", (event) => {
+  const choiceId = event.target.dataset.menuChoiceId;
+
+  if (!choiceId) {
+    return;
+  }
+
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!graph || !selectedNode || selectedNode.type !== "menu") {
+    return;
+  }
+
+  selectedNode.menuChoices = getMenuChoices(selectedNode).map((choice) => (
+    choice.id === choiceId
+      ? { ...choice, text: event.target.value }
+      : choice
+  ));
+
+  renderGraph();
+  syncLabelCodePreview();
+});
+menuChoiceListEl.addEventListener("click", (event) => {
+  const removeChoiceId = event.target.dataset.removeMenuChoiceId;
+
+  if (!removeChoiceId) {
+    return;
+  }
+
+  updateSelectedMenuNode((node) => {
+    const currentChoices = getMenuChoices(node);
+
+    if (currentChoices.length <= 1) {
+      setStatus("Each menu needs at least one choice.");
+      return node;
+    }
+
+    return {
+      ...node,
+      menuChoices: currentChoices.filter((choice) => choice.id !== removeChoiceId),
+    };
+  });
+});
 flowNodeModeInput.addEventListener("change", (event) => {
   const nextMode = event.target.value;
   const nextTitle = capitalize(nextMode);
@@ -3544,6 +3847,15 @@ dialogueDeleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+menuDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 flowDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
@@ -3698,7 +4010,9 @@ function createNodeForType(nodeType, graph) {
     return {
       ...baseNode,
       title: "Choice",
-      content: "Add menu choices here.",
+      content: "",
+      menuPrompt: "",
+      menuChoices: [createMenuChoice(1)],
     };
   }
 

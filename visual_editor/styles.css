@@ -713,6 +713,59 @@ button.danger-button:hover {
   font-size: 14px;
 }
 
+.menu-choice-group {
+  display: grid;
+  gap: 10px;
+}
+
+.menu-choice-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.menu-choice-group-header strong {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.menu-choice-add-button {
+  padding-inline: 14px;
+  min-height: 38px;
+}
+
+.menu-choice-list {
+  display: grid;
+  gap: 10px;
+}
+
+.menu-choice-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.menu-choice-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.menu-choice-item-header span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.menu-choice-remove-button {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
 .character-detail-form textarea,
 .inspector-form textarea {
   min-height: 124px;
@@ -956,6 +1009,34 @@ button.danger-button:hover {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.45;
+}
+
+.menu-node-choice-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.menu-node-choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 8px 30px 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.menu-node-choice-text {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.menu-node-choice .node-port-output-choice {
+  top: 50%;
+  right: -10px;
 }
 
 .node-port {

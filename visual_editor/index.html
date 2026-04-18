@@ -877,6 +877,31 @@
             </div>
           </form>
 
+          <form id="menuInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="menuNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Prompt
+              <textarea id="menuNodePromptInput" rows="4" placeholder="e.g. What should I do?"></textarea>
+            </label>
+
+            <div class="menu-choice-group">
+              <div class="menu-choice-group-header">
+                <strong>Choices</strong>
+                <button id="menuAddChoiceButton" class="secondary menu-choice-add-button" type="button">Add Choice</button>
+              </div>
+
+              <div id="menuChoiceList" class="menu-choice-list"></div>
+            </div>
+
+            <div class="inspector-actions">
+              <button id="menuDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
           <form id="flowInspectorForm" class="inspector-form hidden">
             <label>
               Node Type
