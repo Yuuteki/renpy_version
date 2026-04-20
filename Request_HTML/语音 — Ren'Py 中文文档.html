@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>语音 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/voice.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="文本" href="text.html" />
+    <link rel="prev" title="影片" href="movie.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">语音</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tag">语音标签(tag)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-voice">自动语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multilingual-voice">包含多种语言的语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#voice-functions">语音函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get_voice_info"><code class="docutils literal notranslate"><span class="pre">_get_voice_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#VoiceInfo.filename"><code class="docutils literal notranslate"><span class="pre">VoiceInfo.filename</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#VoiceInfo.auto_filename"><code class="docutils literal notranslate"><span class="pre">VoiceInfo.auto_filename</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#VoiceInfo.tag"><code class="docutils literal notranslate"><span class="pre">VoiceInfo.tag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#VoiceInfo.sustain"><code class="docutils literal notranslate"><span class="pre">VoiceInfo.sustain</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">voice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voice_can_replay"><code class="docutils literal notranslate"><span class="pre">voice_can_replay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voice_replay"><code class="docutils literal notranslate"><span class="pre">voice_replay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voice_sustain"><code class="docutils literal notranslate"><span class="pre">voice_sustain()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#voice-actions">Voice Actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#PlayCharacterVoice"><code class="docutils literal notranslate"><span class="pre">PlayCharacterVoice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#SetCharacterVolume"><code class="docutils literal notranslate"><span class="pre">SetCharacterVolume()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#SetVoiceMute"><code class="docutils literal notranslate"><span class="pre">SetVoiceMute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ToggleVoiceMute"><code class="docutils literal notranslate"><span class="pre">ToggleVoiceMute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#VoiceReplay"><code class="docutils literal notranslate"><span class="pre">VoiceReplay()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">语音</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/voice.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="voice">
+<span id="id1"></span><h1>语音<a class="headerlink" href="#voice" title="Link to this heading"> link</a></h1>
+<p>Ren’Py支持对话文本与语音播放的联结。使用 <code class="docutils literal notranslate"><span class="pre">voice</span></code> 语句可以实现这个功能，<code class="docutils literal notranslate"><span class="pre">voice</span></code> 语句指定了播放的语音文件：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">voice</span> <span class="s2">&quot;line0001.ogg&quot;</span>
+<span class="s2">&quot;欢迎来到Ren&#39;Py&quot;</span>
+</pre></div>
+</div>
+<p>通常来说，某个语音会被后面的互动行为中断。<code class="docutils literal notranslate"><span class="pre">voice</span> <span class="pre">sustain</span></code> 语句则可以保证语音会播放完毕，即使遇到某个互动行为。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">voice</span> <span class="s2">&quot;line0001.ogg&quot;</span>
+<span class="s2">&quot;欢迎来到Ren&#39;Py...&quot;</span>
+
+<span class="k">voice</span> <span class="k">sustain</span>
+<span class="s2">&quot;... 你的电子小说引擎。&quot;</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="config.html#var-config.voice_filename_format"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.voice_filename_format</span></code></a> 配置项允许你定制化语音文件名，使用的时候省略文件夹和文件扩展名。</p>
+<section id="tag">
+<span id="voice-tags"></span><h2>语音标签(tag)<a class="headerlink" href="#tag" title="Link to this heading"> link</a></h2>
+<p>Ren’Py内置了一个语音标签(tag)系统，使得针对某个选定的角色语音的静音和取消静音成为可能。若要活用这个优势，需要在使用 <a class="reference internal" href="dialogue.html#Character" title="Character"><code class="xref py py-func docutils literal notranslate"><span class="pre">Character()</span></code></a> 创建每一个角色对象时都提供一个voice_tag入参，就可以使用 <a class="reference internal" href="#SetVoiceMute" title="SetVoiceMute"><code class="xref py py-func docutils literal notranslate"><span class="pre">SetVoiceMute()</span></code></a> 或 <a class="reference internal" href="#ToggleVoiceMute" title="ToggleVoiceMute"><code class="xref py py-func docutils literal notranslate"><span class="pre">ToggleVoiceMute()</span></code></a> 切换角色语音的静音和取消静音状态。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;艾琳&quot;</span><span class="p">,</span> <span class="n">voice_tag</span><span class="o">=</span><span class="s2">&quot;eileen&quot;</span><span class="p">)</span>
+<span class="k">define</span> <span class="n">l</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;露西&quot;</span><span class="p">,</span> <span class="n">voice_tag</span><span class="o">=</span><span class="s2">&quot;lucy&quot;</span><span class="p">)</span>
+
+<span class="k">screen</span> <span class="n">voice_toggle</span><span class="p">:</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;艾琳静音&quot;</span> <span class="na">action</span> <span class="n">ToggleVoiceMute</span><span class="p">(</span><span class="s2">&quot;eileen&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;露西静音&quot;</span> <span class="na">action</span> <span class="n">ToggleVoiceMute</span><span class="p">(</span><span class="s2">&quot;lucy&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">show</span> <span class="k">screen</span> <span class="n">voice_toggle</span>
+
+    <span class="k">voice</span> <span class="s2">&quot;e01.ogg&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;你可以开关一个角色的语音。&quot;</span>
+
+    <span class="k">voice</span> <span class="s2">&quot;l01.ogg&quot;</span>
+    <span class="n">l</span> <span class="s2">&quot;耶！我现在终于可以让你闭嘴了！&quot;</span>
+
+    <span class="k">voice</span> <span class="s2">&quot;l02.ogg&quot;</span>
+    <span class="n">l</span> <span class="s2">&quot;等下……也就是说我也被静音了！真的假的？&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="automatic-voice">
+<span id="id2"></span><h2>自动语音<a class="headerlink" href="#automatic-voice" title="Link to this heading"> link</a></h2>
+<p>Ren’Py提供了自动匹配语音文件并播放的功能，不用在每行对话脚本之前都写一条voice语句就可以实现语音播放。</p>
+<p>要实现这个功能的话，我们创建的语音文件名必须跟对话脚本每行的标识号(identifier)严格匹配。若要确定应该用那个标识号，需要将对话脚本导出为一个表格，操作如下：在启动器上选择“提取对话”，“以制表符分隔的表格 (dialogue.tab)”，“继续”。然后会生成一个文件——dialogue.tab，它可以使用表格程序打开。</p>
+<p>表格的第一列就是需要使用的标识号，其他列则是对话的更多别的信息。</p>
+<p>要让Ren’Py自动播放语音，需要将 <a class="reference internal" href="config.html#var-config.auto_voice"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.auto_voice</span></code></a> 设置为一个包含 <cite>{id}</cite> 格式的字符串。当对话发生， <cite>{id}</cite> 会被对话标识符替换，并自动组成一个音频文件名。若音频文件名对应的文件真实存在，则那个文件就会播放。</p>
+<p>举例，比如我们如下定义：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">auto_voice</span> <span class="o">=</span> <span class="s2">&quot;voice/</span><span class="si">{id}</span><span class="s2">.ogg&quot;</span>
+</pre></div>
+</div>
+<p>对话标识号是 <code class="docutils literal notranslate"><span class="pre">demo_minigame_03fc91ef</span></code> ，那么当对应的对话显示时，Ren’Py会寻找文件 <code class="file docutils literal notranslate"><span class="pre">voice/demo_minigame_03fc91ef.ogg</span></code> 。如果文件存在，Ren’Py会播放这个文件。</p>
+</section>
+<section id="multilingual-voice">
+<span id="id3"></span><h2>包含多种语言的语音<a class="headerlink" href="#multilingual-voice" title="Link to this heading"> link</a></h2>
+<p>得益于Ren’Py的多语言支持系统，游戏可以使用 <a class="reference internal" href="translation.html#image-file-translation"><span class="std std-ref">图片和文件的多语言支持</span></a> 在多种语言中进行转换。
+原生语言为英语的游戏可以翻译为法语：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">voice</span> <span class="s2">&quot;omelette.ogg&quot;</span>
+<span class="n">e</span> <span class="s2">&quot;I like scrambled eggs with cheese...&quot;</span>
+</pre></div>
+</div>
+<p>放好英语版本的语音文件 <code class="file docutils literal notranslate"><span class="pre">game/omelette.ogg</span></code> 和法语版本 <code class="file docutils literal notranslate"><span class="pre">game/tl/french/omelette.ogg</span></code>，
+就能在Ren’Py启用法语版后，播放法语的语音了。</p>
+<p>自动语音时的效果也类似，只要翻译文件的路径以 <code class="file docutils literal notranslate"><span class="pre">game/tl/</span><em><span class="pre">&lt;language&gt;</span></em><span class="pre">/</span></code> 开头，
+会自动匹配 <code class="file docutils literal notranslate"><span class="pre">game/</span></code>目录中的同名文件。</p>
+</section>
+<section id="voice-functions">
+<span id="id4"></span><h2>语音函数<a class="headerlink" href="#voice-functions" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="get_voice_info">
+<span class="sig-name descname"><span class="pre">_get_voice_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#get_voice_info" title="Link to this definition"> link</a></dt>
+<dd><p>返回目前say语句对应正在播放语音的有关信息。只有当say语句执行时，该函数才能被调用。</p>
+<p>返回对象具有以下几个字段(field)：</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="VoiceInfo.filename">
+<span class="sig-prename descclassname"><span class="pre">VoiceInfo.</span></span><span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#VoiceInfo.filename" title="Link to this definition"> link</a></dt>
+<dd><p>正在播放语音的文件名，如果没有任何文件在播放则返回None。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="VoiceInfo.auto_filename">
+<span class="sig-prename descclassname"><span class="pre">VoiceInfo.</span></span><span class="sig-name descname"><span class="pre">auto_filename</span></span><a class="headerlink" href="#VoiceInfo.auto_filename" title="Link to this definition"> link</a></dt>
+<dd><p>Ren’Py意图使用自动语音搜索的文件名，如果未找到则返回None。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="VoiceInfo.tag">
+<span class="sig-prename descclassname"><span class="pre">VoiceInfo.</span></span><span class="sig-name descname"><span class="pre">tag</span></span><a class="headerlink" href="#VoiceInfo.tag" title="Link to this definition"> link</a></dt>
+<dd><p>目前发言角色(character)的voice_tag参数。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="VoiceInfo.sustain">
+<span class="sig-prename descclassname"><span class="pre">VoiceInfo.</span></span><span class="sig-name descname"><span class="pre">sustain</span></span><a class="headerlink" href="#VoiceInfo.sustain" title="Link to this definition"> link</a></dt>
+<dd><p>该值为False时，用户互动行为会中断语音播放。改值为True时，一次用户互动行为后语音会持续播放。</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">voice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition"> link</a></dt>
+<dd><p>播放voice通道上名为filename的文件。等效于voice语句。</p>
+<dl>
+<dt><cite>filename</cite></dt><dd><p>想要播放的语音文件名。函数会使用 <code class="xref py py-func docutils literal notranslate"><span class="pre">config.voice_filename_format()</span></code> 拼装成将用播放的文件名。</p>
+</dd>
+<dt><cite>tag</cite></dt><dd><p>若该入参非空，其值应该是一个字符串，给定了需要播放的语音标签(tag)。若该入参为None，将使用默认值，即触发下一次互动行为前角色的voice_tag。</p>
+<p>语音标签(tag)用于指定发言角色，并允许用户针对某个角色的语音进行静音或取消静音。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voice_can_replay">
+<span class="sig-name descname"><span class="pre">voice_can_replay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voice_can_replay" title="Link to this definition"> link</a></dt>
+<dd><p>若当前语音允许回放则返回True。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voice_replay">
+<span class="sig-name descname"><span class="pre">voice_replay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voice_replay" title="Link to this definition"> link</a></dt>
+<dd><p>若当前语音允许回放，则回放该语音。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="voice_sustain">
+<span class="sig-name descname"><span class="pre">voice_sustain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ignored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#voice_sustain" title="Link to this definition"> link</a></dt>
+<dd><p>等效于voice sustain语句。</p>
+</dd></dl>
+
+</section>
+<section id="voice-actions">
+<span id="id5"></span><h2>Voice Actions<a class="headerlink" href="#voice-actions" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="PlayCharacterVoice">
+<span class="sig-name descname"><span class="pre">PlayCharacterVoice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voice_tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PlayCharacterVoice" title="Link to this definition"> link</a></dt>
+<dd><p>在voice通道上播放sample语音文件，并将其视为由带有 <cite>voice_tag</cite> 的某个角色所说。</p>
+<dl class="simple">
+<dt><cite>sample</cite></dt><dd><p>语音文件完整路径。不会对该文件的做任何语音相关的处理。</p>
+</dd>
+<dt><cite>selected</cite></dt><dd><p>若该值为True，当sample文件正在播放，调用该行为(action)函数的按钮会被标记为“被选中(selected)”。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SetCharacterVolume">
+<span class="sig-name descname"><span class="pre">SetCharacterVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voice_tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SetCharacterVolume" title="Link to this definition"> link</a></dt>
+<dd><p>该行为允许每个角色的语音音量都可以调整。若 <cite>volume</cite> 值为None，将返回 <cite>voice_tag</cite> 对应的音量值。否则的话， <cite>voice_tag</cite> 对应的音量值会被设置为 <cite>volume</cite> 。</p>
+<p><cite>volume</cite> 是一个介于0.0至1.0之间的值，在包含 <cite>voice</cite> 通道的混合器(mixer)音量中则是一个分量。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SetVoiceMute">
+<span class="sig-name descname"><span class="pre">SetVoiceMute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voice_tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mute</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SetVoiceMute" title="Link to this definition"> link</a></dt>
+<dd><p>若 <cite>mute</cite> 值为True，带有给定语音标签 <cite>voice_tag</cite> 的所有语音会被静音。若 <cite>mute</cite> 值为False，取消语音标签 <cite>voice_tag</cite> 所有语音的静音。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ToggleVoiceMute">
+<span class="sig-name descname"><span class="pre">ToggleVoiceMute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voice_tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ToggleVoiceMute" title="Link to this definition"> link</a></dt>
+<dd><p>切换 <cite>voice_tag</cite> 的静音状态。
+默认情况下，指定 <cite>voice_tag</cite> 处于静音状态时将选择对应的语音tag对象。如果 <cite>invert</cite> 值是True，则会选择不处于静音状态时语言tag对象。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="VoiceReplay">
+<span class="sig-name descname"><span class="pre">VoiceReplay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#VoiceReplay" title="Link to this definition"> link</a></dt>
+<dd><p>回放最近一次播放的语音。</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="movie.html" class="btn btn-neutral float-left" title="影片" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="text.html" class="btn btn-neutral float-right" title="文本" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
