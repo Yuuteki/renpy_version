@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>音频 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/audio.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="音频滤波器" href="audio_filters.html" />
+    <link rel="prev" title="条件语句" href="conditional.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">音频</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#audio-namespace">音频命名空间和目录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#play">play语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stop">stop语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#queue">queue语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#partial-playback">节选播放</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sync-start">同步起始位置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#volume">音量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#playing-silence">播放静音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-actions">行为函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">相关函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#AudioData"><code class="docutils literal notranslate"><span class="pre">AudioData()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.mark_audio_seen"><code class="docutils literal notranslate"><span class="pre">renpy.mark_audio_seen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.mark_audio_unseen"><code class="docutils literal notranslate"><span class="pre">renpy.mark_audio_unseen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.play"><code class="docutils literal notranslate"><span class="pre">renpy.play()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.seen_audio"><code class="docutils literal notranslate"><span class="pre">renpy.seen_audio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.get_duration"><code class="docutils literal notranslate"><span class="pre">renpy.music.get_duration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.get_loop"><code class="docutils literal notranslate"><span class="pre">renpy.music.get_loop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.get_pause"><code class="docutils literal notranslate"><span class="pre">renpy.music.get_pause()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.get_playing"><code class="docutils literal notranslate"><span class="pre">renpy.music.get_playing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.get_pos"><code class="docutils literal notranslate"><span class="pre">renpy.music.get_pos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.is_playing"><code class="docutils literal notranslate"><span class="pre">renpy.music.is_playing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.play"><code class="docutils literal notranslate"><span class="pre">renpy.music.play()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.pump"><code class="docutils literal notranslate"><span class="pre">renpy.music.pump()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.queue"><code class="docutils literal notranslate"><span class="pre">renpy.music.queue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.register_channel"><code class="docutils literal notranslate"><span class="pre">renpy.music.register_channel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.set_audio_filter"><code class="docutils literal notranslate"><span class="pre">renpy.music.set_audio_filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.set_mixer"><code class="docutils literal notranslate"><span class="pre">renpy.music.set_mixer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.set_pan"><code class="docutils literal notranslate"><span class="pre">renpy.music.set_pan()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.set_pause"><code class="docutils literal notranslate"><span class="pre">renpy.music.set_pause()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.set_queue_empty_callback"><code class="docutils literal notranslate"><span class="pre">renpy.music.set_queue_empty_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.set_volume"><code class="docutils literal notranslate"><span class="pre">renpy.music.set_volume()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.music.stop"><code class="docutils literal notranslate"><span class="pre">renpy.music.stop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sound-functions">音效函数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">音频</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/audio.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="audio">
+<span id="id1"></span><h1>音频<a class="headerlink" href="#audio" title="Link to this heading"> link</a></h1>
+<p>Ren’Py支持在后台播放音乐和音效，支持的音频文件格式如下：</p>
+<ul class="simple">
+<li><p>Opus</p></li>
+<li><p>Ogg Vorbis</p></li>
+<li><p>MP3</p></li>
+<li><p>MP2</p></li>
+<li><p>FLAC</p></li>
+<li><p>WAV (未压缩的有符号16bit型PCM编码格式)</p></li>
+</ul>
+<p>在Web浏览器上，Ren’Py会检查一个音频格式列表，并根据浏览器支持的格式启用一个更快更少卡顿的模式。
+如果你的游戏只是用mp3，而且不考虑Safari浏览器，可以直接修改 <a class="reference internal" href="config.html#var-config.webaudio_required_types"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.webaudio_required_types</span></code></a> 的值。</p>
+<p>Ren’Py支持任意数量的音频通道。
+默认预设的通用音频通道有两个：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">music</span></code> - 音乐播放通道。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sound</span></code> - 音效播放通道。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">voice</span></code> - 语音播放通道。</p></li>
+</ul>
+<p>通用通道支持音频的播放和音频队列，但同一时间只能播放1个音频文件。可以使用
+<a class="reference internal" href="#renpy.music.register_channel" title="renpy.music.register_channel"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.music.register_channel()</span></code></a> 函数注册新的通用通道。</p>
+<p>游戏内自定义配置菜单中的“音乐音量”、“音效音量”和“语音音量”设置的值，会应用于以上对应的音频通道。详见 <a class="reference internal" href="#volume"><span class="std std-ref">音量</span></a> 。</p>
+<p>除了通用通道，还存在两个特殊音频通道：
+* <code class="docutils literal notranslate"><span class="pre">audio</span></code> - audio通道支持同时播放多个音频文件，但不支持队列播放和中途停止。
+* <code class="docutils literal notranslate"><span class="pre">voice</span></code> - voice音频通道使用Ren’Py的语音系统。当角色发言时，Ren’Py会自动停止前一句语音并播放新语音。voice通道也可以调整音量。</p>
+<p>音效的用途，包括按钮(button)、菜单选项、图片地图(imagemap)的鼠标悬停和激活状态。详见
+<a class="reference internal" href="style_properties.html#button-style-properties"><span class="std std-ref">按钮样式属性</span></a>. 两个配置项， <a class="reference internal" href="config.html#var-config.main_menu_music"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.main_menu_music</span></code></a> 和 <a class="reference internal" href="config.html#var-config.game_menu_music"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.game_menu_music</span></code></a> ，分别对应主菜单和游戏菜单播放的音乐。</p>
+<p>游戏内播放音乐和音效的常用办法，是使用Ren’Py的三种music/sound语句。
+音频文件可以直接使用文件名字符串或者在audio命名空间中定义名称。</p>
+<section id="audio-namespace">
+<span id="id2"></span><h2>音频命名空间和目录<a class="headerlink" href="#audio-namespace" title="Link to this heading"> link</a></h2>
+<p>当Ren’Py根据audio语句或函数搜索对应音频文件时，会从 <code class="docutils literal notranslate"><span class="pre">game</span></code> 目录开始寻找。
+如果未找到对应文件，再在 <code class="docutils literal notranslate"><span class="pre">game/audio</span></code> 目录寻找。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="s2">&quot;opening.ogg&quot;</span>
+</pre></div>
+</div>
+<p>会先寻找 <code class="file docutils literal notranslate"><span class="pre">game/opening.ogg</span></code>。未果，则寻找 <code class="file docutils literal notranslate"><span class="pre">game/audio/opening.ogg</span></code>。
+文件名带子目录的情况也遵循同样的逻辑。下列语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="s2">&quot;my_music/opening.ogg&quot;</span>
+</pre></div>
+</div>
+<p>会先寻找 <code class="file docutils literal notranslate"><span class="pre">game/my_music/opening.ogg</span></code>，未找到再寻找 <code class="file docutils literal notranslate"><span class="pre">game/audio/my_music/opening.ogg</span></code>。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">game/audio</span></code> 目录及其子目录中的音频文件，如果扩展名是Ren’Py支持的类型(当前包含.wav、.mp2、.mp3、.ogg和.opus)，
+会把文件名自动置入audio命名空间。例如 <code class="file docutils literal notranslate"><span class="pre">game/audio/Town_theme.ogg</span></code> 文件可以使用如下语句播放：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="n">town_theme</span>
+</pre></div>
+</div>
+<p>可以通过配置项 <a class="reference internal" href="config.html#var-config.audio_directories"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.audio_directories</span></code></a> 设置默认的音频文件搜索目录。</p>
+<p>可以直接使用的音频名称，是文件名去掉扩展名后全部字母转小写。这种情况只适用于文件名正好符合Python变量的命名要求。
+例如， <code class="file docutils literal notranslate"><span class="pre">my</span> <span class="pre">song.mp3</span></code>， <code class="file docutils literal notranslate"><span class="pre">8track.opus</span></code> 或 <code class="file docutils literal notranslate"><span class="pre">this-is-a-song.ogg</span></code> 的文件名不能用作Python变量名，不能直接使用。
+除此之外，存在两个或两个以上同名文件时，会在包含路径和扩展名的前提下，根据字母排序选择第一个匹配的同名文件用作为对应变量。</p>
+<p>如果某个文件未自动置入audio音频空间，原因可能是文件名或者所在目录导致，还可以使用define语句手工设置。</p>
+<p>例如，可以这样定义：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">audio</span><span class="o">.</span><span class="n">sunflower</span> <span class="o">=</span> <span class="s2">&quot;my_music/sun-flower-slow-jam.ogg&quot;</span>
+</pre></div>
+</div>
+<p>就可以使用play语句播放：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="n">sunflower</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">play</span></code> 和 <code class="docutils literal notranslate"><span class="pre">queue</span></code> 语句总是会在audio命名空间中计算入参。
+函数则不会自动添加命名空间，因此无法直接使用 <code class="docutils literal notranslate"><span class="pre">sunflower</span></code> 作为变量，而需要使用 <code class="docutils literal notranslate"><span class="pre">audio.sunflower</span></code>。</p>
+</section>
+<section id="play">
+<span id="play-statement"></span><h2>play语句<a class="headerlink" href="#play" title="Link to this heading"> link</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">play</span></code> 语句是最常用的播放音效和音乐的方式。如果某个文件正在通用通道播放，播放会被中断，并开始播放新的文件。</p>
+<p>音频通道名(通常就是“sound”、“music”、“voice”或者“audio”)需要跟在关键词 <code class="docutils literal notranslate"><span class="pre">play</span></code> 后面。通道名后面是音频文件。音频文件可以是单个文件，也可以是文件列表。如果是文件列表的话，列表内元素顺序播放。</p>
+<p><code class="docutils literal notranslate"><span class="pre">fadein</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fadeout</span></code> 分句是可选的。 fadeout指定了正在播放音乐需要停止时的淡出时间，单位为秒。fadein指定了播放新音乐的开头淡入时间。如果没有fadeout时间没有指定，就使用 <a class="reference internal" href="config.html#var-config.fadeout_audio"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.fadeout_audio</span></code></a> 的配置值。</p>
+<p><code class="docutils literal notranslate"><span class="pre">loop</span></code> 和 <code class="docutils literal notranslate"><span class="pre">noloop</span></code> 分句也是可选的。 loop分句表示音乐循环播放，noloop分句表示音乐只播放一次。如果这两个分句都没有出现，根据通道的默认配置决定实际播放情况。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="s2">&quot;mozart.ogg&quot;</span>
+<span class="k">play</span> <span class="k">sound</span> <span class="s2">&quot;woof.mp3&quot;</span>
+<span class="k">play</span> <span class="n">myChannel</span> <span class="s2">&quot;punch.wav&quot;</span> <span class="c1"># &#39;myChannel&#39;需要先使用renpy.music.register_channel()定义。</span>
+
+<span class="s2">&quot;我们也可以播放一个音效或音乐的列表。&quot;</span>
+<span class="k">play</span> <span class="k">music</span> <span class="p">[</span> <span class="s2">&quot;a.ogg&quot;</span><span class="p">,</span> <span class="s2">&quot;b.ogg&quot;</span> <span class="p">]</span> <span class="n">fadeout</span> <span class="mf">1.0</span> <span class="n">fadein</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>当提供了 <code class="docutils literal notranslate"><span class="pre">if_changed</span></code> 从句，并且对应的音频通道正在播放，播放指令不会中断当前播放的音频。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">market_side</span><span class="p">:</span>
+    <span class="k">play</span> <span class="k">music</span> <span class="n">market</span>
+    <span class="s2">&quot;我们正在进入市场。&quot;</span>
+    <span class="k">jump</span> <span class="n">market_main</span>
+
+<span class="k">label</span> <span class="n">market_main</span><span class="p">:</span>
+    <span class="k">play</span> <span class="k">music</span> <span class="n">market</span> <span class="n">if_changed</span>
+    <span class="s2">&quot;我们可能刚进入市场，也可能已经在市场里一段时间了。&quot;</span>
+    <span class="s2">&quot;如果我们已经在市场里一段时间了，音乐不会停止并重从播放，只是继续播放。&quot;</span>
+    <span class="k">jump</span> <span class="n">market_main</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">volume</span></code> 从句也是可选的。其可以指定音轨的相对幅度，范围为0.0到1.0。
+这样每次指定音频文件时，也可以同时设置音量。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">sound</span> <span class="s2">&quot;woof.mp3&quot;</span> <span class="n">volume</span> <span class="mf">0.5</span>
+</pre></div>
+</div>
+<p>在audio通道上，同时播放多个音效文件：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="n">audio</span> <span class="s2">&quot;sfx1.opus&quot;</span>
+<span class="k">play</span> <span class="n">audio</span> <span class="s2">&quot;sfx2.opus&quot;</span>
+</pre></div>
+</div>
+<p>此处可以使用变量替代字符串。如果某个变量在 <a class="reference internal" href="#audio-namespace"><span class="std std-ref">音频命名空间</span></a> 中存在，它就可以在默认的命名空间中直接引用。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="n">illurock</span>
+</pre></div>
+</div>
+<p>放入audio命名空间的文件会根据文件名自动定义变量并使用。</p>
+<p id="synchro-start">Ren’Py支持一种功能，可以确保多个音频文件同步播放。
+该功能默认在不断循环的音频通道(比如music)上启用，
+但也可以通过 <cite>synchro_start</cite> 选项用于 <a class="reference internal" href="#renpy.music.register_channel" title="renpy.music.register_channel"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.music.register_channel()</span></code></a> 或 <a class="reference internal" href="#renpy.music.play" title="renpy.music.play"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.music.play()</span></code></a> 。</p>
+<p>启用synchro start功能后，多个play语句会同时运行，多个音频通道同步播放。
+满足以下条件时，synchro就会开始：</p>
+<ul class="simple">
+<li><p>当各音频通道的音频文件都已加载并且音频采样功能可用时。</p></li>
+<li><p>当所有音频通道播放的内容都已淡出(fade out)时。</p></li>
+</ul>
+<p>两个条件都满足时，还可以加入新的音频。</p>
+</section>
+<section id="stop">
+<span id="stop-statement"></span><h2>stop语句<a class="headerlink" href="#stop" title="Link to this heading"> link</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">stop</span></code> 语句以关键词 <code class="docutils literal notranslate"><span class="pre">stop</span></code> 开头，后面跟需要静音的音频通道名。最后有一个可选的 <code class="docutils literal notranslate"><span class="pre">fadeout</span></code> 分句。
+如果没有fadeout时间没有指定，就使用 <a class="reference internal" href="config.html#var-config.fadeout_audio"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.fadeout_audio</span></code></a> 的配置值。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">stop</span> <span class="k">sound</span>
+<span class="k">stop</span> <span class="k">music</span> <span class="n">fadeout</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+</section>
+<section id="queue">
+<span id="queue-statement"></span><h2>queue语句<a class="headerlink" href="#queue" title="Link to this heading"> link</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">queue</span></code> 语句用于组建音频文件队列。当前播放的文件被播放完毕之后，queue语句组建的音频文件队列就会开始播放。</p>
+<p>queue语句以关键词 <code class="docutils literal notranslate"><span class="pre">queue</span></code> 开头，后面跟播放使用的音频通道名。最后是否带 <code class="docutils literal notranslate"><span class="pre">fadein</span></code> 、 <code class="docutils literal notranslate"><span class="pre">loop</span></code> 或 <code class="docutils literal notranslate"><span class="pre">noloop</span></code> 分句是可选的。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">queue</span> <span class="k">sound</span> <span class="s2">&quot;woof.mp3&quot;</span>
+<span class="k">queue</span> <span class="k">music</span> <span class="p">[</span> <span class="s2">&quot;a.ogg&quot;</span><span class="p">,</span> <span class="s2">&quot;b.ogg&quot;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>queue语句也可以使用 <code class="docutils literal notranslate"><span class="pre">volume</span></code> 从句。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">sound</span> <span class="s2">&quot;woof.mp3&quot;</span> <span class="n">volume</span> <span class="mf">0.25</span>
+<span class="k">queue</span> <span class="k">sound</span> <span class="s2">&quot;woof.mp3&quot;</span> <span class="n">volume</span> <span class="mf">0.5</span>
+<span class="k">queue</span> <span class="k">sound</span> <span class="s2">&quot;woof.mp3&quot;</span> <span class="n">volume</span> <span class="mf">0.75</span>
+<span class="k">queue</span> <span class="k">sound</span> <span class="s2">&quot;woof.mp3&quot;</span> <span class="n">volume</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>当多个queue语句出现，且没有给任何队列指定互动行为情况下，所有的声音文件都将加入到队列中。
+在某个互动行为发生后，第一个queue语句对应的队列将清空，除非其已经被某个play或stop语句清空过。</p>
+<p>此处可以使用变量替代字符串。如果某个变量在 <a class="reference internal" href="#audio-namespace"><span class="std std-ref">音频命名空间</span></a> 中存在，它就可以在默认的命名空间中直接引用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">audio</span><span class="o">.</span><span class="n">woof</span> <span class="o">=</span> <span class="s2">&quot;woof.mp3&quot;</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">play</span> <span class="k">sound</span> <span class="n">woof</span>
+</pre></div>
+</div>
+<p>使用这些语句的优点是，当lint工具运行时，可以检测出你程序中是否有丢失的音乐音效文件。后面的一些函数允许python接入和控制这些文件，并且会揭示一些高级(却很少用到)的特性。</p>
+</section>
+<section id="partial-playback">
+<span id="id3"></span><h2>节选播放<a class="headerlink" href="#partial-playback" title="Link to this heading"> link</a></h2>
+<p>Ren’Py支持节选播放音频文件。节选播放的语法是，在play语句的文件名之前，加上用英文尖括号&lt;&gt;包含的播放起始点。节选播放规范应该包含成对属性名和属性值，并用空格分隔。</p>
+<p>属性值以秒为单位，集成在文件名前面的英文尖括号&lt;&gt;内。三种属性名分别为：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">from</span></code></dt><dd><p>指定播放文件的起始时间点。(默认值为0.0秒)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">to</span></code></dt><dd><p>指定播放文件的终止时间点。(默认值为文件结束。)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">loop</span></code></dt><dd><p>指定需要循环播放的文件起始和终止时间点。(默认的起始时间点为文件开头或 <code class="docutils literal notranslate"><span class="pre">from</span></code> 指定的时间点。)</p>
+</dd>
+</dl>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="s2">&quot;&lt;from 5 to 15.5&gt;waves.opus&quot;</span>
+</pre></div>
+</div>
+<p>将从5秒的标记处开始，播放总计10.5秒waves.opus文件内容。下面这条语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="s2">&quot;&lt;loop 6.333&gt;song.opus&quot;</span>
+</pre></div>
+</div>
+<p>将会在完整播放完文件song.opus后，回到6.333秒标记处重新播放至结尾，并不断循环重复。</p>
+</section>
+<section id="sync-start">
+<span id="id4"></span><h2>同步起始位置<a class="headerlink" href="#sync-start" title="Link to this heading"> link</a></h2>
+<p>某段音频音频的起始播放位置可以同步到另一个音频通道，只需要使用特定的文件名，比如“&lt;sync channelname&gt;track.opus”。
+其中channelname就是需要同步的通道名称，可以是music、sound或其他任意注册过的音频通道。</p>
+<p>该功能可用于多个循环播放音轨的同步。比如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="n">music_2</span> <span class="p">[</span> <span class="s2">&quot;&lt;sync music_1&gt;layer_2.opus&quot;</span><span class="p">,</span> <span class="s2">&quot;layer_2.opus&quot;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>会直接将 <code class="file docutils literal notranslate"><span class="pre">layer_2.opus</span></code> 从当前播放 music_1 的音轨时间点开始播放。
+music_1从头开始播放时也跟随从头播放，而不再会播放完之后再循环。
+(默认情况下，<code class="file docutils literal notranslate"><span class="pre">layer_2.opus</span></code> 起始时间点的修改会永久生效。)</p>
+</section>
+<section id="volume">
+<span id="id5"></span><h2>音量<a class="headerlink" href="#volume" title="Link to this heading"> link</a></h2>
+<p>播放音频时的音量与以下变量都有关：</p>
+<ul class="simple">
+<li><p>混音器“main”的音量值</p></li>
+<li><p>相关音频通道的混音器音量值</p></li>
+<li><p>音频通道的音量值</p></li>
+<li><p>音轨自身的相对幅度。</p></li>
+<li><p>音频文件的相对幅度。</p></li>
+</ul>
+<p>以上5项音量值都介于0与1之间，最终音量值是它们相乘后的结果。</p>
+<p>例如，main音量值80%(0.8)，混音器音量值100%，音频通道音量值50%(0.5)，音轨相对幅度25%(0.25)，音频文件相对音量50%(0.5)。
+最终音量为 .8*1.*.5*.25*.5 = .0.5，即5% 。</p>
+<p>混音器音量可以使用 <a class="reference internal" href="preferences.html#preferences.set_mixer" title="preferences.set_mixer"><code class="xref py py-func docutils literal notranslate"><span class="pre">preferences.set_mixer()</span></code></a> 函数、<a class="reference internal" href="screen_actions.html#SetMixer" title="SetMixer"><code class="xref py py-func docutils literal notranslate"><span class="pre">SetMixer()</span></code></a> 行为和 <a class="reference internal" href="screen_actions.html#Preference" title="Preference"><code class="xref py py-func docutils literal notranslate"><span class="pre">Preference()</span></code></a> 行为指定 <code class="docutils literal notranslate"><span class="pre">&quot;mixer</span> <span class="pre">&lt;mixer&gt;</span> <span class="pre">volume&quot;</span></code> 进行设置。
+audio和sound音频通道相关的混音器为“sfx”，music音频通道相关的混音器为“music”，而voice音频通道相关的混音器为“voice”。
+每个音频通道都与“main”混音器相关。</p>
+<p>使用 <a class="reference internal" href="#renpy.music.set_volume" title="renpy.music.set_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.music.set_volume()</span></code></a> 函数可以设置某个音频通道的音量。
+通常仅当多个音频通道共用同一混音器时才需要用。
+<a class="reference internal" href="#renpy.music.register_channel" title="renpy.music.register_channel"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.music.register_channel()</span></code></a> 函数的 <code class="docutils literal notranslate"><span class="pre">mixer</span></code> 参数可以在注册音频通道时指定关联的混音器，如果混音器不存在则直接创建一个。</p>
+<p>在 <a class="reference internal" href="#play-statement"><span class="std std-ref">play语句</span></a> 后面加 <code class="docutils literal notranslate"><span class="pre">volume</span></code> 从句可以直接设置音轨的相对音量。</p>
+<p>音频文件名前的尖括号内可以使用volume从句设置音量，例如“&lt;volume 0.5&gt;track.opus”。</p>
+<p>除了音量值，各音频通道关联的混音器都有静音标识。
+启用静音标识后，会将音量直接设置为0.
+可以使用 <a class="reference internal" href="screen_actions.html#SetMute" title="SetMute"><code class="xref py py-func docutils literal notranslate"><span class="pre">SetMute()</span></code></a>、<a class="reference internal" href="screen_actions.html#ToggleMute" title="ToggleMute"><code class="xref py py-func docutils literal notranslate"><span class="pre">ToggleMute()</span></code></a>、<a class="reference internal" href="screen_actions.html#Preference" title="Preference"><code class="xref py py-func docutils literal notranslate"><span class="pre">Preference()</span></code></a> 或 <a class="reference internal" href="preferences.html#preferences.set_mute" title="preferences.set_mute"><code class="xref py py-func docutils literal notranslate"><span class="pre">preferences.set_mute()</span></code></a>，指定“mixer &lt;mixer&gt; mute”启用对应混音器的静音标识。</p>
+</section>
+<section id="playing-silence">
+<span id="silence"></span><span id="id6"></span><h2>播放静音<a class="headerlink" href="#playing-silence" title="Link to this heading"> link</a></h2>
+<p>一段指定时间范围播放静音，格式类似“&lt;silence 3.0&gt;”，其中3.0表示需要的静音持续时间，单位为秒。播放静音用于延迟音效文件的播放点。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="n">audio</span> <span class="p">[</span> <span class="s2">&quot;&lt;silence .5&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;boom.opus&quot;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>将播放半秒的静音，然后出现一个爆炸音效。</p>
+</section>
+<section id="a-actions">
+<span id="id7"></span><h2>行为函数<a class="headerlink" href="#a-actions" title="Link to this heading"> link</a></h2>
+<p>详见 <a class="reference internal" href="screen_actions.html#audio-actions"><span class="std std-ref">音频行为</span></a>。</p>
+</section>
+<section id="functions">
+<span id="id8"></span><h2>相关函数<a class="headerlink" href="#functions" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="AudioData">
+<span class="sig-name descname"><span class="pre">AudioData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#AudioData" title="Link to this definition"> link</a></dt>
+<dd><p>该类会指向一个byte编码对象，包含音频数据。该对象可以传入音频播放系统。包含的音频数据应该是Ren’Py支持的格式(例如RIFF、WAV格式)。</p>
+<dl class="simple">
+<dt><cite>data</cite></dt><dd><p>包含音频文件数据的byte编码对象。</p>
+</dd>
+<dt><cite>filename</cite></dt><dd><p>与音频数据相关的复合文件名。它可以表示音频数据格式，也可以用做报错信息。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.mark_audio_seen">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">mark_audio_seen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.mark_audio_seen" title="Link to this definition"> link</a></dt>
+<dd><p>将指定文件名的文件标记为当前用户已播放过至少一次。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.mark_audio_unseen">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">mark_audio_unseen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.mark_audio_unseen" title="Link to this definition"> link</a></dt>
+<dd><p>将指定文件名的文件标记为当前用户未播放过。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.play">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.play" title="Link to this definition"> link</a></dt>
+<dd><p>播放一个音效。如果channel为None，默认值为config.play_channel。该函数用在各种样式(style)定义，鼠标悬停声(hover_sound)和激活声(activate_sound)。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.seen_audio">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">seen_audio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.seen_audio" title="Link to this definition"> link</a></dt>
+<dd><p>如果filename对应的音频文件在用户系统中至少被播放过一次，则返回True。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.get_duration">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">get_duration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.get_duration" title="Link to this definition"> link</a></dt>
+<dd><p>返回目前 <em>channel</em> 通道上正在播放的音频或视频文件的全长。若 <em>channel</em> 通道上没有正在播放的文件，则返回0.0。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.get_loop">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">get_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.get_loop" title="Link to this definition"> link</a></dt>
+<dd><p>返回音频通道上正在循环播放的文件列表，如果没有文件在循环播放则返回None。
+如果循环列表还在待播放队列中排队，并没有播放，依然会返回循环列表，而不是正在播放的音乐。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.get_pause">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">get_pause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.get_pause" title="Link to this definition"> link</a></dt>
+<dd><p>返回 <em>channel</em> 通道上的pause标记的值。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.get_playing">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">get_playing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.get_playing" title="Link to this definition"> link</a></dt>
+<dd><p>若入参channel上有音频正在播放，返回文件名。否则返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.get_pos">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">get_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.get_pos" title="Link to this definition"> link</a></dt>
+<dd><p>返回入参channel通道上正在播放的音频或者视频文件的已播放进度，单位为秒。如果 <em>channel</em> 通道上没有任何音频或视频文件正在播放，返回None。</p>
+<p>由于在某个通道开始播放前，总是会返回None；也可能对应的音频通道已经被静音(mute)。该函数的调用者应该能够处理空值。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.is_playing">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">is_playing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.is_playing" title="Link to this definition"> link</a></dt>
+<dd><p>若入参channel上正在播放一个音频则返回True，否则返回False。或者当声音系统没有工作的情况也返回False。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.play">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filenames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fadeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synchro_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fadein</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.play" title="Link to this definition"> link</a></dt>
+<dd><p>该函数会立即停止入参channel上正在播放的声音，解散音频队列，并开始播放入参filenames指定的文件。</p>
+<dl class="simple">
+<dt><cite>filenames</cite></dt><dd><p>该值可以是单个文件，也可以是待播放的文件列表。</p>
+</dd>
+<dt><cite>channel</cite></dt><dd><p>播放声音使用的通道。</p>
+</dd>
+<dt><cite>loop</cite></dt><dd><p>若该值为True，音轨会循环播放，前提是其已经是播放队列最后一个音频。</p>
+</dd>
+<dt><cite>fadeout</cite></dt><dd><p>若不为空，这是一个淡出效果的持续时间，单位为秒。否则，淡出时间使用config.fade_music的值。</p>
+</dd>
+<dt><cite>synchro_start</cite></dt><dd><p>Ren’Py会确保所有synchro_start标志为True的通道，能够在几乎同一时间一齐开始播放音频。当我们需要两个音频文件相互同步时，synchro_start就应该被设置为True。</p>
+</dd>
+<dt><cite>fadein</cite></dt><dd><p>音频开始淡入效果持续时间，单位为秒，在循环播放时仅对第一遍播放有效。</p>
+</dd>
+<dt><cite>tight</cite></dt><dd><p>若该值为True，淡出效果将作用至同一个队列中后面的声音。若为空，当loop为True时tight也为True，否则为False。</p>
+</dd>
+<dt><cite>if_changed</cite></dt><dd><p>若该值为True，当前真在播放的音频不会被立刻停止/淡出，而会继续播放。</p>
+</dd>
+<dt><cite>relative_volume</cite></dt><dd><p>当前音频通道播放音频时的相对音量值。
+指定文件将以该音量值播放。
+如果没有指定该音量值则默认为1.0，表示以音频文件原始音量播放，再乘以混音器、音频通道和相关第二音量的值。</p>
+</dd>
+</dl>
+<p>该函数会清空对应通道上所有的pause标记。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.pump">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">pump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.pump" title="Link to this definition"> link</a></dt>
+<dd><p>“pump”是指对音频系统的操作。
+通常来说，使用 <code class="docutils literal notranslate"><span class="pre">play</span></code>、<code class="docutils literal notranslate"><span class="pre">queue</span></code> 和 <code class="docutils literal notranslate"><span class="pre">stop</span></code> 语句及等效函数后，会在下次互动时才正式生效。
+在某些情况下，多个语句之间会互相取消。例如，play语句后面跟随一个stop从句，会使得音频无法播放。</p>
+<p>如果在play和stop语句之间调用该函数，音频会在该函数返回结果前继续播放音频，并随后淡出。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">play</span> <span class="k">music</span> <span class="s2">&quot;mytrack.opus&quot;</span>
+<span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="k">music</span><span class="o">.</span><span class="n">pump</span><span class="p">()</span>
+<span class="k">stop</span> <span class="k">music</span> <span class="n">fadeout</span> <span class="mi">4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.queue">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filenames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fadein</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.queue" title="Link to this definition"> link</a></dt>
+<dd><p>该函数将文件名为filenames的文件加入指定通道channel的播放队列。</p>
+<dl class="simple">
+<dt><cite>filenames</cite></dt><dd><p>该值可以是单个文件，也可以是待播放的文件列表。</p>
+</dd>
+<dt><cite>channel</cite></dt><dd><p>播放声音使用的通道。</p>
+</dd>
+<dt><cite>loop</cite></dt><dd><p>若该值为True，音轨会循环播放，前提是其已经是播放队列最后一个音频。</p>
+</dd>
+<dt><cite>clear_queue</cite></dt><dd><p>若为True，当前播放文件结束后，播放队列中原有文件将被清空。若为False，新增文件会被加在原有队列结尾。无论实际哪种情况，如果当前没有任何音频正在播放，新队列中的音频都会立刻被播放。</p>
+</dd>
+<dt><cite>fadein</cite></dt><dd><p>音频开始淡入效果持续时间，单位为秒，在循环播放时仅对第一遍播放有效。</p>
+</dd>
+<dt><cite>tight</cite></dt><dd><p>若该值为True，淡出效果将作用至同一个队列中后面的声音。若为空，当loop为True时tight也为True，否则为False。</p>
+</dd>
+<dt><cite>relative_volume</cite></dt><dd><p>当前音频通道播放音频时的相对音量值。
+指定文件将以该音量值播放。
+如果没有指定该音量值则默认为1.0，表示以音频文件原始音量播放，再乘以混音器、音频通道和相关第二音量的值。</p>
+</dd>
+</dl>
+<p>该函数会清空对应通道上所有的pause标记。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.register_channel">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">register_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_on_mute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">movie</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.register_channel" title="Link to this definition"> link</a></dt>
+<dd><p>该函数用于注册新的名为入参name的音频通道。之后就可以使用play或queue语句在name通道上播放音频了。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>待注册音频通道名。</p>
+</dd>
+<dt><cite>mixer</cite></dt><dd><p>混合器(mixer)使用的通道名。默认情况下，Ren’Py能识别“music”、“sfx”和“voice”混合器。使用其他名称也是可行的，不过可能要修改个性化界面。</p>
+</dd>
+<dt><cite>loop</cite></dt><dd><p>若为True，在新注册通道上的音频默认循环播放。</p>
+</dd>
+<dt><cite>stop_on_mute</cite></dt><dd><p>若为True，当新注册通道被静音(mute)时，通道上所有音频都会停止播放。</p>
+</dd>
+<dt><cite>tight</cite></dt><dd><p>若为True，即使有淡出效果，依然可以循环播放。若要实现音效、音乐的无缝连接，就应该把这项设为True。若使用音乐的淡出效果则设置为False。</p>
+</dd>
+<dt><cite>file_prefix</cite></dt><dd><p>在该通道上播放的所有声音文件都会添加的文件名前缀。</p>
+</dd>
+<dt><cite>file_suffix</cite></dt><dd><p>在该通道上播放的所有声音文件都会添加的文件名后缀。</p>
+</dd>
+<dt><cite>buffer_queue</cite></dt><dd><p>我们是否应缓存一两个文件或者一个文件队列？如果通道是播放音频的话应该设置为True，如果播放视频的话应该设置为False。</p>
+</dd>
+<dt><cite>movie</cite></dt><dd><p>若值为True，该通道会被设为播放视频。</p>
+</dd>
+<dt><cite>framedrop</cite></dt><dd><p>该参数控制视频卡顿时的处理方式。若为True，则会跳帧以保持音视频同步。若为False，Ren’Py会无视视频迟延。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.set_audio_filter">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">set_audio_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.016</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.set_audio_filter" title="Link to this definition"> link</a></dt>
+<dd><p>将指定的音频滤波器加入到 <cite>audio_filter</cite> 队列。</p>
+<dl class="simple">
+<dt><cite>audio_filter</cite></dt><dd><p>该项必须是一个 <a class="reference internal" href="audio_filters.html"><span class="doc">音频滤波器</span></a> 对象或者音频滤波器列表。
+该项也可以是None，表示移除当前所有音频滤波器。</p>
+</dd>
+<dt><cite>replace</cite></dt><dd><p>若为True，音频滤波器会立刻替换当前使用的音频滤波器，修改当前正在播放或播放队列中的声音。
+若为False，新的音频滤波器会在下次播放的声音或播放队列中的下一个声音才生效。</p>
+</dd>
+<dt><cite>duration</cite></dt><dd><p>从当前音频滤波器到新的滤波请生效的时长，单位为秒。
+该项可以防止突然更改滤波器时产生的爆音。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.set_mixer">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">set_mixer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.set_mixer" title="Link to this definition"> link</a></dt>
+<dd><p>该函数可以设置指定音频通道的混音器。默认情况下，至少有两个混音器，分别是“sfx”和“music”。
+“sfx”占用的音频通道编号为0到3，“music”占用的音频通道标号为3到7。
+voice模块调用该函数时，会将2号音频通道用于语音。
+创作者可以创建自己的混音器，但也需要提供一个配置项，可以调整和设置该混音器。</p>
+<p>只能在初始化语句块中调用该函数。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.set_pan">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">set_pan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.set_pan" title="Link to this definition"> link</a></dt>
+<dd><p>设置该通道的声像(pan)。</p>
+<dl class="simple">
+<dt><cite>pan</cite></dt><dd><p>控制音频的音源位置的一个值，位于-1至1的闭区间内。若该值为-1，所有音频使用左声道。若该值为0，左右声道均衡发声。若该值为1，所有音频使用右声道。</p>
+</dd>
+<dt><cite>delay</cite></dt><dd><p>为了形成声像使用的延迟时间。</p>
+</dd>
+<dt><cite>channel</cite></dt><dd><p>应用声像的通道名。可以是音乐或音效通道。通常使用通道7，也就是默认的音乐通道。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.set_pause">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">set_pause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.set_pause" title="Link to this definition"> link</a></dt>
+<dd><p>将入参value赋值给通道名为channel的暂停标识。若value为True，通道会被暂停，否则正常播放。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.set_queue_empty_callback">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">set_queue_empty_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.set_queue_empty_callback" title="Link to this definition"> link</a></dt>
+<dd><p>该函数设置了一个callback函数，当播放队列为空时，将会调用callback函数。播放队列首次变空时callback函数将被调用，且每次会导致播放队列清空的互动行为都会至少调用一次。</p>
+<p>callback函数被调用时不带任何参数。其会使用合适的参数调用renpy.music.queue，将声音组件成一个队列。请注意，某个声音在播放时callback就可能会被调用，因为当时待播放队列已经空了。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.set_volume">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">set_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.set_volume" title="Link to this definition"> link</a></dt>
+<dd><p>设置通道的音量volume。对于控制多个通道的混合器(mixer)，该值表示混合器的一个音量分量。
+Sets the volume of this channel, as a fraction of the volume of the mixer controlling the channel.</p>
+<dl class="simple">
+<dt><cite>volume</cite></dt><dd><p>该值位于0.0至1.0的闭合区间。对于控制多个通道的混合器(mixer)，该值表示混合器的一个音量分量。</p>
+</dd>
+<dt><cite>delay</cite></dt><dd><p>该值代表一个时间量，用于新旧音量值切换/平滑过渡时的时延，单位为秒。该值会保存在存档中，并接受回滚操作。</p>
+</dd>
+<dt><cite>channel</cite></dt><dd><p>需要设置的通道名。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.music.stop">
+<span class="sig-prename descclassname"><span class="pre">renpy.music.</span></span><span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'music'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fadeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.music.stop" title="Link to this definition"> link</a></dt>
+<dd><p>该函数停止正在播放的音乐，并解散播放队列。如果入参fadeout为None，使用config.fade_music配置值作为淡出效果时间，否则就是用fadeout入参值。</p>
+<p>该函数将最后组建的待播放文件列表设置为None。</p>
+<dl class="simple">
+<dt><cite>channel</cite></dt><dd><p>需要停止播放的通道名。</p>
+</dd>
+<dt><cite>fadeout</cite></dt><dd><p>若不为None，包含一个淡出效果时间，单位为秒。否则淡出时间取决于config.fade_music。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="sound-functions">
+<span id="id9"></span><h2>音效函数<a class="headerlink" href="#sound-functions" title="Link to this heading"> link</a></h2>
+<p>大多数 <code class="docutils literal notranslate"><span class="pre">renpy.music</span></code> 函数在 <code class="docutils literal notranslate"><span class="pre">renpy.sound</span></code> 有别名(alias)。这些函数功能类似，主要差别在于它们默认作用于音效(sound)通道而不是音乐(music)通道，且默认不循环播放。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="conditional.html" class="btn btn-neutral float-left" title="条件语句" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="audio_filters.html" class="btn btn-neutral float-right" title="音频滤波器" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

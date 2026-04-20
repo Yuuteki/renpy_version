@@ -142,6 +142,12 @@ const menuNodePromptInput = document.getElementById("menuNodePromptInput");
 const menuChoiceListEl = document.getElementById("menuChoiceList");
 const menuAddChoiceButton = document.getElementById("menuAddChoiceButton");
 const menuDeleteNodeButton = document.getElementById("menuDeleteNodeButton");
+const conditionInspectorFormEl = document.getElementById("conditionInspectorForm");
+const conditionNodeTypeInput = document.getElementById("conditionNodeTypeInput");
+const conditionAddClauseButton = document.getElementById("conditionAddClauseButton");
+const conditionToggleElseButton = document.getElementById("conditionToggleElseButton");
+const conditionClauseListEl = document.getElementById("conditionClauseList");
+const conditionDeleteNodeButton = document.getElementById("conditionDeleteNodeButton");
 const flowInspectorFormEl = document.getElementById("flowInspectorForm");
 const flowNodeTypeInput = document.getElementById("flowNodeTypeInput");
 const flowNodeModeInput = document.getElementById("flowNodeModeInput");
@@ -588,6 +594,14 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
     };
   }
 
+  if (node.type === "condition") {
+    return {
+      ...node,
+      title: node.title || "Condition",
+      conditionClauses: normalizeConditionClauses(node.conditionClauses),
+    };
+  }
+
   if (node.type === "python") {
     return {
       ...node,
@@ -615,15 +629,34 @@ function createMenuChoice(index = 1) {
   };
 }
 
+function createConditionClause(kind = "if", index = 1) {
+  return {
+    id: `condition_clause_${Date.now()}_${index}`,
+    kind,
+    condition: "",
+    conditionMode: kind === "else"
+      ? "none"
+      : "expression",
+    conditionVariableId: "",
+    conditionVariableTarget: "",
+    conditionOperator: "is_true",
+    conditionValue: "",
+  };
+}
+
 function getMenuChoicePortId(choiceId) {
   return `choice:${choiceId}`;
+}
+
+function getConditionClausePortId(clauseId) {
+  return `condition:${clauseId}`;
 }
 
 function getVariableById(variableId) {
   return state.variables.find((variable) => variable.id === variableId) ?? null;
 }
 
-function getMenuChoiceConditionExpression(choice) {
+function getConditionalExpression(choice) {
   if (!choice) {
     return "";
   }
@@ -664,7 +697,7 @@ function getMenuChoiceConditionExpression(choice) {
   return `${target} ${operator} ${value}`;
 }
 
-function buildMenuChoiceVariableOptions(choice) {
+function buildConditionalVariableOptions(choice) {
   const currentVariable = getVariableById(choice.conditionVariableId);
   const fallbackTarget = `${choice.conditionVariableTarget || ""}`.trim();
   const hasMissingVariable = Boolean(choice.conditionVariableId) && !currentVariable && fallbackTarget;
@@ -688,6 +721,56 @@ function buildMenuChoiceVariableOptions(choice) {
       ? currentVariable.id
       : (missingValue || ""),
   };
+}
+
+function normalizeConditionClauses(rawClauses) {
+  const sourceClauses = Array.isArray(rawClauses) ? rawClauses : [];
+  const conditionalClauses = [];
+  let elseClause = null;
+
+  sourceClauses.forEach((clause, index) => {
+    if (!clause || typeof clause !== "object") {
+      conditionalClauses.push(createConditionClause(conditionalClauses.length === 0 ? "if" : "elif", index + 1));
+      return;
+    }
+
+    if (clause.kind === "else") {
+      if (!elseClause) {
+        elseClause = {
+          ...createConditionClause("else", index + 1),
+          id: clause.id || `condition_clause_${Date.now()}_${index + 1}`,
+        };
+      }
+      return;
+    }
+
+    conditionalClauses.push({
+      ...createConditionClause(conditionalClauses.length === 0 ? "if" : "elif", index + 1),
+      ...clause,
+      kind: conditionalClauses.length === 0 ? "if" : "elif",
+      conditionMode: (
+        clause.conditionMode === "simple"
+        || clause.conditionMode === "expression"
+      )
+        ? clause.conditionMode
+        : "expression",
+      conditionVariableId: clause.conditionVariableId || "",
+      conditionVariableTarget: clause.conditionVariableTarget || "",
+      conditionOperator: clause.conditionOperator || "is_true",
+      conditionValue: clause.conditionValue || "",
+      condition: `${clause.condition || ""}`.trim(),
+    });
+  });
+
+  if (!conditionalClauses.length) {
+    conditionalClauses.push(createConditionClause("if", 1));
+  }
+
+  if (elseClause) {
+    conditionalClauses.push(elseClause);
+  }
+
+  return conditionalClauses;
 }
 
 function normalizeMenuChoices(rawChoices) {
@@ -1333,10 +1416,19 @@ function getMenuChoices(node) {
   return normalizeMenuChoices(node?.menuChoices);
 }
 
+function getConditionClauses(node) {
+  return normalizeConditionClauses(node?.conditionClauses);
+}
+
 function getDefaultOutputPortId(node) {
   if (node?.type === "menu") {
     const firstChoice = getMenuChoices(node)[0];
     return firstChoice ? getMenuChoicePortId(firstChoice.id) : "output";
+  }
+
+  if (node?.type === "condition") {
+    const firstClause = getConditionClauses(node)[0];
+    return firstClause ? getConditionClausePortId(firstClause.id) : "output";
   }
 
   return "output";
@@ -1346,6 +1438,16 @@ function normalizeOutputPortId(node, fromPortId) {
   const normalizedPortId = fromPortId || getDefaultOutputPortId(node);
 
   if (node?.type !== "menu") {
+    if (node?.type === "condition") {
+      const validPortIds = new Set(
+        getConditionClauses(node).map((clause) => getConditionClausePortId(clause.id)),
+      );
+
+      return validPortIds.has(normalizedPortId)
+        ? normalizedPortId
+        : getDefaultOutputPortId(node);
+    }
+
     return "output";
   }
 
@@ -1394,7 +1496,7 @@ function renderMenuChoiceList(node) {
       </select>
       ${choice.conditionMode === "simple"
         ? (() => {
-          const variableOptions = buildMenuChoiceVariableOptions(choice);
+          const variableOptions = buildConditionalVariableOptions(choice);
           const comparisonOperators = [
             ["is_true", "is True"],
             ["is_false", "is False"],
@@ -1460,7 +1562,115 @@ function renderMenuChoiceList(node) {
       return;
     }
 
-    const variableOptions = buildMenuChoiceVariableOptions(choice);
+    const variableOptions = buildConditionalVariableOptions(choice);
+    selectEl.value = variableOptions.value;
+  });
+}
+
+function renderConditionClauseList(node) {
+  if (!conditionClauseListEl) {
+    return;
+  }
+
+  const clauses = getConditionClauses(node);
+  const hasElseClause = clauses.some((clause) => clause.kind === "else");
+
+  conditionToggleElseButton.textContent = hasElseClause ? "Remove Else" : "Add Else";
+
+  conditionClauseListEl.innerHTML = clauses.map((clause, index) => `
+    <div class="menu-choice-item">
+      <div class="menu-choice-item-header">
+        <span>${clause.kind === "if" ? "If" : clause.kind === "elif" ? `Elif ${index}` : "Else"}</span>
+        ${clause.kind === "elif"
+          ? `
+            <button
+              class="danger-button menu-choice-remove-button"
+              type="button"
+              data-remove-condition-clause-id="${escapeHtml(clause.id)}"
+            >
+              Remove
+            </button>
+          `
+          : ""}
+      </div>
+      ${clause.kind !== "else"
+        ? `
+          <select
+            data-condition-clause-id="${escapeHtml(clause.id)}"
+            data-condition-clause-field="conditionMode"
+          >
+            <option value="simple" ${clause.conditionMode === "simple" ? "selected" : ""}>Default Variable</option>
+            <option value="expression" ${clause.conditionMode === "expression" ? "selected" : ""}>Expression</option>
+          </select>
+          ${clause.conditionMode === "simple"
+            ? (() => {
+              const variableOptions = buildConditionalVariableOptions(clause);
+              const comparisonOperators = [
+                ["is_true", "is True"],
+                ["is_false", "is False"],
+                ["==", "=="],
+                ["!=", "!="],
+                [">", ">"],
+                [">=", ">="],
+                ["<", "<"],
+                ["<=", "<="],
+                ["in", "in"],
+                ["not in", "not in"],
+              ];
+              const needsValue = !["is_true", "is_false"].includes(clause.conditionOperator);
+
+              return `
+                <select
+                  data-condition-clause-id="${escapeHtml(clause.id)}"
+                  data-condition-clause-field="conditionVariableId"
+                >
+                  ${variableOptions.options}
+                </select>
+                <select
+                  data-condition-clause-id="${escapeHtml(clause.id)}"
+                  data-condition-clause-field="conditionOperator"
+                >
+                  ${comparisonOperators.map(([value, label]) => `
+                    <option value="${escapeHtml(value)}" ${clause.conditionOperator === value ? "selected" : ""}>${escapeHtml(label)}</option>
+                  `).join("")}
+                </select>
+                ${needsValue
+                  ? `
+                    <input
+                      type="text"
+                      value="${escapeHtml(clause.conditionValue || "")}"
+                      placeholder="e.g. 3"
+                      data-condition-clause-id="${escapeHtml(clause.id)}"
+                      data-condition-clause-field="conditionValue"
+                    />
+                  `
+                  : ""}
+              `;
+            })()
+            : `
+              <input
+                type="text"
+                value="${escapeHtml(clause.condition || "")}"
+                placeholder="e.g. points > 3 and route_open"
+                data-condition-clause-id="${escapeHtml(clause.id)}"
+                data-condition-clause-field="condition"
+              />
+            `}
+        `
+        : `<p class="panel-empty-state">Fallback branch used when no earlier condition matches.</p>`}
+    </div>
+  `).join("");
+
+  clauses.forEach((clause) => {
+    const selectEl = conditionClauseListEl.querySelector(
+      `select[data-condition-clause-id="${CSS.escape(clause.id)}"][data-condition-clause-field="conditionVariableId"]`,
+    );
+
+    if (!selectEl) {
+      return;
+    }
+
+    const variableOptions = buildConditionalVariableOptions(clause);
     selectEl.value = variableOptions.value;
   });
 }
@@ -1568,6 +1778,20 @@ function getNodeDisplay(node) {
       typeLabel: "menu",
       title: "Choice",
       content: menuPrompt ? `${menuPrompt} · ${choiceLabel}` : choiceLabel,
+    };
+  }
+
+  if (node.type === "condition") {
+    const clauses = getConditionClauses(node);
+    const firstConditionalClause = clauses.find((clause) => clause.kind !== "else");
+    const firstCondition = firstConditionalClause
+      ? getConditionalExpression(firstConditionalClause)
+      : "";
+
+    return {
+      typeLabel: "condition",
+      title: "Condition",
+      content: firstCondition || `${clauses.length} clauses`,
     };
   }
 
@@ -2181,7 +2405,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
     menuChoices.forEach((choice, index) => {
       const choiceText = `${choice.text || ""}`.trim() || `Choice ${index + 1}`;
-      const choiceCondition = getMenuChoiceConditionExpression(choice);
+      const choiceCondition = getConditionalExpression(choice);
       const branchEdge = getPrimaryOutgoingEdge(graph, node.id, {
         fromPortId: getMenuChoicePortId(choice.id),
       });
@@ -2198,6 +2422,33 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
       }
 
       appendNodeCode(graph, branchEdge.toNodeId, lines, indentLevel + 2, new Set(visited));
+    });
+
+    return;
+  } else if (node.type === "condition") {
+    const clauses = getConditionClauses(node);
+
+    clauses.forEach((clause, index) => {
+      const branchEdge = getPrimaryOutgoingEdge(graph, node.id, {
+        fromPortId: getConditionClausePortId(clause.id),
+      });
+      const clauseCondition = getConditionalExpression(clause);
+      let headerLine = "else:";
+
+      if (clause.kind === "if") {
+        headerLine = `if ${clauseCondition || "True"}:`;
+      } else if (clause.kind === "elif") {
+        headerLine = `elif ${clauseCondition || "False"}:`;
+      }
+
+      appendIndentedLine(lines, indentLevel, headerLine);
+
+      if (!branchEdge) {
+        appendIndentedLine(lines, indentLevel + 1, "pass");
+        return;
+      }
+
+      appendNodeCode(graph, branchEdge.toNodeId, lines, indentLevel + 1, new Set(visited));
     });
 
     return;
@@ -3441,6 +3692,7 @@ function renderGraph() {
     const hasOutputPort = nodeAllowsOutgoingConnections(node);
     const display = getNodeDisplay(node);
     const isMenuNode = node.type === "menu";
+    const isConditionNode = node.type === "condition";
     const menuChoicesMarkup = isMenuNode
       ? getMenuChoices(node).map((choice) => `
           <div class="menu-node-choice">
@@ -3454,6 +3706,24 @@ function renderGraph() {
           </div>
         `).join("")
       : "";
+    const conditionClausesMarkup = isConditionNode
+      ? getConditionClauses(node).map((clause) => `
+          <div class="condition-node-clause">
+            <span class="condition-node-clause-kind">${escapeHtml(clause.kind)}</span>
+            <span class="condition-node-clause-text">${escapeHtml(
+              clause.kind === "else"
+                ? "Fallback"
+                : (getConditionalExpression(clause) || (clause.kind === "if" ? "True" : "False")),
+            )}</span>
+            <span
+              class="node-port node-port-output node-port-output-choice"
+              data-node-id="${escapeHtml(node.id)}"
+              data-port="output"
+              data-port-id="${escapeHtml(getConditionClausePortId(clause.id))}"
+            ></span>
+          </div>
+        `).join("")
+      : "";
     const el = document.createElement("button");
     el.type = "button";
     el.className = "graph-node";
@@ -3461,6 +3731,10 @@ function renderGraph() {
 
     if (isMenuNode) {
       el.classList.add("graph-node-menu");
+    }
+
+    if (isConditionNode) {
+      el.classList.add("graph-node-condition");
     }
 
     if (node.id === graph.selectedNodeId) {
@@ -3477,6 +3751,13 @@ function renderGraph() {
         </div>
         ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input" data-port-id="input"></span>` : ""}
       `
+      : isConditionNode
+        ? `
+          <div class="condition-node-clause-list">
+            ${conditionClausesMarkup}
+          </div>
+          ${hasInputPort ? `<span class="node-port node-port-input" data-node-id="${escapeHtml(node.id)}" data-port="input" data-port-id="input"></span>` : ""}
+        `
       : `
         <p class="node-type">${escapeHtml(display.typeLabel)}</p>
         <h3 class="node-title">${escapeHtml(display.title || "Untitled Node")}</h3>
@@ -3562,6 +3843,7 @@ function renderInspector() {
     animationInspectorFormEl.classList.add("hidden");
     dialogueInspectorFormEl.classList.add("hidden");
     menuInspectorFormEl.classList.add("hidden");
+    conditionInspectorFormEl.classList.add("hidden");
     flowInspectorFormEl.classList.add("hidden");
     pythonInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
@@ -3573,6 +3855,7 @@ function renderInspector() {
   const selectedIsAnimation = selectedNode.type === "animation";
   const selectedIsDialogue = selectedNode.type === "dialogue";
   const selectedIsMenu = selectedNode.type === "menu";
+  const selectedIsCondition = selectedNode.type === "condition";
   const selectedIsFlow = isFlowNode(selectedNode);
   const selectedIsPython = selectedNode.type === "python";
 
@@ -3582,9 +3865,10 @@ function renderInspector() {
   animationInspectorFormEl.classList.toggle("hidden", !selectedIsAnimation);
   dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
   menuInspectorFormEl.classList.toggle("hidden", !selectedIsMenu);
+  conditionInspectorFormEl.classList.toggle("hidden", !selectedIsCondition);
   flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
   pythonInspectorFormEl.classList.toggle("hidden", !selectedIsPython);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsMenu || selectedIsFlow || selectedIsPython);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsPython);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -3639,6 +3923,12 @@ function renderInspector() {
     menuNodeTypeInput.value = "Choice";
     menuNodePromptInput.value = selectedNode.menuPrompt || "";
     renderMenuChoiceList(selectedNode);
+    return;
+  }
+
+  if (selectedIsCondition) {
+    conditionNodeTypeInput.value = "Condition";
+    renderConditionClauseList(selectedNode);
     return;
   }
 
@@ -3763,6 +4053,40 @@ function updateSelectedMenuNode(updater) {
   const nextNode = typeof updater === "function"
     ? updater(selectedNode)
     : { ...selectedNode, ...updater };
+
+  graph.nodes = graph.nodes.map((node) => (
+    node.id === graph.selectedNodeId ? nextNode : node
+  ));
+
+  graph.edges = graph.edges.filter((edge) => {
+    if (edge.fromNodeId !== nextNode.id) {
+      return true;
+    }
+
+    return normalizeOutputPortId(nextNode, edge.fromPortId) === (edge.fromPortId || "output");
+  });
+
+  render();
+}
+
+function updateSelectedConditionNode(updater) {
+  const graph = getActiveGraph();
+
+  if (!graph || !graph.selectedNodeId) {
+    return;
+  }
+
+  const selectedNode = graph.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!selectedNode || selectedNode.type !== "condition") {
+    return;
+  }
+
+  const nextNode = typeof updater === "function"
+    ? updater(selectedNode)
+    : { ...selectedNode, ...updater };
+
+  nextNode.conditionClauses = normalizeConditionClauses(nextNode.conditionClauses);
 
   graph.nodes = graph.nodes.map((node) => (
     node.id === graph.selectedNodeId ? nextNode : node
@@ -4335,6 +4659,151 @@ menuChoiceListEl.addEventListener("click", (event) => {
     };
   });
 });
+conditionAddClauseButton.addEventListener("click", () => {
+  updateSelectedConditionNode((node) => {
+    const currentClauses = getConditionClauses(node);
+    const elseClause = currentClauses.find((clause) => clause.kind === "else") || null;
+    const conditionalClauses = currentClauses.filter((clause) => clause.kind !== "else");
+    const nextClauses = [
+      ...conditionalClauses,
+      createConditionClause("elif", conditionalClauses.length + 1),
+    ];
+
+    if (elseClause) {
+      nextClauses.push(elseClause);
+    }
+
+    return {
+      ...node,
+      conditionClauses: nextClauses,
+    };
+  });
+});
+conditionToggleElseButton.addEventListener("click", () => {
+  updateSelectedConditionNode((node) => {
+    const currentClauses = getConditionClauses(node);
+    const hasElseClause = currentClauses.some((clause) => clause.kind === "else");
+
+    return {
+      ...node,
+      conditionClauses: hasElseClause
+        ? currentClauses.filter((clause) => clause.kind !== "else")
+        : [...currentClauses, createConditionClause("else", currentClauses.length + 1)],
+    };
+  });
+});
+conditionClauseListEl.addEventListener("input", (event) => {
+  const clauseId = event.target.dataset.conditionClauseId;
+  const clauseField = event.target.dataset.conditionClauseField;
+
+  if (!clauseId || !clauseField || !["condition", "conditionValue"].includes(clauseField)) {
+    return;
+  }
+
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!graph || !selectedNode || selectedNode.type !== "condition") {
+    return;
+  }
+
+  selectedNode.conditionClauses = getConditionClauses(selectedNode).map((clause) => (
+    clause.id === clauseId
+      ? {
+        ...clause,
+        [clauseField]: event.target.value,
+      }
+      : clause
+  ));
+
+  renderGraph();
+  syncLabelCodePreview();
+});
+conditionClauseListEl.addEventListener("change", (event) => {
+  const clauseId = event.target.dataset.conditionClauseId;
+  const clauseField = event.target.dataset.conditionClauseField;
+
+  if (!clauseId || !clauseField) {
+    return;
+  }
+
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!graph || !selectedNode || selectedNode.type !== "condition") {
+    return;
+  }
+
+  selectedNode.conditionClauses = getConditionClauses(selectedNode).map((clause) => {
+    if (clause.id !== clauseId) {
+      return clause;
+    }
+
+    if (clauseField === "conditionMode") {
+      return {
+        ...clause,
+        conditionMode: event.target.value,
+        condition: event.target.value === "expression" ? clause.condition : "",
+      };
+    }
+
+    if (clauseField === "conditionVariableId") {
+      const selectedValue = event.target.value;
+
+      if (!selectedValue) {
+        return {
+          ...clause,
+          conditionVariableId: "",
+          conditionVariableTarget: "",
+        };
+      }
+
+      if (selectedValue.startsWith("__missing__:")) {
+        return {
+          ...clause,
+          conditionVariableId: "",
+          conditionVariableTarget: selectedValue.slice("__missing__:".length),
+        };
+      }
+
+      const variable = getVariableById(selectedValue);
+
+      return {
+        ...clause,
+        conditionVariableId: variable?.id || "",
+        conditionVariableTarget: variable ? getVariableTarget(variable) : "",
+      };
+    }
+
+    if (clauseField === "conditionOperator") {
+      return {
+        ...clause,
+        conditionOperator: event.target.value,
+      };
+    }
+
+    return {
+      ...clause,
+      [clauseField]: event.target.value,
+    };
+  });
+
+  renderConditionClauseList(selectedNode);
+  renderGraph();
+  syncLabelCodePreview();
+});
+conditionClauseListEl.addEventListener("click", (event) => {
+  const removeClauseId = event.target.dataset.removeConditionClauseId;
+
+  if (!removeClauseId) {
+    return;
+  }
+
+  updateSelectedConditionNode((node) => ({
+    ...node,
+    conditionClauses: getConditionClauses(node).filter((clause) => clause.id !== removeClauseId),
+  }));
+});
 flowNodeModeInput.addEventListener("change", (event) => {
   const nextMode = event.target.value;
   const nextTitle = capitalize(nextMode);
@@ -4693,6 +5162,15 @@ menuDeleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+conditionDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 flowDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
@@ -4859,6 +5337,15 @@ function createNodeForType(nodeType, graph) {
       content: "",
       menuPrompt: "",
       menuChoices: [createMenuChoice(1)],
+    };
+  }
+
+  if (nodeType === "condition") {
+    return {
+      ...baseNode,
+      title: "Condition",
+      content: "",
+      conditionClauses: [createConditionClause("if", 1)],
     };
   }
 

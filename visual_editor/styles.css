@@ -733,6 +733,14 @@ button.danger-button:hover {
   gap: 12px;
 }
 
+.menu-choice-group-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .menu-choice-group-header strong {
   font-size: 14px;
   color: var(--text);
@@ -1030,6 +1038,11 @@ button.danger-button:hover {
   padding: 8px 0;
 }
 
+.graph-node-condition {
+  width: 268px;
+  padding: 8px 0;
+}
+
 .menu-node-choice {
   position: relative;
   display: flex;
@@ -1048,6 +1061,44 @@ button.danger-button:hover {
 
 .menu-node-choice:first-child {
   border-top: 0;
+}
+
+.condition-node-clause-list {
+  display: grid;
+  gap: 0;
+  overflow: visible;
+}
+
+.condition-node-clause {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  min-height: 38px;
+  padding: 12px 34px 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+}
+
+.condition-node-clause:first-child {
+  border-top: 0;
+}
+
+.condition-node-clause-kind {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.condition-node-clause-text {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.condition-node-clause .node-port-output-choice {
+  top: 50%;
+  right: -10px;
 }
 
 .menu-node-choice .node-port-output-choice {

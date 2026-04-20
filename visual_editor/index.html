@@ -924,6 +924,11 @@
             <span>Branch</span>
           </button>
 
+          <button class="node-card node-card-compact" data-node-type="condition">
+            <strong>Condition</strong>
+            <span>If / Elif / Else</span>
+          </button>
+
           <button class="node-card node-card-compact" data-node-type="flow">
             <strong>Flow</strong>
             <span>Jump / Call / Return</span>
@@ -1097,6 +1102,29 @@
 
             <div class="inspector-actions">
               <button id="menuDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="conditionInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="conditionNodeTypeInput" type="text" readonly />
+            </label>
+
+            <div class="menu-choice-group">
+              <div class="menu-choice-group-header">
+                <strong>Clauses</strong>
+                <div class="menu-choice-group-actions">
+                  <button id="conditionAddClauseButton" class="secondary menu-choice-add-button" type="button">Add Elif</button>
+                  <button id="conditionToggleElseButton" class="secondary menu-choice-add-button" type="button">Add Else</button>
+                </div>
+              </div>
+
+              <div id="conditionClauseList" class="menu-choice-list"></div>
+            </div>
+
+            <div class="inspector-actions">
+              <button id="conditionDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 
