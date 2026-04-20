@@ -11,11 +11,23 @@
       <aside id="sidebar" class="sidebar is-open">
         <div class="sidebar-scroll">
           <section id="projectOverviewSection" class="sidebar-section sidebar-panel is-active">
+            <div class="section-header">
+              <h2>Visual Project</h2>
+              <p>Snapshot of the current visual workspace.</p>
+            </div>
+
             <p class="section-label">Project Path</p>
             <p id="projectPath" class="project-path">No project path provided.</p>
 
             <p class="section-label secondary-label">Expected Files</p>
             <p id="projectFiles" class="project-files"></p>
+
+            <div class="sidebar-actions">
+              <button id="saveDraftButton" class="secondary">Save Draft</button>
+              <button id="exportButton" class="primary">Export to .rpy</button>
+            </div>
+
+            <div id="visualProjectStats" class="visual-project-stats"></div>
           </section>
 
           <section id="labelGraphsSection" class="sidebar-section sidebar-panel">
@@ -896,18 +908,6 @@
           </section>
 
           <section id="visualProjectSection" class="sidebar-section sidebar-panel status-section">
-            <div class="section-header">
-              <h2>Visual Project</h2>
-              <p>Snapshot of the current visual workspace.</p>
-            </div>
-
-            <div class="sidebar-actions">
-              <button id="saveDraftButton" class="secondary">Save Draft</button>
-              <button id="exportButton" class="primary">Export to .rpy</button>
-            </div>
-
-            <div id="visualProjectStats" class="visual-project-stats"></div>
-
             <p class="section-label secondary-label">Voice Settings</p>
             <form id="projectVoiceSettingsForm" class="character-detail-form">
               <label>
