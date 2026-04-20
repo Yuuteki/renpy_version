@@ -229,12 +229,15 @@ const imageCategoryMeta = {
 const audioChannelMeta = {
   music: {
     label: "Music",
+    empty: "No music audio yet.",
   },
   sound: {
     label: "Sound",
+    empty: "No sound effects yet.",
   },
   voice: {
     label: "Voice",
+    empty: "No voice audio yet.",
   },
 };
 
@@ -471,6 +474,11 @@ let imageCategorySectionState = {
 let contextMenuAudioDefinitionId = null;
 let activeAudioDefinitionId = null;
 let audioDefinitionDetailOpen = false;
+let audioChannelSectionState = {
+  music: true,
+  sound: true,
+  voice: true,
+};
 let activeCharacterId = null;
 let characterDetailOpen = false;
 let activeVariableId = null;
@@ -3537,56 +3545,97 @@ function renderAudioPanel() {
     audioDefinitionDetailOpen = false;
   }
 
-  audioDefinitionEmptyEl.classList.toggle("hidden", hasAudioDefinitions);
+  audioDefinitionEmptyEl.classList.add("hidden");
   audioDefinitionListEl.innerHTML = "";
 
-  state.audio.forEach((audioDefinition) => {
-    const item = document.createElement("div");
-    item.className = "character-card";
-    item.setAttribute("role", "button");
-    item.tabIndex = 0;
+  Object.entries(audioChannelMeta).forEach(([channelKey, channelInfo]) => {
+    const channelGroup = document.createElement("section");
+    const isExpanded = audioChannelSectionState[channelKey] !== false;
+    const channelAudioDefinitions = state.audio.filter((audioDefinition) => audioDefinition.channel === channelKey);
+    channelGroup.className = "image-category-group";
+    channelGroup.classList.toggle("is-collapsed", !isExpanded);
 
-    if (audioDefinition.id === activeAudioDefinitionId) {
-      item.classList.add("is-active");
-    }
-
-    item.innerHTML = `
-      <strong>${escapeHtml(audioDefinition.name)}</strong>
-      <span>${escapeHtml(audioChannelMeta[audioDefinition.channel]?.label || "Audio")} · ${escapeHtml(audioDefinition.sourcePath || "No source path yet")}</span>
+    const toggleButton = document.createElement("button");
+    toggleButton.type = "button";
+    toggleButton.className = "image-category-toggle";
+    toggleButton.setAttribute("aria-expanded", String(isExpanded));
+    toggleButton.innerHTML = `
+      <span class="image-category-toggle-main">
+        <svg class="image-category-toggle-caret" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 6.5 8 11l5-4.5"></path>
+        </svg>
+        <span class="image-category-toggle-label">${escapeHtml(channelInfo.label)}</span>
+      </span>
+      <span class="image-category-toggle-count">${channelAudioDefinitions.length}</span>
     `;
 
-    item.addEventListener("click", () => {
-      activeAudioDefinitionId = audioDefinition.id;
-      setAudioContextMenuState(false);
+    toggleButton.addEventListener("click", () => {
+      audioChannelSectionState[channelKey] = !isExpanded;
       renderAudioPanel();
-    });
-    item.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
-      activeAudioDefinitionId = audioDefinition.id;
-      renderAudioPanel();
-      setContextMenuState(false);
-      setLabelContextMenuState(false);
-      setImageContextMenuState(false);
-      setCharacterContextMenuState(false);
-      setAudioContextMenuState(true, {
-        audioId: audioDefinition.id,
-        x: event.clientX,
-        y: event.clientY,
-      });
-    });
-    item.addEventListener("dblclick", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      openAudioDefinitionDetail(audioDefinition.id);
-    });
-    item.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        openAudioDefinitionDetail(audioDefinition.id);
-      }
     });
 
-    audioDefinitionListEl.appendChild(item);
+    const itemsEl = document.createElement("div");
+    itemsEl.className = "image-category-items";
+
+    if (!channelAudioDefinitions.length) {
+      const emptyEl = document.createElement("p");
+      emptyEl.className = "image-category-empty";
+      emptyEl.textContent = channelInfo.empty;
+      itemsEl.appendChild(emptyEl);
+    }
+
+    channelAudioDefinitions.forEach((audioDefinition) => {
+      const item = document.createElement("div");
+      item.className = "character-card";
+      item.setAttribute("role", "button");
+      item.tabIndex = 0;
+
+      if (audioDefinition.id === activeAudioDefinitionId) {
+        item.classList.add("is-active");
+      }
+
+      item.innerHTML = `
+        <strong>${escapeHtml(audioDefinition.name)}</strong>
+        <span>${escapeHtml(audioDefinition.sourcePath || "No source path yet")}</span>
+      `;
+
+      item.addEventListener("click", () => {
+        activeAudioDefinitionId = audioDefinition.id;
+        setAudioContextMenuState(false);
+        renderAudioPanel();
+      });
+      item.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        activeAudioDefinitionId = audioDefinition.id;
+        renderAudioPanel();
+        setContextMenuState(false);
+        setLabelContextMenuState(false);
+        setImageContextMenuState(false);
+        setCharacterContextMenuState(false);
+        setAudioContextMenuState(true, {
+          audioId: audioDefinition.id,
+          x: event.clientX,
+          y: event.clientY,
+        });
+      });
+      item.addEventListener("dblclick", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openAudioDefinitionDetail(audioDefinition.id);
+      });
+      item.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openAudioDefinitionDetail(audioDefinition.id);
+        }
+      });
+
+      itemsEl.appendChild(item);
+    });
+
+    channelGroup.appendChild(toggleButton);
+    channelGroup.appendChild(itemsEl);
+    audioDefinitionListEl.appendChild(channelGroup);
   });
 
   audioListViewEl.classList.toggle("hidden", audioDefinitionDetailOpen);
@@ -4729,6 +4778,10 @@ function handleAudioDefinitionFieldChange(event) {
     return;
   }
 
+  if (field === "channel") {
+    audioChannelSectionState[event.target.value] = true;
+  }
+
   updateActiveAudioDefinition({ [field]: event.target.value });
 }
 
@@ -5600,6 +5653,7 @@ newAudioDefinitionButton.addEventListener("click", () => {
 
   state.audio.push(newAudioDefinition);
   activeAudioDefinitionId = newAudioDefinition.id;
+  audioChannelSectionState[newAudioDefinition.channel] = true;
   audioDefinitionDetailOpen = false;
   setAudioContextMenuState(false);
   render();
