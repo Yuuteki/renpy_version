@@ -426,6 +426,69 @@
             </div>
           </section>
 
+          <section id="audioSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="audioListView" class="characters-view">
+              <div id="audioDefinitionEmpty" class="panel-empty-state hidden">
+                No audio yet. Create one to define a reusable sound resource.
+              </div>
+
+              <div id="audioDefinitionList" class="character-list"></div>
+
+              <button
+                id="newAudioDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create audio definition"
+                title="Create audio definition"
+              >
+                New Audio
+              </button>
+            </div>
+
+            <div id="audioDefinitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="audioDefinitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="audioDefinitionDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
+                <label>
+                  Audio Name
+                  <input id="audioDefinitionNameInput" data-audio-field="name" type="text" placeholder="e.g. bgm_theme" />
+                </label>
+
+                <label>
+                  Channel
+                  <select id="audioDefinitionChannelInput" data-audio-field="channel">
+                    <option value="music">music</option>
+                    <option value="sound">sound</option>
+                    <option value="voice">voice</option>
+                  </select>
+                </label>
+
+                <label>
+                  Source Path
+                  <div class="field-with-action">
+                    <input id="audioDefinitionSourcePathInput" data-audio-field="sourcePath" type="text" placeholder="e.g. audio/music/theme.ogg" />
+                    <button id="audioDefinitionBrowseButton" class="secondary field-action-button" type="button">
+                      Browse
+                    </button>
+                  </div>
+                  <input id="audioDefinitionFileInput" type="file" accept="audio/*,.ogg,.mp3,.wav,.opus,.m4a" hidden />
+                </label>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="audioDefinitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
           <section id="charactersSection" class="sidebar-section sidebar-panel characters-section">
             <div id="charactersListView" class="characters-view">
               <div id="characterListEmpty" class="panel-empty-state hidden">
@@ -836,6 +899,21 @@
           <button
             class="collapsed-rail-button"
             type="button"
+            data-sidebar-section="audioSection"
+            aria-label="Open audio definitions"
+            title="Audio"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 10v4"></path>
+              <path d="M10 8v8"></path>
+              <path d="M14 6v12"></path>
+              <path d="M18 9v6"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
             data-sidebar-section="charactersSection"
             aria-label="Open character definitions"
             title="Characters"
@@ -912,6 +990,11 @@
           <button class="node-card node-card-compact" data-node-type="animation">
             <strong>Animation</strong>
             <span>With Transition</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="audio">
+            <strong>Audio</strong>
+            <span>Play / Queue / Stop</span>
           </button>
 
           <button class="node-card node-card-compact" data-node-type="dialogue">
@@ -1054,6 +1137,67 @@
 
             <div class="inspector-actions">
               <button id="animationDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="audioInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="audioNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="audioNodeActionInput">
+                <option value="play">Play</option>
+                <option value="queue">Queue</option>
+                <option value="stop">Stop</option>
+              </select>
+            </label>
+
+            <label id="audioNodeResourceField">
+              Audio Resource
+              <select id="audioNodeResourceInput">
+                <option value="">No imported audio</option>
+              </select>
+            </label>
+
+            <label>
+              Channel
+              <select id="audioNodeChannelInput">
+                <option value="music">music</option>
+                <option value="sound">sound</option>
+                <option value="voice">voice</option>
+              </select>
+            </label>
+
+            <label id="audioNodeLoopField" class="character-checkbox">
+              <input id="audioNodeLoopInput" type="checkbox" />
+              <span>Loop</span>
+            </label>
+
+            <label id="audioNodeFadeInField">
+              Fade In
+              <input id="audioNodeFadeInInput" type="text" placeholder="e.g. 0.5" />
+            </label>
+
+            <label id="audioNodeFadeOutField" class="hidden">
+              Fade Out
+              <input id="audioNodeFadeOutInput" type="text" placeholder="e.g. 0.5" />
+            </label>
+
+            <label id="audioNodeVolumeField">
+              Volume
+              <input id="audioNodeVolumeInput" type="text" placeholder="e.g. 0.8" />
+            </label>
+
+            <label id="audioNodeIfChangedField" class="character-checkbox">
+              <input id="audioNodeIfChangedInput" type="checkbox" />
+              <span>If Changed</span>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="audioDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 
@@ -1240,6 +1384,17 @@
           role="menuitem"
         >
           Delete Image
+        </button>
+      </div>
+
+      <div id="audioContextMenu" class="node-context-menu" role="menu">
+        <button
+          id="contextDeleteAudioButton"
+          class="node-context-menu-item danger-text"
+          type="button"
+          role="menuitem"
+        >
+          Delete Audio
         </button>
       </div>
 

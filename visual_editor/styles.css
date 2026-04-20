@@ -151,6 +151,8 @@ button.danger-button:hover {
   display: grid;
   gap: 10px;
   width: 180px;
+  max-height: min(78vh, 760px);
+  overflow: auto;
   padding: 14px;
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -525,6 +527,7 @@ button.danger-button:hover {
 }
 
 .characters-view#imagesListView,
+.characters-view#audioListView,
 .characters-view#charactersListView,
 .characters-view#variablesListView,
 .characters-view#definitionsListView {

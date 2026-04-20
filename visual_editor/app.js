@@ -31,6 +31,8 @@ const contextRenameLabelButton = document.getElementById("contextRenameLabelButt
 const contextDeleteLabelButton = document.getElementById("contextDeleteLabelButton");
 const imageContextMenuEl = document.getElementById("imageContextMenu");
 const contextDeleteImageButton = document.getElementById("contextDeleteImageButton");
+const audioContextMenuEl = document.getElementById("audioContextMenu");
+const contextDeleteAudioButton = document.getElementById("contextDeleteAudioButton");
 const characterContextMenuEl = document.getElementById("characterContextMenu");
 const contextDeleteCharacterButton = document.getElementById("contextDeleteCharacterButton");
 const imageDefinitionListEl = document.getElementById("imageDefinitionList");
@@ -51,6 +53,16 @@ const imageDefinitionYAnchorInput = document.getElementById("imageDefinitionYAnc
 const imageDefinitionXPosInput = document.getElementById("imageDefinitionXPosInput");
 const imageDefinitionYPosInput = document.getElementById("imageDefinitionYPosInput");
 const imageDefinitionCodePreviewEl = document.getElementById("imageDefinitionCodePreview");
+const audioDefinitionListEl = document.getElementById("audioDefinitionList");
+const audioDefinitionEmptyEl = document.getElementById("audioDefinitionEmpty");
+const audioListViewEl = document.getElementById("audioListView");
+const audioDefinitionDetailViewEl = document.getElementById("audioDefinitionDetailView");
+const audioDefinitionDetailFormEl = document.getElementById("audioDefinitionDetailForm");
+const newAudioDefinitionButton = document.getElementById("newAudioDefinitionButton");
+const audioDefinitionBackButton = document.getElementById("audioDefinitionBackButton");
+const audioDefinitionBrowseButton = document.getElementById("audioDefinitionBrowseButton");
+const audioDefinitionFileInput = document.getElementById("audioDefinitionFileInput");
+const audioDefinitionCodePreviewEl = document.getElementById("audioDefinitionCodePreview");
 const characterListEl = document.getElementById("characterList");
 const characterListEmptyEl = document.getElementById("characterListEmpty");
 const charactersListViewEl = document.getElementById("charactersListView");
@@ -131,6 +143,23 @@ const animationInspectorFormEl = document.getElementById("animationInspectorForm
 const animationNodeTypeInput = document.getElementById("animationNodeTypeInput");
 const animationNodeTransitionInput = document.getElementById("animationNodeTransitionInput");
 const animationDeleteNodeButton = document.getElementById("animationDeleteNodeButton");
+const audioInspectorFormEl = document.getElementById("audioInspectorForm");
+const audioNodeTypeInput = document.getElementById("audioNodeTypeInput");
+const audioNodeActionInput = document.getElementById("audioNodeActionInput");
+const audioNodeResourceFieldEl = document.getElementById("audioNodeResourceField");
+const audioNodeResourceInput = document.getElementById("audioNodeResourceInput");
+const audioNodeChannelInput = document.getElementById("audioNodeChannelInput");
+const audioNodeLoopFieldEl = document.getElementById("audioNodeLoopField");
+const audioNodeLoopInput = document.getElementById("audioNodeLoopInput");
+const audioNodeFadeInFieldEl = document.getElementById("audioNodeFadeInField");
+const audioNodeFadeInInput = document.getElementById("audioNodeFadeInInput");
+const audioNodeFadeOutFieldEl = document.getElementById("audioNodeFadeOutField");
+const audioNodeFadeOutInput = document.getElementById("audioNodeFadeOutInput");
+const audioNodeVolumeFieldEl = document.getElementById("audioNodeVolumeField");
+const audioNodeVolumeInput = document.getElementById("audioNodeVolumeInput");
+const audioNodeIfChangedFieldEl = document.getElementById("audioNodeIfChangedField");
+const audioNodeIfChangedInput = document.getElementById("audioNodeIfChangedInput");
+const audioDeleteNodeButton = document.getElementById("audioDeleteNodeButton");
 const dialogueInspectorFormEl = document.getElementById("dialogueInspectorForm");
 const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
 const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
@@ -195,6 +224,23 @@ const imageCategoryMeta = {
     label: "Others",
     empty: "No other images yet.",
   },
+};
+
+const audioChannelMeta = {
+  music: {
+    label: "Music",
+  },
+  sound: {
+    label: "Sound",
+  },
+  voice: {
+    label: "Voice",
+  },
+};
+
+const audioDefinitionFieldDefaults = {
+  channel: "music",
+  sourcePath: "",
 };
 
 const imageDefinitionFieldDefaults = {
@@ -352,6 +398,10 @@ const imageDefinitionFieldEls = Array.from(
   imageDefinitionDetailFormEl.querySelectorAll("[data-image-field]"),
 );
 
+const audioDefinitionFieldEls = Array.from(
+  audioDefinitionDetailFormEl.querySelectorAll("[data-audio-field]"),
+);
+
 const defaultStarterNodes = [
   {
     id: "start",
@@ -388,6 +438,7 @@ const defaultProjectState = {
     },
   ],
   images: [],
+  audio: [],
   characters: [],
   variables: [],
   definitions: [],
@@ -417,6 +468,9 @@ let imageCategorySectionState = {
   character: true,
   others: true,
 };
+let contextMenuAudioDefinitionId = null;
+let activeAudioDefinitionId = null;
+let audioDefinitionDetailOpen = false;
 let activeCharacterId = null;
 let characterDetailOpen = false;
 let activeVariableId = null;
@@ -449,6 +503,9 @@ function normalizeState(rawState) {
   const normalizedImageDefinitions = Array.isArray(rawState.images)
     ? rawState.images.map((image, index) => normalizeImageDefinition(image, index))
     : [];
+  const normalizedAudioDefinitions = Array.isArray(rawState.audio)
+    ? rawState.audio.map((audioDefinition, index) => normalizeAudioDefinition(audioDefinition, index))
+    : [];
   const normalizedVariables = Array.isArray(rawState.variables)
     ? rawState.variables.map((variable, index) => normalizeVariable(variable, index))
     : [];
@@ -466,6 +523,7 @@ function normalizeState(rawState) {
     },
     graphs: normalizedGraphs,
     images: normalizedImageDefinitions,
+    audio: normalizedAudioDefinitions,
     characters: normalizedCharacters,
     variables: normalizedVariables,
     definitions: normalizedDefinitions,
@@ -610,6 +668,26 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
       pythonCode: node.pythonCode || node.content || "",
       pythonStore: node.pythonStore || "",
       pythonHide: Boolean(node.pythonHide),
+    };
+  }
+
+  if (node.type === "audio") {
+    return {
+      ...node,
+      title: node.title || "Audio Play",
+      audioAction: ["play", "queue", "stop"].includes(node.audioAction)
+        ? node.audioAction
+        : "play",
+      audioDefinitionId: node.audioDefinitionId || "",
+      audioName: node.audioName || "",
+      audioChannel: Object.prototype.hasOwnProperty.call(audioChannelMeta, node.audioChannel)
+        ? node.audioChannel
+        : "music",
+      audioLoop: Boolean(node.audioLoop),
+      audioFadeIn: node.audioFadeIn || "",
+      audioFadeOut: node.audioFadeOut || "",
+      audioVolume: node.audioVolume || "",
+      audioIfChanged: Boolean(node.audioIfChanged),
     };
   }
 
@@ -878,6 +956,17 @@ function normalizeVariable(variable, index) {
   };
 }
 
+function normalizeAudioDefinition(audioDefinition, index) {
+  return {
+    id: audioDefinition.id || `audio_${index + 1}`,
+    name: audioDefinition.name || `audio_${index + 1}`,
+    channel: Object.prototype.hasOwnProperty.call(audioChannelMeta, audioDefinition.channel)
+      ? audioDefinition.channel
+      : "music",
+    sourcePath: audioDefinition.sourcePath || "",
+  };
+}
+
 function normalizeDefinition(definition, index) {
   const mode = definition.mode === "init_python" ? "init_python" : "define";
 
@@ -1029,6 +1118,34 @@ function setImageContextMenuState(nextOpen, options = {}) {
   imageContextMenuEl.style.top = `${top}px`;
 }
 
+function setAudioContextMenuState(nextOpen, options = {}) {
+  if (!nextOpen) {
+    contextMenuAudioDefinitionId = null;
+    audioContextMenuEl.classList.remove("is-open");
+    return;
+  }
+
+  contextMenuAudioDefinitionId = options.audioId ?? contextMenuAudioDefinitionId;
+  audioContextMenuEl.classList.add("is-open");
+  audioContextMenuEl.style.left = "0px";
+  audioContextMenuEl.style.top = "0px";
+
+  const margin = 12;
+  const menuWidth = audioContextMenuEl.offsetWidth;
+  const menuHeight = audioContextMenuEl.offsetHeight;
+  const left = Math.min(
+    Math.max(margin, options.x ?? margin),
+    window.innerWidth - menuWidth - margin,
+  );
+  const top = Math.min(
+    Math.max(margin, options.y ?? margin),
+    window.innerHeight - menuHeight - margin,
+  );
+
+  audioContextMenuEl.style.left = `${left}px`;
+  audioContextMenuEl.style.top = `${top}px`;
+}
+
 function setCharacterContextMenuState(nextOpen, options = {}) {
   if (!nextOpen) {
     contextMenuCharacterId = null;
@@ -1124,6 +1241,16 @@ function createBlankImageDefinition() {
   };
 }
 
+function createBlankAudioDefinition() {
+  const nextIndex = state.audio.length + 1;
+
+  return {
+    id: `audio_${nextIndex}`,
+    name: `audio_${nextIndex}`,
+    ...structuredClone(audioDefinitionFieldDefaults),
+  };
+}
+
 function createBlankVariable() {
   const nextIndex = state.variables.length + 1;
 
@@ -1166,6 +1293,14 @@ function getActiveImageDefinition() {
 
 function getImageDefinitionById(imageId) {
   return state.images.find((image) => image.id === imageId) ?? null;
+}
+
+function getActiveAudioDefinition() {
+  return state.audio.find((audioDefinition) => audioDefinition.id === activeAudioDefinitionId) ?? null;
+}
+
+function getAudioDefinitionById(audioId) {
+  return state.audio.find((audioDefinition) => audioDefinition.id === audioId) ?? null;
 }
 
 function getActiveVariable() {
@@ -1233,6 +1368,134 @@ function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   }
 
   selectEl.value = "";
+}
+
+function getAudioNodeAction(node) {
+  return ["play", "queue", "stop"].includes(node?.audioAction)
+    ? node.audioAction
+    : "play";
+}
+
+function getAudioNodeChannel(node) {
+  if (Object.prototype.hasOwnProperty.call(audioChannelMeta, node?.audioChannel)) {
+    return node.audioChannel;
+  }
+
+  const selectedAudio = getAudioDefinitionById(node?.audioDefinitionId || "");
+
+  return selectedAudio?.channel || "music";
+}
+
+function getAudioNodeResource(node) {
+  const selectedAudio = getAudioDefinitionById(node?.audioDefinitionId || "");
+
+  if (selectedAudio) {
+    return {
+      kind: "definition",
+      id: selectedAudio.id,
+      name: (selectedAudio.name || "").trim(),
+      sourcePath: (selectedAudio.sourcePath || "").trim(),
+    };
+  }
+
+  const fallbackName = `${node?.audioName || ""}`.trim();
+
+  if (fallbackName) {
+    return {
+      kind: "missing",
+      id: "",
+      name: fallbackName,
+      sourcePath: "",
+    };
+  }
+
+  return {
+    kind: "empty",
+    id: "",
+    name: "",
+    sourcePath: "",
+  };
+}
+
+function formatAudioResourceReference(name) {
+  const trimmedName = `${name || ""}`.trim();
+
+  if (!trimmedName) {
+    return "audio.audio_name";
+  }
+
+  if (trimmedName.startsWith("audio.")) {
+    return trimmedName;
+  }
+
+  if (/[\\/]/.test(trimmedName) || /\.(ogg|mp3|wav|opus|m4a)$/i.test(trimmedName)) {
+    return `"${escapeRenpyString(trimmedName)}"`;
+  }
+
+  return `audio.${trimmedName}`;
+}
+
+function buildAudioNodeResourceOptions(selectEl, node) {
+  if (!selectEl) {
+    return;
+  }
+
+  const resource = getAudioNodeResource(node);
+  const hasMissingAudio = resource.kind === "missing" && resource.name;
+  const missingValue = hasMissingAudio ? `__missing__:${resource.name}` : "";
+
+  selectEl.innerHTML = "";
+
+  const placeholderOption = document.createElement("option");
+  placeholderOption.value = "";
+  placeholderOption.textContent = state.audio.length
+    ? "Select imported audio"
+    : "No imported audio";
+  selectEl.appendChild(placeholderOption);
+
+  if (hasMissingAudio) {
+    const missingOption = document.createElement("option");
+    missingOption.value = missingValue;
+    missingOption.textContent = `Legacy / Missing: ${resource.name}`;
+    selectEl.appendChild(missingOption);
+  }
+
+  state.audio.forEach((audioDefinition) => {
+    const option = document.createElement("option");
+    option.value = audioDefinition.id;
+    option.textContent = `${audioDefinition.name} · ${audioChannelMeta[audioDefinition.channel]?.label || "Audio"}`;
+    selectEl.appendChild(option);
+  });
+
+  if (resource.kind === "definition" && resource.id) {
+    selectEl.value = resource.id;
+    return;
+  }
+
+  if (missingValue) {
+    selectEl.value = missingValue;
+    return;
+  }
+
+  selectEl.value = "";
+}
+
+function buildAudioSourcePathFromSelection(fileName, channel, currentValue = "") {
+  const normalizedCurrent = `${currentValue}`.trim().replaceAll("\\", "/");
+
+  if (normalizedCurrent.includes("/")) {
+    const segments = normalizedCurrent.split("/");
+    segments[segments.length - 1] = fileName;
+    return segments.join("/");
+  }
+
+  const baseDirectoryByChannel = {
+    music: "audio/music",
+    sound: "audio/sfx",
+    voice: "audio/voice",
+  };
+
+  return `${baseDirectoryByChannel[channel] || "audio"}/${fileName}`;
 }
 
 function getAnimationNodeTransition(node) {
@@ -1752,6 +2015,47 @@ function getNodeDisplay(node) {
     };
   }
 
+  if (node.type === "audio") {
+    const action = getAudioNodeAction(node);
+    const resource = getAudioNodeResource(node);
+    const channel = getAudioNodeChannel(node);
+    const detailParts = [];
+
+    if (action !== "stop" && resource.name) {
+      detailParts.push(resource.name);
+    }
+
+    detailParts.push(channel);
+
+    if (action === "stop") {
+      if (`${node.audioFadeOut || ""}`.trim()) {
+        detailParts.push(`fadeout:${node.audioFadeOut.trim()}`);
+      }
+    } else {
+      if (node.audioLoop) {
+        detailParts.push("loop");
+      }
+
+      if (`${node.audioFadeIn || ""}`.trim()) {
+        detailParts.push(`fadein:${node.audioFadeIn.trim()}`);
+      }
+
+      if (`${node.audioVolume || ""}`.trim()) {
+        detailParts.push(`vol:${node.audioVolume.trim()}`);
+      }
+
+      if (action === "play" && node.audioIfChanged) {
+        detailParts.push("if_changed");
+      }
+    }
+
+    return {
+      typeLabel: "audio",
+      title: `Audio ${capitalize(action)}`,
+      content: detailParts.join(" · ") || "Configure audio playback.",
+    };
+  }
+
   if (node.type === "dialogue") {
     const speaker = getDialogueSpeaker(node);
     const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: [] });
@@ -2104,6 +2408,9 @@ function beginConnectionDrag(event, fromNodeId, options = {}) {
   setAddBlockState(false);
   setContextMenuState(false);
   setLabelContextMenuState(false);
+  setImageContextMenuState(false);
+  setAudioContextMenuState(false);
+  setCharacterContextMenuState(false);
 
   connectionSession = {
     pointerId: event.pointerId,
@@ -2393,6 +2700,45 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
       appendIndentedLine(lines, indentLevel, `"${escapeRenpyString(dialogueText)}"`);
     });
+  } else if (node.type === "audio") {
+    const action = getAudioNodeAction(node);
+    const channel = getAudioNodeChannel(node);
+
+    if (action === "stop") {
+      const fadeOut = `${node.audioFadeOut || ""}`.trim();
+      appendIndentedLine(
+        lines,
+        indentLevel,
+        `stop ${channel}${fadeOut ? ` fadeout ${fadeOut}` : ""}`,
+      );
+    } else {
+      const resource = getAudioNodeResource(node);
+      const parts = [
+        action,
+        channel,
+        formatAudioResourceReference(resource.name || resource.sourcePath),
+      ];
+      const fadeIn = `${node.audioFadeIn || ""}`.trim();
+      const volume = `${node.audioVolume || ""}`.trim();
+
+      if (node.audioLoop) {
+        parts.push("loop");
+      }
+
+      if (fadeIn) {
+        parts.push("fadein", fadeIn);
+      }
+
+      if (volume) {
+        parts.push("volume", volume);
+      }
+
+      if (action === "play" && node.audioIfChanged) {
+        parts.push("if_changed");
+      }
+
+      appendIndentedLine(lines, indentLevel, parts.join(" "));
+    }
   } else if (node.type === "menu") {
     const menuPrompt = `${node.menuPrompt || ""}`.trim();
     const menuChoices = getMenuChoices(node);
@@ -2773,6 +3119,9 @@ function renderLabelGraphList() {
         state.activeGraphId = graph.id;
         setContextMenuState(false);
         setLabelContextMenuState(false);
+        setImageContextMenuState(false);
+        setAudioContextMenuState(false);
+        setCharacterContextMenuState(false);
         setAddBlockState(false);
         setInspectorState(Boolean(graph.selectedNodeId));
         render();
@@ -2789,6 +3138,9 @@ function renderLabelGraphList() {
           state.activeGraphId = graph.id;
           setContextMenuState(false);
           setLabelContextMenuState(false);
+          setImageContextMenuState(false);
+          setAudioContextMenuState(false);
+          setCharacterContextMenuState(false);
           setAddBlockState(false);
           setInspectorState(Boolean(graph.selectedNodeId));
           render();
@@ -2800,6 +3152,9 @@ function renderLabelGraphList() {
         event.stopPropagation();
         state.activeGraphId = graph.id;
         setContextMenuState(false);
+        setImageContextMenuState(false);
+        setAudioContextMenuState(false);
+        setCharacterContextMenuState(false);
         setAddBlockState(false);
         setInspectorState(Boolean(graph.selectedNodeId));
         setLabelContextMenuState(true, {
@@ -3066,6 +3421,7 @@ function renderImagesPanel() {
         renderImagesPanel();
         setContextMenuState(false);
         setLabelContextMenuState(false);
+        setAudioContextMenuState(false);
         setCharacterContextMenuState(false);
         setImageContextMenuState(true, {
           imageId: image.id,
@@ -3096,6 +3452,146 @@ function renderImagesPanel() {
   imagesListViewEl.classList.toggle("hidden", imageDefinitionDetailOpen);
   imageDefinitionDetailViewEl.classList.toggle("hidden", !imageDefinitionDetailOpen);
   syncImageDefinitionDetailFields();
+}
+
+function openAudioDefinitionDetail(audioId) {
+  activeAudioDefinitionId = audioId;
+  audioDefinitionDetailOpen = true;
+  setAudioContextMenuState(false);
+  renderAudioPanel();
+  const audioDefinition = getActiveAudioDefinition();
+
+  if (audioDefinition) {
+    setStatus(`Opened audio "${audioDefinition.name}".`);
+  }
+}
+
+function closeAudioDefinitionDetail() {
+  audioDefinitionDetailOpen = false;
+  setAudioContextMenuState(false);
+  renderAudioPanel();
+}
+
+function deleteAudioDefinition(audioId) {
+  const audioDefinition = state.audio.find((currentAudio) => currentAudio.id === audioId);
+
+  if (!audioDefinition) {
+    return;
+  }
+
+  state.audio = state.audio.filter((currentAudio) => currentAudio.id !== audioId);
+
+  if (activeAudioDefinitionId === audioId) {
+    activeAudioDefinitionId = state.audio[0]?.id ?? null;
+  }
+
+  if (audioDefinitionDetailOpen && !getActiveAudioDefinition()) {
+    audioDefinitionDetailOpen = false;
+  }
+
+  setAudioContextMenuState(false);
+  render();
+  saveState(`Deleted audio "${audioDefinition.name}".`);
+}
+
+function formatAudioDefinitionCode(audioDefinition) {
+  if (!audioDefinition) {
+    return "";
+  }
+
+  const safeName = `${audioDefinition.name || ""}`.trim() || "audio_name";
+  const sourcePath = `${audioDefinition.sourcePath || ""}`.trim() || "audio/example.ogg";
+  return `define audio.${safeName} = "${escapeRenpyString(sourcePath)}"`;
+}
+
+function syncAudioDefinitionDetailFields() {
+  const audioDefinition = getActiveAudioDefinition();
+
+  if (!audioDefinition) {
+    audioDefinitionFieldEls.forEach((fieldEl) => {
+      const field = fieldEl.dataset.audioField;
+      fieldEl.value = `${audioDefinitionFieldDefaults[field] ?? ""}`;
+    });
+    audioDefinitionCodePreviewEl.textContent = "";
+    return;
+  }
+
+  audioDefinitionFieldEls.forEach((fieldEl) => {
+    const field = fieldEl.dataset.audioField;
+    fieldEl.value = `${audioDefinition[field] ?? ""}`;
+  });
+  audioDefinitionCodePreviewEl.textContent = formatAudioDefinitionCode(audioDefinition);
+}
+
+function renderAudioPanel() {
+  const hasAudioDefinitions = state.audio.length > 0;
+
+  if (!hasAudioDefinitions) {
+    activeAudioDefinitionId = null;
+    audioDefinitionDetailOpen = false;
+  } else if (!getActiveAudioDefinition()) {
+    activeAudioDefinitionId = state.audio[0].id;
+  }
+
+  if (audioDefinitionDetailOpen && !getActiveAudioDefinition()) {
+    audioDefinitionDetailOpen = false;
+  }
+
+  audioDefinitionEmptyEl.classList.toggle("hidden", hasAudioDefinitions);
+  audioDefinitionListEl.innerHTML = "";
+
+  state.audio.forEach((audioDefinition) => {
+    const item = document.createElement("div");
+    item.className = "character-card";
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
+
+    if (audioDefinition.id === activeAudioDefinitionId) {
+      item.classList.add("is-active");
+    }
+
+    item.innerHTML = `
+      <strong>${escapeHtml(audioDefinition.name)}</strong>
+      <span>${escapeHtml(audioChannelMeta[audioDefinition.channel]?.label || "Audio")} · ${escapeHtml(audioDefinition.sourcePath || "No source path yet")}</span>
+    `;
+
+    item.addEventListener("click", () => {
+      activeAudioDefinitionId = audioDefinition.id;
+      setAudioContextMenuState(false);
+      renderAudioPanel();
+    });
+    item.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      activeAudioDefinitionId = audioDefinition.id;
+      renderAudioPanel();
+      setContextMenuState(false);
+      setLabelContextMenuState(false);
+      setImageContextMenuState(false);
+      setCharacterContextMenuState(false);
+      setAudioContextMenuState(true, {
+        audioId: audioDefinition.id,
+        x: event.clientX,
+        y: event.clientY,
+      });
+    });
+    item.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openAudioDefinitionDetail(audioDefinition.id);
+    });
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openAudioDefinitionDetail(audioDefinition.id);
+      }
+    });
+
+    audioDefinitionListEl.appendChild(item);
+  });
+
+  audioListViewEl.classList.toggle("hidden", audioDefinitionDetailOpen);
+  audioDefinitionDetailViewEl.classList.toggle("hidden", !audioDefinitionDetailOpen);
+  syncAudioDefinitionDetailFields();
 }
 
 function openCharacterDetail(characterId) {
@@ -3341,6 +3837,7 @@ function renderCharactersPanel() {
       setContextMenuState(false);
       setLabelContextMenuState(false);
       setImageContextMenuState(false);
+      setAudioContextMenuState(false);
       setCharacterContextMenuState(true, {
         characterId: character.id,
         x: event.clientX,
@@ -3658,6 +4155,10 @@ function renderVisualProjectStats() {
       value: String(graph?.nodes.length || 0),
     },
     {
+      title: "Audio Definitions",
+      value: String(state.audio.length),
+    },
+    {
       title: "Default Variables",
       value: String(state.variables.length),
     },
@@ -3841,6 +4342,7 @@ function renderInspector() {
     startInspectorFormEl.classList.add("hidden");
     imageInspectorFormEl.classList.add("hidden");
     animationInspectorFormEl.classList.add("hidden");
+    audioInspectorFormEl.classList.add("hidden");
     dialogueInspectorFormEl.classList.add("hidden");
     menuInspectorFormEl.classList.add("hidden");
     conditionInspectorFormEl.classList.add("hidden");
@@ -3853,6 +4355,7 @@ function renderInspector() {
   const selectedIsStart = selectedNode.type === "start";
   const selectedIsImage = selectedNode.type === "image";
   const selectedIsAnimation = selectedNode.type === "animation";
+  const selectedIsAudio = selectedNode.type === "audio";
   const selectedIsDialogue = selectedNode.type === "dialogue";
   const selectedIsMenu = selectedNode.type === "menu";
   const selectedIsCondition = selectedNode.type === "condition";
@@ -3863,12 +4366,13 @@ function renderInspector() {
   startInspectorFormEl.classList.toggle("hidden", !selectedIsStart);
   imageInspectorFormEl.classList.toggle("hidden", !selectedIsImage);
   animationInspectorFormEl.classList.toggle("hidden", !selectedIsAnimation);
+  audioInspectorFormEl.classList.toggle("hidden", !selectedIsAudio);
   dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
   menuInspectorFormEl.classList.toggle("hidden", !selectedIsMenu);
   conditionInspectorFormEl.classList.toggle("hidden", !selectedIsCondition);
   flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
   pythonInspectorFormEl.classList.toggle("hidden", !selectedIsPython);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsDialogue || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsPython);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsAudio || selectedIsDialogue || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsPython);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -3909,6 +4413,29 @@ function renderInspector() {
   if (selectedIsAnimation) {
     animationNodeTypeInput.value = "Animation";
     animationNodeTransitionInput.value = getAnimationNodeTransition(selectedNode);
+    return;
+  }
+
+  if (selectedIsAudio) {
+    const audioAction = getAudioNodeAction(selectedNode);
+    const usesResource = audioAction !== "stop";
+
+    audioNodeTypeInput.value = "Audio";
+    audioNodeActionInput.value = audioAction;
+    buildAudioNodeResourceOptions(audioNodeResourceInput, selectedNode);
+    audioNodeChannelInput.value = getAudioNodeChannel(selectedNode);
+    audioNodeLoopInput.checked = Boolean(selectedNode.audioLoop);
+    audioNodeFadeInInput.value = selectedNode.audioFadeIn || "";
+    audioNodeFadeOutInput.value = selectedNode.audioFadeOut || "";
+    audioNodeVolumeInput.value = selectedNode.audioVolume || "";
+    audioNodeIfChangedInput.checked = Boolean(selectedNode.audioIfChanged);
+
+    audioNodeResourceFieldEl.classList.toggle("hidden", !usesResource);
+    audioNodeLoopFieldEl.classList.toggle("hidden", !usesResource);
+    audioNodeFadeInFieldEl.classList.toggle("hidden", !usesResource);
+    audioNodeFadeOutFieldEl.classList.toggle("hidden", usesResource);
+    audioNodeVolumeFieldEl.classList.toggle("hidden", !usesResource);
+    audioNodeIfChangedFieldEl.classList.toggle("hidden", audioAction !== "play");
     return;
   }
 
@@ -3972,6 +4499,7 @@ function render() {
   renderLabelGraphList();
   renderLabelPanel();
   renderImagesPanel();
+  renderAudioPanel();
   renderCharactersPanel();
   renderVariablesPanel();
   renderDefinitionsPanel();
@@ -4135,6 +4663,19 @@ function updateActiveImageDefinition(patch) {
   saveState();
 }
 
+function updateActiveAudioDefinition(patch) {
+  const audioDefinition = getActiveAudioDefinition();
+
+  if (!audioDefinition) {
+    return;
+  }
+
+  Object.assign(audioDefinition, patch);
+  syncAudioDefinitionDetailFields();
+  render();
+  saveState();
+}
+
 function updateActiveVariable(patch) {
   const variable = getActiveVariable();
 
@@ -4181,6 +4722,16 @@ function handleImageDefinitionFieldChange(event) {
   updateActiveImageDefinition({ [field]: nextValue });
 }
 
+function handleAudioDefinitionFieldChange(event) {
+  const field = event.target.dataset.audioField;
+
+  if (!field) {
+    return;
+  }
+
+  updateActiveAudioDefinition({ [field]: event.target.value });
+}
+
 function resetGraph() {
   const graph = getActiveGraph();
 
@@ -4193,6 +4744,9 @@ function resetGraph() {
   graph.nodes = structuredClone(defaultStarterNodes);
   graph.selectedNodeId = defaultStarterNodes[1].id;
   setContextMenuState(false);
+  setImageContextMenuState(false);
+  setAudioContextMenuState(false);
+  setCharacterContextMenuState(false);
   setInspectorState(Boolean(graph.selectedNodeId));
   setAddBlockState(false);
   saveState(`Reset label graph "${graph.label}".`);
@@ -4228,6 +4782,9 @@ function deleteNode(nodeId) {
   }
 
   setContextMenuState(false);
+  setImageContextMenuState(false);
+  setAudioContextMenuState(false);
+  setCharacterContextMenuState(false);
   render();
   setInspectorState(Boolean(graph.selectedNodeId));
   saveState(`Deleted ${getNodeDisplay(node).title}.`);
@@ -4248,6 +4805,10 @@ function selectNode(nodeId, element) {
   setInspectorState(true);
   setAddBlockState(false);
   setContextMenuState(false);
+  setLabelContextMenuState(false);
+  setImageContextMenuState(false);
+  setAudioContextMenuState(false);
+  setCharacterContextMenuState(false);
 
   graphNodesEl.querySelectorAll(".graph-node.is-selected").forEach((nodeEl) => {
     nodeEl.classList.remove("is-selected");
@@ -4479,6 +5040,59 @@ imageNodeZorderInput.addEventListener("input", (event) => {
 });
 animationNodeTransitionInput.addEventListener("change", (event) => {
   updateSelectedNode({ animationTransition: event.target.value });
+});
+audioNodeActionInput.addEventListener("change", (event) => {
+  updateSelectedNode({
+    audioAction: event.target.value,
+    title: `Audio ${capitalize(event.target.value)}`,
+  });
+});
+audioNodeResourceInput.addEventListener("change", (event) => {
+  const selectedValue = event.target.value;
+
+  if (!selectedValue) {
+    updateSelectedNode({ audioDefinitionId: "", audioName: "" });
+    return;
+  }
+
+  if (selectedValue.startsWith("__missing__:")) {
+    updateSelectedNode({
+      audioDefinitionId: "",
+      audioName: selectedValue.slice("__missing__:".length),
+    });
+    return;
+  }
+
+  const selectedAudio = getAudioDefinitionById(selectedValue);
+
+  if (!selectedAudio) {
+    updateSelectedNode({ audioDefinitionId: "", audioName: "" });
+    return;
+  }
+
+  updateSelectedNode({
+    audioDefinitionId: selectedAudio.id,
+    audioName: selectedAudio.name,
+    audioChannel: selectedAudio.channel,
+  });
+});
+audioNodeChannelInput.addEventListener("change", (event) => {
+  updateSelectedNode({ audioChannel: event.target.value });
+});
+audioNodeLoopInput.addEventListener("change", (event) => {
+  updateSelectedNode({ audioLoop: event.target.checked });
+});
+audioNodeFadeInInput.addEventListener("input", (event) => {
+  updateSelectedNode({ audioFadeIn: event.target.value });
+});
+audioNodeFadeOutInput.addEventListener("input", (event) => {
+  updateSelectedNode({ audioFadeOut: event.target.value });
+});
+audioNodeVolumeInput.addEventListener("input", (event) => {
+  updateSelectedNode({ audioVolume: event.target.value });
+});
+audioNodeIfChangedInput.addEventListener("change", (event) => {
+  updateSelectedNode({ audioIfChanged: event.target.checked });
 });
 dialogueCharacterInput.addEventListener("change", (event) => {
   const selectedValue = event.target.value;
@@ -4878,6 +5492,10 @@ saveDraftButton.addEventListener("click", () => {
 exportButton.addEventListener("click", exportGraph);
 addBlockToggleButton.addEventListener("click", () => {
   setContextMenuState(false);
+  setLabelContextMenuState(false);
+  setImageContextMenuState(false);
+  setAudioContextMenuState(false);
+  setCharacterContextMenuState(false);
   setAddBlockState(!addBlockOpen);
 });
 newLabelButton.addEventListener("click", () => {
@@ -4888,6 +5506,9 @@ newLabelButton.addEventListener("click", () => {
   state.activeGraphId = nextGraph.id;
   setContextMenuState(false);
   setLabelContextMenuState(false);
+  setImageContextMenuState(false);
+  setAudioContextMenuState(false);
+  setCharacterContextMenuState(false);
   setInspectorState(true);
   setAddBlockState(false);
   render();
@@ -4916,6 +5537,13 @@ contextDeleteImageButton.addEventListener("click", () => {
   }
 
   deleteImageDefinition(contextMenuImageDefinitionId);
+});
+contextDeleteAudioButton.addEventListener("click", () => {
+  if (!contextMenuAudioDefinitionId) {
+    return;
+  }
+
+  deleteAudioDefinition(contextMenuAudioDefinitionId);
 });
 contextDeleteCharacterButton.addEventListener("click", () => {
   if (!contextMenuCharacterId) {
@@ -4966,6 +5594,48 @@ imageDefinitionFileInput.addEventListener("change", (event) => {
 
   updateActiveImageDefinition({ sourcePath: nextSourcePath });
   setStatus(`Selected "${file.name}" for image source. Adjust the path if needed.`);
+});
+newAudioDefinitionButton.addEventListener("click", () => {
+  const newAudioDefinition = createBlankAudioDefinition();
+
+  state.audio.push(newAudioDefinition);
+  activeAudioDefinitionId = newAudioDefinition.id;
+  audioDefinitionDetailOpen = false;
+  setAudioContextMenuState(false);
+  render();
+  saveState(`Created audio "${newAudioDefinition.name}".`);
+});
+audioDefinitionBackButton.addEventListener("click", () => {
+  closeAudioDefinitionDetail();
+  setStatus("Returned to audio list.");
+});
+audioDefinitionDetailFormEl.addEventListener("input", handleAudioDefinitionFieldChange);
+audioDefinitionDetailFormEl.addEventListener("change", handleAudioDefinitionFieldChange);
+audioDefinitionBrowseButton.addEventListener("click", () => {
+  if (!getActiveAudioDefinition()) {
+    setStatus("Create or select an audio definition before browsing for a file.");
+    return;
+  }
+
+  audioDefinitionFileInput.value = "";
+  audioDefinitionFileInput.click();
+});
+audioDefinitionFileInput.addEventListener("change", (event) => {
+  const audioDefinition = getActiveAudioDefinition();
+  const file = event.target.files?.[0];
+
+  if (!audioDefinition || !file) {
+    return;
+  }
+
+  const nextSourcePath = buildAudioSourcePathFromSelection(
+    file.name,
+    audioDefinition.channel,
+    audioDefinition.sourcePath,
+  );
+
+  updateActiveAudioDefinition({ sourcePath: nextSourcePath });
+  setStatus(`Selected "${file.name}" for audio source. Adjust the path if needed.`);
 });
 newCharacterButton.addEventListener("click", () => {
   const newCharacter = createBlankCharacter();
@@ -5144,6 +5814,15 @@ animationDeleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+audioDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 dialogueDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
@@ -5233,6 +5912,10 @@ document.addEventListener("pointerdown", (event) => {
     return;
   }
 
+  if (audioContextMenuEl.contains(event.target)) {
+    return;
+  }
+
   if (characterContextMenuEl.contains(event.target)) {
     return;
   }
@@ -5240,6 +5923,7 @@ document.addEventListener("pointerdown", (event) => {
   setContextMenuState(false);
   setLabelContextMenuState(false);
   setImageContextMenuState(false);
+  setAudioContextMenuState(false);
   setCharacterContextMenuState(false);
 });
 
@@ -5264,6 +5948,7 @@ document.querySelectorAll(".node-card").forEach((button) => {
   button.addEventListener("click", () => {
     const graph = getActiveGraph();
     const nodeType = button.dataset.nodeType;
+    const nodeAction = button.dataset.nodeAction || "";
 
     if (!graph) {
       return;
@@ -5274,18 +5959,18 @@ document.querySelectorAll(".node-card").forEach((button) => {
       return;
     }
 
-    const newNode = createNodeForType(nodeType, graph);
+    const newNode = createNodeForType(nodeType, graph, { action: nodeAction });
 
     graph.nodes.push(newNode);
     graph.selectedNodeId = newNode.id;
     render();
     setInspectorState(true);
     setAddBlockState(false);
-    setStatus(`Added a ${nodeType} node to "${graph.label}".`);
+    setStatus(`Added ${getNodeDisplay(newNode).title} to "${graph.label}".`);
   });
 });
 
-function createNodeForType(nodeType, graph) {
+function createNodeForType(nodeType, graph, options = {}) {
   const baseNode = {
     id: `${nodeType}_${Date.now()}`,
     type: nodeType,
@@ -5317,6 +6002,28 @@ function createNodeForType(nodeType, graph) {
       title: "Animation",
       content: "",
       animationTransition: "dissolve",
+    };
+  }
+
+  if (nodeType === "audio") {
+    const action = ["play", "queue", "stop"].includes(options.action)
+      ? options.action
+      : "play";
+    const defaultChannel = action === "stop" ? "music" : "music";
+
+    return {
+      ...baseNode,
+      title: `Audio ${capitalize(action)}`,
+      content: "",
+      audioAction: action,
+      audioDefinitionId: "",
+      audioName: "",
+      audioChannel: defaultChannel,
+      audioLoop: false,
+      audioFadeIn: "",
+      audioFadeOut: "",
+      audioVolume: "",
+      audioIfChanged: false,
     };
   }
 
