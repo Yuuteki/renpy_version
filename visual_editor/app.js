@@ -607,11 +607,87 @@ function createMenuChoice(index = 1) {
     id: `menu_choice_${Date.now()}_${index}`,
     text: `Choice ${index}`,
     condition: "",
+    conditionMode: "none",
+    conditionVariableId: "",
+    conditionVariableTarget: "",
+    conditionOperator: "is_true",
+    conditionValue: "",
   };
 }
 
 function getMenuChoicePortId(choiceId) {
   return `choice:${choiceId}`;
+}
+
+function getVariableById(variableId) {
+  return state.variables.find((variable) => variable.id === variableId) ?? null;
+}
+
+function getMenuChoiceConditionExpression(choice) {
+  if (!choice) {
+    return "";
+  }
+
+  const mode = choice.conditionMode || "none";
+
+  if (mode === "expression") {
+    return `${choice.condition || ""}`.trim();
+  }
+
+  if (mode !== "simple") {
+    return "";
+  }
+
+  const variable = getVariableById(choice.conditionVariableId);
+  const target = variable
+    ? getVariableTarget(variable)
+    : `${choice.conditionVariableTarget || ""}`.trim();
+  const operator = choice.conditionOperator || "is_true";
+  const value = `${choice.conditionValue || ""}`.trim();
+
+  if (!target) {
+    return "";
+  }
+
+  if (operator === "is_true") {
+    return target;
+  }
+
+  if (operator === "is_false") {
+    return `not ${target}`;
+  }
+
+  if (!value) {
+    return target;
+  }
+
+  return `${target} ${operator} ${value}`;
+}
+
+function buildMenuChoiceVariableOptions(choice) {
+  const currentVariable = getVariableById(choice.conditionVariableId);
+  const fallbackTarget = `${choice.conditionVariableTarget || ""}`.trim();
+  const hasMissingVariable = Boolean(choice.conditionVariableId) && !currentVariable && fallbackTarget;
+  const missingValue = hasMissingVariable ? `__missing__:${fallbackTarget}` : "";
+
+  const options = ['<option value="">Select a default variable...</option>'];
+
+  if (hasMissingVariable) {
+    options.push(`<option value="${escapeHtml(missingValue)}">Legacy / Missing: ${escapeHtml(fallbackTarget)}</option>`);
+  }
+
+  state.variables.forEach((variable) => {
+    options.push(
+      `<option value="${escapeHtml(variable.id)}">${escapeHtml(getVariableTarget(variable))}</option>`,
+    );
+  });
+
+  return {
+    options: options.join(""),
+    value: currentVariable
+      ? currentVariable.id
+      : (missingValue || ""),
+  };
 }
 
 function normalizeMenuChoices(rawChoices) {
@@ -628,6 +704,17 @@ function normalizeMenuChoices(rawChoices) {
       id: choice.id || `menu_choice_${Date.now()}_${index + 1}`,
       text: `${choice.text || ""}`.trim() || `Choice ${index + 1}`,
       condition: `${choice.condition || ""}`.trim(),
+      conditionMode: (
+        choice.conditionMode === "simple"
+        || choice.conditionMode === "expression"
+        || choice.conditionMode === "none"
+      )
+        ? choice.conditionMode
+        : (`${choice.condition || ""}`.trim() ? "expression" : "none"),
+      conditionVariableId: choice.conditionVariableId || "",
+      conditionVariableTarget: choice.conditionVariableTarget || "",
+      conditionOperator: choice.conditionOperator || "is_true",
+      conditionValue: choice.conditionValue || "",
     };
   });
 
@@ -1297,15 +1384,85 @@ function renderMenuChoiceList(node) {
         data-menu-choice-id="${escapeHtml(choice.id)}"
         data-menu-choice-field="text"
       />
-      <input
-        type="text"
-        value="${escapeHtml(choice.condition || "")}"
-        placeholder="e.g. points > 3"
+      <select
         data-menu-choice-id="${escapeHtml(choice.id)}"
-        data-menu-choice-field="condition"
-      />
+        data-menu-choice-field="conditionMode"
+      >
+        <option value="none" ${choice.conditionMode === "none" ? "selected" : ""}>No Condition</option>
+        <option value="simple" ${choice.conditionMode === "simple" ? "selected" : ""}>Default Variable</option>
+        <option value="expression" ${choice.conditionMode === "expression" ? "selected" : ""}>Expression</option>
+      </select>
+      ${choice.conditionMode === "simple"
+        ? (() => {
+          const variableOptions = buildMenuChoiceVariableOptions(choice);
+          const comparisonOperators = [
+            ["is_true", "is True"],
+            ["is_false", "is False"],
+            ["==", "=="],
+            ["!=", "!="],
+            [">", ">"],
+            [">=", ">="],
+            ["<", "<"],
+            ["<=", "<="],
+            ["in", "in"],
+            ["not in", "not in"],
+          ];
+          const needsValue = !["is_true", "is_false"].includes(choice.conditionOperator);
+
+          return `
+            <select
+              data-menu-choice-id="${escapeHtml(choice.id)}"
+              data-menu-choice-field="conditionVariableId"
+            >
+              ${variableOptions.options}
+            </select>
+            <select
+              data-menu-choice-id="${escapeHtml(choice.id)}"
+              data-menu-choice-field="conditionOperator"
+            >
+              ${comparisonOperators.map(([value, label]) => `
+                <option value="${escapeHtml(value)}" ${choice.conditionOperator === value ? "selected" : ""}>${escapeHtml(label)}</option>
+              `).join("")}
+            </select>
+            ${needsValue
+              ? `
+                <input
+                  type="text"
+                  value="${escapeHtml(choice.conditionValue || "")}"
+                  placeholder="e.g. 3"
+                  data-menu-choice-id="${escapeHtml(choice.id)}"
+                  data-menu-choice-field="conditionValue"
+                />
+              `
+              : ""}
+          `;
+        })()
+        : choice.conditionMode === "expression"
+          ? `
+            <input
+              type="text"
+              value="${escapeHtml(choice.condition || "")}"
+              placeholder="e.g. points > 3 and route_open"
+              data-menu-choice-id="${escapeHtml(choice.id)}"
+              data-menu-choice-field="condition"
+            />
+          `
+          : ""}
     </div>
   `).join("");
+
+  choices.forEach((choice) => {
+    const selectEl = menuChoiceListEl.querySelector(
+      `select[data-menu-choice-id="${CSS.escape(choice.id)}"][data-menu-choice-field="conditionVariableId"]`,
+    );
+
+    if (!selectEl) {
+      return;
+    }
+
+    const variableOptions = buildMenuChoiceVariableOptions(choice);
+    selectEl.value = variableOptions.value;
+  });
 }
 
 function buildImageSourcePathFromSelection(fileName, category, currentValue = "") {
@@ -2024,7 +2181,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
     menuChoices.forEach((choice, index) => {
       const choiceText = `${choice.text || ""}`.trim() || `Choice ${index + 1}`;
-      const choiceCondition = `${choice.condition || ""}`.trim();
+      const choiceCondition = getMenuChoiceConditionExpression(choice);
       const branchEdge = getPrimaryOutgoingEdge(graph, node.id, {
         fromPortId: getMenuChoicePortId(choice.id),
       });
@@ -3212,6 +3369,7 @@ function deleteActiveVariable() {
   }
 
   render();
+  syncLabelCodePreview();
   saveState(`Deleted variable "${getVariableTarget(variable)}".`);
 }
 
@@ -3662,6 +3820,8 @@ function updateActiveVariable(patch) {
 
   Object.assign(variable, patch);
   syncVariableDetailFields();
+  syncLabelCodePreview();
+  renderInspector();
   renderVisualProjectStats();
   saveState();
 }
@@ -4056,7 +4216,7 @@ menuChoiceListEl.addEventListener("input", (event) => {
   const choiceId = event.target.dataset.menuChoiceId;
   const choiceField = event.target.dataset.menuChoiceField;
 
-  if (!choiceId || !choiceField) {
+  if (!choiceId || !choiceField || !["text", "condition", "conditionValue"].includes(choiceField)) {
     return;
   }
 
@@ -4069,10 +4229,88 @@ menuChoiceListEl.addEventListener("input", (event) => {
 
   selectedNode.menuChoices = getMenuChoices(selectedNode).map((choice) => (
     choice.id === choiceId
-      ? { ...choice, [choiceField]: event.target.value }
+      ? {
+        ...choice,
+        [choiceField]: event.target.value,
+      }
       : choice
   ));
 
+  renderGraph();
+  syncLabelCodePreview();
+});
+menuChoiceListEl.addEventListener("change", (event) => {
+  const choiceId = event.target.dataset.menuChoiceId;
+  const choiceField = event.target.dataset.menuChoiceField;
+
+  if (!choiceId || !choiceField) {
+    return;
+  }
+
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!graph || !selectedNode || selectedNode.type !== "menu") {
+    return;
+  }
+
+  selectedNode.menuChoices = getMenuChoices(selectedNode).map((choice) => {
+    if (choice.id !== choiceId) {
+      return choice;
+    }
+
+    if (choiceField === "conditionMode") {
+      const nextMode = event.target.value;
+
+      return {
+        ...choice,
+        conditionMode: nextMode,
+        condition: nextMode === "expression" ? choice.condition : "",
+      };
+    }
+
+    if (choiceField === "conditionVariableId") {
+      const selectedValue = event.target.value;
+
+      if (!selectedValue) {
+        return {
+          ...choice,
+          conditionVariableId: "",
+          conditionVariableTarget: "",
+        };
+      }
+
+      if (selectedValue.startsWith("__missing__:")) {
+        return {
+          ...choice,
+          conditionVariableId: "",
+          conditionVariableTarget: selectedValue.slice("__missing__:".length),
+        };
+      }
+
+      const variable = getVariableById(selectedValue);
+
+      return {
+        ...choice,
+        conditionVariableId: variable?.id || "",
+        conditionVariableTarget: variable ? getVariableTarget(variable) : "",
+      };
+    }
+
+    if (choiceField === "conditionOperator") {
+      return {
+        ...choice,
+        conditionOperator: event.target.value,
+      };
+    }
+
+    return {
+      ...choice,
+      [choiceField]: event.target.value,
+    };
+  });
+
+  renderMenuChoiceList(selectedNode);
   renderGraph();
   syncLabelCodePreview();
 });

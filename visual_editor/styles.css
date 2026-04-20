@@ -599,6 +599,7 @@ button.danger-button:hover {
 .character-checkbox input {
   width: 16px;
   height: 16px;
+  min-height: 16px;
   margin: 0;
   padding: 0;
   flex: 0 0 auto;
@@ -616,7 +617,7 @@ button.danger-button:hover {
 
 .character-detail-form input:not([type="checkbox"]),
 .character-detail-form select,
-.inspector-form input,
+.inspector-form input:not([type="checkbox"]),
 .inspector-form select,
 .inspector-form textarea {
   width: 100%;
@@ -637,7 +638,7 @@ button.danger-button:hover {
 
 .character-detail-form input:not([type="checkbox"]):focus,
 .character-detail-form select:focus,
-.inspector-form input:focus,
+.inspector-form input:not([type="checkbox"]):focus,
 .inspector-form select:focus,
 .inspector-form textarea:focus {
   outline: 2px solid rgba(255, 255, 255, 0.16);
@@ -803,7 +804,7 @@ button.danger-button:hover {
 
 .character-detail-form input[readonly],
 .character-detail-form textarea[readonly],
-.inspector-form input[readonly],
+.inspector-form input[readonly]:not([type="checkbox"]),
 .inspector-form textarea[readonly] {
   border-color: var(--field-border-readonly);
   background: var(--field-bg-readonly);
