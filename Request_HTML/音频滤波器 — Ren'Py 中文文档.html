@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>音频滤波器 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/audio_filters.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="影片" href="movie.html" />
+    <link rel="prev" title="音频" href="audio.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">音频滤波器</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#filter-reuse">滤波器复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#silence-padding">静音衔接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-audio-filters">多个音频滤波器</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Allpass"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Allpass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Bandpass"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Bandpass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Comb"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Comb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Delay"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Delay</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Highpass"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Highpass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Highshelf"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Highshelf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Lowpass"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Lowpass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Lowshelf"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Lowshelf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Mix"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Mix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Multiply"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Multiply</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Notch"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Notch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Null"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Null</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Peaking"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Peaking()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Reverb"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Reverb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.Sequence"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.Sequence</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.audio.filter.WetDry"><code class="docutils literal notranslate"><span class="pre">renpy.audio.filter.WetDry</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">音频滤波器</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/audio_filters.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="audio-filters">
+<span id="id1"></span><h1>音频滤波器<a class="headerlink" href="#audio-filters" title="Link to this heading"> link</a></h1>
+<p>音频滤波器可以在游戏中更改音频通道上的声音。常用于给声音添加效果，包括混响、延迟/回声、高通/低通滤波等。</p>
+<p>音频滤波器位于 renpy.audio.filter 模块。
+不是严格要求，只是推荐引用该模块时使用一个简短的别名，比如 <code class="docutils literal notranslate"><span class="pre">af</span></code>：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">af</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">filter</span>
+</pre></div>
+</div>
+<p>可以调用 <a class="reference internal" href="audio.html#renpy.music.set_audio_filter" title="renpy.music.set_audio_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.music.set_audio_filter()</span></code></a> 函数设置想用的音频滤波器：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="k">music</span><span class="o">.</span><span class="n">set_audio_filter</span><span class="p">(</span><span class="s2">&quot;music&quot;</span><span class="p">,</span> <span class="n">af</span><span class="o">.</span><span class="n">Reverb</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>默认情况下，音频滤波器设置之后会在下一个播放的音频文件时生效。
+如果想要立刻生效，可以使用 <cite>replace</cite> 参数：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="k">music</span><span class="o">.</span><span class="n">set_audio_filter</span><span class="p">(</span><span class="s2">&quot;music&quot;</span><span class="p">,</span> <span class="n">af</span><span class="o">.</span><span class="n">Lowpass</span><span class="p">(</span><span class="mi">440</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这样就能让音频尽可能快地应用新的滤波器。</p>
+<p>最后，创作者可以传入None来清除所有滤波器效果：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="k">music</span><span class="o">.</span><span class="n">set_audio_filter</span><span class="p">(</span><span class="s2">&quot;music&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(也可以使用None搭配 <cite>replace</cite> 来立刻清除所有滤波器效果。)</p>
+<section id="filter-reuse">
+<span id="id2"></span><h2>滤波器复用<a class="headerlink" href="#filter-reuse" title="Link to this heading"> link</a></h2>
+<p>在某个音频通道设置滤波器后，在该通道播放的所有音频都会受到滤波器的影响。
+特别是梳状滤波器(comb filter)、延迟滤波器和混响滤波器，会根据旧音频产生一些输出结果，
+对新播放的音频产生影响。</p>
+<p>Ren’Py会在滤波器对象中保留一些音频信息。因此，在不同音频通道间共用滤波器不是个好主意。
+在单个音频通道里多次使用同一个滤波器对象也不行。</p>
+</section>
+<section id="silence-padding">
+<span id="id3"></span><h2>静音衔接<a class="headerlink" href="#silence-padding" title="Link to this heading"> link</a></h2>
+<p>当启用音频滤波器后，对应音频通道切换播放的音频内容时，Ren’Py会在该通道添加2秒的静音，
+以确保延迟、混响等滤波器能完整播放。</p>
+<p>如果需要更久的静音，可以在播放队列中设置：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">queue</span> <span class="k">sound</span> <span class="s2">&quot;&lt;silence 10&quot;</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="a-audio-filters">
+<span id="id4"></span><h2>多个音频滤波器<a class="headerlink" href="#a-audio-filters" title="Link to this heading"> link</a></h2>
+<p>除了使用单个滤波器，我们还可以使用一个滤波器列表，即一个 <a class="reference internal" href="#renpy.audio.filter.Sequence" title="renpy.audio.filter.Sequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">renpy.audio.filter.Sequence</span></code></a> 对象：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">renpy</span><span class="o">.</span><span class="k">music</span><span class="o">.</span><span class="n">set_audio_filter</span><span class="p">(</span><span class="s2">&quot;music&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">af</span><span class="o">.</span><span class="n">Reverb</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">af</span><span class="o">.</span><span class="n">Lowpass</span><span class="p">(</span><span class="mi">440</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>也等效于：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">renpy</span><span class="o">.</span><span class="k">music</span><span class="o">.</span><span class="n">set_audio_filter</span><span class="p">(</span><span class="s2">&quot;music&quot;</span><span class="p">,</span>
+    <span class="n">af</span><span class="o">.</span><span class="n">Sequence</span><span class="p">([</span>
+        <span class="n">af</span><span class="o">.</span><span class="n">Reverb</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
+        <span class="n">af</span><span class="o">.</span><span class="n">Lowpass</span><span class="p">(</span><span class="mi">440</span><span class="p">),</span>
+        <span class="p">]))</span>
+</pre></div>
+</div>
+<p>除此之外，也可以用多个音频滤波器组成下列类的对象。
+出于性能考虑，现在不能自定义滤波器类。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Allpass">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Allpass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Allpass" title="Link to this definition"> link</a></dt>
+<dd><p>全通滤波器，可以允许所有频率通过，但会更改各频率间的相位关系。</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>相位变化的中心频率。</p>
+</dd>
+<dt><cite>q</cite></dt><dd><p>控制相位移动(phase shift)的形状。该数值越大，相位移动的形状约尖锐。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Bandpass">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Bandpass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Bandpass" title="Link to this definition"> link</a></dt>
+<dd><p>带通滤波器。</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>中心频率。</p>
+</dd>
+<dt><cite>q</cite></dt><dd><p>该值控制频带宽度。当q的值减少后，频带会变窄。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.audio.filter.Comb">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Comb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Comb" title="Link to this definition"> link</a></dt>
+<dd><p>梳状滤波器类。梳状滤波器由一些多次延迟效果叠加并混合输出，并将输出进一步反馈回延迟，最终会叠加多次。</p>
+<p>(译者注：中文互联网上大多数关于梳状滤波器的说明都是扯淡。
+“梳状”来源于该滤波器的 <em>频域</em> 特性曲线有明显的周期性峰谷，类似梳子，可以产生回声效果。
+其他几种滤波器，比如“高通”、“低通”、“带通”、“全通”都指滤波器的 <em>频域</em> 特性。)</p>
+<dl class="simple">
+<dt><cite>delay</cite></dt><dd><p>延迟时间，单位为秒。如果该参数是一个列表，则各个子通道的延迟分别对应列表中具有相同索引的元素。
+延迟时间最小为0.01秒。</p>
+</dd>
+<dt><cite>filter</cite></dt><dd><p>对延迟之后的信号应用的滤波器。若为None，则使用Null滤波器。</p>
+</dd>
+<dt><cite>multiplier</cite></dt><dd><p>对滤波之后信号的乘数。</p>
+</dd>
+<dt><cite>wet</cite></dt><dd><p>若为True，滤波器输出结果包含，输入信号、滤波后信号和计算乘数后的信号。
+若为False，滤波器输出结果仅包含，滤波后信号和计算乘数后的信号。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.audio.filter.Delay">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Delay" title="Link to this definition"> link</a></dt>
+<dd><p>该滤波器实现了一度时间的延迟输出。从输入端采样得到的结果，会在延迟 <cite>delay</cite> 秒之后再输出。</p>
+<dl class="simple">
+<dt><cite>delay</cite></dt><dd><p>延迟时间，单位为秒。如果该参数是一个列表，则各个子通道的延迟分别对应列表中具有相同索引的元素。
+延迟时间最小为0.01秒。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Highpass">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Highpass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Highpass" title="Link to this definition"> link</a></dt>
+<dd><p>高通滤波器。低于阈值的频率每低一个八度(频率减半)就会有12/dB的衰减。</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>阈值频率。</p>
+</dd>
+<dt><cite>q</cite></dt><dd><p>以分贝形式控制结果的峰值。在该类滤波器中，q值并非传统的Q值(品质参数)，而是一个转化为分贝的共振结果。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Highshelf">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Highshelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Highshelf" title="Link to this definition"> link</a></dt>
+<dd><p>highshelf滤波器，可以让所有频率通过，但会增强高于某个频率的部分。</p>
+<p>(译者注：未找到high-shelf滤波器通用的中文译名。)</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>频率阈值。</p>
+</dd>
+<dt><cite>gain</cite></dt><dd><p>大于阈值的频率会获得的增益强度，单位为分贝。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Lowpass">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Lowpass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Lowpass" title="Link to this definition"> link</a></dt>
+<dd><p>低通滤波器。高于阈值的频率每高一个八度(频率加倍)就会有12/dB的衰减。</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>阈值频率。</p>
+</dd>
+<dt><cite>q</cite></dt><dd><p>以分贝形式控制结果的峰值。在该类滤波器中，q值并非传统的Q值(品质参数)，而是一个转化为分贝的共振结果。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Lowshelf">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Lowshelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Lowshelf" title="Link to this definition"> link</a></dt>
+<dd><p>highshelf滤波器，可以让所有频率通过，但会增强低于某个频率的部分。</p>
+<p>(译者注：未找到low-shelf滤波器通用的中文译名。)</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>频率阈值。</p>
+</dd>
+<dt><cite>gain</cite></dt><dd><p>小于阈值的频率会获得的增益强度，单位为分贝。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.audio.filter.Mix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Mix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">filters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Mix" title="Link to this definition"> link</a></dt>
+<dd><p>该音频过滤器会将自身输入切分为多个音频流，各音频流应用不同的过滤器，最终将各音频流相加作为输出。</p>
+<p>例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">renpy.audio.filter</span> <span class="k">as</span> <span class="nn">af</span>
+
+    <span class="c1"># 此效果将信号延迟0.3秒后与原输入信号混合。</span>
+    <span class="k">$</span> <span class="n">echo</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">Mix</span><span class="p">(</span><span class="n">af</span><span class="o">.</span><span class="n">Null</span><span class="p">(),</span> <span class="n">af</span><span class="o">.</span><span class="n">Delay</span><span class="p">(</span><span class="mf">.3</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.audio.filter.Multiply">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multiplier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Multiply" title="Link to this definition"> link</a></dt>
+<dd><p>该音频过滤器直接将输入与 <cite>multiplier</cite> 相乘并输出。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Notch">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Notch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Notch" title="Link to this definition"> link</a></dt>
+<dd><p>陷波滤波器，与带通滤波器相反，<cite>frequency</cite> 两边一定范围内的信号被屏蔽，范围外的则可以通过。</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>中心频率。</p>
+</dd>
+<dt><cite>q</cite></dt><dd><p>控制陷波滤波器的作用频带宽度。当q的值增加时，作用频带会变窄。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.audio.filter.Null">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Null</span></span><a class="headerlink" href="#renpy.audio.filter.Null" title="Link to this definition"> link</a></dt>
+<dd><p>输入与输出完全一样的音频滤波器。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Peaking">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Peaking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Peaking" title="Link to this definition"> link</a></dt>
+<dd><p>峰化滤波器可以让所有频率通过，但会增强 <cite>frequency</cite> 两边一定范围内的信号。</p>
+<dl class="simple">
+<dt><cite>frequency</cite></dt><dd><p>中心频率。</p>
+</dd>
+<dt><cite>q</cite></dt><dd><p>控制峰值形状。q值越大，峰值越尖锐。</p>
+</dd>
+<dt><cite>gain</cite></dt><dd><p>中心频率两边一定范围内的信号的增益强度，单位为分贝。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.audio.filter.Reverb">
+<span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Reverb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resonance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dampening</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">880</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay_times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0253,</span> <span class="pre">0.0269,</span> <span class="pre">0.029,</span> <span class="pre">0.0307,</span> <span class="pre">0.0322,</span> <span class="pre">0.0338,</span> <span class="pre">0.0353,</span> <span class="pre">0.0367]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay_subchannel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allpass_frequences</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[225,</span> <span class="pre">556,</span> <span class="pre">441,</span> <span class="pre">341]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.Reverb" title="Link to this definition"> link</a></dt>
+<dd><p>来自Freeverb库，带瑕疵的混响滤波器，用于模拟在房间内或者大厅中的声音。</p>
+<dl class="simple">
+<dt><cite>resonance</cite></dt><dd><p>混响的反馈值。该值应介于0到1之间，值越大则混响的持续越久。该值过大可能会让混响效果失控。</p>
+</dd>
+<dt><cite>dampening</cite></dt><dd><p>该参数使用了一个低通滤波器，在每次混响时都会应用。模拟了声音通过空气传播时会丢失部分高频信号的现象。</p>
+</dd>
+<dt><cite>wet</cite></dt><dd><p>该参数会与混音信号相乘并输出最终结果。</p>
+</dd>
+<dt><cite>dry</cite></dt><dd><p>该参数会与原始输入信号相乘。若该值为0.0则最终只有混音结果，而没有原始声音。</p>
+</dd>
+<dt><cite>delay_multiplier</cite></dt><dd><p>该参数会与 <cite>delay_times</cite> 相乘，用于调整各混音频段的长度。</p>
+</dd>
+<dt><cite>delay_times</cite></dt><dd><p>延迟时间列表，单位为秒。用于创建前期回响，类似于梳状滤波器。</p>
+</dd>
+<dt><cite>delay_subchannel</cite></dt><dd><p>子通道延迟时间，单位为秒。可以用于营造立体声效果。</p>
+</dd>
+<dt><cite>allpass_frequences</cite></dt><dd><p>一个频率列表，单位为赫兹(Hz)。用于创建全通滤波器，模拟后期回响。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.audio.filter.Sequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">Sequence</span></span><a class="headerlink" href="#renpy.audio.filter.Sequence" title="Link to this definition"> link</a></dt>
+<dd><p>该音频滤波器会依次应用一个滤波器队列的所有滤波器效果。通常内部使用，很少直接用。</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.audio.filter.WetDry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.audio.filter.</span></span><span class="sig-name descname"><span class="pre">WetDry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.audio.filter.WetDry" title="Link to this definition"> link</a></dt>
+<dd><p>该滤波器会将输入与经过另一个滤波器的输出混合。</p>
+<dl class="simple">
+<dt><cite>filter</cite></dt><dd><p>应用到输入信号上的滤波器。</p>
+</dd>
+<dt><cite>wet</cite></dt><dd><p>该参数是一个介于0.0到1.0之间的值，与 <cite>filter</cite> 输出结果相乘，用作最终输出的一部分。</p>
+</dd>
+<dt><cite>dry</cite></dt><dd><p>该参数是一个介于0.0到1.0之间的值，与输入结果相乘，用作最终输出的一部分。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="audio.html" class="btn btn-neutral float-left" title="音频" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="movie.html" class="btn btn-neutral float-right" title="影片" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
