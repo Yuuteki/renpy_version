@@ -86,47 +86,56 @@
                 </label>
 
                 <label>
-                  Source Path
-                  <div class="field-with-action">
-                    <input id="imageDefinitionSourcePathInput" data-image-field="sourcePath" type="text" placeholder="e.g. images/bg/classroom.png" />
-                    <button id="imageDefinitionBrowseButton" class="secondary field-action-button" type="button">
-                      Browse
-                    </button>
-                  </div>
-                  <input id="imageDefinitionFileInput" type="file" accept="image/*" hidden />
+                  Definition Type
+                  <select id="imageDefinitionTypeInput" data-image-field="definitionType">
+                    <option value="static">Static Image</option>
+                    <option value="movie">Movie</option>
+                  </select>
                 </label>
 
-                <p class="section-label secondary-label">Position</p>
+                <div id="imageDefinitionStaticFields" class="definition-fields">
+                  <label>
+                    Source Path
+                    <div class="field-with-action">
+                      <input id="imageDefinitionSourcePathInput" data-image-field="sourcePath" type="text" placeholder="e.g. images/bg/classroom.png" />
+                      <button id="imageDefinitionBrowseButton" class="secondary field-action-button" type="button">
+                        Browse
+                      </button>
+                    </div>
+                    <input id="imageDefinitionFileInput" type="file" accept="image/*" hidden />
+                  </label>
 
-                <label>
-                  pos
-                  <input id="imageDefinitionPosInput" data-image-field="pos" type="text" placeholder="e.g. (960, 540)" />
-                </label>
+                  <p class="section-label secondary-label">Position</p>
 
-                <label>
-                  anchor
-                  <input id="imageDefinitionAnchorInput" data-image-field="anchor" type="text" placeholder="e.g. (0.5, 0.5)" />
-                </label>
+                  <label>
+                    pos
+                    <input id="imageDefinitionPosInput" data-image-field="pos" type="text" placeholder="e.g. (960, 540)" />
+                  </label>
 
-                <label>
-                  align
-                  <input id="imageDefinitionAlignInput" data-image-field="align" type="text" placeholder="e.g. (0.5, 1.0)" />
-                </label>
+                  <label>
+                    anchor
+                    <input id="imageDefinitionAnchorInput" data-image-field="anchor" type="text" placeholder="e.g. (0.5, 0.5)" />
+                  </label>
 
-                <label>
-                  alignaround
-                  <input id="imageDefinitionAlignAroundInput" data-image-field="alignaround" type="text" placeholder="e.g. (0.5, 0.5)" />
-                </label>
+                  <label>
+                    align
+                    <input id="imageDefinitionAlignInput" data-image-field="align" type="text" placeholder="e.g. (0.5, 1.0)" />
+                  </label>
 
-                <label>
-                  xalign
-                  <input id="imageDefinitionXAlignInput" data-image-field="xalign" type="text" placeholder="e.g. 0.5" />
-                </label>
+                  <label>
+                    alignaround
+                    <input id="imageDefinitionAlignAroundInput" data-image-field="alignaround" type="text" placeholder="e.g. (0.5, 0.5)" />
+                  </label>
 
-                <label>
-                  yalign
-                  <input id="imageDefinitionYAlignInput" data-image-field="yalign" type="text" placeholder="e.g. 1.0" />
-                </label>
+                  <label>
+                    xalign
+                    <input id="imageDefinitionXAlignInput" data-image-field="xalign" type="text" placeholder="e.g. 0.5" />
+                  </label>
+
+                  <label>
+                    yalign
+                    <input id="imageDefinitionYAlignInput" data-image-field="yalign" type="text" placeholder="e.g. 1.0" />
+                  </label>
 
                 <label>
                   offset
@@ -415,10 +424,76 @@
                   <span>events</span>
                 </label>
 
-                <label class="character-checkbox">
-                  <input id="imageDefinitionShowCancelsHideInput" data-image-field="show_cancels_hide" type="checkbox" />
-                  <span>show_cancels_hide</span>
-                </label>
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionShowCancelsHideInput" data-image-field="show_cancels_hide" type="checkbox" />
+                    <span>show_cancels_hide</span>
+                  </label>
+                </div>
+
+                <div id="imageDefinitionMovieFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Movie</p>
+
+                  <label>
+                    Play Path
+                    <div class="field-with-action">
+                      <input id="imageDefinitionMoviePlayInput" data-image-field="moviePlay" type="text" placeholder="e.g. movies/opening.webm" />
+                      <button id="imageDefinitionMovieBrowseButton" class="secondary field-action-button" type="button">
+                        Browse
+                      </button>
+                    </div>
+                    <input id="imageDefinitionMovieFileInput" type="file" accept="video/*,.webm,.ogv,.ogg,.mpg,.mpeg,.avi,.mkv" hidden />
+                  </label>
+
+                  <label>
+                    size
+                    <input id="imageDefinitionMovieSizeInput" data-image-field="movieSize" type="text" placeholder="e.g. (1920, 1080)" />
+                  </label>
+
+                  <label>
+                    channel
+                    <input id="imageDefinitionMovieChannelInput" data-image-field="movieChannel" type="text" placeholder="e.g. movie" />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionMovieSideMaskInput" data-image-field="movieSideMask" type="checkbox" />
+                    <span>side_mask</span>
+                  </label>
+
+                  <label>
+                    mask
+                    <input id="imageDefinitionMovieMaskInput" data-image-field="movieMask" type="text" placeholder="e.g. movies/opening_mask.webm" />
+                  </label>
+
+                  <label>
+                    mask_channel
+                    <input id="imageDefinitionMovieMaskChannelInput" data-image-field="movieMaskChannel" type="text" placeholder="e.g. sprite_mask (blank = auto)" />
+                  </label>
+
+                  <label>
+                    start_image
+                    <input id="imageDefinitionMovieStartImageInput" data-image-field="movieStartImage" type="text" placeholder='e.g. "images/ui/loading.png" or loading_displayable' />
+                  </label>
+
+                  <label>
+                    image
+                    <input id="imageDefinitionMovieFallbackImageInput" data-image-field="movieFallbackImage" type="text" placeholder='e.g. "images/posters/opening.png" or poster_displayable' />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionMovieLoopInput" data-image-field="movieLoop" type="checkbox" />
+                    <span>loop</span>
+                  </label>
+
+                  <label>
+                    group
+                    <input id="imageDefinitionMovieGroupInput" data-image-field="movieGroup" type="text" placeholder='e.g. "opening_sequence"' />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionMovieKeepLastFrameInput" data-image-field="movieKeepLastFrame" type="checkbox" />
+                    <span>keep_last_frame</span>
+                  </label>
+                </div>
 
                 <p class="section-label secondary-label">Generated Code</p>
                 <pre id="imageDefinitionCodePreview" class="code-preview"></pre>

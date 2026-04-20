@@ -42,11 +42,17 @@ const imageDefinitionDetailViewEl = document.getElementById("imageDefinitionDeta
 const imageDefinitionDetailFormEl = document.getElementById("imageDefinitionDetailForm");
 const newImageDefinitionButton = document.getElementById("newImageDefinitionButton");
 const imageDefinitionBackButton = document.getElementById("imageDefinitionBackButton");
+const imageDefinitionStaticFieldsEl = document.getElementById("imageDefinitionStaticFields");
+const imageDefinitionMovieFieldsEl = document.getElementById("imageDefinitionMovieFields");
 const imageDefinitionNameInput = document.getElementById("imageDefinitionNameInput");
 const imageDefinitionCategoryInput = document.getElementById("imageDefinitionCategoryInput");
+const imageDefinitionTypeInput = document.getElementById("imageDefinitionTypeInput");
 const imageDefinitionSourcePathInput = document.getElementById("imageDefinitionSourcePathInput");
 const imageDefinitionBrowseButton = document.getElementById("imageDefinitionBrowseButton");
 const imageDefinitionFileInput = document.getElementById("imageDefinitionFileInput");
+const imageDefinitionMovieBrowseButton = document.getElementById("imageDefinitionMovieBrowseButton");
+const imageDefinitionMovieFileInput = document.getElementById("imageDefinitionMovieFileInput");
+const imageDefinitionMovieLoopInput = document.getElementById("imageDefinitionMovieLoopInput");
 const imageDefinitionZoomInput = document.getElementById("imageDefinitionZoomInput");
 const imageDefinitionXAnchorInput = document.getElementById("imageDefinitionXAnchorInput");
 const imageDefinitionYAnchorInput = document.getElementById("imageDefinitionYAnchorInput");
@@ -248,7 +254,19 @@ const audioDefinitionFieldDefaults = {
 
 const imageDefinitionFieldDefaults = {
   category: "others",
+  definitionType: "static",
   sourcePath: "",
+  moviePlay: "",
+  movieSize: "",
+  movieChannel: "movie",
+  movieSideMask: false,
+  movieMask: "",
+  movieMaskChannel: "",
+  movieStartImage: "",
+  movieFallbackImage: "",
+  movieLoop: true,
+  movieGroup: "",
+  movieKeepLastFrame: false,
   pos: "",
   xpos: "",
   ypos: "",
@@ -326,6 +344,9 @@ const imageDefinitionBooleanFields = new Set([
   "mesh",
   "events",
   "show_cancels_hide",
+  "movieSideMask",
+  "movieLoop",
+  "movieKeepLastFrame",
 ]);
 
 const imageDefinitionCodePropertyOrder = [
@@ -931,12 +952,33 @@ function normalizeCharacter(character, index) {
 
 function normalizeImageDefinition(image, index) {
   const normalizedFields = {};
+  const hasMovieMetadata = Boolean(
+    `${image.moviePlay || ""}`.trim()
+    || `${image.movieMask || ""}`.trim()
+    || `${image.movieStartImage || ""}`.trim()
+    || `${image.movieFallbackImage || ""}`.trim(),
+  );
 
   Object.entries(imageDefinitionFieldDefaults).forEach(([field, defaultValue]) => {
     if (field === "category") {
       normalizedFields.category = Object.prototype.hasOwnProperty.call(imageCategoryMeta, image.category)
         ? image.category
         : defaultValue;
+      return;
+    }
+
+    if (field === "definitionType") {
+      normalizedFields.definitionType = (
+        image.definitionType === "movie"
+        || (!image.definitionType && hasMovieMetadata)
+      )
+        ? "movie"
+        : "static";
+      return;
+    }
+
+    if (field === "movieChannel") {
+      normalizedFields.movieChannel = `${image.movieChannel || ""}`.trim() || "movie";
       return;
     }
 
@@ -947,6 +989,10 @@ function normalizeImageDefinition(image, index) {
 
     normalizedFields[field] = image[field] || "";
   });
+
+  if (normalizedFields.movieKeepLastFrame) {
+    normalizedFields.movieLoop = false;
+  }
 
   return {
     id: image.id || `image_${index + 1}`,
@@ -1361,7 +1407,7 @@ function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   state.images.forEach((image) => {
     const option = document.createElement("option");
     option.value = image.id;
-    option.textContent = `${image.name} · ${imageCategoryMeta[image.category]?.label || "Others"}`;
+    option.textContent = `${image.name} · ${getImageDefinitionType(image) === "movie" ? "Movie" : "Image"} · ${imageCategoryMeta[image.category]?.label || "Others"}`;
     selectEl.appendChild(option);
   });
 
@@ -1962,6 +2008,59 @@ function buildImageSourcePathFromSelection(fileName, category, currentValue = ""
   };
 
   return `${baseDirectoryByCategory[category] || "images"}/${fileName}`;
+}
+
+function buildMovieSourcePathFromSelection(fileName, currentValue = "") {
+  const normalizedCurrent = `${currentValue}`.trim().replaceAll("\\", "/");
+
+  if (normalizedCurrent.includes("/")) {
+    const segments = normalizedCurrent.split("/");
+    segments[segments.length - 1] = fileName;
+    return segments.join("/");
+  }
+
+  return `movies/${fileName}`;
+}
+
+function getImageDefinitionType(image) {
+  return image?.definitionType === "movie" ? "movie" : "static";
+}
+
+function formatMovieDisplayableValue(value) {
+  const normalizedValue = `${value || ""}`.trim();
+
+  if (!normalizedValue) {
+    return "";
+  }
+
+  const isQuotedString = (
+    (normalizedValue.startsWith("\"") && normalizedValue.endsWith("\""))
+    || (normalizedValue.startsWith("'") && normalizedValue.endsWith("'"))
+  );
+
+  if (isQuotedString) {
+    return normalizedValue;
+  }
+
+  const looksLikeFilePath = (
+    normalizedValue.includes("/")
+    || normalizedValue.includes("\\")
+    || /\.[a-z0-9]{2,5}$/i.test(normalizedValue)
+  );
+
+  if (looksLikeFilePath) {
+    return `"${escapeRenpyString(normalizedValue.replaceAll("\\", "/"))}"`;
+  }
+
+  return normalizedValue;
+}
+
+function getImageDefinitionMovieLoop(image) {
+  if (image?.movieKeepLastFrame) {
+    return false;
+  }
+
+  return image?.movieLoop !== false;
 }
 
 function getDialogueBlocks(node, { fallbackBlocks = ["..."] } = {}) {
@@ -3292,6 +3391,65 @@ function formatImageDefinitionCode(image) {
   }
 
   const safeName = image.name.trim() || "image_name";
+  const definitionType = getImageDefinitionType(image);
+
+  if (definitionType === "movie") {
+    const moviePlay = `${image.moviePlay || ""}`.trim() || "movies/example.webm";
+    const args = [
+      `play="${escapeRenpyString(moviePlay)}"`,
+    ];
+    const movieSize = `${image.movieSize || ""}`.trim();
+    const movieChannel = `${image.movieChannel || ""}`.trim() || "movie";
+    const movieMask = `${image.movieMask || ""}`.trim();
+    const movieMaskChannel = `${image.movieMaskChannel || ""}`.trim();
+    const movieStartImage = formatMovieDisplayableValue(image.movieStartImage);
+    const movieFallbackImage = formatMovieDisplayableValue(image.movieFallbackImage);
+    const movieGroup = `${image.movieGroup || ""}`.trim();
+    const movieLoop = getImageDefinitionMovieLoop(image);
+
+    if (movieSize) {
+      args.push(`size=${movieSize}`);
+    }
+
+    if (movieChannel && movieChannel !== "movie") {
+      args.push(`channel="${escapeRenpyString(movieChannel)}"`);
+    }
+
+    if (image.movieSideMask) {
+      args.push("side_mask=True");
+    }
+
+    if (movieMask) {
+      args.push(`mask="${escapeRenpyString(movieMask)}"`);
+    }
+
+    if (movieMaskChannel) {
+      args.push(`mask_channel="${escapeRenpyString(movieMaskChannel)}"`);
+    }
+
+    if (movieStartImage) {
+      args.push(`start_image=${movieStartImage}`);
+    }
+
+    if (movieFallbackImage) {
+      args.push(`image=${movieFallbackImage}`);
+    }
+
+    if (!movieLoop) {
+      args.push("loop=False");
+    }
+
+    if (movieGroup) {
+      args.push(`group="${escapeRenpyString(movieGroup)}"`);
+    }
+
+    if (image.movieKeepLastFrame) {
+      args.push("keep_last_frame=True");
+    }
+
+    return `image ${safeName} = Movie(\n    ${args.join(",\n    ")}\n)`;
+  }
+
   const sourcePath = image.sourcePath.trim() || "images/example.png";
   const lines = [
     `image ${safeName}:`,
@@ -3333,6 +3491,9 @@ function syncImageDefinitionDetailFields() {
 
       fieldEl.value = `${defaultValue ?? ""}`;
     });
+    imageDefinitionStaticFieldsEl.classList.remove("hidden");
+    imageDefinitionMovieFieldsEl.classList.add("hidden");
+    imageDefinitionMovieLoopInput.disabled = false;
     imageDefinitionCodePreviewEl.textContent = "";
     return;
   }
@@ -3347,6 +3508,12 @@ function syncImageDefinitionDetailFields() {
 
     fieldEl.value = `${image[field] ?? ""}`;
   });
+  imageDefinitionStaticFieldsEl.classList.toggle("hidden", getImageDefinitionType(image) !== "static");
+  imageDefinitionMovieFieldsEl.classList.toggle("hidden", getImageDefinitionType(image) !== "movie");
+  imageDefinitionMovieLoopInput.disabled = (
+    getImageDefinitionType(image) === "movie"
+    && Boolean(image.movieKeepLastFrame)
+  );
   imageDefinitionCodePreviewEl.textContent = formatImageDefinitionCode(image);
 }
 
@@ -3415,7 +3582,11 @@ function renderImagesPanel() {
 
       item.innerHTML = `
         <strong>${escapeHtml(image.name)}</strong>
-        <span>${escapeHtml(image.sourcePath || "No source path yet")}</span>
+        <span>${escapeHtml(
+          getImageDefinitionType(image) === "movie"
+            ? `Movie · ${image.moviePlay || "No play path yet"}`
+            : (image.sourcePath || "No source path yet"),
+        )}</span>
       `;
 
       item.addEventListener("click", () => {
@@ -4755,8 +4926,9 @@ function updateActiveDefinition(patch) {
 
 function handleImageDefinitionFieldChange(event) {
   const field = event.target.dataset.imageField;
+  const activeImage = getActiveImageDefinition();
 
-  if (!field) {
+  if (!field || !activeImage) {
     return;
   }
 
@@ -4766,6 +4938,22 @@ function handleImageDefinitionFieldChange(event) {
 
   if (field === "category") {
     imageCategorySectionState[nextValue] = true;
+  }
+
+  if (field === "movieKeepLastFrame") {
+    updateActiveImageDefinition({
+      movieKeepLastFrame: nextValue,
+      ...(nextValue ? { movieLoop: false } : {}),
+    });
+    return;
+  }
+
+  if (field === "movieLoop" && nextValue && activeImage.movieKeepLastFrame) {
+    updateActiveImageDefinition({
+      movieLoop: true,
+      movieKeepLastFrame: false,
+    });
+    return;
   }
 
   updateActiveImageDefinition({ [field]: nextValue });
@@ -5647,6 +5835,31 @@ imageDefinitionFileInput.addEventListener("change", (event) => {
 
   updateActiveImageDefinition({ sourcePath: nextSourcePath });
   setStatus(`Selected "${file.name}" for image source. Adjust the path if needed.`);
+});
+imageDefinitionMovieBrowseButton.addEventListener("click", () => {
+  if (!getActiveImageDefinition()) {
+    setStatus("Create or select an image definition before browsing for a movie file.");
+    return;
+  }
+
+  imageDefinitionMovieFileInput.value = "";
+  imageDefinitionMovieFileInput.click();
+});
+imageDefinitionMovieFileInput.addEventListener("change", (event) => {
+  const image = getActiveImageDefinition();
+  const file = event.target.files?.[0];
+
+  if (!image || !file) {
+    return;
+  }
+
+  const nextMoviePath = buildMovieSourcePathFromSelection(
+    file.name,
+    image.moviePlay,
+  );
+
+  updateActiveImageDefinition({ moviePlay: nextMoviePath });
+  setStatus(`Selected "${file.name}" for movie playback. Adjust the path if needed.`);
 });
 newAudioDefinitionButton.addEventListener("click", () => {
   const newAudioDefinition = createBlankAudioDefinition();
