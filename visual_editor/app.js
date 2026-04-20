@@ -130,6 +130,12 @@ const definitionCodeInput = document.getElementById("definitionCodeInput");
 const definitionDeleteButton = document.getElementById("definitionDeleteButton");
 const definitionCodePreviewEl = document.getElementById("definitionCodePreview");
 const visualProjectStatsEl = document.getElementById("visualProjectStats");
+const projectVoiceSettingsFormEl = document.getElementById("projectVoiceSettingsForm");
+const projectVoiceModeInput = document.getElementById("projectVoiceModeInput");
+const projectAutoVoiceTemplateFieldEl = document.getElementById("projectAutoVoiceTemplateField");
+const projectAutoVoiceTemplateInput = document.getElementById("projectAutoVoiceTemplateInput");
+const projectVoiceMultilingualInput = document.getElementById("projectVoiceMultilingualInput");
+const projectVoiceCodePreviewEl = document.getElementById("projectVoiceCodePreview");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
 const startInspectorFormEl = document.getElementById("startInspectorForm");
@@ -169,6 +175,13 @@ const audioDeleteNodeButton = document.getElementById("audioDeleteNodeButton");
 const dialogueInspectorFormEl = document.getElementById("dialogueInspectorForm");
 const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
 const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
+const dialogueVoiceModeInput = document.getElementById("dialogueVoiceModeInput");
+const dialogueVoiceResourceFieldEl = document.getElementById("dialogueVoiceResourceField");
+const dialogueVoiceResourceInput = document.getElementById("dialogueVoiceResourceInput");
+const dialogueVoicePathFieldEl = document.getElementById("dialogueVoicePathField");
+const dialogueVoicePathInput = document.getElementById("dialogueVoicePathInput");
+const dialogueVoiceSustainFieldEl = document.getElementById("dialogueVoiceSustainField");
+const dialogueVoiceSustainInput = document.getElementById("dialogueVoiceSustainInput");
 const dialogueNodeContentInput = document.getElementById("dialogueNodeContentInput");
 const dialogueDeleteNodeButton = document.getElementById("dialogueDeleteNodeButton");
 const menuInspectorFormEl = document.getElementById("menuInspectorForm");
@@ -215,6 +228,13 @@ const defaultViewport = {
   x: 0,
   y: 0,
   scale: 1,
+};
+
+const defaultProjectMeta = {
+  name: "Ren'Py Visual Project",
+  voiceMode: "manual",
+  autoVoiceTemplate: "voice/{id}.ogg",
+  multilingualVoices: true,
 };
 
 const imageCategoryMeta = {
@@ -448,9 +468,7 @@ const defaultStarterNodes = [
 const nodePortOffset = 8;
 
 const defaultProjectState = {
-  meta: {
-    name: "Ren'Py Visual Project",
-  },
+  meta: structuredClone(defaultProjectMeta),
   graphs: [
     {
       id: "label_start",
@@ -523,6 +541,7 @@ function loadState() {
 }
 
 function normalizeState(rawState) {
+  const rawMeta = rawState.meta || {};
   const normalizedGraphs = Array.isArray(rawState.graphs) && rawState.graphs.length
     ? rawState.graphs.map((graph, index) => normalizeGraph(graph, index))
     : [normalizeLegacyGraph(rawState)];
@@ -547,8 +566,12 @@ function normalizeState(rawState) {
 
   return {
     meta: {
-      ...defaultProjectState.meta,
-      ...(rawState.meta || {}),
+      ...defaultProjectMeta,
+      ...rawMeta,
+      name: rawMeta.name || defaultProjectMeta.name,
+      voiceMode: rawMeta.voiceMode === "auto" ? "auto" : "manual",
+      autoVoiceTemplate: `${rawMeta.autoVoiceTemplate || ""}`.trim() || defaultProjectMeta.autoVoiceTemplate,
+      multilingualVoices: rawMeta.multilingualVoices !== false,
     },
     graphs: normalizedGraphs,
     images: normalizedImageDefinitions,
@@ -665,6 +688,22 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
       flowMode: normalizedMode,
       flowTargetGraphId: node.flowTargetGraphId || "",
       flowTargetLabel: node.flowTargetLabel || node.content || "",
+    };
+  }
+
+  if (node.type === "dialogue") {
+    return {
+      ...node,
+      title: node.title || "Dialogue",
+      dialogueCharacterId: node.dialogueCharacterId || "",
+      dialogueSpeaker: node.dialogueSpeaker || "Narrator",
+      dialogueVoiceMode: ["none", "manual", "auto"].includes(node.dialogueVoiceMode)
+        ? node.dialogueVoiceMode
+        : "none",
+      dialogueVoiceAudioId: node.dialogueVoiceAudioId || "",
+      dialogueVoiceAudioName: node.dialogueVoiceAudioName || "",
+      dialogueVoicePath: node.dialogueVoicePath || "",
+      dialogueVoiceSustain: Boolean(node.dialogueVoiceSustain),
     };
   }
 
@@ -1363,6 +1402,149 @@ function getActiveVariable() {
 
 function getActiveDefinition() {
   return state.definitions.find((definition) => definition.id === activeDefinitionId) ?? null;
+}
+
+function getProjectVoiceMode() {
+  return state.meta.voiceMode === "auto" ? "auto" : "manual";
+}
+
+function getProjectAutoVoiceTemplate() {
+  return `${state.meta.autoVoiceTemplate || ""}`.trim() || defaultProjectMeta.autoVoiceTemplate;
+}
+
+function formatProjectVoiceCode() {
+  const lines = [];
+
+  if (getProjectVoiceMode() === "auto") {
+    lines.push(`define config.auto_voice = "${escapeRenpyString(getProjectAutoVoiceTemplate())}"`);
+  } else {
+    lines.push("# Automatic voice disabled.");
+    lines.push("# Dialogue blocks can still emit manual voice statements.");
+  }
+
+  if (state.meta.multilingualVoices !== false) {
+    lines.push("# Localized voice files can live under game/tl/<language>/...");
+  }
+
+  return lines.join("\n");
+}
+
+function getDialogueVoiceMode(node) {
+  return ["none", "manual", "auto"].includes(node?.dialogueVoiceMode)
+    ? node.dialogueVoiceMode
+    : "none";
+}
+
+function getDialogueVoiceResource(node) {
+  const audioDefinition = getAudioDefinitionById(node?.dialogueVoiceAudioId || "");
+
+  if (audioDefinition) {
+    return {
+      kind: "definition",
+      id: audioDefinition.id,
+      name: audioDefinition.name,
+      sourcePath: audioDefinition.sourcePath || "",
+      channel: audioDefinition.channel || "",
+    };
+  }
+
+  const legacyName = `${node?.dialogueVoiceAudioName || ""}`.trim();
+
+  return {
+    kind: legacyName ? "missing" : "empty",
+    id: "",
+    name: legacyName,
+    sourcePath: "",
+    channel: "",
+  };
+}
+
+function buildDialogueVoiceResourceOptions(selectEl, node) {
+  if (!selectEl) {
+    return;
+  }
+
+  const currentResource = getDialogueVoiceResource(node);
+  const currentAudioDefinition = getAudioDefinitionById(node?.dialogueVoiceAudioId || "");
+  const hasMissingAudio = currentResource.kind === "missing" && currentResource.name;
+  const hasNonVoiceAudio = currentAudioDefinition && currentAudioDefinition.channel !== "voice";
+  const missingLabel = hasNonVoiceAudio
+    ? `Non-voice Audio: ${currentAudioDefinition.name}`
+    : currentResource.name;
+  const missingValue = hasMissingAudio || hasNonVoiceAudio
+    ? `__missing__:${missingLabel}`
+    : "";
+
+  selectEl.innerHTML = "";
+
+  const placeholderOption = document.createElement("option");
+  placeholderOption.value = "";
+  placeholderOption.textContent = state.audio.some((audioDefinition) => audioDefinition.channel === "voice")
+    ? "Optional imported voice"
+    : "No imported voice audio";
+  selectEl.appendChild(placeholderOption);
+
+  if (missingValue) {
+    const missingOption = document.createElement("option");
+    missingOption.value = missingValue;
+    missingOption.textContent = `Legacy / Missing: ${missingLabel}`;
+    selectEl.appendChild(missingOption);
+  }
+
+  state.audio
+    .filter((audioDefinition) => audioDefinition.channel === "voice")
+    .forEach((audioDefinition) => {
+      const option = document.createElement("option");
+      option.value = audioDefinition.id;
+      option.textContent = `${audioDefinition.name} · ${audioDefinition.sourcePath || "No source path yet"}`;
+      selectEl.appendChild(option);
+    });
+
+  if (currentResource.kind === "definition" && currentResource.id && currentAudioDefinition?.channel === "voice") {
+    selectEl.value = currentResource.id;
+    return;
+  }
+
+  if (missingValue) {
+    selectEl.value = missingValue;
+    return;
+  }
+
+  selectEl.value = "";
+}
+
+function getDialogueManualVoicePath(node) {
+  const customPath = `${node?.dialogueVoicePath || ""}`.trim();
+
+  if (customPath) {
+    return customPath;
+  }
+
+  const resource = getDialogueVoiceResource(node);
+
+  return `${resource.sourcePath || ""}`.trim();
+}
+
+function getDialogueVoiceSummary(node) {
+  const voiceMode = getDialogueVoiceMode(node);
+
+  if (voiceMode === "auto") {
+    return "auto voice";
+  }
+
+  if (voiceMode !== "manual") {
+    return "";
+  }
+
+  const voicePath = getDialogueManualVoicePath(node);
+
+  if (!voicePath) {
+    return "manual voice";
+  }
+
+  return node?.dialogueVoiceSustain
+    ? `voice:${voicePath} · sustain`
+    : `voice:${voicePath}`;
 }
 
 function getImageNodeMode(node) {
@@ -2172,11 +2354,12 @@ function getNodeDisplay(node) {
     const summary = moreLineCount > 0
       ? `${previewText} (+${moreLineCount} more blocks)`
       : previewText;
+    const voiceSummary = getDialogueVoiceSummary(node);
 
     return {
       typeLabel: "dialogue",
       title: speaker.kind === "narrator" ? "Narration" : `Dialogue · ${speaker.name}`,
-      content: summary || "Enter dialogue content.",
+      content: [summary || "Enter dialogue content.", voiceSummary].filter(Boolean).join(" · "),
     };
   }
 
@@ -2798,8 +2981,18 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
   if (node.type === "dialogue") {
     const speaker = getDialogueSpeaker(node);
     const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: ["..."] });
+    const dialogueVoiceMode = getDialogueVoiceMode(node);
+    const manualVoicePath = dialogueVoiceMode === "manual"
+      ? getDialogueManualVoicePath(node)
+      : "";
 
-    dialogueBlocks.forEach((dialogueText) => {
+    dialogueBlocks.forEach((dialogueText, index) => {
+      if (index === 0 && manualVoicePath) {
+        appendIndentedLine(lines, indentLevel, `voice "${escapeRenpyString(manualVoicePath)}"`);
+      } else if (index > 0 && manualVoicePath && node.dialogueVoiceSustain) {
+        appendIndentedLine(lines, indentLevel, "voice sustain");
+      }
+
       if (speaker.kind === "character" && speaker.id) {
         appendIndentedLine(lines, indentLevel, `${speaker.id} "${escapeRenpyString(dialogueText)}"`);
         return;
@@ -4359,8 +4552,22 @@ function deleteActiveDefinition() {
   saveState(`Deleted definition "${getDefinitionLabel(definition)}".`);
 }
 
+function renderProjectVoiceSettings() {
+  projectVoiceModeInput.value = getProjectVoiceMode();
+  projectAutoVoiceTemplateInput.value = getProjectAutoVoiceTemplate();
+  projectVoiceMultilingualInput.checked = state.meta.multilingualVoices !== false;
+  projectAutoVoiceTemplateFieldEl.classList.toggle("hidden", getProjectVoiceMode() !== "auto");
+  projectVoiceCodePreviewEl.textContent = formatProjectVoiceCode();
+}
+
 function renderVisualProjectStats() {
   const graph = getActiveGraph();
+  const voicedDialogueCount = state.graphs.reduce(
+    (count, currentGraph) => count + currentGraph.nodes.filter((node) => (
+      node.type === "dialogue" && getDialogueVoiceMode(node) !== "none"
+    )).length,
+    0,
+  );
   const stats = [
     {
       title: "Current Label",
@@ -4385,6 +4592,14 @@ function renderVisualProjectStats() {
     {
       title: "Definitions",
       value: String(state.definitions.length),
+    },
+    {
+      title: "Voice Strategy",
+      value: getProjectVoiceMode() === "auto" ? "Auto Voice" : "Manual Voice",
+    },
+    {
+      title: "Voiced Dialogues",
+      value: String(voicedDialogueCount),
     },
     {
       title: "Canvas Zoom",
@@ -4660,8 +4875,17 @@ function renderInspector() {
   }
 
   if (selectedIsDialogue) {
+    const dialogueVoiceMode = getDialogueVoiceMode(selectedNode);
+
     dialogueNodeTypeInput.value = "Dialogue";
     buildDialogueCharacterOptions(dialogueCharacterInput, selectedNode);
+    dialogueVoiceModeInput.value = dialogueVoiceMode;
+    buildDialogueVoiceResourceOptions(dialogueVoiceResourceInput, selectedNode);
+    dialogueVoicePathInput.value = selectedNode.dialogueVoicePath || "";
+    dialogueVoiceSustainInput.checked = Boolean(selectedNode.dialogueVoiceSustain);
+    dialogueVoiceResourceFieldEl.classList.toggle("hidden", dialogueVoiceMode !== "manual");
+    dialogueVoicePathFieldEl.classList.toggle("hidden", dialogueVoiceMode !== "manual");
+    dialogueVoiceSustainFieldEl.classList.toggle("hidden", dialogueVoiceMode !== "manual");
     dialogueNodeContentInput.value = selectedNode.content || "";
     return;
   }
@@ -4723,6 +4947,7 @@ function render() {
   renderCharactersPanel();
   renderVariablesPanel();
   renderDefinitionsPanel();
+  renderProjectVoiceSettings();
   renderVisualProjectStats();
   renderGraph();
   renderInspector();
@@ -4921,6 +5146,12 @@ function updateActiveDefinition(patch) {
   Object.assign(definition, patch);
   syncDefinitionDetailFields();
   renderVisualProjectStats();
+  saveState();
+}
+
+function updateProjectMeta(patch) {
+  Object.assign(state.meta, patch);
+  render();
   saveState();
 }
 
@@ -5373,6 +5604,49 @@ dialogueCharacterInput.addEventListener("change", (event) => {
     dialogueCharacterId: selectedCharacter.id,
     dialogueSpeaker: selectedCharacter.name,
   });
+});
+dialogueVoiceModeInput.addEventListener("change", (event) => {
+  updateSelectedNode({ dialogueVoiceMode: event.target.value });
+});
+dialogueVoiceResourceInput.addEventListener("change", (event) => {
+  const selectedValue = event.target.value;
+
+  if (!selectedValue) {
+    updateSelectedNode({
+      dialogueVoiceAudioId: "",
+      dialogueVoiceAudioName: "",
+    });
+    return;
+  }
+
+  if (selectedValue.startsWith("__missing__:")) {
+    updateSelectedNode({
+      dialogueVoiceAudioId: "",
+      dialogueVoiceAudioName: selectedValue.slice("__missing__:".length),
+    });
+    return;
+  }
+
+  const selectedAudio = getAudioDefinitionById(selectedValue);
+
+  if (!selectedAudio) {
+    updateSelectedNode({
+      dialogueVoiceAudioId: "",
+      dialogueVoiceAudioName: "",
+    });
+    return;
+  }
+
+  updateSelectedNode({
+    dialogueVoiceAudioId: selectedAudio.id,
+    dialogueVoiceAudioName: selectedAudio.name,
+  });
+});
+dialogueVoicePathInput.addEventListener("input", (event) => {
+  updateSelectedNode({ dialogueVoicePath: event.target.value });
+});
+dialogueVoiceSustainInput.addEventListener("change", (event) => {
+  updateSelectedNode({ dialogueVoiceSustain: event.target.checked });
 });
 dialogueNodeContentInput.addEventListener("input", (event) => {
   updateSelectedNode({ content: event.target.value });
@@ -5988,6 +6262,15 @@ definitionCodeInput.addEventListener("input", (event) => {
 definitionDeleteButton.addEventListener("click", () => {
   deleteActiveDefinition();
 });
+projectVoiceModeInput.addEventListener("change", (event) => {
+  updateProjectMeta({ voiceMode: event.target.value });
+});
+projectAutoVoiceTemplateInput.addEventListener("input", (event) => {
+  updateProjectMeta({ autoVoiceTemplate: event.target.value });
+});
+projectVoiceMultilingualInput.addEventListener("change", (event) => {
+  updateProjectMeta({ multilingualVoices: event.target.checked });
+});
 characterIdInput.addEventListener("input", (event) => {
   updateActiveCharacter({ id: event.target.value });
 });
@@ -6301,6 +6584,11 @@ function createNodeForType(nodeType, graph, options = {}) {
       content: "New dialogue line.",
       dialogueCharacterId: "",
       dialogueSpeaker: "Narrator",
+      dialogueVoiceMode: "none",
+      dialogueVoiceAudioId: "",
+      dialogueVoiceAudioName: "",
+      dialogueVoicePath: "",
+      dialogueVoiceSustain: false,
     };
   }
 

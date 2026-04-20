@@ -908,6 +908,34 @@
 
             <div id="visualProjectStats" class="visual-project-stats"></div>
 
+            <p class="section-label secondary-label">Voice Settings</p>
+            <form id="projectVoiceSettingsForm" class="character-detail-form">
+              <label>
+                Strategy
+                <select id="projectVoiceModeInput">
+                  <option value="manual">Manual Voice</option>
+                  <option value="auto">Auto Voice</option>
+                </select>
+              </label>
+
+              <label id="projectAutoVoiceTemplateField" class="hidden">
+                Auto Voice Template
+                <input id="projectAutoVoiceTemplateInput" type="text" placeholder="e.g. voice/{id}.ogg" />
+              </label>
+
+              <label class="character-checkbox">
+                <input id="projectVoiceMultilingualInput" type="checkbox" />
+                <span>Use tl/&lt;language&gt;/... voice folders</span>
+              </label>
+
+              <p class="project-settings-note">
+                Manual voice uses explicit <code>voice</code> statements on dialogue blocks. Auto voice relies on Ren'Py identifiers and <code>config.auto_voice</code>.
+              </p>
+
+              <p class="section-label secondary-label">Generated Voice Config</p>
+              <pre id="projectVoiceCodePreview" class="code-preview"></pre>
+            </form>
+
             <p class="section-label secondary-label">Status</p>
             <p id="statusText" class="status-text">Visual editor scaffold ready.</p>
           </section>
@@ -1287,6 +1315,32 @@
               <select id="dialogueCharacterInput">
                 <option value="">Narrator</option>
               </select>
+            </label>
+
+            <label>
+              Voice
+              <select id="dialogueVoiceModeInput">
+                <option value="none">None</option>
+                <option value="manual">Manual Voice</option>
+                <option value="auto">Auto Voice</option>
+              </select>
+            </label>
+
+            <label id="dialogueVoiceResourceField" class="hidden">
+              Imported Voice
+              <select id="dialogueVoiceResourceInput">
+                <option value="">No imported voice audio</option>
+              </select>
+            </label>
+
+            <label id="dialogueVoicePathField" class="hidden">
+              Voice Path
+              <input id="dialogueVoicePathInput" type="text" placeholder="e.g. audio/voice/eileen_001.ogg" />
+            </label>
+
+            <label id="dialogueVoiceSustainField" class="character-checkbox hidden">
+              <input id="dialogueVoiceSustainInput" type="checkbox" />
+              <span>voice sustain across split blocks</span>
             </label>
 
             <label>
