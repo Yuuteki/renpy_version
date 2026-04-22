@@ -541,6 +541,24 @@ button.danger-button:hover {
   gap: 14px;
 }
 
+.image-definition-help {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.image-definition-empty {
+  margin: 0;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .character-detail-header {
   display: flex;
   align-items: center;

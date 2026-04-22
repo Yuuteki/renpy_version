@@ -102,6 +102,9 @@
                   <select id="imageDefinitionTypeInput" data-image-field="definitionType">
                     <option value="static">Static Image</option>
                     <option value="movie">Movie</option>
+                    <option value="solid">Solid</option>
+                    <option value="composite">Composite</option>
+                    <option value="placeholder">Placeholder</option>
                   </select>
                 </label>
 
@@ -504,6 +507,67 @@
                   <label class="character-checkbox">
                     <input id="imageDefinitionMovieKeepLastFrameInput" data-image-field="movieKeepLastFrame" type="checkbox" />
                     <span>keep_last_frame</span>
+                  </label>
+                </div>
+
+                <div id="imageDefinitionSolidFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Solid</p>
+
+                  <label>
+                    Color
+                    <input id="imageDefinitionSolidColorInput" data-image-field="solidColor" type="text" placeholder='e.g. #111111 or "#ffffff"' />
+                  </label>
+                </div>
+
+                <div id="imageDefinitionCompositeFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Composite</p>
+
+                  <label>
+                    size
+                    <input id="imageDefinitionCompositeSizeInput" data-image-field="compositeSize" type="text" placeholder="e.g. (300, 600)" />
+                  </label>
+
+                  <div class="menu-choice-group">
+                    <div class="menu-choice-group-header">
+                      <strong>Layers</strong>
+                      <button id="imageDefinitionAddCompositeLayerButton" class="secondary menu-choice-add-button" type="button">New Layer</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      Layers are stacked from back to front. You can reference an imported image definition name or a file path.
+                    </p>
+
+                    <div id="imageDefinitionCompositeLayerList" class="menu-choice-list"></div>
+                    <datalist id="imageDefinitionCompositeDisplayableOptions"></datalist>
+                  </div>
+                </div>
+
+                <div id="imageDefinitionPlaceholderFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Placeholder</p>
+
+                  <label>
+                    Base
+                    <select id="imageDefinitionPlaceholderBaseInput" data-image-field="placeholderBase">
+                      <option value="auto">Auto</option>
+                      <option value="bg">Background</option>
+                      <option value="boy">Boy</option>
+                      <option value="girl">Girl</option>
+                    </select>
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionPlaceholderFullInput" data-image-field="placeholderFull" type="checkbox" />
+                    <span>full</span>
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionPlaceholderFlipInput" data-image-field="placeholderFlip" type="checkbox" />
+                    <span>flip</span>
+                  </label>
+
+                  <label>
+                    text
+                    <input id="imageDefinitionPlaceholderTextInput" data-image-field="placeholderText" type="text" placeholder="e.g. temporary_character" />
                   </label>
                 </div>
 

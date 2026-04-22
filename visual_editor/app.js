@@ -44,6 +44,9 @@ const newImageDefinitionButton = document.getElementById("newImageDefinitionButt
 const imageDefinitionBackButton = document.getElementById("imageDefinitionBackButton");
 const imageDefinitionStaticFieldsEl = document.getElementById("imageDefinitionStaticFields");
 const imageDefinitionMovieFieldsEl = document.getElementById("imageDefinitionMovieFields");
+const imageDefinitionSolidFieldsEl = document.getElementById("imageDefinitionSolidFields");
+const imageDefinitionCompositeFieldsEl = document.getElementById("imageDefinitionCompositeFields");
+const imageDefinitionPlaceholderFieldsEl = document.getElementById("imageDefinitionPlaceholderFields");
 const imageDefinitionNameInput = document.getElementById("imageDefinitionNameInput");
 const imageDefinitionCategoryInput = document.getElementById("imageDefinitionCategoryInput");
 const imageDefinitionTypeInput = document.getElementById("imageDefinitionTypeInput");
@@ -53,6 +56,9 @@ const imageDefinitionFileInput = document.getElementById("imageDefinitionFileInp
 const imageDefinitionMovieBrowseButton = document.getElementById("imageDefinitionMovieBrowseButton");
 const imageDefinitionMovieFileInput = document.getElementById("imageDefinitionMovieFileInput");
 const imageDefinitionMovieLoopInput = document.getElementById("imageDefinitionMovieLoopInput");
+const imageDefinitionAddCompositeLayerButton = document.getElementById("imageDefinitionAddCompositeLayerButton");
+const imageDefinitionCompositeLayerListEl = document.getElementById("imageDefinitionCompositeLayerList");
+const imageDefinitionCompositeDisplayableOptionsEl = document.getElementById("imageDefinitionCompositeDisplayableOptions");
 const imageDefinitionZoomInput = document.getElementById("imageDefinitionZoomInput");
 const imageDefinitionXAnchorInput = document.getElementById("imageDefinitionXAnchorInput");
 const imageDefinitionYAnchorInput = document.getElementById("imageDefinitionYAnchorInput");
@@ -255,6 +261,24 @@ const imageCategoryMeta = {
   },
 };
 
+const imageDefinitionTypeMeta = {
+  static: {
+    label: "Static Image",
+  },
+  movie: {
+    label: "Movie",
+  },
+  solid: {
+    label: "Solid",
+  },
+  composite: {
+    label: "Composite",
+  },
+  placeholder: {
+    label: "Placeholder",
+  },
+};
+
 const audioChannelMeta = {
   music: {
     label: "Music",
@@ -292,6 +316,13 @@ const imageDefinitionFieldDefaults = {
   movieLoop: true,
   movieGroup: "",
   movieKeepLastFrame: false,
+  solidColor: "#ffffff",
+  compositeSize: "",
+  compositeLayers: [],
+  placeholderBase: "auto",
+  placeholderFull: false,
+  placeholderFlip: false,
+  placeholderText: "",
   pos: "",
   xpos: "",
   ypos: "",
@@ -372,6 +403,8 @@ const imageDefinitionBooleanFields = new Set([
   "movieSideMask",
   "movieLoop",
   "movieKeepLastFrame",
+  "placeholderFull",
+  "placeholderFlip",
 ]);
 
 const imageDefinitionCodePropertyOrder = [
@@ -1108,6 +1141,33 @@ function normalizeImageDefinition(image, index) {
     || `${image.movieStartImage || ""}`.trim()
     || `${image.movieFallbackImage || ""}`.trim(),
   );
+  const hasCompositeMetadata = Boolean(
+    `${image.compositeSize || ""}`.trim()
+    || (Array.isArray(image.compositeLayers) && image.compositeLayers.length),
+  );
+  const hasPlaceholderMetadata = Boolean(
+    image.placeholderFull
+    || image.placeholderFlip
+    || `${image.placeholderText || ""}`.trim()
+    || (
+      `${image.placeholderBase || ""}`.trim()
+      && `${image.placeholderBase || ""}`.trim() !== imageDefinitionFieldDefaults.placeholderBase
+    ),
+  );
+  const normalizedDefinitionType = Object.prototype.hasOwnProperty.call(
+    imageDefinitionTypeMeta,
+    image.definitionType,
+  )
+    ? image.definitionType
+    : (
+      hasMovieMetadata
+        ? "movie"
+        : hasCompositeMetadata
+          ? "composite"
+          : hasPlaceholderMetadata
+            ? "placeholder"
+            : "static"
+    );
 
   Object.entries(imageDefinitionFieldDefaults).forEach(([field, defaultValue]) => {
     if (field === "category") {
@@ -1118,12 +1178,7 @@ function normalizeImageDefinition(image, index) {
     }
 
     if (field === "definitionType") {
-      normalizedFields.definitionType = (
-        image.definitionType === "movie"
-        || (!image.definitionType && hasMovieMetadata)
-      )
-        ? "movie"
-        : "static";
+      normalizedFields.definitionType = normalizedDefinitionType;
       return;
     }
 
@@ -1132,12 +1187,27 @@ function normalizeImageDefinition(image, index) {
       return;
     }
 
+    if (field === "compositeLayers") {
+      normalizedFields.compositeLayers = normalizeCompositeLayers(image.compositeLayers);
+      return;
+    }
+
     if (typeof defaultValue === "boolean") {
       normalizedFields[field] = Boolean(image[field]);
       return;
     }
 
-    normalizedFields[field] = image[field] || "";
+    if (Array.isArray(defaultValue)) {
+      normalizedFields[field] = structuredClone(defaultValue);
+      return;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(image, field)) {
+      normalizedFields[field] = image[field] || "";
+      return;
+    }
+
+    normalizedFields[field] = defaultValue;
   });
 
   if (normalizedFields.movieKeepLastFrame) {
@@ -1435,6 +1505,24 @@ function createBlankCharacter() {
     ctcTimedPause: "",
     ctcPosition: "",
   };
+}
+
+function createCompositeLayer(index, overrides = {}) {
+  return {
+    id: overrides.id || `composite_layer_${Date.now()}_${index}`,
+    position: `${overrides.position || ""}`.trim() || "(0, 0)",
+    displayable: `${overrides.displayable || overrides.child || ""}`.trim(),
+  };
+}
+
+function normalizeCompositeLayers(rawLayers) {
+  if (!Array.isArray(rawLayers)) {
+    return [];
+  }
+
+  return rawLayers
+    .filter((layer) => layer && typeof layer === "object")
+    .map((layer, index) => createCompositeLayer(index + 1, layer));
 }
 
 function createBlankImageDefinition() {
@@ -1909,7 +1997,7 @@ function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   state.images.forEach((image) => {
     const option = document.createElement("option");
     option.value = image.id;
-    option.textContent = `${image.name} · ${getImageDefinitionType(image) === "movie" ? "Movie" : "Image"} · ${imageCategoryMeta[image.category]?.label || "Others"}`;
+    option.textContent = `${image.name} · ${getImageDefinitionTypeLabel(image)} · ${imageCategoryMeta[image.category]?.label || "Others"}`;
     selectEl.appendChild(option);
   });
 
@@ -2730,7 +2818,61 @@ function buildMovieSourcePathFromSelection(fileName, currentValue = "") {
 }
 
 function getImageDefinitionType(image) {
-  return image?.definitionType === "movie" ? "movie" : "static";
+  return Object.prototype.hasOwnProperty.call(imageDefinitionTypeMeta, image?.definitionType)
+    ? image.definitionType
+    : "static";
+}
+
+function getImageDefinitionTypeLabel(image) {
+  return imageDefinitionTypeMeta[getImageDefinitionType(image)]?.label || imageDefinitionTypeMeta.static.label;
+}
+
+function formatRenpyQuotedString(value) {
+  const normalizedValue = `${value || ""}`.trim();
+
+  if (!normalizedValue) {
+    return "\"\"";
+  }
+
+  const isQuotedString = (
+    (normalizedValue.startsWith("\"") && normalizedValue.endsWith("\""))
+    || (normalizedValue.startsWith("'") && normalizedValue.endsWith("'"))
+  );
+  const unquotedValue = isQuotedString
+    ? normalizedValue.slice(1, -1)
+    : normalizedValue;
+
+  return `"${escapeRenpyString(unquotedValue)}"`;
+}
+
+function getImageDefinitionSummary(image) {
+  const definitionType = getImageDefinitionType(image);
+
+  if (definitionType === "movie") {
+    return `Movie · ${image.moviePlay || "No play path yet"}`;
+  }
+
+  if (definitionType === "solid") {
+    return `Solid · ${image.solidColor || imageDefinitionFieldDefaults.solidColor}`;
+  }
+
+  if (definitionType === "composite") {
+    const layerCount = normalizeCompositeLayers(image.compositeLayers).length;
+    return `Composite · ${layerCount} ${layerCount === 1 ? "layer" : "layers"}`;
+  }
+
+  if (definitionType === "placeholder") {
+    const baseLabelMap = {
+      auto: "Auto",
+      bg: "Background",
+      boy: "Boy",
+      girl: "Girl",
+    };
+
+    return `Placeholder · ${baseLabelMap[image.placeholderBase] || "Auto"}`;
+  }
+
+  return `Static · ${image.sourcePath || "No source path yet"}`;
 }
 
 function formatMovieDisplayableValue(value) {
@@ -4103,6 +4245,14 @@ function deleteImageDefinition(imageId) {
   saveState(`Deleted image "${image.name}".`);
 }
 
+function formatImageDefinitionConstructorCode(imageName, constructorName, parts = []) {
+  if (!parts.length) {
+    return `image ${imageName} = ${constructorName}()`;
+  }
+
+  return `image ${imageName} = ${constructorName}(\n    ${parts.join(",\n    ")}\n)`;
+}
+
 function formatImageDefinitionCode(image) {
   if (!image) {
     return "";
@@ -4165,7 +4315,57 @@ function formatImageDefinitionCode(image) {
       args.push("keep_last_frame=True");
     }
 
-    return `image ${safeName} = Movie(\n    ${args.join(",\n    ")}\n)`;
+    return formatImageDefinitionConstructorCode(safeName, "Movie", args);
+  }
+
+  if (definitionType === "solid") {
+    const solidColor = `${image.solidColor || ""}`.trim() || imageDefinitionFieldDefaults.solidColor;
+    return formatImageDefinitionConstructorCode(safeName, "Solid", [
+      formatRenpyQuotedString(solidColor),
+    ]);
+  }
+
+  if (definitionType === "composite") {
+    const compositeSize = `${image.compositeSize || ""}`.trim() || "(1920, 1080)";
+    const layers = normalizeCompositeLayers(image.compositeLayers);
+    const parts = [compositeSize];
+
+    if (!layers.length) {
+      parts.push("(0, 0)", "Null()");
+    } else {
+      layers.forEach((layer) => {
+        parts.push(
+          `${layer.position || ""}`.trim() || "(0, 0)",
+          formatMovieDisplayableValue(layer.displayable) || "Null()",
+        );
+      });
+    }
+
+    return formatImageDefinitionConstructorCode(safeName, "Composite", parts);
+  }
+
+  if (definitionType === "placeholder") {
+    const args = [];
+    const placeholderBase = `${image.placeholderBase || ""}`.trim() || imageDefinitionFieldDefaults.placeholderBase;
+    const placeholderText = `${image.placeholderText || ""}`.trim();
+
+    if (placeholderBase !== "auto") {
+      args.push(formatRenpyQuotedString(placeholderBase));
+    }
+
+    if (image.placeholderFull) {
+      args.push("full=True");
+    }
+
+    if (image.placeholderFlip) {
+      args.push("flip=True");
+    }
+
+    if (placeholderText) {
+      args.push(`text=${formatRenpyQuotedString(placeholderText)}`);
+    }
+
+    return formatImageDefinitionConstructorCode(safeName, "Placeholder", args);
   }
 
   const sourcePath = image.sourcePath.trim() || "images/example.png";
@@ -4194,6 +4394,79 @@ function formatImageDefinitionCode(image) {
   return lines.join("\n");
 }
 
+function setImageDefinitionTypeFieldVisibility(definitionType) {
+  imageDefinitionStaticFieldsEl.classList.toggle("hidden", definitionType !== "static");
+  imageDefinitionMovieFieldsEl.classList.toggle("hidden", definitionType !== "movie");
+  imageDefinitionSolidFieldsEl.classList.toggle("hidden", definitionType !== "solid");
+  imageDefinitionCompositeFieldsEl.classList.toggle("hidden", definitionType !== "composite");
+  imageDefinitionPlaceholderFieldsEl.classList.toggle("hidden", definitionType !== "placeholder");
+}
+
+function renderCompositeLayerList(image) {
+  if (!imageDefinitionCompositeLayerListEl || !imageDefinitionCompositeDisplayableOptionsEl) {
+    return;
+  }
+
+  if (!image || getImageDefinitionType(image) !== "composite") {
+    imageDefinitionCompositeLayerListEl.innerHTML = "";
+    imageDefinitionCompositeDisplayableOptionsEl.innerHTML = "";
+    return;
+  }
+
+  const layers = normalizeCompositeLayers(image.compositeLayers);
+  image.compositeLayers = layers;
+
+  imageDefinitionCompositeDisplayableOptionsEl.innerHTML = state.images
+    .filter((candidate) => candidate.id !== image.id)
+    .map((candidate) => `<option value="${escapeHtml(candidate.name)}"></option>`)
+    .join("");
+
+  if (!layers.length) {
+    imageDefinitionCompositeLayerListEl.innerHTML = `
+      <p class="image-definition-empty">No layers yet. Add one to stack displayables into a single image definition.</p>
+    `;
+    return;
+  }
+
+  imageDefinitionCompositeLayerListEl.innerHTML = layers.map((layer, index) => `
+    <div class="menu-choice-item">
+      <div class="menu-choice-item-header">
+        <span>Layer ${index + 1}</span>
+        <button
+          class="danger-button menu-choice-remove-button"
+          type="button"
+          data-remove-composite-layer-id="${escapeHtml(layer.id)}"
+        >
+          Remove
+        </button>
+      </div>
+
+      <label>
+        Position
+        <input
+          type="text"
+          value="${escapeHtml(layer.position || "")}"
+          placeholder="e.g. (0, 0)"
+          data-image-composite-layer-id="${escapeHtml(layer.id)}"
+          data-image-composite-layer-field="position"
+        />
+      </label>
+
+      <label>
+        Displayable
+        <input
+          type="text"
+          value="${escapeHtml(layer.displayable || "")}"
+          placeholder='e.g. "body.png" or character_body'
+          list="imageDefinitionCompositeDisplayableOptions"
+          data-image-composite-layer-id="${escapeHtml(layer.id)}"
+          data-image-composite-layer-field="displayable"
+        />
+      </label>
+    </div>
+  `).join("");
+}
+
 function syncImageDefinitionDetailFields() {
   const image = getActiveImageDefinition();
 
@@ -4209,8 +4482,8 @@ function syncImageDefinitionDetailFields() {
 
       fieldEl.value = `${defaultValue ?? ""}`;
     });
-    imageDefinitionStaticFieldsEl.classList.remove("hidden");
-    imageDefinitionMovieFieldsEl.classList.add("hidden");
+    setImageDefinitionTypeFieldVisibility("static");
+    renderCompositeLayerList(null);
     imageDefinitionMovieLoopInput.disabled = false;
     imageDefinitionCodePreviewEl.textContent = "";
     return;
@@ -4226,8 +4499,8 @@ function syncImageDefinitionDetailFields() {
 
     fieldEl.value = `${image[field] ?? ""}`;
   });
-  imageDefinitionStaticFieldsEl.classList.toggle("hidden", getImageDefinitionType(image) !== "static");
-  imageDefinitionMovieFieldsEl.classList.toggle("hidden", getImageDefinitionType(image) !== "movie");
+  setImageDefinitionTypeFieldVisibility(getImageDefinitionType(image));
+  renderCompositeLayerList(image);
   imageDefinitionMovieLoopInput.disabled = (
     getImageDefinitionType(image) === "movie"
     && Boolean(image.movieKeepLastFrame)
@@ -4300,11 +4573,7 @@ function renderImagesPanel() {
 
       item.innerHTML = `
         <strong>${escapeHtml(image.name)}</strong>
-        <span>${escapeHtml(
-          getImageDefinitionType(image) === "movie"
-            ? `Movie · ${image.moviePlay || "No play path yet"}`
-            : (image.sourcePath || "No source path yet"),
-        )}</span>
+        <span>${escapeHtml(getImageDefinitionSummary(image))}</span>
       `;
 
       item.addEventListener("click", () => {
@@ -5727,6 +5996,27 @@ function handleImageDefinitionFieldChange(event) {
     imageCategorySectionState[nextValue] = true;
   }
 
+  if (field === "definitionType") {
+    const patch = {
+      definitionType: nextValue,
+    };
+
+    if (nextValue === "composite" && !normalizeCompositeLayers(activeImage.compositeLayers).length) {
+      patch.compositeLayers = [createCompositeLayer(1)];
+    }
+
+    if (nextValue === "solid" && !`${activeImage.solidColor || ""}`.trim()) {
+      patch.solidColor = imageDefinitionFieldDefaults.solidColor;
+    }
+
+    if (nextValue === "placeholder" && !`${activeImage.placeholderBase || ""}`.trim()) {
+      patch.placeholderBase = imageDefinitionFieldDefaults.placeholderBase;
+    }
+
+    updateActiveImageDefinition(patch);
+    return;
+  }
+
   if (field === "movieKeepLastFrame") {
     updateActiveImageDefinition({
       movieKeepLastFrame: nextValue,
@@ -6829,6 +7119,54 @@ imageDefinitionMovieFileInput.addEventListener("change", (event) => {
 
   updateActiveImageDefinition({ moviePlay: nextMoviePath });
   setStatus(`Selected "${file.name}" for movie playback. Adjust the path if needed.`);
+});
+imageDefinitionAddCompositeLayerButton.addEventListener("click", () => {
+  const image = getActiveImageDefinition();
+
+  if (!image) {
+    return;
+  }
+
+  const currentLayers = normalizeCompositeLayers(image.compositeLayers);
+
+  updateActiveImageDefinition({
+    compositeLayers: [...currentLayers, createCompositeLayer(currentLayers.length + 1)],
+  });
+});
+imageDefinitionCompositeLayerListEl.addEventListener("input", (event) => {
+  const layerId = event.target.dataset.imageCompositeLayerId;
+  const field = event.target.dataset.imageCompositeLayerField;
+  const image = getActiveImageDefinition();
+
+  if (!layerId || !field || !image) {
+    return;
+  }
+
+  updateActiveImageDefinition({
+    compositeLayers: normalizeCompositeLayers(image.compositeLayers).map((layer) => (
+      layer.id === layerId
+        ? {
+          ...layer,
+          [field]: event.target.value,
+        }
+        : layer
+    )),
+  });
+});
+imageDefinitionCompositeLayerListEl.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-remove-composite-layer-id]");
+  const image = getActiveImageDefinition();
+
+  if (!removeButton || !image) {
+    return;
+  }
+
+  const removeLayerId = removeButton.dataset.removeCompositeLayerId;
+
+  updateActiveImageDefinition({
+    compositeLayers: normalizeCompositeLayers(image.compositeLayers)
+      .filter((layer) => layer.id !== removeLayerId),
+  });
 });
 newAudioDefinitionButton.addEventListener("click", () => {
   const newAudioDefinition = createBlankAudioDefinition();
