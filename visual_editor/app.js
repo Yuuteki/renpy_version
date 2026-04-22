@@ -137,6 +137,7 @@ const projectVoiceModeInput = document.getElementById("projectVoiceModeInput");
 const projectAutoVoiceTemplateFieldEl = document.getElementById("projectAutoVoiceTemplateField");
 const projectAutoVoiceTemplateInput = document.getElementById("projectAutoVoiceTemplateInput");
 const projectVoiceMultilingualInput = document.getElementById("projectVoiceMultilingualInput");
+const projectDefaultDialogueVoiceInput = document.getElementById("projectDefaultDialogueVoiceInput");
 const projectVoiceCodePreviewEl = document.getElementById("projectVoiceCodePreview");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
@@ -235,6 +236,7 @@ const defaultProjectMeta = {
   voiceMode: "manual",
   autoVoiceTemplate: "voice/{id}.ogg",
   multilingualVoices: true,
+  defaultDialogueVoiceEnabled: false,
 };
 
 const imageCategoryMeta = {
@@ -574,6 +576,7 @@ function normalizeState(rawState) {
       voiceMode: rawMeta.voiceMode === "auto" ? "auto" : "manual",
       autoVoiceTemplate: `${rawMeta.autoVoiceTemplate || ""}`.trim() || defaultProjectMeta.autoVoiceTemplate,
       multilingualVoices: rawMeta.multilingualVoices !== false,
+      defaultDialogueVoiceEnabled: rawMeta.defaultDialogueVoiceEnabled === true,
     },
     graphs: normalizedGraphs,
     images: normalizedImageDefinitions,
@@ -1529,6 +1532,10 @@ function getProjectVoiceMode() {
 
 function getProjectAutoVoiceTemplate() {
   return `${state.meta.autoVoiceTemplate || ""}`.trim() || defaultProjectMeta.autoVoiceTemplate;
+}
+
+function getProjectDefaultDialogueVoiceEnabled() {
+  return state.meta.defaultDialogueVoiceEnabled === true;
 }
 
 function formatProjectVoiceCode() {
@@ -4843,6 +4850,7 @@ function renderProjectVoiceSettings() {
   projectVoiceModeInput.value = getProjectVoiceMode();
   projectAutoVoiceTemplateInput.value = getProjectAutoVoiceTemplate();
   projectVoiceMultilingualInput.checked = state.meta.multilingualVoices !== false;
+  projectDefaultDialogueVoiceInput.checked = getProjectDefaultDialogueVoiceEnabled();
   projectAutoVoiceTemplateFieldEl.classList.toggle("hidden", getProjectVoiceMode() !== "auto");
   projectVoiceCodePreviewEl.textContent = formatProjectVoiceCode();
 }
@@ -6711,6 +6719,9 @@ projectAutoVoiceTemplateInput.addEventListener("input", (event) => {
 projectVoiceMultilingualInput.addEventListener("change", (event) => {
   updateProjectMeta({ multilingualVoices: event.target.checked });
 });
+projectDefaultDialogueVoiceInput.addEventListener("change", (event) => {
+  updateProjectMeta({ defaultDialogueVoiceEnabled: event.target.checked });
+});
 characterIdInput.addEventListener("input", (event) => {
   updateActiveCharacter({ id: event.target.value });
 });
@@ -7018,14 +7029,24 @@ function createNodeForType(nodeType, graph, options = {}) {
   }
 
   if (nodeType === "dialogue") {
+    const defaultDialogueText = "New dialogue line.";
+    const defaultDialogueVoiceEnabled = getProjectDefaultDialogueVoiceEnabled();
+
     return {
       ...baseNode,
       title: "Dialogue",
-      content: "New dialogue line.",
+      content: defaultDialogueText,
       dialogueCharacterId: "",
       dialogueSpeaker: "Narrator",
-      dialogueVoiceEnabled: false,
-      dialogueLines: [],
+      dialogueVoiceEnabled: defaultDialogueVoiceEnabled,
+      dialogueLines: defaultDialogueVoiceEnabled
+        ? [
+          {
+            ...createDialogueVoiceLine(1),
+            text: defaultDialogueText,
+          },
+        ]
+        : [],
     };
   }
 
