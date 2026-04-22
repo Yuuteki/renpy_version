@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多语言支持 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/translation.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="可视组件" href="displayables.html" />
+    <link rel="prev" title="文本" href="text.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">多语言支持</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#primary-and-alternate-languages">主语言和备选语言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-translation-files">生成翻译文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#translating-dialogue">多语言对话</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#translation-units">多语言支持的单元</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#translate">translate语句</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-complex-translations">更复杂的多语言支持</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#translation-tips">小贴士</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#string-translations">菜单和字符串的多语言支持</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#translating-substitutions">多语言替换</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extract-merge-translations">提取和复用多语言字符串</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#image-file-translation">图片和文件的多语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#style-translations">样式的多语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deferred-translations">翻译文件延迟加载</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-language">默认语言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#translation-info-screen">多语言信息界面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#translation-actions-functions-and-variables">多语言支持的行为、函数和变量</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Language"><code class="docutils literal notranslate"><span class="pre">Language</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.change_language"><code class="docutils literal notranslate"><span class="pre">renpy.change_language()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.get_translation_identifier"><code class="docutils literal notranslate"><span class="pre">renpy.get_translation_identifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.known_languages"><code class="docutils literal notranslate"><span class="pre">renpy.known_languages()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">_()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">___()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#p"><code class="docutils literal notranslate"><span class="pre">_p()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.translate_string"><code class="docutils literal notranslate"><span class="pre">renpy.translate_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#unsanctioned-translations">非常规多语言支持</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">多语言支持</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/translation.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="translation">
+<span id="id1"></span><h1>多语言支持<a class="headerlink" href="#translation" title="Link to this heading"> link</a></h1>
+<p>(译者注：原文为“Translation”。将translation直译为“翻译”，容易引发歧义，所以文档中单独出现时一律使用“多语言支持”，“translation file”则翻译为“翻译文件”。)
+Ren’Py包含了视觉系小说多语言支持的综合框架。有4类要素支持多语言：</p>
+<dl class="simple">
+<dt>对话</dt><dd><p>脚本的主对话能够支持多语言，包括各行文本内容的分割、合并、删除和调整的一套规则。</p>
+</dd>
+<dt>菜单和接口字符串</dt><dd><p>所有接口文本都支持多语言。</p>
+</dd>
+<dt>图像和文件</dt><dd><p>选择某种语言时，可以使用对应的一系列图片和其他文件。</p>
+</dd>
+<dt>样式</dt><dd><p>可以基于语言实现样式定制化，这样游戏会自动切换为对应某种语言的样式。</p>
+</dd>
+</dl>
+<p>目前Ren’Py的多语言支持主要聚焦在标准化的多语言支持。如果实现的话，创作者就可以使用将游戏脚本直接扔给多语言解释器，或者自己创建多语言模板。目前支持的非标准化多语言支持有诸多限制。</p>
+<section id="primary-and-alternate-languages">
+<span id="id2"></span><h2>主语言和备选语言<a class="headerlink" href="#primary-and-alternate-languages" title="Link to this heading"> link</a></h2>
+<p>Ren’Py需要每一个作品都使用一种主语言编写。这种主语言无论具体是哪国的，都被称作 <code class="docutils literal notranslate"><span class="pre">None</span></code> 语言。(如果使用英语编写，英语就是 <code class="docutils literal notranslate"><span class="pre">None</span></code> 语言。)</p>
+<p>备选语言在作品中出现时，推荐使用原来的Python标识符连写两次。(格式为，以字母或下划线开头，后面跟字母、数字或者下划线。)</p>
+<p>当选用None语言后，Ren’Py的大多数多语言支持功能都会关闭，
+例如Ren’Py内建的异常提示字符串和默认菜单项等。
+在你项目代码中找不到这些字符串，也不会放入游戏的最终分发版中。
+你可以在 <code class="file docutils literal notranslate"><span class="pre">game/tl/None/common.rpym</span></code> 文件中找到这些字符串。
+这些字符串的用处有两点：
+1. 非英语做为None语言时提供多语言支持；
+2. 允许创作者在游戏中自定义翻译。</p>
+<p>启动器的语言会作为项目创建时的默认语言。Ren’Py内部的字符串初始化时也会使用同种语言。</p>
+</section>
+<section id="generating-translation-files">
+<span id="id3"></span><h2>生成翻译文件<a class="headerlink" href="#generating-translation-files" title="Link to this heading"> link</a></h2>
+<p>当项目脚本是正常可用的情况下，我们可以在Ren’Py启动器中选择“生成翻译文件”。启动器将提示你需要生成的语言名称，然后创建或更新翻译文件。</p>
+<p>翻译文件是在game文件夹中一个名为“tl”的子文件夹下的同名目录中。例如，如果你为tutorial项目创建了piglatin的语言支持，对应的语言支持文件将会放在 <code class="file docutils literal notranslate"><span class="pre">tutorial/game/tl/piglatin</span></code> 目录下。</p>
+<p>每一个游戏脚本文件都会被创建对应的翻译文件。common.rpy文件也会被创建，其内容包含所有Ren’Py制作游戏使用的通用字符串的多语言支持。</p>
+</section>
+<section id="translating-dialogue">
+<span id="id4"></span><h2>多语言对话<a class="headerlink" href="#translating-dialogue" title="Link to this heading"> link</a></h2>
+<p>因为Ren’Py是一个视觉系小说引擎，我们最需要的自然就是对话的多语言支持。Ren’Py包含了一个具有可塑性的框架，允许对话内容的分割、合并、调整顺序及整段删除。</p>
+<section id="translation-units">
+<span id="id5"></span><h3>多语言支持的单元<a class="headerlink" href="#translation-units" title="Link to this heading"> link</a></h3>
+<p>一个由0个或多个可支持多语言的语句构成的语句块(block)是多语言支持的基础单元，后面可选加上一条say语句。可支持多语言的语句包括voice和nvl语句。例如下面脚本中的：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="n">e</span> <span class="s2">&quot;Thank you for taking a look at the Ren&#39;Py translation framework.&quot;</span>
+
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span>
+
+    <span class="n">e</span> <span class="s2">&quot;We aim to provide a comprehensive framework for translating dialogue, strings, images, and styles.&quot;</span>
+
+    <span class="n">e</span> <span class="s2">&quot;Pretty much everything your game needs!&quot;</span>
+</pre></div>
+</div>
+<p>这段脚本可以分割为多个多语言支持单元。每个单元都有对应的一个标识符用于声明该单元。标识符根据单元前的脚本标签(label)和单元内的语句来生成。(如果多个单元被声明为同一个多语言数字，从第二个单元开始会自动添加上一个自然数编号便于区分。)</p>
+<p>在上面的样例脚本中，第一个单元生成的标识号为start_636ae3f5，包含这条语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="s2">&quot;Thank you for taking a look at the Ren&#39;Py translation framework.&quot;</span>
+</pre></div>
+</div>
+<p>第二个单元的标识号是start_bd1ad9e1m，包含这条语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="s2">&quot;We aim to provide a comprehensive framework for translating dialogue, strings, images, and styles.&quot;</span>
+</pre></div>
+</div>
+<p>第三个单元的标识号是start_9e949aac，包含这条语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="s2">&quot;Pretty much everything your game needs!&quot;</span>
+</pre></div>
+</div>
+<p>当游戏脚本加载时，这些多语言支持的单元会被Ren’Py自动创建。</p>
+</section>
+<section id="translate">
+<span id="translate-statement"></span><h3>translate语句<a class="headerlink" href="#translate" title="Link to this heading"> link</a></h3>
+<p>当你生成了对某种语言的支持时，Ren’Py会针对每一个多语言支持单元生成一条translate语句。我们再以刚才的那段脚本举例，Ren’Py生成的语句如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># game/script.rpy:95</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_636ae3f5</span><span class="p">:</span>
+
+    <span class="c1"># e &quot;Thank you for taking a look at the Ren&#39;Py translation framework.&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;&quot;</span>
+
+<span class="c1"># game/script.rpy:99</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_bd1ad9e1</span><span class="p">:</span>
+
+    <span class="c1"># e &quot;We aim to provide a comprehensive framework for translating dialogue, strings, images, and styles.&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;&quot;</span>
+
+<span class="c1"># game/script.rpy:101</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_9e949aac</span><span class="p">:</span>
+
+    <span class="c1"># e &quot;Pretty much everything your game needs!&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;&quot;</span>
+</pre></div>
+</div>
+<p>编辑这个文件就可以实现对piglatin语言的支持了。完成编辑后的样子如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># game/script.rpy:95</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_636ae3f5</span><span class="p">:</span>
+    <span class="c1"># e &quot;Thank you for taking a look at the Ren&#39;Py translation framework.&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;Ankthay ouyay orfay akingtay away ooklay atway ethay En&#39;Pyray anslationtray ameworkfray.&quot;</span>
+
+<span class="c1"># game/script.rpy:99</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_bd1ad9e1</span><span class="p">:</span>
+
+    <span class="c1"># e &quot;We aim to provide a comprehensive framework for translating dialogue, strings, images, and styles.&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;Eway aimway otay ovidepray away omprehensivecay ameworkfray orfay anslatingtray ialogueday, ingsstray, imagesway, andway ylesstay.&quot;</span>
+
+<span class="c1"># game/script.rpy:101</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_9e949aac</span><span class="p">:</span>
+
+    <span class="c1"># e &quot;Pretty much everything your game needs!&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;Ettypray uchmay everythingway ouryay amegay eedsnay!&quot;</span>
+</pre></div>
+</div>
+<p>当引擎在主线脚本中遇到一个语句块(block)，Ren’Py就会检查是否存在对应的translate语句存在。如果存在的话，Ren’Py将会执行translate语句，并向用户显示对应语言的内容。</p>
+</section>
+<section id="more-complex-translations">
+<span id="id6"></span><h3>更复杂的多语言支持<a class="headerlink" href="#more-complex-translations" title="Link to this heading"> link</a></h3>
+<p>translate语句中数量并不要求与原语言语句数量保持1比1。例如，一行很长的语句可以分割：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># game/script.rpy:99</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_bd1ad9e1</span><span class="p">:</span>
+    <span class="c1"># e &quot;We aim to provide a comprehensive framework for translating dialogue, strings, images, and styles.&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;Eway aimway otay ovidepray away omprehensivecay ameworkfray...&quot;</span>
+    <span class="n">e</span> <span class="s2">&quot;...orfay anslatingtray ialogueday, ingsstray, imagesway, andway ylesstay.&quot;</span>
+</pre></div>
+</div>
+<p>或者某条语句可以移除，并用 <code class="docutils literal notranslate"><span class="pre">pass</span></code> 语句代替。:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># game/script.rpy:101</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_9e949aac</span><span class="p">:</span>
+
+     <span class="c1"># e &quot;Pretty much everything your game needs!&quot;</span>
+     <span class="k">pass</span>
+</pre></div>
+</div>
+<p>甚至可以运行非对话型的语句，比如条件语句或者Python语句。例如，我们可以把下面这句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="s2">&quot;You scored [points] points!&quot;</span>
+</pre></div>
+</div>
+<p>在其他语言中写成：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># game/script.rpy:103</span>
+<span class="k">translate</span> <span class="n">piglatin</span> <span class="n">start_36562aba</span><span class="p">:</span>
+
+    <span class="c1"># e &quot;You scored [points] points!&quot;</span>
+    <span class="k">$</span> <span class="n">latin_points</span> <span class="o">=</span> <span class="n">to_roman_numerals</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">e</span> <span class="s2">&quot;Ouyay oredscay [latin_points] ointspay!&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="translation-tips">
+<span id="id7"></span><h3>小贴士<a class="headerlink" href="#translation-tips" title="Link to this heading"> link</a></h3>
+<p>在处理多语言支持的对话内容时必须非常小心，特别是某个脚本标签(label)下某个对话内容重复多次的情况。在某些时候，有必要在主语言脚本中直接声明多语言支持的标识符，像这条语句：</p>
+<p>有时候，需要修改原语言对话内容中的某一行，但不想要修改所有翻译文件的对应内容。
+例如，英语中修复了个拼写错误，但不想要修改俄语的翻译文件。</p>
+<p>此时可以在say语句中使用 <code class="docutils literal notranslate"><span class="pre">id</span></code> 从句，指定语言的翻译ID。
+例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="n">e</span> <span class="s2">&quot;This used to have a typo.&quot;</span> <span class="na">id</span> <span class="n">start_61b861a2</span>
+</pre></div>
+</div>
+<p>增加文本标签(label)也可能会导致多语言支持冲突。为了防止这种情况出现，脚本标签(label)后加上一个 <code class="docutils literal notranslate"><span class="pre">hide</span></code> 分句就可以在翻译文件生成时忽略这个标签：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">ignored_by_translation</span> <span class="k">hide</span><span class="p">:</span>
+    <span class="s2">&quot;...&quot;</span>
+</pre></div>
+</div>
+<p>由于多语言语句块(block)中可以包含Python语句，这些Python语句不应该在超过其所处语句块(block)之外造成任何副作用。这是因为，切换语言会重启多语言支持语句块(block)，语句块内的Python语句的副作用会发生多次。</p>
+</section>
+</section>
+<section id="string-translations">
+<span id="id8"></span><h2>菜单和字符串的多语言支持<a class="headerlink" href="#string-translations" title="Link to this heading"> link</a></h2>
+<p>除了对话，Ren’Py也可以提供菜单与其他字符串内文本的多语言支持。接口的各种语言文本条数是严格1比1对应的。某个字符串被对上的话，就能被另一种语言的字符串替换。</p>
+<p>当生成翻译文件时，Ren’Py会扫描脚本文件中的菜单和 _()函数中定义的字符串。然后它会将这些字符串内容放入一个多语言字符串语句块(block)中。例如，如果我们有如下的脚本内容：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Eileen&quot;</span><span class="p">))</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">menu</span><span class="p">:</span>
+
+    <span class="s2">&quot;Go West&quot;</span><span class="p">:</span>
+        <span class="c1"># ...</span>
+
+    <span class="s2">&quot;Head East&quot;</span><span class="p">:</span>
+        <span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>Ren’Py会自动生成：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">translate</span> <span class="n">piglatin</span> <span class="k">strings</span><span class="p">:</span>
+
+    <span class="k">old</span> <span class="s2">&quot;Eileen&quot;</span>
+    <span class="k">new</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">old</span> <span class="s2">&quot;Go West&quot;</span>
+    <span class="k">new</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">old</span> <span class="s2">&quot;Head East&quot;</span>
+    <span class="k">new</span> <span class="s2">&quot;&quot;</span>
+</pre></div>
+</div>
+<p>完成后的多语言支持内容为：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">translate</span> <span class="n">piglatin</span> <span class="k">strings</span><span class="p">:</span>
+
+    <span class="k">old</span> <span class="s2">&quot;Eileen&quot;</span>
+    <span class="k">new</span> <span class="s2">&quot;Eileenway&quot;</span>
+
+    <span class="k">old</span> <span class="s2">&quot;Go West&quot;</span>
+    <span class="k">new</span> <span class="s2">&quot;Ogay Estway&quot;</span>
+
+    <span class="k">old</span> <span class="s2">&quot;Head East&quot;</span>
+    <span class="k">new</span> <span class="s2">&quot;Eadhay Eastway&quot;</span>
+</pre></div>
+</div>
+<p>字符串的多语言支持用于在对话中内插的某些字符串。那些字符串不能以对话形式支持多语言。</p>
+<p>如果某个字符串同时用在多处，可以使用{#…}文本标签(tag)加以区别。尽管这些字符串使用同样的名字，Ren’Py把这些稍有差别的字符串看作需要多语言支持：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;New&quot;</span>
+<span class="s2">&quot;New{#project}&quot;</span>
+<span class="s2">&quot;New{#game}&quot;</span>
+<span class="s2">&quot;New{#playlist}&quot;</span>
+</pre></div>
+</div>
+<p>translate字符串语句可以用来对None语言脚本的转换。在使用非英语编写的游戏中，translate字符串语句可以用来转换Ren’Py的用户接口。:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">translate</span> <span class="kc">None</span> <span class="k">strings</span><span class="p">:</span>
+    <span class="k">old</span> <span class="s2">&quot;Start Game&quot;</span>
+    <span class="k">new</span> <span class="s2">&quot;Artstay Amegay&quot;</span>
+</pre></div>
+</div>
+<section id="translating-substitutions">
+<span id="id9"></span><h3>多语言替换<a class="headerlink" href="#translating-substitutions" title="Link to this heading"> link</a></h3>
+<p>!t标志用于表示多语言的字符串转换。下面这段脚本使用了原对话和多语言字符串的组合：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">mood_points</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">mood</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;great&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">mood</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;awful&quot;</span><span class="p">)</span>
+
+<span class="s2">&quot;I&#39;m feeling [mood!t].&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="extract-merge-translations">
+<span id="id10"></span><h3>提取和复用多语言字符串<a class="headerlink" href="#extract-merge-translations" title="Link to this heading"> link</a></h3>
+<p>多语言字符串可以从某个项目中提取，然后移植到另一个项目。完成这点需要以下步骤：</p>
+<ul class="simple">
+<li><p>选取来源项目，并选择“生成翻译文件”。</p></li>
+<li><p>输入需要提取的语言，并点击“导出字串翻译”。</p></li>
+<li><p>回到主菜单，选取目标项目，并选择“生成翻译文件”。</p></li>
+<li><p>输入需要复用的语言(通常与之前提取的语言相通)，并选择“合并字串翻译”。</p></li>
+</ul>
+<p>这里有两个选项，控制语言的复用功能：</p>
+<dl class="simple">
+<dt>替换已存在的翻译</dt><dd><p>如果选用这项，已经存在的重要翻译文件会被覆盖。默认情况下，复用过程会拒绝覆盖已经存在的重要翻译文件。</p>
+</dd>
+<dt>反转语言</dt><dd><p>在复用之前反转主备语言类型。例如，使用一个原本英语为主语言俄语为备选语言的项目，复用为“俄语为主语言英语为备选语言”的项目时，就需要勾选该项。</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="image-file-translation">
+<span id="id11"></span><h2>图片和文件的多语言支持<a class="headerlink" href="#image-file-translation" title="Link to this heading"> link</a></h2>
+<p>当让一个游戏支持多语言时，最好替换文件时带一个语言版本号。例如，某个图片包含文本，最好的办法是使用带其他文字的图片替换。而那个新的图片带一个语言版本号。</p>
+<p>Ren’Py遇到这种情况时，会在translation文件夹里寻找对应的图片。例如，假如使用了“piglatin”语言，并加载了“library.png”图片，Ren’Py就会使用 <code class="file docutils literal notranslate"><span class="pre">game/tl/piglatin/library.png</span></code> 图片代替 <code class="file docutils literal notranslate"><span class="pre">game/library.png</span></code>。</p>
+<p>如果文件位置直接在game目录中，该目录应该包含在对应的语言中。
+例如，文件 <code class="file docutils literal notranslate"><span class="pre">game/gui/main_menu.png</span></code>，可以使用 <code class="file docutils literal notranslate"><span class="pre">game/tl/piglatin/gui/main_menu.png</span></code> 作为多语言替换图。</p>
+</section>
+<section id="style-translations">
+<span id="id12"></span><h2>样式的多语言支持<a class="headerlink" href="#style-translations" title="Link to this heading"> link</a></h2>
+<p>当对某个游戏实现多语言支持时，最好变更样式(style)——特别是那些与字体相关的样式。Ren’Py使用多语言样式语句块(block)和多语言python语句块处理这类情况。这些语句块(block)可以更改语言相关的变量和样式。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">translate</span> <span class="n">piglatin</span> <span class="k">style</span> <span class="k">default</span><span class="p">:</span>
+    <span class="na">font</span> <span class="s2">&quot;stonecutter.ttf&quot;</span>
+</pre></div>
+</div>
+<p>更常见的是，对话使用的字体由 <a class="reference internal" href="gui.html#var-gui.text_font"><code class="xref std std-var docutils literal notranslate"><span class="pre">gui.text_font</span></code></a> 决定。
+系统文本，比如异常界面、可达性菜单和GUI菜单，都由 <a class="reference internal" href="gui.html#var-gui.system_font"><code class="xref std std-var docutils literal notranslate"><span class="pre">gui.system_font</span></code></a> 项决定。
+系统使用的字体应能同时显示ASCII码和其他对应语言文字。
+综上，可以这样定制：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">translate</span> <span class="n">piglatin</span> <span class="k">python</span><span class="p">:</span>
+    <span class="n">gui</span><span class="o">.</span><span class="na">text_font</span> <span class="o">=</span> <span class="s2">&quot;stonecutter.ttf&quot;</span>
+    <span class="n">gui</span><span class="o">.</span><span class="n">system_font</span> <span class="o">=</span> <span class="s2">&quot;Noto Sans.ttf&quot;</span>
+</pre></div>
+</div>
+<p>当某种语言被激活——无论是游戏开始时还是中途修改语言——Ren’Py都会重设初始化环节内所有样式的内容。
+Ren’Py会运行所有与当前激活语言相关的 <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">python</span></code> 语句块、style语句块和translate style语句块，保证文件中这些语句块被优先执行。
+最后，Ren’Py会重建所有样式，并使语言修改生效。</p>
+<p>样式的多语言支持可以添加在任何.rpy文件中。</p>
+</section>
+<section id="deferred-translations">
+<span id="id13"></span><h2>翻译文件延迟加载<a class="headerlink" href="#deferred-translations" title="Link to this heading"> link</a></h2>
+<p>比较大的游戏如果一口气加载所有翻译文件相当耗时。为了能提速，Ren’Py提供了翻译文件延迟加载功能。
+若要启用该功能，需要在脚本中添加：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">defer_tl_scripts</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>通常这行会写在 <code class="file docutils literal notranslate"><span class="pre">options.rpy</span></code> 或其他加载优先级高于翻译文件的脚本中。</p>
+<p>当该项为True时，Ren’Py不会在初始化阶段加载 <code class="file docutils literal notranslate"><span class="pre">tl/</span><em><span class="pre">language</span></em></code> 目录下的脚本。
+之后，只有首次启用某种语言后，Ren’Py才会在游戏启动时加载对应翻译文件。</p>
+<p>由于在初始化阶段不加载 <code class="file docutils literal notranslate"><span class="pre">tl/</span><em><span class="pre">language</span></em></code> 目录的文件，所以这些文件不应包含在初始化阶段必须执行的内容。
+比如 <code class="docutils literal notranslate"><span class="pre">init</span></code> 或 <code class="docutils literal notranslate"><span class="pre">python</span></code> 开头的语句块，<code class="docutils literal notranslate"><span class="pre">screen</span></code>、<code class="docutils literal notranslate"><span class="pre">image</span></code>、<code class="docutils literal notranslate"><span class="pre">transform</span></code> 等语句。
+翻译文件应该只有以 <code class="docutils literal notranslate"><span class="pre">translate</span></code>、<code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">python</span></code> 和 <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">style</span></code> 开头的语句块。</p>
+</section>
+<section id="default-language">
+<span id="id14"></span><h2>默认语言<a class="headerlink" href="#default-language" title="Link to this heading"> link</a></h2>
+<p>使用以下方法可以选择默认语言：</p>
+<ul class="simple">
+<li><p>根据设置的RENPY_LANGUAGE环境变量。</p></li>
+<li><p>根据设置的 <a class="reference internal" href="#var-config.language"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.language</span></code></a> 。</p></li>
+<li><p>使用之前游戏中选择的语言选项。</p></li>
+<li><p>游戏第一次运行，并且 <a class="reference internal" href="config.html#var-config.enable_language_autodetect"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.enable_language_autodetect</span></code></a> 的值是True时，Ren’Py会尝试使用 <a class="reference internal" href="config.html#var-config.locale_to_language_function"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.locale_to_language_function</span></code></a> 自动检测语言。</p></li>
+<li><p>游戏第一次运行时，使用 <a class="reference internal" href="config.html#var-config.default_language"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.default_language</span></code></a> 。</p></li>
+<li><p>以上情况都未配置，使用None语言。</p></li>
+</ul>
+</section>
+<section id="translation-info-screen">
+<span id="id15"></span><h2>多语言信息界面<a class="headerlink" href="#translation-info-screen" title="Link to this heading"> link</a></h2>
+<p>进入开发者菜单(Shift+D)后选择“Show Translation Info”，可以发现一个关于多语言的界面。
+对于非开发人员，该界面可以使用如下脚本显示：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="k">screen</span> <span class="n">_translation_info</span>
+</pre></div>
+</div>
+</section>
+<section id="translation-actions-functions-and-variables">
+<span id="id16"></span><h2>多语言支持的行为、函数和变量<a class="headerlink" href="#translation-actions-functions-and-variables" title="Link to this heading"> link</a></h2>
+<p>切换语言的主要办法是使用语言的行为函数。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Language">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Language" title="Link to this definition"> link</a></dt>
+<dd><p>将游戏语言改为 <cite>language</cite> 。</p>
+<dl class="simple">
+<dt><cite>language</cite></dt><dd><p>一个字符串，表示切换的目标语言，若为None表示游戏脚本默认语言。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>语言行为函数可以用于在自定义配置界面添加一个语言自定义选项。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">frame</span><span class="p">:</span>
+    <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+    <span class="k">has</span> <span class="k">vbox</span>
+
+    <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Language&quot;</span><span class="p">)</span>
+    <span class="k">textbutton</span> <span class="s2">&quot;English&quot;</span> <span class="na">action</span> <span class="n">Language</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">textbutton</span> <span class="s2">&quot;Igpay Atinlay&quot;</span> <span class="na">action</span> <span class="n">Language</span><span class="p">(</span><span class="s2">&quot;piglatin&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>还有三个与多语言支持相关的函数：</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.change_language">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">change_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.change_language" title="Link to this definition"> link</a></dt>
+<dd><p>一个字符串，表示切换的目标语言命，若为None表示游戏脚本默认语言。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.get_translation_identifier">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">get_translation_identifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.get_translation_identifier" title="Link to this definition"> link</a></dt>
+<dd><p>返回当前语句的翻译文件标识符。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.known_languages">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">known_languages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.known_languages" title="Link to this definition"> link</a></dt>
+<dd><p>返回已知语言的集。不包含默认语言None。</p>
+</dd></dl>
+
+<p>此外，还有四个与字符串多语言支持相关的函数：</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition"> link</a></dt>
+<dd><p>(单下划线)返回字符串 <cite>s</cite> 的原语言内容。Ren’Py会搜寻该函数传入的字符串，并把它们加入到多语言支持字符串列表中。这些字符串不会转换为其他语言，直到他们被显示过。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id17" title="Link to this definition"> link</a></dt>
+<dd><p>(双下划线)返回字符串 <cite>s</cite> 转换成当前语言后的内容。该函数返回的字符串会被加入到多语言支持字符串列表中。注意字符串可以经历过双重转换。如果其匹配到一个对应的多语言字符串则显示转换后的结果。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">___</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id18" title="Link to this definition"> link</a></dt>
+<dd><p>(连续3个下划线)立刻将 <cite>s</cite> 转换成当前语言。若在 <a class="reference internal" href="text.html#text-interpolation"><span class="std std-ref">文本内插</span></a> 中调用此函数，则会在作用域内使用本地变量调用。
+注意，此时显示的字符串可能经过了两次转换。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="p">
+<span class="sig-name descname"><span class="pre">_p</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#p" title="Link to this definition"> link</a></dt>
+<dd><p>将一个字符串重新格式化并标记其是支持多语言的。使用文本组件显示的字符串是转换过语言的。该函数的用途是，使用表单格式(form)定义多行字符串：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">about</span> <span class="o">=</span> <span class="n">_p</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    These two lines will be combined together</span>
+<span class="s2">    to form a long line.</span>
+
+<span class="s2">    This line will be separate.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>重新格式化会将整段文本断行，移除每行开头和结尾的空白。整段文本末尾的空白行会被删除。段落中的空白行会被插入段落分割符。{p}文本标签(tag)可以断行，但不会增加新的空白行。</p>
+<p>在字符串多语言支持中的使用方式如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">old</span> <span class="s2">&quot;These two lines will be combined together to form a long line.</span><span class="se">\n\n</span><span class="s2">This line will be separate.&quot;</span>
+<span class="k">new</span> <span class="n">_p</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    These two lines will be combined together</span>
+<span class="s2">    to form a long line. Bork bork bork.</span>
+
+<span class="s2">    This line will be separate. Bork bork bork.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.translate_string">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">translate_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language=&lt;renpy.object.Sentinel</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f5afce071f0&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.translate_string" title="Link to this definition"> link</a></dt>
+<dd><p>将 <cite>s</cite> 立刻翻译为指定语言 <cite>language</cite> 并返回。
+如果 <cite>language</cite> 的值是Default，使用设置(preferences)中的语言。
+经过该函数翻译后的字符串 <strong>不会</strong> 被添加到可翻译字符串列表中。指定某个字符串的语言可能会导致其发生两次翻译的情况。</p>
+</dd></dl>
+
+<p>这里有两个语言相关的变量。一个是 <a class="reference internal" href="config.html#var-config.default_language"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.default_language</span></code></a> ，用于改变游戏默认语言。</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_preferences.language">
+<span class="sig-name descname"><span class="pre">_preferences.language</span></span><a class="headerlink" href="#var-_preferences.language" title="Link to this definition"> link</a></dt>
+<dd><p>当前语言名称，如果使用的是默认语言则是None。需要改变语言的话，调用 <a class="reference internal" href="#renpy.change_language" title="renpy.change_language"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.change_language()</span></code></a> 函数。</p>
+</dd></dl>
+
+</section>
+<section id="unsanctioned-translations">
+<span id="id19"></span><h2>非常规多语言支持<a class="headerlink" href="#unsanctioned-translations" title="Link to this heading"> link</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>创建非常规多语言支持前，最好获取原游戏创作者的许可。</p>
+</div>
+<p>在没有游戏创作者原生支持的情况下，Ren’Py也有一点支持可以创建多语言支持。Ren’Py能根据游戏内所有字符串自动生成一个字符串多语言支持的文件。因为多语言字符串可以用在未转换过的对话，这个小技巧可以让游戏直接支持多语言。</p>
+<p>想要创建一个字符串翻译文件，需要执行以下步骤：</p>
+<ul class="simple">
+<li><p>设置环境变量RENPY_LANGUAGE为你想要添加的目标语言。</p></li>
+<li><p>设置环境变量RENPY_UPDATE_STRINGS为一个非空值。</p></li>
+<li><p>执行游戏直到看见目标文本内容。</p></li>
+</ul>
+<p>这些操作会更新 <code class="file docutils literal notranslate"><span class="pre">game/tl/language/strings.rpy</span></code> 文件，其中包含所有多语言字符串的一个模板。</p>
+<p>如果某个游戏内部不支持更改语言，可以在 <a class="reference internal" href="#var-config.language"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.language</span></code></a>
+中使用一个 <code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> 语句块(block)，强行切换到目标语言。</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-config.language">
+<span class="pre">define</span> <span class="sig-name descname"><span class="pre">config.language</span></span> <span class="pre">=</span> <span class="pre">None</span><a class="headerlink" href="#var-config.language" title="Link to this definition"> link</a></dt>
+<dd><p>若不是None，会在游戏启动时切换为该语言，覆盖用户之前更改过的设置。</p>
+</dd></dl>
+
+<p>除了使用字符串的多语言支持解决对话的问题，上面描述的非常规多语言支持技巧也可以应用在图片和样式上。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="text.html" class="btn btn-neutral float-left" title="文本" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="displayables.html" class="btn btn-neutral float-right" title="可视组件" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
