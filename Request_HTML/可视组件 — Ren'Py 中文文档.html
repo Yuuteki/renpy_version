@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>可视组件 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/displayables.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="变换" href="transforms.html" />
+    <link rel="prev" title="多语言支持" href="translation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">可视组件</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#images">图像</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Image"><code class="docutils literal notranslate"><span class="pre">Image()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#svg">SVG图片</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-like-displayables">类图像的可视组件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#AlphaMask"><code class="docutils literal notranslate"><span class="pre">AlphaMask()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Borders"><code class="docutils literal notranslate"><span class="pre">Borders()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#padding"><code class="docutils literal notranslate"><span class="pre">padding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Composite"><code class="docutils literal notranslate"><span class="pre">Composite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Crop"><code class="docutils literal notranslate"><span class="pre">Crop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#DynamicImage"><code class="docutils literal notranslate"><span class="pre">DynamicImage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Flatten"><code class="docutils literal notranslate"><span class="pre">Flatten()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Frame"><code class="docutils literal notranslate"><span class="pre">Frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Null"><code class="docutils literal notranslate"><span class="pre">Null()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Solid"><code class="docutils literal notranslate"><span class="pre">Solid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Tile"><code class="docutils literal notranslate"><span class="pre">Tile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gui-text-displayables">文本组件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-displayables">动态可视组件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ConditionSwitch"><code class="docutils literal notranslate"><span class="pre">ConditionSwitch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#DynamicDisplayable"><code class="docutils literal notranslate"><span class="pre">DynamicDisplayable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ShowingSwitch"><code class="docutils literal notranslate"><span class="pre">ShowingSwitch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#layer-displayables">图层可视组件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#layout-boxes-and-grids">布局框和坐标系</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Fixed"><code class="docutils literal notranslate"><span class="pre">Fixed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#HBox"><code class="docutils literal notranslate"><span class="pre">HBox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#VBox"><code class="docutils literal notranslate"><span class="pre">VBox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Grid"><code class="docutils literal notranslate"><span class="pre">Grid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#effects">特效</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#AlphaBlend"><code class="docutils literal notranslate"><span class="pre">AlphaBlend()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#image-manipulators">图像处理器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#placeholders">占位组件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Placeholder"><code class="docutils literal notranslate"><span class="pre">Placeholder()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#displayable-prefixes">可视组件前缀</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#displayable-see-also">其他参考</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">可视组件</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/displayables.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="displayables">
+<span id="id1"></span><h1>可视组件<a class="headerlink" href="#displayables" title="Link to this heading"> link</a></h1>
+<p>可视组件是一类可以向用户显示的对象。Ren’Py可视组件具有多种用途。</p>
+<ul class="simple">
+<li><p>使用image语句声明一个图像名。</p></li>
+<li><p>使用screen language add语句添加至界面(screen)。</p></li>
+<li><p>声明某个配置变量。</p></li>
+<li><p>声明某个样式特性。</p></li>
+</ul>
+<p>当Ren’Py函数或者变量需要一个可视组件时，总共可用的东西有5种：</p>
+<ul class="simple">
+<li><p>典型的可视组件(displayable)对象，通过调用本章后面提到的某些函数创建。</p></li>
+<li><p>一个带英文冒号 <code class="docutils literal notranslate"><span class="pre">:</span></code> 的字符串。很少使用，详见下面 <a class="reference internal" href="#displayable-prefixes"><span class="std std-ref">可视组件前缀</span></a> 部分。</p></li>
+<li><p>一个带英文句号(.)的字符串。该字符串在传入 <a class="reference internal" href="#Image" title="Image"><code class="xref py py-func docutils literal notranslate"><span class="pre">Image()</span></code></a> 函数后被作为一个文件名处理。</p></li>
+<li><p>一种颜色。可能是十六进制表示的颜色字符串格式——比如 “#rgb”、“#rgba”、“#rrggbb”或“#rrggbbaa”，可能是一个 <a class="reference internal" href="color_class.html#Color" title="Color"><code class="xref py py-class docutils literal notranslate"><span class="pre">Color</span></code></a>，也可能是一个(r, g, b, a)格式的元组，元组中每个元素的值都位于0到255的闭区间内。颜色会被传入 <a class="reference internal" href="#Solid" title="Solid"><code class="xref py py-func docutils literal notranslate"><span class="pre">Solid()</span></code></a> 函数。</p></li>
+<li><p>一个图像名。所有字符串拼接后，引用某个使用image语句定义的图像。图像名可以由image语句定义，或者从 <a class="reference internal" href="displaying_images.html#images-directory"><span class="std std-ref">images目录</span></a> 中自动定义。</p></li>
+<li><p>一个列表。如果提供的是一个列表，列表中的物件(item)会按后面描述的方式展开，并逐个检查是否能匹配到某个文件名或图像名。如果匹配成功，列表物件展开会停止，匹配到的内容会按照刚才提到的几种方式处理。</p></li>
+</ul>
+<p>字符串中允许存在一个或多个用方括号包含的带替换内容，比如“eileen [mood]”和“eileen_[outfit]_[mood].png”这样形式的。一旦出现了类似的字符串，引擎就会创建出动态图像。动态图像在每次互动行为(比如say语句和菜单)开始阶段，具有
+<a class="reference internal" href="text.html#text-interpolation"><span class="std std-ref">文本内插</span></a> 的行为表现。最终生成的字符串会按照上文提到的规则处理。</p>
+<p>如果某个字符串含有一个子字符串 “[prefix_”] ，就会使用当前可视组件关联样式的前缀替换该子字符串。</p>
+<section id="images">
+<span id="id2"></span><h2>图像<a class="headerlink" href="#images" title="Link to this heading"> link</a></h2>
+<p>最常见的可视组件是通过加载硬盘上的一个文件并显示的图像(image)。由于图像是如此常用，所以每当某个上下文中某字符串给出了一个文件名，并需要将这个文件用作可视组件时，引擎就会自动创建一个图像(image)对象。唯一需要直接使用图像(image)对象的情况是，你想创建一个带样式特性的图像。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="Image">
+<span class="sig-name descname"><span class="pre">Image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimize_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oversample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">96</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Image" title="Link to this definition"> link</a></dt>
+<dd><p>从文件中加载一个图像。 <cite>filename</cite> 是一个字符串，表示加载的文件名。</p>
+<dl class="simple">
+<dt><cite>filename</cite></dt><dd><p>应该是一个图片文件名，包括扩展名。</p>
+</dd>
+<dt><cite>optimize_bounds</cite></dt><dd><p>若为True，图片在一个不透明像素构成的包围框(bounding box)内的部分才会加载到显存中。
+(只有将图片作为着色器输入时，才可能需要将该项设置为False。)</p>
+</dd>
+<dt><cite>oversample</cite></dt><dd><p>若该参数大于1，表示图像需要过采样(oversample)，实际像素数比逻辑尺寸大。
+例如分辨率为2048×2048，过采样率为2的图片文件，在各种布局计算时都当作1024×1024大小的图片。</p>
+</dd>
+<dt><cite>dpi</cite></dt><dd><p>SVG图片的DPI。默认值为96。增大该参数可以把SVG图片渲染得更大，反之则渲染得更小。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 这两行等价。</span>
+<span class="k">image</span> <span class="n">logo</span> <span class="o">=</span> <span class="s2">&quot;logo.png&quot;</span>
+<span class="k">image</span> <span class="n">logo</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;logo.png&quot;</span><span class="p">)</span>
+
+<span class="c1"># 使用Image()允许我们指定一个默认位置截取某个图像的一部分。</span>
+<span class="k">image</span> <span class="n">logo</span> <span class="n">right</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;logo.png&quot;</span><span class="p">,</span> <span class="na">xalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>以下四种是推荐使用的图片文件格式：</p>
+<ul class="simple">
+<li><p>AVIF</p></li>
+<li><p>Webp</p></li>
+<li><p>Png</p></li>
+<li><p>Jpg</p></li>
+</ul>
+<p>推荐的矢量图文件格式：</p>
+<ul class="simple">
+<li><p>SVG</p></li>
+</ul>
+<p>没有动画的Gif文件和Bmp文件也是支持的，但已经不推荐用在本世代游戏中。</p>
+<p>从硬盘加载文件，解码图像并将图像绘制到屏幕上，这一系列工作耗时比较长。因此加载过程需要几十甚至上百毫秒的话，就无法提供一个可接受的帧率，并会让用户觉得恼怒。</p>
+<p>因为图像是一个固定尺寸，在大多数情况下都不会更改图像的可视区域，所以可以在图像真正使用之前提前加载，并放入内存的图片缓存中。图片解码并放入缓存之后，就可以很高效地绘制在屏幕上了。</p>
+<p>Ren’Py会预测未来使用的图像，加载文件后先放入图像缓存备用。当图像缓存空间不足时，Ren’Py会先删除不会再被使用到的那些图像。</p>
+<p>默认情况下，Ren’Py会预先缓存相当于8个界面大小的图像数据。(如果你的界面分辨率是800×600，那一个界面大小相当于一张800×600的图像，两张400×600的图像，以此类推。)这个值可以通过 :var:config.image_cache_size 配置项修改。</p>
+<p>尽管精确的数值取决于规则细节，并且也存在一些明确的标准。一个最基础的规则是，图像缓存中的每一个像素，都占用4个字长的主内存和4个字长的显存。</p>
+</section>
+<section id="svg">
+<span id="svg-images"></span><h2>SVG图片<a class="headerlink" href="#svg" title="Link to this heading"> link</a></h2>
+<p>Ren’Py支持SVG 1.0标准的图片，使用的是NanoSVG库。一些 <strong>不支持</strong> 的功能特性如下：</p>
+<ul class="simple">
+<li><p>文本类元素直接忽略。如果文本已转换为路径(path)，则可以渲染出来。</p></li>
+<li><p>内嵌的位图(bitmap)直接忽略。</p></li>
+<li><p>内置脚本直接忽略。</p></li>
+<li><p>动画直接忽略。</p></li>
+</ul>
+<p>NanoSVG库支持的功能特性详见 <a class="reference external" href="https://core.tcl-lang.org/tips/doc/trunk/tip/507.md">这里</a> 。</p>
+<p>推荐将所有SVG图片中无法渲染的内容都转换为路径(path)。</p>
+<p>Ren’Py渲染SVG图片时假设虚拟界面的分辨率为96dpi.
+如果窗口拉大或缩小，SVG图片将等比缩放，<a class="reference internal" href="displaying_images.html#oversampling"><span class="std std-ref">过采样</span></a> 会用于确保图片能以正确的虚拟尺寸渲染。</p>
+<p>SVG图片在缩放后依然能保持锐度。</p>
+</section>
+<section id="image-like-displayables">
+<span id="id4"></span><h2>类图像的可视组件<a class="headerlink" href="#image-like-displayables" title="Link to this heading"> link</a></h2>
+<p>我们将这些可视组件称作“类图像”，是因为他们占用界面中的一块矩形区域但不会对输入做任何反应。
+有别于通常的图像，这些“类图像”可以调整尺寸填充某个区域(Frame、Tile、Solid)，或者允许用户指定尺寸(Composite、Crop、Null)。这些“类图像”不是图像处理器(Image Manipulator)。</p>
+<p>类图像可视组件使用 <a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a>。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="AlphaMask">
+<span class="sig-name descname"><span class="pre">AlphaMask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#AlphaMask" title="Link to this definition"> link</a></dt>
+<dd><p>可视组件使用入参 <em>child</em> 作为自身的颜色，其alpha通道值使用 <em>child</em> 的alpha通道值与 <em>mask</em> 的乘积。因此，该可视组件具有 <em>child</em> 同样的颜色，当 <em>child</em> 或 <em>mask</em> 之一是透明的情况下该组件也是透明，当 <em>child</em> 和 <em>mask</em> 都不透明的情况下该组件才不透明。</p>
+<p><em>child</em> 和 <em>mask</em> 可以是任意可视组件。AlphaMask的尺寸是 <em>child</em> 和 <em>mask</em> 的重叠区域尺寸。</p>
+<p>需要注意，该函数与im.AlphaMask()使用不同的入参，im.AlphaMask()还使用入参mask的颜色通道。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Borders">
+<span class="sig-name descname"><span class="pre">Borders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Borders" title="Link to this definition"> link</a></dt>
+<dd><p>border对象提供边界(border)尺寸和码放(tile)给 <a class="reference internal" href="#Frame" title="Frame"><code class="xref py py-func docutils literal notranslate"><span class="pre">Frame()</span></code></a> 对象。其也可以提供填充( <a class="reference internal" href="#padding" title="padding"><code class="xref py py-func docutils literal notranslate"><span class="pre">padding()</span></code></a> )信息，用于带填充特性的窗口(window)或者框架(frame)。</p>
+<dl class="simple">
+<dt><cite>left top right bottom</cite></dt><dd><p>这些参数提供的某个框架(frame)需要使用的插入尺寸，以及各条边的填充(padding)边界。这些值应该是0或者正整数。</p>
+</dd>
+<dt><cite>pad_left pad_top pad_right pad_bottom</cite></dt><dd><p>这些参数会添加到各条边填充(padding)的值，可以是正整数或负整数。(例如，如果 <em>left</em> 是5， <em>pad_left</em> 是-3，那么最终的填充(padding)值就是2。)</p>
+</dd>
+</dl>
+<p>填充(padding)信息是一个字段(field)：</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="padding">
+<span class="sig-name descname"><span class="pre">padding</span></span><a class="headerlink" href="#padding" title="Link to this definition"> link</a></dt>
+<dd><p>这是一个4元素的元组，包含了矩形4条边的填充(padding)信息。</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Composite">
+<span class="sig-name descname"><span class="pre">Composite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Composite" title="Link to this definition"> link</a></dt>
+<dd><p>这个函数使用其他可视组件合成并创建一个新的可视组件。新可视组件的尺寸由 <em>size</em> 决定。 <em>size</em> 是一个(width, height)形式的元组，两个元素分别表示宽度和高度。</p>
+<p>保留的固定位置参数用于放置LiveComposite中的图像。保留的固定位置参数应该是由两个数据构成的组。组中的第一个元素是一个(x, y)形式的元组；第二个元素是合成用的可视组件，使用前一个元素表示的位置进行合成。</p>
+<p>可视组件的合成顺序为从后往前。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">eileen</span> <span class="n">composite</span> <span class="o">=</span> <span class="n">Composite</span><span class="p">(</span>
+    <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;body.png&quot;</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;clothes.png&quot;</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="s2">&quot;expression.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Crop">
+<span class="sig-name descname"><span class="pre">Crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Crop" title="Link to this definition"> link</a></dt>
+<dd><p>这个函数使用 <em>rect</em> 剪裁 <em>child</em> 并创建一个新的可视组件。 <em>rect</em> 是一个(x, y, width, height)形式的元组。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">eileen</span> <span class="n">cropped</span> <span class="o">=</span> <span class="n">Crop</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="s2">&quot;eileen happy&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DynamicImage">
+<span class="sig-name descname"><span class="pre">DynamicImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DynamicImage" title="Link to this definition"> link</a></dt>
+<dd><p>动态图像是一种可视组件，这个组件包含文本内插(text interpolation)字符串。那些待内插的文本内容补完后就能生成一个新的可视组件对象。每一项互动行为开始后都会执行文本内插补完字符串。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Flatten">
+<span class="sig-name descname"><span class="pre">Flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flatten" title="Link to this definition"> link</a></dt>
+<dd><p>该对象将可能由多个纹理组成的入参 <em>child</em> ，压成单个纹理。</p>
+<p>某些操作，比如变换特性alpha，会应用到最终构成可视组件的每一个纹理上。最终的可视组件会剔除错误结果，比如界面上的纹理有重叠。Flatten对象根据多个纹理创建单个纹理的时，能避免这些问题。</p>
+<p>Flatten是一个性能消耗高昂的操作，应该在必要的情况下才使用。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Frame">
+<span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Frame" title="Link to this definition"> link</a></dt>
+<dd><p>Frame是一个可视组件，可以调整图像尺寸使其匹配某个可用区域，同时也保存其边界(border)的宽度和高度。Frame通常用于窗口(window)或按钮(button)的背景。</p>
+<p>(译者注：中文里类似该组件的图像处理方式为“九宫格”。)</p>
+<figure class="align-default" id="id14">
+<img alt="_images/frame_example.png" src="_images/frame_example.png" />
+<figcaption>
+<p><span class="caption-text">使用框架(frame)将图像增大为原尺寸的两倍。</span><a class="headerlink" href="#id14" title="Link to this image"> link</a></p>
+</figcaption>
+</figure>
+<dl class="simple">
+<dt><cite>image</cite></dt><dd><p>一个可以被框架(frame)调整尺寸的图像处理器。</p>
+</dd>
+<dt><cite>left</cite></dt><dd><p>左边框的边界(border)尺寸。此入参也可以是一个 <code class="xref py py-func docutils literal notranslate"><span class="pre">Border()</span></code> 对象，这种情况下其他几个参数也都被这个Border对象一块代替。</p>
+</dd>
+<dt><cite>top</cite></dt><dd><p>上边框的边界(border)尺寸。</p>
+</dd>
+<dt><cite>right</cite></dt><dd><p>右边框的边界(border)尺寸。如果为None，则默认与  <em>left</em> 一样。</p>
+</dd>
+<dt><cite>bottom</cite></dt><dd><p>下边框的边界(border)尺寸。如果为None，则默认与  <em>top</em> 一样。</p>
+</dd>
+<dt><cite>tile</cite></dt><dd><p>若该值为True，使用码放(tile)形式重新调整图像区域尺寸，否则使用缩放(scale)形式。</p>
+</dd>
+</dl>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 文本窗口过小时重新调整背景尺寸</span>
+<span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">style</span><span class="o">.</span><span class="k">window</span><span class="o">.</span><span class="na">background</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="s2">&quot;frame.png&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Null">
+<span class="sig-name descname"><span class="pre">Null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Null" title="Link to this definition"> link</a></dt>
+<dd><p>在界面上创建一个空框(box)的可视组件。框的尺寸由 <em>width</em> 和 <em>height</em> 控制。这个对象用在某个可视组件需要一个子组件且找不到合适的子组件时，或者在box里充当空白。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">logo</span> <span class="n">spaced</span> <span class="o">=</span> <span class="n">HBox</span><span class="p">(</span><span class="s2">&quot;logo.png&quot;</span><span class="p">,</span> <span class="n">Null</span><span class="p">(</span><span class="na">width</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span> <span class="s2">&quot;logo.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Solid">
+<span class="sig-name descname"><span class="pre">Solid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solid" title="Link to this definition"> link</a></dt>
+<dd><p>将声明的颜色 <em>color</em> 填满自身所有区域的可视组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">white</span> <span class="o">=</span> <span class="n">Solid</span><span class="p">(</span><span class="s2">&quot;#fff&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Tile">
+<span class="sig-name descname"><span class="pre">Tile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tile'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tile" title="Link to this definition"> link</a></dt>
+<dd><p>将 <em>child</em> 以码放形式填充整个可视组件区域。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">bg</span> <span class="n">tile</span> <span class="o">=</span> <span class="n">Tile</span><span class="p">(</span><span class="s2">&quot;bg.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="gui-text-displayables">
+<span id="id5"></span><h2>文本组件<a class="headerlink" href="#gui-text-displayables" title="Link to this heading"> link</a></h2>
+<p>参见 <a class="reference internal" href="text.html#text-displayables"><span class="std std-ref">文本组件</span></a> 。</p>
+</section>
+<section id="dynamic-displayables">
+<span id="id6"></span><h2>动态可视组件<a class="headerlink" href="#dynamic-displayables" title="Link to this heading"> link</a></h2>
+<p>动态可视组件会基于游戏状态显示一个子组件。</p>
+<p>需要注意，动态可视组件总是显示它们的当前状态。因此，动态可视组件参与转场(transition)。(准确的说，转场过程中动态可视组件总是显示同样的东西。)</p>
+<p>根据设计，动态可视组件用于从定义到离开界面都很少改变的要素(比如自定义角色系统)，而不是用于经常变化的内容，比如角色表情。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ConditionSwitch">
+<span class="sig-name descname"><span class="pre">ConditionSwitch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ConditionSwitch" title="Link to this definition"> link</a></dt>
+<dd><p>基于Python条件表达式，改变自身显示内容的可视组件。固定位置入参应该是一组两个值的形式，每组分别包含：</p>
+<ul class="simple">
+<li><p>包含Python表达式语句的字符串。</p></li>
+<li><p>当条件表达式为True时显示的组件。</p></li>
+</ul>
+<p>第一条为True的条件表达式会显示自己的可视组件，所以需要保证至少一个条件表达式永远为True。</p>
+<p>这里使用的条件表达式不应该有明显的副作用。</p>
+<dl class="simple">
+<dt><cite>predict_all</cite></dt><dd><p>若为True，当显示可视组件时，所有可能的可视组件都会提前缓存。若为False，只加载当前条件表达式的可视组件。若为None，使用 <code class="xref py py-func docutils literal notranslate"><span class="pre">config.conditionswitch_predict_all()</span></code> 的配置。</p>
+</dd>
+</dl>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">jill</span> <span class="o">=</span> <span class="n">ConditionSwitch</span><span class="p">(</span>
+    <span class="s2">&quot;jill_beers &gt; 4&quot;</span><span class="p">,</span> <span class="s2">&quot;jill_drunk.png&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;jill_sober.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DynamicDisplayable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DynamicDisplayable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DynamicDisplayable" title="Link to this definition"> link</a></dt>
+<dd><p>基于某个Python函数可以改变自身子组件的可视组件，作用范围贯穿于某次互动行为。
+此类对象不能使用任何特性，因为其布局是由子组件的特性所决定。</p>
+<dl>
+<dt><cite>function</cite></dt><dd><p>该入参是一个函数，调用时可使用以下参数：</p>
+<ul class="simple">
+<li><p>可视组件的显示时间。</p></li>
+<li><p>具有相同标签(tag)的任意可视组件的显示时间。</p></li>
+<li><p>任何固定位置的或关键字入参用于DynamicDisplayable类对象。</p></li>
+</ul>
+<p>并返回一个(d, redraw)元组。这个元组中：</p>
+<ul class="simple">
+<li><p><cite>d</cite> 是需要显示的可视组件。</p></li>
+<li><p><cite>redraw</cite> 是再次调用该函数的间隔等待时间，如果是空值(None)的话就不会再次调用函数直到下次互动行为。</p></li>
+</ul>
+<p>每次互动后，<cite>function</cite> 函数都会被调用。</p>
+</dd>
+</dl>
+<p>有一个特殊情况，<cite>function</cite> 可能是一个Python字符串并可以等效为一个可视组件。在那种情况下，每个互动行为中function都只能运行一次。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 显示一个从5到0的倒计时，每十分之一秒更新直到计时结束。</span>
+<span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">show_countdown</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="k">at</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">st</span> <span class="o">&gt;</span> <span class="mf">5.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;0.0&quot;</span><span class="p">),</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">5.0</span> <span class="o">-</span> <span class="n">st</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="mf">0.1</span>
+
+<span class="k">image</span> <span class="n">countdown</span> <span class="o">=</span> <span class="n">DynamicDisplayable</span><span class="p">(</span><span class="n">show_countdown</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ShowingSwitch">
+<span class="sig-name descname"><span class="pre">ShowingSwitch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ShowingSwitch" title="Link to this definition"> link</a></dt>
+<dd><p>基于目前界面上正在显示图像，能更改自身显示内容的可视组件。固定位置入参应该是一组两个值的形式，每组分别包含：</p>
+<ul class="simple">
+<li><p>一个指定图像名的字符串，或者用None表示默认图像。</p></li>
+<li><p>在条件表达式为True时使用的可视组件。</p></li>
+</ul>
+<p>默认图像需要提前指定。</p>
+<dl class="simple">
+<dt><cite>predict_all</cite></dt><dd><p>若为True，当显示可视组件时，所有可能的可视组件都会提前缓存。若为False，只加载当前条件表达式的可视组件。若为None，使用 <code class="xref py py-func docutils literal notranslate"><span class="pre">config.conditionswitch_predict_all()</span></code> 的配置。</p>
+</dd>
+</dl>
+<p>ShowingSwitch的一个用途是，根据角色感情更改角色边栏头像。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;Eileen&quot;</span><span class="p">,</span>
+    <span class="n">show_side_image</span><span class="o">=</span><span class="n">ShowingSwitch</span><span class="p">(</span>
+        <span class="s2">&quot;eileen happy&quot;</span><span class="p">,</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;eileen_happy_side.png&quot;</span><span class="p">,</span> <span class="na">xalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="na">yalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="s2">&quot;eileen vhappy&quot;</span><span class="p">,</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;eileen_vhappy_side.png&quot;</span><span class="p">,</span> <span class="na">xalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="na">yalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;eileen_happy_default.png&quot;</span><span class="p">,</span> <span class="na">xalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="na">yalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="layer-displayables">
+<span id="id7"></span><h2>图层可视组件<a class="headerlink" href="#layer-displayables" title="Link to this heading"> link</a></h2>
+<p>图层可视组件会基于游戏的某些状态值在某个图层上显示内容。
+图层可视组件设计为与 <a class="reference internal" href="config.html#var-config.detached_layers"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.detached_layers</span></code></a> 协同使用。</p>
+<p>图层可视组件与动态可视组件类似，图层显示的内容由当前状态值决定。
+因此，图层可视组件不受转场效果的影响。除非某个转场指定目标就是图层可视组件对应的图层。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Layer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Layer" title="Link to this definition"> link</a></dt>
+<dd><p>该类可以让某个图层像可视组件一样覆盖在其他图层上。设计为与独立图层(detached layer)协同使用。</p>
+<p>不能把图层覆盖在自身上。</p>
+<dl>
+<dt><cite>layer</cite></dt><dd><p>需要显示的图层。</p>
+</dd>
+<dt><cite>clipping</cite></dt><dd><p>若为False，图层内容可以超过自身范围的部分依然显示。否则超出范围的部分将被剪裁。</p>
+<p>配置项config.layer_clipping的值会覆盖此参数的值。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 定义一个新的名为broadcast的独立图层</span>
+<span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">detached_layers</span> <span class="o">+=</span> <span class="p">[</span> <span class="s2">&quot;broadcast&quot;</span> <span class="p">]</span>
+
+<span class="c1"># 定义一个新的名为tv的图层可视组件，用于显示图层broadcast的内容</span>
+<span class="k">image</span> <span class="n">tv</span> <span class="o">=</span> <span class="n">Window</span><span class="p">(</span><span class="n">Layer</span><span class="p">(</span><span class="s2">&quot;broadcast&quot;</span><span class="p">),</span> <span class="na">background</span><span class="o">=</span><span class="s1">&#39;#000&#39;</span><span class="p">,</span> <span class="na">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="k">image</span> <span class="n">living_room</span> <span class="o">=</span> <span class="n">Placeholder</span><span class="p">(</span><span class="s1">&#39;bg&#39;</span><span class="p">,</span> <span class="k">text</span><span class="o">=</span><span class="s1">&#39;living_room&#39;</span><span class="p">)</span>
+<span class="k">image</span> <span class="n">studio</span> <span class="o">=</span> <span class="n">Solid</span><span class="p">(</span><span class="s1">&#39;7c7&#39;</span><span class="p">)</span>
+<span class="k">image</span> <span class="n">eileen</span> <span class="o">=</span> <span class="n">Placeholder</span><span class="p">(</span><span class="s1">&#39;girl&#39;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">example</span><span class="p">:</span>
+    <span class="k">pause</span>
+
+    <span class="c1"># 设置broadcast图层的场景</span>
+    <span class="k">scene</span> <span class="n">studio</span> <span class="k">onlayer</span> <span class="n">broadcast</span>
+    <span class="k">with</span> <span class="kc">None</span>
+
+    <span class="c1"># 开启新场景living_room</span>
+    <span class="k">scene</span> <span class="n">living_room</span>
+
+    <span class="c1"># 在屏幕右下角显示图层可视组件tv</span>
+    <span class="k">show</span> <span class="n">tv</span><span class="p">:</span>
+      <span class="na">align</span> <span class="p">(</span><span class="mf">.75</span><span class="p">,</span> <span class="mf">.75</span><span class="p">)</span> <span class="na">zoom</span> <span class="mf">.3</span>
+
+    <span class="c1"># 在broadcast图层显示Eileen</span>
+    <span class="k">show</span> <span class="n">eileen</span> <span class="k">onlayer</span> <span class="n">broadcast</span>
+
+    <span class="c1"># 以dissolve转场进入living room场景，同时Eillen从画面右侧进入。</span>
+    <span class="k">with</span> <span class="p">{</span><span class="s1">&#39;master&#39;</span><span class="p">:</span> <span class="n">dissolve</span><span class="p">,</span> <span class="s1">&#39;broadcast&#39;</span><span class="p">:</span> <span class="n">moveinright</span><span class="p">}</span>
+    <span class="k">pause</span>
+</pre></div>
+</div>
+</section>
+<section id="layout-boxes-and-grids">
+<span id="id8"></span><h2>布局框和坐标系<a class="headerlink" href="#layout-boxes-and-grids" title="Link to this heading"> link</a></h2>
+<p>布局框是在界面上设置其子组件布局的可视组件。其可以使用水平布局或者垂直布局，也可以使用标准位置算法设置布局。</p>
+<p>框式可视组件可以使用任意数量的固定位置参数和关键词参数。固定位置参数会被以子组件的形式加入框体中。关键词参数则是应用于框体的各种样式特性。</p>
+<p>框体使用 <a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a> 和 <a class="reference internal" href="style_properties.html#box-style-properties"><span class="std std-ref">方框(box)样式特性</span></a>。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="Fixed">
+<span class="sig-name descname"><span class="pre">Fixed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Fixed" title="Link to this definition"> link</a></dt>
+<dd><p>充满整个界面的框体。该框体成员的布局顺序从后往前，使用自身的位置特性控制显示位置。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="HBox">
+<span class="sig-name descname"><span class="pre">HBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#HBox" title="Link to this definition"> link</a></dt>
+<dd><p>框体内成员布局顺序从左到右。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="VBox">
+<span class="sig-name descname"><span class="pre">VBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#VBox" title="Link to this definition"> link</a></dt>
+<dd><p>框体内成员布局顺序从上到下。</p>
+</dd></dl>
+
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 显示两个logo，分别位于左边和右边。</span>
+<span class="k">image</span> <span class="n">logo</span> <span class="k">hbox</span> <span class="o">=</span> <span class="n">HBox</span><span class="p">(</span><span class="s2">&quot;logo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;logo.png&quot;</span><span class="p">)</span>
+
+<span class="c1"># 显示两个logo, 一个在另一个上方。</span>
+<span class="k">image</span> <span class="n">logo</span> <span class="k">vbox</span> <span class="o">=</span> <span class="n">VBox</span><span class="p">(</span><span class="s2">&quot;logo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;logo.png&quot;</span><span class="p">)</span>
+
+<span class="c1"># 显示两个logo。</span>
+<span class="c1"># 由于默认情况下，其他位置显示的图像与界面左上方显示的一致，</span>
+<span class="c1"># 我们需要使用其他图片替换那些不需要logo的地方。</span>
+<span class="k">image</span> <span class="n">logo</span> <span class="k">fixed</span> <span class="o">=</span> <span class="n">Fixed</span><span class="p">(</span>
+    <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;logo.png&quot;</span><span class="p">,</span> <span class="na">xalign</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="na">yalign</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+    <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;logo.png&quot;</span><span class="p">,</span> <span class="na">xalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="na">yalign</span><span class="o">=</span><span class="mf">1.0</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>坐标布局会在界面上建立一个坐标系，并显示其子组件。其使用
+<a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a> 和 <a class="reference internal" href="style_properties.html#style-property-spacing"><code class="xref std std-propref docutils literal notranslate"><span class="pre">spacing</span></code></a> 样式特性。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="Grid">
+<span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Grid" title="Link to this definition"> link</a></dt>
+<dd><p>在一个坐标系中布局可视组件。前两个固定位置参数分别对应坐标中的列号和行号。固定位置参数的 <em>columns * rows</em> 给定了坐标系中所能容纳的可视组件总数。</p>
+</dd></dl>
+
+</section>
+<section id="effects">
+<span id="id9"></span><h2>特效<a class="headerlink" href="#effects" title="Link to this heading"> link</a></h2>
+<p>这些可视组件通常用于创建某种视觉特效。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="AlphaBlend">
+<span class="sig-name descname"><span class="pre">AlphaBlend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#AlphaBlend" title="Link to this definition"> link</a></dt>
+<dd><p>这种过渡(transition)效果用于从一个可视组件(大多数使用某种动画变化)过渡到另一个。当变换(transform)完全不透明时，新的可视组件会被启用；当变化完全透明时，旧的可视组件会被启用。</p>
+<dl class="simple">
+<dt><cite>alpha</cite></dt><dd><p>若该值为True，前后图像会相互混合。若该值为False，也就是默认值，前面的图像会显示半透明，覆盖在后面的图像上。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="image-manipulators">
+<span id="id10"></span><h2>图像处理器<a class="headerlink" href="#image-manipulators" title="Link to this heading"> link</a></h2>
+<p><a class="reference internal" href="im.html"><span class="doc">图像处理器</span></a> 本身是一个可视组件。它会接受一个图像或者另一个图像处理器对象，对原有对象进行某些处理。图像处理器只接受图像或其他图像处理器作为输入。</p>
+<p>任何能放可视组件的地方也可以放图像处理器，但反过来不一定可行。 <a class="reference internal" href="#Image" title="Image"><code class="xref py py-func docutils literal notranslate"><span class="pre">Image()</span></code></a> 对象是一种图像处理器，所以任何需要使用图像处理器的地方都可以使用image对象。</p>
+<p>图像处理的应用具有重大意义。过去的一些图像处理器由于各种的问题不应再使用。
+除了使用 <a class="reference internal" href="im.html#im.Data" title="im.Data"><code class="xref py py-func docutils literal notranslate"><span class="pre">im.Data()</span></code></a> 的情况，可视组件 <a class="reference internal" href="transforms.html#Transform" title="Transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">Transform()</span></code></a> 提供了很多类似的功能，并同时修复了过去的问题。</p>
+<p>图像处理器的详情请参见 <a class="reference internal" href="im.html"><span class="doc">图像处理器</span></a> 。</p>
+</section>
+<section id="placeholders">
+<span id="id11"></span><h2>占位组件<a class="headerlink" href="#placeholders" title="Link to this heading"> link</a></h2>
+<p>占位组件(placeholder)用于正确显示背景图或者角色图像。在开发者模式下，使用某个未定义的图像时，占位组件会被自动使用。如果你觉得默认的显示有问题，也可以手动指定占位组件的使用。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 默认情况下，会使用girl占位组件。</span>
+<span class="k">image</span> <span class="n">sue</span> <span class="o">=</span> <span class="n">Placeholder</span><span class="p">(</span><span class="s2">&quot;boy&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+     <span class="k">show</span> <span class="n">sue</span> <span class="n">angry</span>
+     <span class="s2">&quot;苏&quot;</span> <span class="s2">&quot;你还好吗？现在，受死吧！&quot;</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="Placeholder">
+<span class="sig-name descname"><span class="pre">Placeholder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Placeholder" title="Link to this definition"> link</a></dt>
+<dd><p>该可视组件可以用于显示一个占位角色或背景。</p>
+<dl>
+<dt><cite>base</cite></dt><dd><p>显示图像的类型。应该是以下类型之一：</p>
+<dl>
+<dt>‘bg’</dt><dd><p>显示一个背景占位组件。这个组件会以浅灰填满整个界面，并在界面上方显示图像名。</p>
+</dd>
+<dt>‘boy’</dt><dd><p>显示一个“记为男性”的占位组件，胸口位置显示图片名。</p>
+</dd>
+<dt>‘girl’</dt><dd><p>显示一个“记为女性”的占位组件，胸口位置显示图片名。</p>
+</dd>
+<dt>None</dt><dd><p>尝试自动确认图像用途。如果图像名以“bg”、“cg”或者“event”开头，则取值’bg’。</p>
+<p>否则，使用’girl’占位组件。</p>
+</dd>
+</dl>
+</dd>
+<dt><cite>full</cite></dt><dd><p>若该值为True，使用全身像的精灵(sprite)。否则，使用3/4像的精灵(sprite)。</p>
+</dd>
+<dt><cite>flip</cite></dt><dd><p>若该值为True，精灵(sprite)会水平翻转。</p>
+</dd>
+<dt><cite>text</cite></dt><dd><p>若指定了该项，显示占位符时会使用此项文本。若没有指定，则会使用对应占位符自带的文本。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="displayable-prefixes">
+<span id="id12"></span><h2>可视组件前缀<a class="headerlink" href="#displayable-prefixes" title="Link to this heading"> link</a></h2>
+<p>可视组件可以使制作者定义他们自己的可视组件，并且涉及到所有Ren’Py可以用到可视组件的地方。
+一个带前缀的可视组件名是一个带有英文冒号的字符串。前缀在冒号左边，参数在冒号右边。
+<a class="reference internal" href="config.html#var-config.displayable_prefix"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.displayable_prefix</span></code></a> 变量将前缀对应到一个函数。函数接受此参数，并返回一个可视组件或None。</p>
+<p>比如说，这个例子创建一个big前缀，返回一个原来两倍大的图像。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="o">-</span><span class="mi">10</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">embiggen</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Transform</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="na">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">config</span><span class="o">.</span><span class="n">displayable_prefix</span><span class="p">[</span><span class="s2">&quot;big&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">embiggen</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">-10</span></code> 确保前缀在任何图像使用它之前被定义。
+然后前缀可以用来定义图像：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">eileen</span> <span class="n">big</span> <span class="o">=</span> <span class="s2">&quot;big:eileen happy&quot;</span>
+</pre></div>
+</div>
+<p>或者其他需要显示可视组件的地方。</p>
+</section>
+<section id="displayable-see-also">
+<span id="id13"></span><h2>其他参考<a class="headerlink" href="#displayable-see-also" title="Link to this heading"> link</a></h2>
+<p><a class="reference internal" href="displaying_images.html"><span class="doc">显示图像</span></a> ：这页介绍了如果制作以上可视组件并在界面上显示。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="translation.html" class="btn btn-neutral float-left" title="多语言支持" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="transforms.html" class="btn btn-neutral float-right" title="变换" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
