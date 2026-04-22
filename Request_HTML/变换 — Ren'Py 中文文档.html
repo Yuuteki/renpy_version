@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>变换 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/transforms.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="变换特性" href="transform_properties.html" />
+    <link rel="prev" title="可视组件" href="displayables.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">变换</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python">在Python中对可视组件应用变换</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#At"><code class="docutils literal notranslate"><span class="pre">At()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#built-in-transforms">内建变换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atl">动画和变换语言</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ren-py">Ren’Py脚本语句</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#transform">transform语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#atlimage">带ATL语句块的image语句</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#atlsceneshow">带ATL语句块的scene和show语句</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atl-syntax-and-semantics">ATL语法和语义</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#contains">单行contains语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#number-statement">数值语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#properties-statement">特性值语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpolation-statement">插值语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pass">pass语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#repeat">repeat语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#block">block语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parallel">parallel语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#choice">choice语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#animation">animation语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#on">on语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transform-expression-atl-statement">变换表达式语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#displayable-atl-statement">可视组件语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contains-block-statement">contains语句块</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#function">function语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#time">time语句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#event">event语句</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#external-atl-events">外部事件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atl-partial">ATL的柯里化和部分入参传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#child">特殊child参数</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#warpers">warpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#replacing-transforms">替换变换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-transform-class">Transform类</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Transform.function"><code class="docutils literal notranslate"><span class="pre">Transform.function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Transform.hide_request"><code class="docutils literal notranslate"><span class="pre">Transform.hide_request</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Transform.hide_response"><code class="docutils literal notranslate"><span class="pre">Transform.hide_response</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Transform.original_child"><code class="docutils literal notranslate"><span class="pre">Transform.original_child</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Transform.set_child"><code class="docutils literal notranslate"><span class="pre">Transform.set_child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Transform.update"><code class="docutils literal notranslate"><span class="pre">Transform.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#callables-as-transforms">可调用对象用作变换</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">变换</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/transforms.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="transforms">
+<span id="id1"></span><h1>变换<a class="headerlink" href="#transforms" title="Link to this heading"> link</a></h1>
+<p>变换(transform)可以按顺序依次使用，将一个 <a class="reference internal" href="displayables.html"><span class="doc">可视组件</span></a> 变为另一个可视组件。
+总共有多种类型的变换，也有多种方式创建变换。
+内建的变换常用于控制界面上某个对象的位置，而用户自定义的变换可以触发更复杂的效果，比如移动、缩放和旋转，甚至复杂的色彩效果。</p>
+<p>在scene和 <a class="reference internal" href="displaying_images.html#show-statement"><span class="std std-ref">show</span></a> 语句后使用at分句就能应用各种变换。
+下面样例中对图像 <code class="docutils literal notranslate"><span class="pre">eileen</span> <span class="pre">happy</span></code> 应用了 <code class="docutils literal notranslate"><span class="pre">right</span></code> 变换。:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">right</span>
+</pre></div>
+</div>
+<p>可以同时应用多个变换，不同变换之间用英文逗号分隔。这些变换从左到右依次应用。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">halfsize</span><span class="p">,</span> <span class="n">right</span>
+</pre></div>
+</div>
+<section id="python">
+<span id="applying-transforms-to-displayables-in-python"></span><h2>在Python中对可视组件应用变换<a class="headerlink" href="#python" title="Link to this heading"> link</a></h2>
+<p>若要在Python中对可视组件 <code class="docutils literal notranslate"><span class="pre">d</span></code> 引用变换 <code class="docutils literal notranslate"><span class="pre">t</span></code> 有好几种方法：</p>
+<ol class="arabic simple">
+<li><p>最为通用也最推荐的方法是，使用 <code class="docutils literal notranslate"><span class="pre">At(d,</span> <span class="pre">t)</span></code> (下面有样例)。这种方法适用于所有变换。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d(child=t)</span></code> 适用于所有 <a class="reference internal" href="#atl"><span class="std std-ref">ATL变换</span></a>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t(d)</span></code> 适用于 <a class="reference internal" href="#transforms-python"><span class="std std-ref">Python变换</span></a>，以及不需要坐标作为参数的ATL变换。</p></li>
+</ol>
+<dl class="py function">
+<dt class="sig sig-object py" id="At">
+<span class="sig-name descname"><span class="pre">At</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#At" title="Link to this definition"> link</a></dt>
+<dd><p>对指定的源可视组件 <cite>d</cite> ，将 <cite>args</cite> 中所有变换应用于该组件。变换的应用顺序是从左到右，所以最外层的变换效果是最右边的入参。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">birds_transform</span><span class="p">:</span>
+    <span class="na">xpos</span> <span class="o">-</span><span class="mi">200</span>
+    <span class="n">linear</span> <span class="mi">10</span> <span class="na">xpos</span> <span class="mi">800</span>
+    <span class="k">pause</span> <span class="mi">20</span>
+    <span class="k">repeat</span>
+
+<span class="k">image</span> <span class="n">birds</span> <span class="o">=</span> <span class="n">At</span><span class="p">(</span><span class="s2">&quot;birds.png&quot;</span><span class="p">,</span> <span class="n">birds_transform</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果某些变换没有传入需要的参数，变换结果可能会导致无法正常显示。
+这种情况下需要检查使用 <a class="reference internal" href="#transform-statement"><span class="std std-ref">transform语句</span></a> 定义的变换到底需要什么参数。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>变换结果可能还是一个变换，可以进一步应用于另一个可视组件(及其子组件)；
+这种情况下ATL变换依然可以如其他变换一样使用，不影响其子组件。</p>
+</div>
+</section>
+<section id="built-in-transforms">
+<span id="id2"></span><h2>内建变换<a class="headerlink" href="#built-in-transforms" title="Link to this heading"> link</a></h2>
+<p>Ren’Py附带了一些默认定义好的变换。这些变换定义了界面上的位置信息。这里有一个默认变换下图像位置的描述：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>             +-----------------------------------------------------------+
+             |topleft, reset               top                   topright|
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                          truecenter                       |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+offscreenleft|left                   center, default                right|offscreenright
+             +-----------------------------------------------------------+
+</pre></div>
+</div>
+<p><a class="reference internal" href="#var-offscreenleft"><code class="xref std std-var docutils literal notranslate"><span class="pre">offscreenleft</span></code></a> 和 <a class="reference internal" href="#var-offscreenright"><code class="xref std std-var docutils literal notranslate"><span class="pre">offscreenright</span></code></a> 变换会让图像显示在界面之外。这两个变换可以用于将物体从界面移除(记得之后隐藏这些物体，并确认他们不再消耗系统资源)。</p>
+<p>这些变换(transform)的详细信息如下：</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-center">
+<span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#var-center" title="Link to this definition"> link</a></dt>
+<dd><p>水平居中，并与界面底部对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-default">
+<span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#var-default" title="Link to this definition"> link</a></dt>
+<dd><p>水平居中，并与界面底部对齐。default可以通过 <a class="reference internal" href="config.html#var-config.default_transform"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.default_transform</span></code></a> 重定义，这样show和scene语句显示的图片默认位置也会改变</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-left">
+<span class="sig-name descname"><span class="pre">left</span></span><a class="headerlink" href="#var-left" title="Link to this definition"> link</a></dt>
+<dd><p>与界面左下角对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-offscreenleft">
+<span class="sig-name descname"><span class="pre">offscreenleft</span></span><a class="headerlink" href="#var-offscreenleft" title="Link to this definition"> link</a></dt>
+<dd><p>将可视组件置于界面左外侧，与界面底部对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-offscreenright">
+<span class="sig-name descname"><span class="pre">offscreenright</span></span><a class="headerlink" href="#var-offscreenright" title="Link to this definition"> link</a></dt>
+<dd><p>将可视组件置于界面右外侧，与界面底部对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><a class="headerlink" href="#var-reset" title="Link to this definition"> link</a></dt>
+<dd><p>将所有变换特性的值都重置为默认值。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-right">
+<span class="sig-name descname"><span class="pre">right</span></span><a class="headerlink" href="#var-right" title="Link to this definition"> link</a></dt>
+<dd><p>与界面右下角对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-top">
+<span class="sig-name descname"><span class="pre">top</span></span><a class="headerlink" href="#var-top" title="Link to this definition"> link</a></dt>
+<dd><p>水平居中，与界面顶部对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-topleft">
+<span class="sig-name descname"><span class="pre">topleft</span></span><a class="headerlink" href="#var-topleft" title="Link to this definition"> link</a></dt>
+<dd><p>与界面左上角对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-topright">
+<span class="sig-name descname"><span class="pre">topright</span></span><a class="headerlink" href="#var-topright" title="Link to this definition"> link</a></dt>
+<dd><p>与界面右上角对齐。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-truecenter">
+<span class="sig-name descname"><span class="pre">truecenter</span></span><a class="headerlink" href="#var-truecenter" title="Link to this definition"> link</a></dt>
+<dd><p>水平和垂直都居中。</p>
+</dd></dl>
+
+</section>
+<section id="atl">
+<span id="id3"></span><h2>动画和变换语言<a class="headerlink" href="#atl" title="Link to this heading"> link</a></h2>
+<p>动画和变换语言(简称ATL)提供了一种高级方式，便于创建动画、界面内移动可视组件、设置组件位置、应用各种变换(等。
+ATL语言可以根据时间变化实现效果，也可以根据事件类消息做出响应。</p>
+<p>在Python中，与ATL变换等效的是 <a class="reference internal" href="#Transform" title="Transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">Transform()</span></code></a>
+类组件。目前没有办法通过编程创建一个ATL变换效果。</p>
+<p>可以使用 <a class="reference internal" href="#transform-statement"><span class="std std-ref">transform语句</span></a> 创建ATL变换对象。创建结果可用作可视组件(可能没有能被看到的子组件所以透明)。
+ATL变换对象可以使用 <a class="reference internal" href="screens.html#sl-add"><span class="std std-ref">add</span></a> 传入某个界面，或者使用 <a class="reference internal" href="displaying_images.html#show-expression-statement"><span class="std std-ref">show expression语句</span></a> 或 <a class="reference internal" href="statement_equivalents.html#renpy.show" title="renpy.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.show()</span></code></a> 函数直接显示。</p>
+<section id="ren-py">
+<span id="ren-py-script-statements"></span><h3>Ren’Py脚本语句<a class="headerlink" href="#ren-py" title="Link to this heading"> link</a></h3>
+<p>ATL可以包含在Ren’Py脚本语句中。</p>
+<section id="transform">
+<span id="transform-statement"></span><h4>transform语句<a class="headerlink" href="#transform" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">transform</span></code> 语句创建了一个变换(transform)效果，可以在某个at分句中使用。transform语句的语法如下：</p>
+<pre>
+<strong id="grammar-token-script-atl_transform">atl_transform</strong> ::=  &quot;transform&quot; <code class="xref docutils literal notranslate"><span class="pre">qualname</span></code> ( &quot;(&quot; <code class="xref docutils literal notranslate"><span class="pre">parameters</span></code> &quot;)&quot; )? &quot;:&quot;
+                      <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>
+</pre>
+<p>transform语句必须在 <a class="reference internal" href="lifecycle.html#init-phase"><span class="std std-ref">初始化阶段</span></a> 运行。
+定义transform可能需要一个参数列表，使用方式与Python函数类型。
+有一些类型参数暂时禁止使用，未来可能会开放：</p>
+<ol class="arabic simple">
+<li><p>只有固定位置参数</p></li>
+<li><p>没有默认值的关键词参数</p></li>
+<li><p>可变的固定位置参数(<code class="docutils literal notranslate"><span class="pre">*args</span></code>)</p></li>
+<li><p>可变的关键词参数(<code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p></li>
+</ol>
+<p>只有所有参数都赋值之后，创建的Transfor对象才能用作变换。</p>
+<p><em>请参考：</em> <a class="reference internal" href="#atl-partial"><span class="std std-ref">ATL的柯里化和部分入参传递</span></a></p>
+<p><cite>qualname</cite> 必须是一个使用英文标点“.”分割的Python标识符。使用ATL创建的transform与 <cite>qualname</cite> 绑定，
+如果存在 <a class="reference internal" href="python.html#named-stores"><span class="std std-ref">store</span></a> 则保存在对应存储空间中。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">left_to_right</span><span class="p">:</span>
+    <span class="na">xalign</span> <span class="mf">0.</span>
+    <span class="n">linear</span> <span class="mi">2</span> <span class="na">xalign</span> <span class="mf">1.</span>
+    <span class="k">repeat</span>
+
+<span class="k">transform</span> <span class="n">ariana</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+    <span class="na">xalign</span> <span class="mf">.3</span>
+
+<span class="k">transform</span> <span class="n">animated_ariana_disp</span><span class="p">:</span>
+    <span class="s2">&quot;ariana&quot;</span>
+    <span class="k">pause</span> <span class="mf">1.</span>
+    <span class="s2">&quot;ariana_reverse&quot;</span>
+    <span class="k">pause</span> <span class="mf">1.</span>
+    <span class="k">repeat</span>
+</pre></div>
+</div>
+<p>创建出的对象既是变换也是可视组件，但不支持 <code class="docutils literal notranslate"><span class="pre">image</span></code> 语句。
+因为它以变量(或常量)形式创建，与命名空间 <a class="reference internal" href="displaying_images.html#defining-images"><span class="std std-ref">images</span></a> 中的对象不同。</p>
+</section>
+<section id="atlimage">
+<span id="atl-image-statement"></span><h4>带ATL语句块的image语句<a class="headerlink" href="#atlimage" title="Link to this heading"> link</a></h4>
+<p>使用ATL的另一种方法是，在 <a class="reference internal" href="displaying_images.html#image-statement"><span class="std std-ref">images</span></a> 语句中包含ATL语句块。这将某个图像与给定的transform绑定。由于没有办法向该transform传入参数，所以只在transform自身定义了某个动画的情况下才有用。
+带ATL语句块的image语句语法如下：</p>
+<pre>
+<strong id="grammar-token-script-atl_image">atl_image</strong> ::=  &quot;image&quot; <code class="xref docutils literal notranslate"><span class="pre">image_name</span></code> &quot;:&quot;
+                  <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>
+</pre>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">animated_ariana_img</span><span class="p">:</span>
+    <span class="s2">&quot;ariana&quot;</span>
+    <span class="k">pause</span> <span class="mf">1.</span>
+    <span class="s2">&quot;ariana_reverse&quot;</span>
+    <span class="k">pause</span> <span class="mf">1.</span>
+    <span class="k">repeat</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="atlsceneshow">
+<span id="scene-and-show-statements-with-atl-block"></span><h3>带ATL语句块的scene和show语句<a class="headerlink" href="#atlsceneshow" title="Link to this heading"> link</a></h3>
+<p>最后一种使用ATL的方法是，包含在 <code class="docutils literal notranslate"><span class="pre">scene</span></code> 或者 <a class="reference internal" href="displaying_images.html#show-statement"><span class="std std-ref">show</span></a> 语句中。这种方法可以通过ATL改变图像。</p>
+<pre>
+<strong id="grammar-token-script-atl_scene">atl_scene</strong> ::=  <code class="xref docutils literal notranslate"><span class="pre">stmt_scene</span></code> &quot;:&quot;
+                   <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>
+<strong id="grammar-token-script-atl_show">atl_show </strong> ::=  <code class="xref docutils literal notranslate"><span class="pre">stmt_show</span></code> &quot;:&quot;
+                   <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>
+</pre>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span><span class="p">:</span>
+    <span class="na">xalign</span> <span class="mf">1.</span>
+
+<span class="k">scene</span> <span class="n">bg</span> <span class="n">washington</span><span class="p">:</span>
+    <span class="na">zoom</span> <span class="mf">2.</span>
+</pre></div>
+</div>
+</section>
+<section id="atl-syntax-and-semantics">
+<span id="id4"></span><h3>ATL语法和语义<a class="headerlink" href="#atl-syntax-and-semantics" title="Link to this heading"> link</a></h3>
+<p>ATL语句可能是单行的，也可能是多行组成的语句块(block)。
+除了后面会提到的少数例外，ATL语句块中的语句按从上到下的顺序执行。</p>
+<p>如果某个ATL语句需要计算某个表达式，那么对应的整个变换首次执行时(例如使用 <code class="docutils literal notranslate"><span class="pre">show</span></code> 语句或将该变换显示为某个界面的一部分时)将计算该表达式，
+而不是执行某部分ATL语句时才计算。</p>
+<blockquote>
+<div><p>一个ATL语句块(block)由一个或多个逻辑行组成，使用相同的缩进量。每个ATL语句块中的逻辑行都必须包含一条或多条ATL语句。</p>
+<p>总共有两种ATL语句：简单ATL语句和复杂ATL语句。简单语句不使用ATL语句块。单条逻辑行就可能包含一条或多条ATL语句，使用英文逗号分隔。复杂语句会包含语句块(block)。复杂语句的第一行会以英文冒号( <code class="docutils literal notranslate"><span class="pre">&quot;:&quot;</span></code> )结尾：</p>
+<p>默认情况下，语句块(block)里会从第一条语句开始顺序执行所有语句。当整个语句块达到结尾时执行就会被终止。time语句会改变这种执行逻辑，详见后面的段落。</p>
+<p>当语句块(block)中所有语句都终止时，语句块的执行也就被终止了。</p>
+<p>如果ATL语句需要某个表达式赋值，只能在transform初次加入场景列表时进行赋值。(比如使用 <code class="docutils literal notranslate"><span class="pre">show</span></code> 语句或者某个界面显示展示部分变换时。)</p>
+</div></blockquote>
+<p>下面列出各种ATL语句。</p>
+<section id="contains">
+<span id="inline-contains-atl-statement"></span><h4>单行contains语句<a class="headerlink" href="#contains" title="Link to this heading"> link</a></h4>
+<p>单行contains语句可以计算一个简单表达式，并得到一个 <a class="reference internal" href="displayables.html"><span class="doc">可视组件</span></a> 。</p>
+<pre>
+<strong id="grammar-token-atl-atl_contains">atl_contains</strong> ::=  &quot;contains&quot; <code class="xref docutils literal notranslate"><span class="pre">expression</span></code>
+</pre>
+<p>此语句会把当前ATL变换的某个子组件设置(或替换)成表达式计算结果，用作动画。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">an_animation</span><span class="p">:</span>
+    <span class="s2">&quot;1.png&quot;</span>
+    <span class="k">pause</span> <span class="mi">2</span>
+    <span class="s2">&quot;2.png&quot;</span>
+    <span class="k">pause</span> <span class="mi">2</span>
+    <span class="k">repeat</span>
+
+<span class="k">image</span> <span class="n">move_an_animation</span><span class="p">:</span>
+    <span class="k">contains</span> <span class="n">an_animation</span>
+
+    <span class="c1"># 如果我们不使用contains语句，</span>
+    <span class="c1"># 就会一直处于循环中并不能抵达这里</span>
+    <span class="na">xalign</span> <span class="mf">0.0</span>
+    <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">yalign</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>与变换表达式语句相比，<a class="reference internal" href="#displayable-atl-statement"><span class="std std-ref">可视组件语句</span></a> 定义更明晰，但其可以使用
+<a class="reference internal" href="transitions.html"><span class="doc">transition</span></a> 来替换子组件。
+contains语句适合用在某个ATL语句块中容纳另一个变换效果，而不是单纯复用某个变换的代码块。</p>
+</section>
+<section id="number-statement">
+<span id="id5"></span><h4>数值语句<a class="headerlink" href="#number-statement" title="Link to this heading"> link</a></h4>
+<p>数值语句由一个简单表达式构成，该表达式可以计算出一个整数或一个浮点数。
+其是“pause”的一个简略版。</p>
+<pre>
+<strong id="grammar-token-atl-atl_number">atl_number</strong> ::=  &quot;pause&quot;? <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>
+</pre>
+<p>数值语句用于指定一个固定秒数的暂停。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">atl</span> <span class="n">example</span><span class="p">:</span>
+    <span class="c1"># 显示logo_base.png。</span>
+    <span class="k">contains</span> <span class="s2">&quot;logo_base.png&quot;</span>
+
+    <span class="c1"># 暂停1.0秒。</span>
+    <span class="k">pause</span> <span class="mf">1.0</span>
+
+    <span class="c1"># 显示logo_bw.png，使用dissolve转场。</span>
+    <span class="s2">&quot;logo_bw.png&quot;</span> <span class="k">with</span> <span class="n">Dissolve</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="na">alpha</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># 暂停3秒。</span>
+    <span class="mi">3</span>
+
+    <span class="k">repeat</span>
+</pre></div>
+</div>
+</section>
+<section id="properties-statement">
+<span id="id6"></span><h4>特性值语句<a class="headerlink" href="#properties-statement" title="Link to this heading"> link</a></h4>
+<p>该语句可以将一个或多个变换特性设置为某个新的值。</p>
+<pre>
+<strong id="grammar-token-atl-atl_properties">atl_properties</strong> ::=  <a class="reference internal" href="#grammar-token-atl-atl_property"><code class="xref docutils literal notranslate"><span class="pre">atl_property</span></code></a>+
+</pre>
+<pre>
+<strong id="grammar-token-atl-atl_property">atl_property</strong> ::=  <code class="xref docutils literal notranslate"><span class="pre">transform_property</span></code> <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>
+</pre>
+<p>特性值语句先指定一些特性名称，并对每项特性都设置一个值。
+<a class="reference internal" href="transform_properties.html#transform-properties"><span class="std std-ref">变换特性</span></a> 中的变换特性列表详细说明了每个特性的含义及使用的值类型。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">rightoid</span><span class="p">:</span>
+    <span class="na">xalign</span> <span class="mf">.9</span>
+
+<span class="k">transform</span> <span class="n">ariana</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+    <span class="na">xanchor</span> <span class="mf">.3</span> <span class="na">xpos</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</section>
+<section id="interpolation-statement">
+<span id="id7"></span><h4>插值语句<a class="headerlink" href="#interpolation-statement" title="Link to this heading"> link</a></h4>
+<p>插值语句主要用于获取平滑的动画效果。</p>
+<pre>
+<strong id="grammar-token-atl-atl_interp">atl_interp</strong> ::=  ((<code class="xref docutils literal notranslate"><span class="pre">warper</span></code> <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>) | (&quot;warp&quot; <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code> <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>)) (<a class="reference internal" href="#grammar-token-atl-atl_interp_target"><code class="xref docutils literal notranslate"><span class="pre">atl_interp_target</span></code></a>+ | (&quot;:&quot;
+                   <a class="reference internal" href="#grammar-token-atl-atl_interp_target"><code class="xref docutils literal notranslate"><span class="pre">atl_interp_target</span></code></a>+ ))
+</pre>
+<pre>
+<strong id="grammar-token-atl-atl_interp_target">atl_interp_target</strong> ::=  (<a class="reference internal" href="#grammar-token-atl-atl_property"><code class="xref docutils literal notranslate"><span class="pre">atl_property</span></code></a>+ (&quot;knot&quot; <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>)* )
+                       | <a class="reference internal" href="#grammar-token-atl-atl_transform_expression"><code class="xref docutils literal notranslate"><span class="pre">atl_transform_expression</span></code></a>
+                       | &quot;clockwise&quot;
+                       | &quot;counterclockwise&quot;
+                       | (&quot;circles&quot; <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>)
+</pre>
+<p>下面是一些插值语句的样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">logo</span> <span class="n">base</span><span class="p">:</span>
+    <span class="c1"># 在界面右上角显示logo。</span>
+    <span class="na">xalign</span> <span class="mf">1.0</span> <span class="na">yalign</span> <span class="mf">0.0</span>
+
+    <span class="c1"># 耗时1秒，将logo移动到最左侧。</span>
+    <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">0.0</span>
+
+    <span class="c1"># 耗时1秒，将logo移动到界面正中心。移动时的使用ease缓动函数。</span>
+    <span class="n">ease</span> <span class="mf">1.0</span> <span class="n">truecenter</span>
+
+    <span class="c1"># 设置旋转锚点。</span>
+    <span class="na">anchor</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c1"># 耗时2秒，让logo按顺时针方向做圆周旋转，最终到达界面正上方。</span>
+    <span class="n">linear</span> <span class="mf">2.0</span> <span class="na">yalign</span> <span class="mf">0.0</span> <span class="k">clockwise</span> <span class="k">circles</span> <span class="mi">3</span>
+
+    <span class="c1"># 让logo按照指定样条的路径，在界面中移动。</span>
+    <span class="n">linear</span> <span class="mf">2.0</span> <span class="na">align</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">knot</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">.33</span><span class="p">)</span> <span class="k">knot</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">.66</span><span class="p">)</span>
+
+    <span class="c1"># 同时修改xalign和yalign的值。</span>
+    <span class="n">linear</span> <span class="mf">2.0</span> <span class="na">xalign</span> <span class="mf">1.0</span> <span class="na">yalign</span> <span class="mf">1.0</span>
+
+    <span class="c1"># 与上一步相同，但使用语句块形式。</span>
+    <span class="n">linear</span> <span class="mf">2.0</span><span class="p">:</span>
+        <span class="na">xalign</span> <span class="mf">1.0</span>
+        <span class="na">yalign</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>插值语句的第一部分用于选择time-warp函数。即，将线性时间转为非线性时间，关于warper的信息详见 <a class="reference internal" href="#warpers"><span class="std std-ref">warpers</span></a> 。
+可以使用在ATL注册的warp类函数名，或者使用关键词“warp”开头的某个表达式代表的函数。
+无论使用的是哪种函数，后面跟着的数字表示总体消耗时间，单位为秒。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">builtin_warper</span><span class="p">:</span>
+    <span class="na">xpos</span> <span class="mi">0</span>
+    <span class="n">ease</span> <span class="mi">5</span> <span class="na">xpos</span> <span class="mi">520</span>
+
+<span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">my_warper</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">t</span><span class="o">**</span><span class="mf">4.4</span>
+
+<span class="k">define</span> <span class="n">my_warpers</span> <span class="o">=</span> <span class="p">[</span><span class="n">my_warper</span><span class="p">]</span>
+
+<span class="k">transform</span> <span class="n">accessed_as_function</span><span class="p">:</span>
+    <span class="na">xpos</span> <span class="mi">0</span>
+    <span class="k">warp</span> <span class="n">my_warpers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="mi">5</span> <span class="na">xpos</span> <span class="mi">520</span>
+    <span class="k">warp</span> <span class="n">my_warper</span> <span class="mi">3</span> <span class="na">xpos</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<p>整个插值语句的持续时长由给定的时间决定，至少为1帧。</p>
+<p>指定的 <a class="reference internal" href="transform_properties.html"><span class="doc">变换特性</span></a> 会逐渐逼近终值，并在插值语句结尾达到该终值。
+具体的细节有以下几种：</p>
+<ul class="simple">
+<li><p>如果终值后面还跟着一个或多个节点(knot)，表示运动路径是样条。
+初始值和终值分别是样条的起点与终点，knot则是样条的控制节点。
+四次曲线只使用一个knot，贝塞尔曲线使用两个knot，Carmull-Rom曲线则使用三个或更多knot。
+前两种情况中，knot都是单纯的控制节点。
+而Catmull-Rom曲线中，只有首尾两个knot是控制节点(通常不在曲线上)，其他knot则都在曲线路径上。</p></li>
+<li><p>如果插值语句中包含一个“clockwise”或“counterclockwise”从句，表示使用圆周运动。
+Ren’Py处理圆周运动时，首先比较起点与终点位置(通常使用 <a class="reference internal" href="transform_properties.html#transform-property-pos"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">pos</span></code></a>、<a class="reference internal" href="transform_properties.html#transform-property-align"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">align</span></code></a>、<a class="reference internal" href="transform_properties.html#transform-property-angle"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">angle</span></code></a> 和 <a class="reference internal" href="transform_properties.html#transform-property-radius"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">radius</span></code></a> 设置)，
+然后找到极坐标原点(通常使用 <a class="reference internal" href="transform_properties.html#transform-property-around"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">around</span></code></a> 设置)。接着计算指定方向需要旋转的角度值，单位为度。
+如果出现了“circle”从句，Ren’Py则会加上对应数量的整圈。</p></li>
+<li><p>其他情况下，会对起点和重点的坐标进行线性插值。</p></li>
+</ul>
+<p>如果某个 <a class="reference internal" href="#transform-expression-atl-statement"><span class="std std-ref">变换表达式语句</span></a> 中只有一条特性(property)语句，也可以进行插值计算。
+起始值就是ATL变换中对应特性的值，跟直接设置起点的值效果相同。</p>
+<p>warper后面可以跟一个英文冒号(:)。这种情况下，warper后可能会有一个或多个如上阐述的从句。
+这样做可以让ATL可以同时对多个特性进行插值。</p>
+</section>
+<section id="pass">
+<span id="pass-statement"></span><h4>pass语句<a class="headerlink" href="#pass" title="Link to this heading"> link</a></h4>
+<pre>
+<strong id="grammar-token-atl-atl_pass">atl_pass</strong> ::=  &quot;pass&quot;
+</pre>
+<p><code class="docutils literal notranslate"><span class="pre">pass</span></code> 语句是一个简单语句，不会触发任何效果：一种 no-op 。
+pass语句可以用于分隔其他语句。比如出现两套choice语句的时候，如果不用pass语句，选项会混在一起。
+pass语句还可以用在一些语法层面需要出现语句块，但创作者只想要空着的地方，比如某些选项语句后面必须写点什么。</p>
+<p>(译者注：pass就是脚本中的占位符。空着不写会报错，写个pass就能运行了。)</p>
+</section>
+<section id="repeat">
+<span id="repeat-statement"></span><h4>repeat语句<a class="headerlink" href="#repeat" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">repeat</span></code> 语句是一种简单语句。脚本执行到repeat时会跳转到包含repeat的语句块的开头，并重新开始执行。</p>
+<pre>
+<strong id="grammar-token-atl-atl_repeat">atl_repeat</strong> ::=  &quot;repeat&quot; (<code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>)?
+</pre>
+<p>如果repeat中出现了一个表达式，该表达式可以计算出一个整数。这个整数就是整个语句块(block)重复执行的次数。
+(<code class="docutils literal notranslate"><span class="pre">repeat</span> <span class="pre">2</span></code> 表示语句块最多会执行2次，<code class="docutils literal notranslate"><span class="pre">repeat</span> <span class="pre">1</span></code> 则不会有重复执行的效果。)
+repeat语句必须是一个语句块(block)的最后一个语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">logo</span> <span class="n">base</span><span class="p">:</span>
+    <span class="na">xalign</span> <span class="mf">0.0</span>
+    <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+    <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">0.0</span>
+    <span class="k">repeat</span>
+</pre></div>
+</div>
+</section>
+<section id="block">
+<span id="block-statement"></span><h4>block语句<a class="headerlink" href="#block" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">block</span></code> 语句包含ATL语句块(block)。</p>
+<pre>
+<strong id="grammar-token-atl-atl_block_stmt">atl_block_stmt</strong> ::=  &quot;block&quot; &quot;:&quot;
+                         <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>
+</pre>
+<p>block语句用于对需要重复运行的语句分组：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">logo</span> <span class="n">base</span><span class="p">:</span>
+    <span class="na">alpha</span> <span class="mf">0.0</span> <span class="na">xalign</span> <span class="mf">0.0</span> <span class="na">yalign</span> <span class="mf">0.0</span>
+    <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">alpha</span> <span class="mf">1.0</span>
+
+    <span class="k">block</span><span class="p">:</span>
+        <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+        <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">0.0</span>
+        <span class="k">repeat</span>
+</pre></div>
+</div>
+</section>
+<section id="parallel">
+<span id="parallel-statement"></span><h4>parallel语句<a class="headerlink" href="#parallel" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">parallel</span></code> 语句用于定义一个可以并行执行的ATL语句块的集。</p>
+<pre>
+<strong id="grammar-token-atl-atl_parallel">atl_parallel</strong> ::=  (&quot;parallel&quot; &quot;:&quot;
+                     <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>)+
+</pre>
+<p>parallel语句会将语句块(block)中连续出现的多个parallel项都放入一个并行集之中。当整个语句块中所有语句都执行完后，parallel语句才会终止。</p>
+<p>语句块中的所有并行语句都应各自独立，并使用不同的 <a class="reference internal" href="transform_properties.html"><span class="doc">变换特性</span></a>。当两个并行分支修改了同一项特性(property)，会产生无法预料的结果。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">logo</span> <span class="n">base</span><span class="p">:</span>
+    <span class="k">parallel</span><span class="p">:</span>
+        <span class="na">xalign</span> <span class="mf">0.0</span>
+        <span class="n">linear</span> <span class="mf">1.3</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+        <span class="n">linear</span> <span class="mf">1.3</span> <span class="na">xalign</span> <span class="mf">0.0</span>
+        <span class="k">repeat</span>
+    <span class="k">parallel</span><span class="p">:</span>
+        <span class="na">yalign</span> <span class="mf">0.0</span>
+        <span class="n">linear</span> <span class="mf">1.6</span> <span class="na">yalign</span> <span class="mf">1.0</span>
+        <span class="n">linear</span> <span class="mf">1.6</span> <span class="na">yalign</span> <span class="mf">0.0</span>
+        <span class="k">repeat</span>
+</pre></div>
+</div>
+</section>
+<section id="choice">
+<span id="choice-statement"></span><h4>choice语句<a class="headerlink" href="#choice" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">choice</span></code> 语句定义了一个所有可选项的集合。Ren’Py会根据玩家的选择，执行对应选项相关的ATL语句块(block)，之后跳转到choice语句块结束处。</p>
+<pre>
+<strong id="grammar-token-atl-atl_choice">atl_choice</strong> ::=  (&quot;choice&quot; (<code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>)? &quot;:&quot;
+                    <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>)+
+</pre>
+<p>choice语句会将语句块(block)中连续出现的多个choice选项都放入一个选项集之中。如果选项后面出现一个简单表达式，这个表达式的值应该是一个浮点数，表示对应选项的权重；如果没有权重表达式，默认值为1.0。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">eileen</span> <span class="n">random</span><span class="p">:</span>
+    <span class="k">choice</span><span class="p">:</span>
+        <span class="s2">&quot;eileen happy&quot;</span>
+    <span class="k">choice</span><span class="p">:</span>
+        <span class="s2">&quot;eileen vhappy&quot;</span>
+    <span class="k">choice</span><span class="p">:</span>
+        <span class="s2">&quot;eileen concerned&quot;</span>
+
+    <span class="k">pause</span> <span class="mf">1.0</span>
+    <span class="k">repeat</span>
+</pre></div>
+</div>
+<p>在choice语句块内部使用 <code class="docutils literal notranslate"><span class="pre">pass</span></code> 语句可以生成一个空的choice语句块。</p>
+</section>
+<section id="animation">
+<span id="animation-statement"></span><h4>animation语句<a class="headerlink" href="#animation" title="Link to this heading"> link</a></h4>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">animation</span></code> 语句时，必须将其放在整个ATL语句块的开头，告诉Ren’Py该语句块要使用动画时间轴。</p>
+<pre>
+<strong id="grammar-token-atl-atl_animation">atl_animation</strong> ::=  &quot;animation&quot;
+</pre>
+<p>与普通的显示时间轴相比，在带有相同标签(tag)的图像(image)或界面(screen)开始显示的那一刻，animation时间轴就将进行计时并被所有相同标签(tag)的图像和界面共享。
+animation时间轴常用于动画过程中的图像替换。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="n">moving</span><span class="p">:</span>
+    <span class="k">animation</span>
+    <span class="s2">&quot;eileen happy&quot;</span>
+    <span class="na">xalign</span> <span class="mf">0.0</span>
+    <span class="n">linear</span> <span class="mf">5.0</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+    <span class="k">repeat</span>
+
+<span class="k">image</span> <span class="n">eileen</span> <span class="n">vhappy</span> <span class="n">moving</span><span class="p">:</span>
+    <span class="k">animation</span>
+    <span class="s2">&quot;eileen vhappy&quot;</span>
+    <span class="na">xalign</span> <span class="mf">0.0</span>
+    <span class="n">linear</span> <span class="mf">5.0</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+    <span class="k">repeat</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="n">moving</span>
+    <span class="k">pause</span>
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">vhappy</span> <span class="n">moving</span>
+    <span class="k">pause</span>
+</pre></div>
+</div>
+<p>这个例子中，艾琳的立绘表情将在第一个 pause 语句处改变，但她的位置不会改变。
+因为两个动画使用相同的animation时间轴，避免了更换立绘后出现图像位置不连续。
+不使用 animation 语句的话，用户通过点击鼠标或屏幕后，角色的立绘位置将发生一次重置。</p>
+</section>
+<section id="on">
+<span id="on-statement"></span><h4>on语句<a class="headerlink" href="#on" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">on</span></code> 语句会定义一个事件处理器(handler)。</p>
+<pre>
+<strong id="grammar-token-atl-atl_on">atl_on</strong> ::=  &quot;on&quot; <code class="xref docutils literal notranslate"><span class="pre">name</span></code> [ &quot;,&quot; <code class="xref docutils literal notranslate"><span class="pre">name</span></code> ] * &quot;:&quot;
+                 <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>
+</pre>
+<p><code class="docutils literal notranslate"><span class="pre">on</span></code> 语句会将语句块(block)中连续出现的多个on项都放入一个事件集之中。on语句可以只处理某一个事件名，或者使用逗号分隔的事件名列表。</p>
+<p>on语句用于处理各种事件(event)。当某个事件被处理后，其他的事件处理就会停止，并且会立即进入新事件的处理流程。当某个事件处理器没有新的待处理事件，就会产生 <code class="docutils literal notranslate"><span class="pre">default</span></code> 事件(已经处理 <code class="docutils literal notranslate"><span class="pre">default</span></code> 事件的情况除外)。</p>
+<p>on语句的执行不会自然终止。(但是其可以被time语句，或者关联的事件处理器终止。)</p>
+<p>生成任意事件的方法详见event语句部分，以及 <a class="reference internal" href="#external-atl-events"><span class="std std-ref">外部事件</span></a> 中的原生事件列表。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">logo</span> <span class="n">base</span><span class="p">:</span>
+    <span class="k">on</span> <span class="k">show</span><span class="p">:</span>
+        <span class="na">alpha</span> <span class="mf">0.0</span>
+        <span class="n">linear</span> <span class="mf">.5</span> <span class="na">alpha</span> <span class="mf">1.0</span>
+    <span class="k">on</span> <span class="k">hide</span><span class="p">:</span>
+        <span class="n">linear</span> <span class="mf">.5</span> <span class="na">alpha</span> <span class="mf">0.0</span>
+
+<span class="k">transform</span> <span class="n">pulse_button</span><span class="p">:</span>
+    <span class="k">on</span> <span class="na">hover</span><span class="p">,</span> <span class="na">idle</span><span class="p">:</span>
+        <span class="n">linear</span> <span class="mf">.25</span> <span class="na">zoom</span> <span class="mf">1.25</span>
+        <span class="n">linear</span> <span class="mf">.25</span> <span class="na">zoom</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+</section>
+<section id="transform-expression-atl-statement">
+<span id="id8"></span><h4>变换表达式语句<a class="headerlink" href="#transform-expression-atl-statement" title="Link to this heading"> link</a></h4>
+<p>变换表达式语句可以包含另一个ATL变换，并用作自身ATL语句块的一部分。</p>
+<pre>
+<strong id="grammar-token-atl-atl_transform_expression">atl_transform_expression</strong> ::=  <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>
+</pre>
+<p>这种语句只有在ATL变换自身 <strong>没有</strong> 子组件时才有效。否则，同样的语句会被当作 <a class="reference internal" href="#displayable-atl-statement"><span class="std std-ref">可视组件语句</span></a> 处理。
+变换表达式语句中的内容会替换变换名，并执行对应的变换。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">move_right</span><span class="p">:</span>
+    <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+
+<span class="k">image</span> <span class="n">atl</span> <span class="n">example</span><span class="p">:</span>
+    <span class="c1"># 显示logo_base.png</span>
+    <span class="s2">&quot;logo_base.png&quot;</span>
+
+    <span class="c1"># 运行变换move_right</span>
+    <span class="n">move_right</span>
+</pre></div>
+</div>
+</section>
+<section id="displayable-atl-statement">
+<span id="id9"></span><h4>可视组件语句<a class="headerlink" href="#displayable-atl-statement" title="Link to this heading"> link</a></h4>
+<p>可视组件语句通常是一个简单的Python表达式，可以计算出一个 <a class="reference internal" href="displayables.html"><span class="doc">可视组件</span></a> 对象。
+可视组件语句后面也可能会有一个从句，即另一个简单表达式。</p>
+<pre>
+<strong id="grammar-token-atl-atl_displayable">atl_displayable</strong> ::=  <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code> (&quot;with&quot; <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>)?
+</pre>
+<p>该语句用于设置或替换某个变换的子组件。</p>
+<p>如果后面有 <code class="docutils literal notranslate"><span class="pre">with</span></code> 从句，后面的第二个表达式计算结果会用作 <a class="reference internal" href="transitions.html"><span class="doc">转场</span></a> 效果，并用于新旧两个子组件的切换过程。
+需要注意的是，并非所有转场都能正常使用。具体参考 <a class="reference internal" href="transitions.html#dict-transitions"><span class="std std-ref">字典转场(Dict Transitions)</span></a> 、 <a class="reference internal" href="transitions.html#var-move"><code class="xref std std-var docutils literal notranslate"><span class="pre">move-</span></code></a> 和:var:<cite>ease- &lt;ease&gt;</cite> 。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">atl</span> <span class="n">example</span><span class="p">:</span>
+    <span class="c1"># 显示logo_base.png。</span>
+    <span class="s2">&quot;logo_base.png&quot;</span>
+
+    <span class="c1"># 暂停1.0秒。</span>
+    <span class="mf">1.0</span>
+
+    <span class="c1"># 显示logo_bw.png，使用dissolve转场效果。</span>
+    <span class="s2">&quot;logo_bw.png&quot;</span> <span class="k">with</span> <span class="n">Dissolve</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="na">alpha</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>如果传入无子组件的变换对象，可能会让整个变换变成透明且无效。
+传入无子组件的ATL变换可能会被当作 <a class="reference internal" href="#transform-expression-atl-statement"><span class="std std-ref">变换表达式语句</span></a>，产生与预期不同的效果。</p>
+</div>
+<p>如果表达式计算出的ATL变换 <strong>包含</strong> 子组件，那么整个ATL语句块会等到所有子组件内的ATL代码都执行完之后再继续向下执行。</p>
+</section>
+<section id="contains-block-statement">
+<span id="id10"></span><h4>contains语句块<a class="headerlink" href="#contains-block-statement" title="Link to this heading"> link</a></h4>
+<p>contains语句块，类似于 <a class="reference internal" href="#inline-contains-atl-statement"><span class="std std-ref">单行contains语句</span></a>，可以设置变换的子组件，但方式不同。</p>
+<pre>
+<strong id="grammar-token-atl-atl_counts">atl_counts</strong> ::=  &quot;contains&quot; &quot;:&quot;
+                   <code class="xref docutils literal notranslate"><span class="pre">atl_block</span></code>
+</pre>
+<p>一个或多个contains语句块会被分组，并放在一个 <a class="reference internal" href="displayables.html#Fixed" title="Fixed"><code class="xref py py-func docutils literal notranslate"><span class="pre">Fixed()</span></code></a> 组件中，设置为该变换的子组件。</p>
+<p>每个语句块都必须定义一个可用的可视组件，否则会报错。
+所有contains语句会立刻并行执行，并不会等待所有子组件内的代码都执行完毕才执行下一条contains。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">test</span> <span class="n">double</span><span class="p">:</span>
+    <span class="k">contains</span><span class="p">:</span>
+        <span class="s2">&quot;logo.png&quot;</span>
+        <span class="na">xalign</span> <span class="mf">0.0</span>
+        <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+        <span class="k">repeat</span>
+
+    <span class="k">contains</span><span class="p">:</span>
+        <span class="s2">&quot;logo.png&quot;</span>
+        <span class="na">xalign</span> <span class="mf">1.0</span>
+        <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xalign</span> <span class="mf">0.0</span>
+        <span class="k">repeat</span>
+</pre></div>
+</div>
+</section>
+<section id="function">
+<span id="function-statement"></span><h4>function语句<a class="headerlink" href="#function" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">function</span></code> 语句允许ATL使用Python代码。</p>
+<pre>
+<strong id="grammar-token-atl-atl_function">atl_function</strong> ::=  &quot;function&quot; <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>
+</pre>
+<p>这些函数与 <a class="reference internal" href="#Transform" title="Transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">Transform()</span></code></a> 具有相同的入参和返回结果：</p>
+<ul class="simple">
+<li><p>第一个入参是一个transform对象。可以设置该对象的 <a class="reference internal" href="transform_properties.html"><span class="doc">变换特性</span></a>。</p></li>
+<li><p>第二个入参是显示时间轴，表示函数开始执行到现在经过的秒数。</p></li>
+<li><p>第三个入参是动画时间轴，表示具有相同标签(tag)的对象在整个界面上已存在的秒数。</p></li>
+<li><p>如果函数返回一个数值，其会在数值对应的时间(秒)后再次被调用。(0秒表示尽可能快地调用该函数。)如果函数返回None，主控流程会跳到下一个ATL语句。</p></li>
+</ul>
+<p>除了修改第一个入参中的Transform对象之外，该函数不应产生副作用。
+并可以在任意时间传入任意值并调用，能配合预加载功能。</p>
+<p>注意，<code class="docutils literal notranslate"><span class="pre">function</span></code> 不是一个变换特性，并且其跟 <a class="reference internal" href="#Transform" title="Transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">Transform()</span></code></a> 的 <cite>function</cite> 参数也不完全一致。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">slide_vibrate</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="k">at</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">st</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">trans</span><span class="o">.</span><span class="na">xalign</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">trans</span><span class="o">.</span><span class="na">yoffset</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trans</span><span class="o">.</span><span class="na">xalign</span> <span class="o">=</span> <span class="n">st</span>
+            <span class="n">trans</span><span class="o">.</span><span class="na">yoffset</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">show</span> <span class="n">logo</span> <span class="n">base</span><span class="p">:</span>
+        <span class="k">function</span> <span class="n">slide_vibrate</span>
+        <span class="k">pause</span> <span class="mf">1.0</span>
+        <span class="k">repeat</span>
+</pre></div>
+</div>
+</section>
+<section id="time">
+<span id="time-statement"></span><h4>time语句<a class="headerlink" href="#time" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">time</span></code> 语句是一种控制语句。</p>
+<pre>
+<strong id="grammar-token-atl-atl_time">atl_time</strong> ::=  &quot;time&quot; <code class="xref docutils literal notranslate"><span class="pre">simple_expression</span></code>
+</pre>
+<p>其包含一个简单表达式，可以算出一个时间点，单位为秒。这个时间点表示其所在语句块(block)从开始执行到time语句结束的总时长。
+当time语句中给定的“time”结束后，后面的语句才会开始执行。在上一个语句还在执行的情况下，这种控制转换依然会执行，也能强行终止任意优先级的语句。</p>
+<p>time语句隐含了一个pause语句，表示暂停无限长时间。这表示如果主控流程不能抵达time语句处，它就会保持等待直到time语句获取流程控制权。</p>
+<p>当一个语句块中存在多个time语句时，它们各自的结束时间点必须按顺序严格递增。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">backgrounds</span><span class="p">:</span>
+    <span class="s2">&quot;bg band&quot;</span>
+    <span class="na">xoffset</span> <span class="mi">0</span>
+    <span class="k">block</span><span class="p">:</span>
+        <span class="n">linear</span> <span class="mi">1</span> <span class="na">xoffset</span> <span class="mi">10</span>
+        <span class="n">linear</span> <span class="mi">1</span> <span class="na">xoffset</span> <span class="mi">0</span>
+        <span class="k">repeat</span> <span class="c1"># 主控流程永远无法主动退出循环</span>
+
+    <span class="k">time</span> <span class="mf">2.0</span>
+    <span class="na">xoffset</span> <span class="mi">0</span>
+    <span class="s2">&quot;bg whitehouse&quot;</span>
+
+    <span class="k">time</span> <span class="mf">4.0</span>
+    <span class="s2">&quot;bg washington&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="event">
+<span id="event-statement"></span><h4>event语句<a class="headerlink" href="#event" title="Link to this heading"> link</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">event</span></code> 语句是一个简单语句，其会使用给定的名称产生一个事件(event)。</p>
+<pre>
+<strong id="grammar-token-atl-atl_event">atl_event</strong> ::=  &quot;event&quot; <code class="xref docutils literal notranslate"><span class="pre">name</span></code>
+</pre>
+<p>当在某个语句块(block)运行过程中出现某个事件(event)时，语句块会检查自身是否存在对应事件名的处理器(handler)。如果处理器存在，主控流程会切换到对应的事件处理器。否则，事件会广播至所有事件处理器。</p>
+</section>
+</section>
+<section id="external-atl-events">
+<span id="id11"></span><h3>外部事件<a class="headerlink" href="#external-atl-events" title="Link to this heading"> link</a></h3>
+<p>下列事件会在ATL变换中自动触发：</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">start</span></code></dt><dd><p>一种伪事件，进入 <code class="docutils literal notranslate"><span class="pre">on</span></code> 语句时触发，前提是没有更高优先级的事件出现。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">show</span></code></dt><dd><p>使用 <code class="docutils literal notranslate"><span class="pre">show</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">scene</span></code> 语句显示transform，并且给定标签(tag)没有对应已显示的图像时触发。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">replace</span></code></dt><dd><p>使用 <code class="docutils literal notranslate"><span class="pre">show</span></code> 语句中的transform根据给定标签(tag)替换某个图像时触发。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hide</span></code></dt><dd><p>使用 <code class="docutils literal notranslate"><span class="pre">hide</span></code> 语句或等效的python语句中的transform时触发。</p>
+<p>需要注意的是，transform被 <a class="reference internal" href="displaying_images.html#scene-statement"><span class="std std-ref">scene语句</span></a> 清除，或者退出其所在的 <a class="reference internal" href="label.html#context"><span class="std std-ref">上下文</span></a> 时，hide事件是不会触发的。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">replaced</span></code></dt><dd><p>transform被另一个transform替换时触发。原transform的图像实际上并不会隐藏或移除，直到整个ATL语句块(block)执行完。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hover</span></code>、<code class="docutils literal notranslate"><span class="pre">idle</span></code>、<code class="docutils literal notranslate"><span class="pre">selected_hover</span></code>、<code class="docutils literal notranslate"><span class="pre">selected_idle</span></code>、<code class="docutils literal notranslate"><span class="pre">insensitive</span></code>、<code class="docutils literal notranslate"><span class="pre">selected_insensitive</span></code></dt><dd><p>当包含此transform的按钮或者被此transform包含的按钮，出现对应的状态名称时触发。</p>
+</dd>
+</dl>
+</section>
+<section id="atl-partial">
+<span id="id12"></span><h3>ATL的柯里化和部分入参传递<a class="headerlink" href="#atl-partial" title="Link to this heading"> link</a></h3>
+<p>使用 <a class="reference internal" href="#transform-statement"><span class="std std-ref">transform语句</span></a> 定义的ATL变换可以设置多种不同的入参列表。
+如同调用函数一样调用ATL变换时，返回结果依然是一个transform，入参则可以改变原transform中同名参数的值。</p>
+<p>例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">screamer</span><span class="p">(</span><span class="na">child</span><span class="p">,</span> <span class="n">screamee</span><span class="p">,</span> <span class="n">wait_time</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">flash_time</span><span class="o">=</span><span class="mf">.1</span><span class="p">):</span>
+    <span class="na">child</span>
+    <span class="k">pause</span> <span class="n">wait_time</span>
+    <span class="n">screamee</span>
+    <span class="k">pause</span> <span class="n">flash_time</span>
+    <span class="na">child</span>
+
+<span class="c1"># 这样写不会报错(类似于引用Python函数返回结果)。</span>
+<span class="k">define</span> <span class="n">shorter_screamer</span> <span class="o">=</span> <span class="n">screamer</span><span class="p">(</span><span class="n">wait_time</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">define</span> <span class="n">eileen_excited_screamer</span> <span class="o">=</span> <span class="n">screamer</span><span class="p">(</span><span class="n">screamee</span><span class="o">=</span><span class="s2">&quot;eileen excited&quot;</span><span class="p">,</span> <span class="n">flash_time</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">show</span> <span class="n">hhannahh</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">screamer</span><span class="p">(</span><span class="n">screamee</span><span class="o">=</span><span class="s2">&quot;hhannahh surprised&quot;</span><span class="p">,</span> <span class="n">wait_time</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="s2">&quot;这是一种方法。&quot;</span>
+
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">vhappy</span> <span class="k">at</span> <span class="n">eileen_excited_screamer</span>
+    <span class="s2">&quot;这是另一种方法。&quot;</span>
+
+    <span class="k">show</span> <span class="n">patricia</span> <span class="n">sad</span> <span class="k">at</span> <span class="n">eileen_excited_screamer</span><span class="p">(</span><span class="n">screamee</span><span class="o">=</span><span class="s2">&quot;patricia wow&quot;</span><span class="p">)</span>
+    <span class="s2">&quot;并且你也可以这样做。&quot;</span>
+</pre></div>
+</div>
+<p>需要注意，变换 <code class="docutils literal notranslate"><span class="pre">shorter_screamer</span></code> 虽然源自 <code class="docutils literal notranslate"><span class="pre">screamer</span></code>，但不能直接像 <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">eileen</span> <span class="pre">at</span> <span class="pre">screamer</span></code> 这样直接用。
+因为其 <code class="docutils literal notranslate"><span class="pre">screamee</span></code> 参数未赋值。</p>
+<p>还要注意，类似脚本标签(label)和界面(screen)定义，使用 <a class="reference internal" href="#transform-statement"><span class="std std-ref">transform语句</span></a> 定义的transform的入参默认值，
+是在transform <em>被调用</em> 时才计算的，而不是 <em>被定义</em> 时就计算好的。</p>
+<p>总之，transform只有在调用另一个变换(例如上例中的 <code class="docutils literal notranslate"><span class="pre">shorter_screamer</span></code> 或部分入参传递)时，才会计算所有入参的默认值。
+无论默认值来自原始的transform(比如 <code class="docutils literal notranslate"><span class="pre">shorter_screamer</span></code> 的 <cite>flash_time</cite> 参数或部分入参传递的 <cite>wait_time</cite> 参数)，
+还是来自更早执行的脚本中的调用(比如 <cite>shorter_screamer`</cite> 中的 <cite>wait_time</cite> 参数或部分入参传递的 <cite>screamee</cite> 和`flash_time` 参数)。</p>
+</section>
+<section id="child">
+<span id="atl-child-param"></span><h3>特殊child参数<a class="headerlink" href="#child" title="Link to this heading"> link</a></h3>
+<p>如果某个ATL变换有一个入参名为“child”，并且该入参获得了一个值，那么将 <strong>无视该入参值的类型和赋值方式</strong> ，
+该变换的子组件将被设置为child参数的值。
+(无视入参值类型和赋值方式是指，不需要考虑参数是固定位置入参是还是关键词入参，也不需要考虑该参数有默认值还是要求必须重新赋值。)</p>
+<p>需要注意，child入参的默认值不会生效，还是需要从外部传入一个新的值。</p>
+<p>另外，ATL变换用作一个transform时，默认不会将 <code class="docutils literal notranslate"><span class="pre">child=</span></code> 作为关键词参数传递并设置目标的child，除非目标有个同名的child入参。</p>
+<p>例如，下面的脚本能在child与另一个可视组件之间来回切换：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">lucy_jump_scare</span><span class="p">(</span><span class="na">child</span><span class="p">):</span>
+    <span class="c1"># child的值会隐式设置为transform的子组件。</span>
+    <span class="k">pause</span> <span class="mi">5</span>
+
+    <span class="c1"># “jump scare”式惊吓。</span>
+    <span class="s2">&quot;lucy mad&quot;</span>
+    <span class="k">pause</span> <span class="mf">.2</span>
+
+    <span class="c1"># 再显示原来的子组件。</span>
+    <span class="na">child</span>
+</pre></div>
+</div>
+<p>还可以在 <code class="docutils literal notranslate"><span class="pre">contains</span></code> 语句块中放置原来的子组件：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">marquee</span><span class="p">(</span><span class="na">width</span><span class="p">,</span> <span class="na">height</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="na">child</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="na">xcenter</span> <span class="mf">0.5</span>
+    <span class="na">ycenter</span> <span class="mf">0.5</span>
+
+    <span class="na">crop</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+
+    <span class="k">contains</span><span class="p">:</span>
+        <span class="na">child</span>
+        <span class="na">xanchor</span> <span class="mf">0.0</span> <span class="na">xpos</span> <span class="mf">1.0</span>
+        <span class="n">linear</span> <span class="n">duration</span> <span class="na">xanchor</span> <span class="mf">1.0</span> <span class="na">xpos</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+<p><cite>old_widget</cite> 和 <cite>new_widget</cite> 两个“关键词限定”入参(即不能用于固定位置入参)在 <a class="reference internal" href="transitions.html#atl-transitions"><span class="std std-ref">ATL转场</span></a> 中有特殊用法。</p>
+</section>
+</section>
+<section id="warpers">
+<span id="id13"></span><h2>warpers<a class="headerlink" href="#warpers" title="Link to this heading"> link</a></h2>
+<p>warper是一类函数，其可以改变插值语句中用到的时间值。他们将时间t转换为t’，t和t’都是浮点数，t会将给定的时间值归一化为0.0到1.0。
+(如果该语句给定的原时长是0，那运行时t就是1.0。)
+t’的初始取值范围也是0.0到1.0，不过可以超出这个范围。
+以下warper都是默认定义好的。</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">pause</span></code></dt><dd><p>暂停，然后跳变成新值。如果 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">==</span> <span class="pre">1.0</span></code>，则 <code class="docutils literal notranslate"><span class="pre">t'</span> <span class="pre">=</span> <span class="pre">1.0</span></code>；否则 <code class="docutils literal notranslate"><span class="pre">t'</span> <span class="pre">=</span> <span class="pre">0.0</span></code>。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">linear</span></code></dt><dd><p>线性插值。<code class="docutils literal notranslate"><span class="pre">t'</span> <span class="pre">=</span> <span class="pre">t</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ease</span></code></dt><dd><p>开头慢，中间加速，之后又减速。<code class="docutils literal notranslate"><span class="pre">t'</span> <span class="pre">=</span> <span class="pre">.5</span> <span class="pre">-</span> <span class="pre">math.cos(math.pi</span> <span class="pre">*</span> <span class="pre">t)</span> <span class="pre">/</span> <span class="pre">2.0</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">easein</span></code></dt><dd><p>开头快，然后减速。<code class="docutils literal notranslate"><span class="pre">t'</span> <span class="pre">=</span> <span class="pre">math.cos((1.0</span> <span class="pre">-</span> <span class="pre">t)</span> <span class="pre">*</span> <span class="pre">math.pi</span> <span class="pre">/</span> <span class="pre">2.0</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">easeout</span></code></dt><dd><p>开头慢，然后加速。<code class="docutils literal notranslate"><span class="pre">t'</span> <span class="pre">=</span> <span class="pre">1.0</span> <span class="pre">-</span> <span class="pre">math.cos(t</span> <span class="pre">*</span> <span class="pre">math.pi</span> <span class="pre">/</span> <span class="pre">2.0)</span></code></p>
+</dd>
+</dl>
+<p>除此之外，Robert Penner的easing函数都是支持的。为了避免与上面的几个函数名重复，有些函数名字修改过。这些标准函数的图像可以在这个网站上查看 <a class="reference external" href="http://www.easings.net/">http://www.easings.net/</a></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Ren’Py 函数名</p></th>
+<th class="head"><p>easings.net 函数名</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ease_back</p></td>
+<td><p>easeInOut_back</p></td>
+</tr>
+<tr class="row-odd"><td><p>ease_bounce</p></td>
+<td><p>easeInOut_bounce</p></td>
+</tr>
+<tr class="row-even"><td><p>ease_circ</p></td>
+<td><p>easeInOut_circ</p></td>
+</tr>
+<tr class="row-odd"><td><p>ease_cubic</p></td>
+<td><p>easeInOut_cubic</p></td>
+</tr>
+<tr class="row-even"><td><p>ease_elastic</p></td>
+<td><p>easeInOut_elastic</p></td>
+</tr>
+<tr class="row-odd"><td><p>ease_expo</p></td>
+<td><p>easeInOut_expo</p></td>
+</tr>
+<tr class="row-even"><td><p>ease_quad</p></td>
+<td><p>easeInOut_quad</p></td>
+</tr>
+<tr class="row-odd"><td><p>ease_quart</p></td>
+<td><p>easeInOut_quart</p></td>
+</tr>
+<tr class="row-even"><td><p>ease_quint</p></td>
+<td><p>easeInOut_quint</p></td>
+</tr>
+<tr class="row-odd"><td><p>easein_back</p></td>
+<td><p>easeOut_back</p></td>
+</tr>
+<tr class="row-even"><td><p>easein_bounce</p></td>
+<td><p>easeOut_bounce</p></td>
+</tr>
+<tr class="row-odd"><td><p>easein_circ</p></td>
+<td><p>easeOut_circ</p></td>
+</tr>
+<tr class="row-even"><td><p>easein_cubic</p></td>
+<td><p>easeOut_cubic</p></td>
+</tr>
+<tr class="row-odd"><td><p>easein_elastic</p></td>
+<td><p>easeOut_elastic</p></td>
+</tr>
+<tr class="row-even"><td><p>easein_expo</p></td>
+<td><p>easeOut_expo</p></td>
+</tr>
+<tr class="row-odd"><td><p>easein_quad</p></td>
+<td><p>easeOut_quad</p></td>
+</tr>
+<tr class="row-even"><td><p>easein_quart</p></td>
+<td><p>easeOut_quart</p></td>
+</tr>
+<tr class="row-odd"><td><p>easein_quint</p></td>
+<td><p>easeOut_quint</p></td>
+</tr>
+<tr class="row-even"><td><p>easeout_back</p></td>
+<td><p>easeIn_back</p></td>
+</tr>
+<tr class="row-odd"><td><p>easeout_bounce</p></td>
+<td><p>easeIn_bounce</p></td>
+</tr>
+<tr class="row-even"><td><p>easeout_circ</p></td>
+<td><p>easeIn_circ</p></td>
+</tr>
+<tr class="row-odd"><td><p>easeout_cubic</p></td>
+<td><p>easeIn_cubic</p></td>
+</tr>
+<tr class="row-even"><td><p>easeout_elastic</p></td>
+<td><p>easeIn_elastic</p></td>
+</tr>
+<tr class="row-odd"><td><p>easeout_expo</p></td>
+<td><p>easeIn_expo</p></td>
+</tr>
+<tr class="row-even"><td><p>easeout_quad</p></td>
+<td><p>easeIn_quad</p></td>
+</tr>
+<tr class="row-odd"><td><p>easeout_quart</p></td>
+<td><p>easeIn_quart</p></td>
+</tr>
+<tr class="row-even"><td><p>easeout_quint</p></td>
+<td><p>easeIn_quint</p></td>
+</tr>
+</tbody>
+</table>
+<p>可以通过只读模块 <code class="docutils literal notranslate"><span class="pre">_warper</span></code> 访问这些warper效果。该模块包含了上述所有函数。
+在Ren’Py内置效果中使用时间warp函数很有用，比如可以这样用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">Dissolve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_warp</span><span class="o">=</span><span class="n">_warper</span><span class="o">.</span><span class="n">easein_quad</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们可以在一个 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">early</span></code> 语句块中，使用 <code class="docutils literal notranslate"><span class="pre">renpy.atl_warper</span></code> 装饰器定义新的warper函数。定义warper函数文件需要在使用那个函数的其他任何文件之前被处理。定义的代码如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span> <span class="n">early</span> <span class="k">hide</span><span class="p">:</span>
+
+    <span class="nd">@renpy</span><span class="o">.</span><span class="n">atl_warper</span>
+    <span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">t</span>
+</pre></div>
+</div>
+</section>
+<section id="replacing-transforms">
+<span id="id14"></span><h2>替换变换<a class="headerlink" href="#replacing-transforms" title="Link to this heading"> link</a></h2>
+<p>某个ATL变换、内建变换或使用 <a class="reference internal" href="#Transform" title="Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a> 定义的变换对象被同类变换替换时，
+同名特性的值会从前一个变换继承到新的变换。不同类型的变换无法继承。</p>
+<p>如果 <a class="reference internal" href="displaying_images.html#show-statement"><span class="std std-ref">show语句</span></a> 中的at关键字后列出了多个变换待替换，则新变换列表从后往前依次替换，直到新替换变换列表全部换完。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span>
+<span class="s2">&quot;我们稍等一下。&quot;</span>
+<span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">e</span></code> 变换替换了 <code class="docutils literal notranslate"><span class="pre">c</span></code>， <code class="docutils literal notranslate"><span class="pre">d</span></code> 变换替换了 <code class="docutils literal notranslate"><span class="pre">b</span></code>，而没有变换会替换 <code class="docutils literal notranslate"><span class="pre">a</span></code>。</p>
+<p>替换时，旧变换的特性值由新变换继承。如果旧变换正处于动画中，则新变换继承的可能是中间的某个值。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">bounce</span><span class="p">:</span>
+    <span class="n">linear</span> <span class="mf">3.0</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+    <span class="n">linear</span> <span class="mf">3.0</span> <span class="na">xalign</span> <span class="mf">0.0</span>
+    <span class="k">repeat</span>
+
+<span class="k">transform</span> <span class="n">headright</span><span class="p">:</span>
+    <span class="n">linear</span> <span class="mi">15</span> <span class="na">xalign</span> <span class="mf">1.0</span>
+
+<span class="k">label</span> <span class="n">example</span><span class="p">:</span>
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">bounce</span>
+    <span class="k">pause</span>
+    <span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">headright</span>
+    <span class="k">pause</span>
+</pre></div>
+</div>
+<p>这个例子中，图像会左右弹跳，直到用户点击鼠标。
+当用户点击鼠标后， <code class="docutils literal notranslate"><span class="pre">bounce</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">xalign</span></code> 特性值将被 <code class="docutils literal notranslate"><span class="pre">headright</span></code> 继承。
+精灵在x轴方向坐标移动的初始值，即是用户点击鼠标时的值。</p>
+<p>位置相关特性(包括 <a class="reference internal" href="transform_properties.html#transform-property-xpos"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xpos</span></code></a>、<a class="reference internal" href="transform_properties.html#transform-property-ypos"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">ypos</span></code></a>、<a class="reference internal" href="transform_properties.html#transform-property-xanchor"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xanchor</span></code></a> 和 <a class="reference internal" href="transform_properties.html#transform-property-yanchor"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">yanchor</span></code></a>，以及等效的:tpref:<cite>xalign</cite>、<a class="reference internal" href="transform_properties.html#transform-property-radius"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">radius</span></code></a> 和 <a class="reference internal" href="transform_properties.html#transform-property-angle"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">angle</span></code></a>))继承时有一项特殊规则：
+子组件设置的值会覆盖父组件的值。这样设计是考虑到可视组件往往只有一项位置信息，需要优先保证设置的值不受影响。
+对位置特性的设置有多种方式，例如，<a class="reference internal" href="transform_properties.html#transform-property-xalign"><code class="xref std std-tpref docutils literal notranslate"><span class="pre">xalign</span></code></a> 会同时设置xpos和xanchor。</p>
+<p>最后，如果某个 <code class="docutils literal notranslate"><span class="pre">show</span></code> 语句不包含 <code class="docutils literal notranslate"><span class="pre">at</span></code> 从句，则不需要搞特性值继承问题。若要重置所有变换特性，可以先隐藏再显示对应的可视组件。
+若要中断动画效果，可以这样：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">eileen</span> <span class="n">happy</span> <span class="k">at</span> <span class="n">some_animation</span>
+<span class="s2">&quot;Wow, so this is what antigravity feels like !&quot;</span>
+
+<span class="k">show</span> <span class="n">eileen</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="s2">&quot;But I&#39;m happy when it settles down.&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="the-transform-class">
+<span id="id15"></span><h2>Transform类<a class="headerlink" href="#the-transform-class" title="Link to this heading"> link</a></h2>
+<p>ATL变换在Python中等效于一个Transform对象。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Transform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Transform" title="Link to this definition"> link</a></dt>
+<dd><p>创建一个Transform对象，并将各种操作应用到其子组件，操作包括：剪裁、旋转、缩放和alpha混合等。
+一个Transform对象的字段一一对应 <a class="reference internal" href="transform_properties.html#transform-properties"><span class="std std-ref">变换特性</span></a> ，并都将应用到子组件。</p>
+<dl class="simple">
+<dt><cite>child</cite></dt><dd><p>应用变换的子组件。</p>
+</dd>
+<dt><cite>reset</cite></dt><dd><p>若为True，显示时会重置所有变化特性为默认值，而不是继承其替代的那个变换。</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="Transform.function">
+<span class="sig-name descname"><span class="pre">function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Transform" title="Transform"><span class="pre">Transform</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">st</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#Transform.function" title="Link to this definition"> link</a></dt>
+<dd><p>若不是None，这是渲染变换效果时调用的函数。调用这个函数时使用3个固定位置入参：</p>
+<ul class="simple">
+<li><p>Transform对象。</p></li>
+<li><p>显示时间轴，单位为秒。</p></li>
+<li><p>动画时间轴，单位为秒。</p></li>
+</ul>
+<p>函数会返回一个延迟时间，单位为秒。在运行延迟时间之后这个函数会被再次调用。如果延迟时间是None，则会在下次互动之后立刻调用。</p>
+<p>该函数除了修改第一个入参的变换对象之外不应有其他副作用，并且要求可以在任何时间点使用任何值调用以配合预加载。</p>
+</dd></dl>
+
+<p>其他关键词入参都会作为对应变换特性的值。
+绘制变换效果时，对应的变换特性都会根据入参设置值，但在变换对象创建后不再更改。
+使用 <code class="docutils literal notranslate"><span class="pre">function</span></code> 参数传入的函数或调用 <a class="reference internal" href="#Transform.update" title="Transform.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> 方法，可以改变对应的变换特性。</p>
+<p>其他参数被视为设置变换特性的值。</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Transform.hide_request">
+<span class="sig-name descname"><span class="pre">hide_request</span></span><a class="headerlink" href="#Transform.hide_request" title="Link to this definition"> link</a></dt>
+<dd><p>当function函数被调用时，这项会被设置为True，标识变换效果被隐藏。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Transform.hide_response">
+<span class="sig-name descname"><span class="pre">hide_response</span></span><a class="headerlink" href="#Transform.hide_response" title="Link to this definition"> link</a></dt>
+<dd><p>如果hide_request为True，这项会被设置为False，防止变换效果被隐藏。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Transform.original_child">
+<span class="sig-name descname"><span class="pre">original_child</span></span><a class="headerlink" href="#Transform.original_child" title="Link to this definition"> link</a></dt>
+<dd><p>创建变换对象时就设置的子可视组件，早于调用set_child。
+如果创建时没有子组件，可以设置为None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Transform.set_child">
+<span class="sig-name descname"><span class="pre">set_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Transform.set_child" title="Link to this definition"> link</a></dt>
+<dd><p>使用一个新的 <cite>child</cite> 调用这个方法，<cite>child</cite> 成为变换的子组件。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Transform.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Transform.update" title="Link to this definition"> link</a></dt>
+<dd><p>当变换特性(property)字段在 <cite>function</cite> 参数指定的回调方法之外被更新时，这个方法会被调用，确保修改生效。</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="callables-as-transforms">
+<span id="transforms-python"></span><span id="id16"></span><h2>可调用对象用作变换<a class="headerlink" href="#callables-as-transforms" title="Link to this heading"> link</a></h2>
+<p>最后，Python中的可调用对象可以用作变换。这些可调用对象必须能使用 <a class="reference internal" href="displayables.html"><span class="doc">可视组件</span></a> 作为入参，
+并且能返回一个新的可视组件。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="c1"># 这是一个使用right和left两个默认变换的自定义变换。</span>
+    <span class="k">def</span> <span class="nf">right_or_left</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">switch</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">At</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">At</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>某些内建对象可以也符合入参为可视组件并返回可视组件的要求，例如 <a class="reference internal" href="displayables.html#Flatten" title="Flatten"><code class="xref py py-func docutils literal notranslate"><span class="pre">Flatten()</span></code></a>，也可以直接用作变换。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="displayables.html" class="btn btn-neutral float-left" title="可视组件" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="transform_properties.html" class="btn btn-neutral float-right" title="变换特性" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
