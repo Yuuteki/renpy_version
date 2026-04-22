@@ -175,6 +175,8 @@ const audioDeleteNodeButton = document.getElementById("audioDeleteNodeButton");
 const dialogueInspectorFormEl = document.getElementById("dialogueInspectorForm");
 const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
 const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
+const dialogueVoiceEnabledInput = document.getElementById("dialogueVoiceEnabledInput");
+const dialogueVoiceSettingsGroupEl = document.getElementById("dialogueVoiceSettingsGroup");
 const dialogueVoiceModeInput = document.getElementById("dialogueVoiceModeInput");
 const dialogueVoiceResourceFieldEl = document.getElementById("dialogueVoiceResourceField");
 const dialogueVoiceResourceInput = document.getElementById("dialogueVoiceResourceInput");
@@ -692,14 +694,26 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
   }
 
   if (node.type === "dialogue") {
+    const legacyVoiceMode = ["manual", "auto"].includes(node.dialogueVoiceMode)
+      ? node.dialogueVoiceMode
+      : "manual";
+    const hasLegacyVoiceData = (
+      node.dialogueVoiceMode === "manual"
+      || node.dialogueVoiceMode === "auto"
+      || `${node.dialogueVoicePath || ""}`.trim().length > 0
+      || Boolean(node.dialogueVoiceAudioId)
+      || Boolean(node.dialogueVoiceAudioName)
+    );
+
     return {
       ...node,
       title: node.title || "Dialogue",
       dialogueCharacterId: node.dialogueCharacterId || "",
       dialogueSpeaker: node.dialogueSpeaker || "Narrator",
-      dialogueVoiceMode: ["none", "manual", "auto"].includes(node.dialogueVoiceMode)
-        ? node.dialogueVoiceMode
-        : "none",
+      dialogueVoiceEnabled: Object.prototype.hasOwnProperty.call(node, "dialogueVoiceEnabled")
+        ? Boolean(node.dialogueVoiceEnabled)
+        : hasLegacyVoiceData,
+      dialogueVoiceMode: legacyVoiceMode,
       dialogueVoiceAudioId: node.dialogueVoiceAudioId || "",
       dialogueVoiceAudioName: node.dialogueVoiceAudioName || "",
       dialogueVoicePath: node.dialogueVoicePath || "",
@@ -1429,10 +1443,16 @@ function formatProjectVoiceCode() {
   return lines.join("\n");
 }
 
+function getDialogueVoiceEnabled(node) {
+  if (Object.prototype.hasOwnProperty.call(node || {}, "dialogueVoiceEnabled")) {
+    return Boolean(node?.dialogueVoiceEnabled);
+  }
+
+  return node?.dialogueVoiceMode === "manual" || node?.dialogueVoiceMode === "auto";
+}
+
 function getDialogueVoiceMode(node) {
-  return ["none", "manual", "auto"].includes(node?.dialogueVoiceMode)
-    ? node.dialogueVoiceMode
-    : "none";
+  return node?.dialogueVoiceMode === "auto" ? "auto" : "manual";
 }
 
 function getDialogueVoiceResource(node) {
@@ -1526,14 +1546,14 @@ function getDialogueManualVoicePath(node) {
 }
 
 function getDialogueVoiceSummary(node) {
+  if (!getDialogueVoiceEnabled(node)) {
+    return "";
+  }
+
   const voiceMode = getDialogueVoiceMode(node);
 
   if (voiceMode === "auto") {
     return "auto voice";
-  }
-
-  if (voiceMode !== "manual") {
-    return "";
   }
 
   const voicePath = getDialogueManualVoicePath(node);
@@ -2981,8 +3001,9 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
   if (node.type === "dialogue") {
     const speaker = getDialogueSpeaker(node);
     const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: ["..."] });
+    const dialogueHasVoice = getDialogueVoiceEnabled(node);
     const dialogueVoiceMode = getDialogueVoiceMode(node);
-    const manualVoicePath = dialogueVoiceMode === "manual"
+    const manualVoicePath = dialogueHasVoice && dialogueVoiceMode === "manual"
       ? getDialogueManualVoicePath(node)
       : "";
 
@@ -4564,7 +4585,7 @@ function renderVisualProjectStats() {
   const graph = getActiveGraph();
   const voicedDialogueCount = state.graphs.reduce(
     (count, currentGraph) => count + currentGraph.nodes.filter((node) => (
-      node.type === "dialogue" && getDialogueVoiceMode(node) !== "none"
+      node.type === "dialogue" && getDialogueVoiceEnabled(node)
     )).length,
     0,
   );
@@ -4875,17 +4896,20 @@ function renderInspector() {
   }
 
   if (selectedIsDialogue) {
+    const dialogueHasVoice = getDialogueVoiceEnabled(selectedNode);
     const dialogueVoiceMode = getDialogueVoiceMode(selectedNode);
 
     dialogueNodeTypeInput.value = "Dialogue";
     buildDialogueCharacterOptions(dialogueCharacterInput, selectedNode);
+    dialogueVoiceEnabledInput.checked = dialogueHasVoice;
     dialogueVoiceModeInput.value = dialogueVoiceMode;
     buildDialogueVoiceResourceOptions(dialogueVoiceResourceInput, selectedNode);
     dialogueVoicePathInput.value = selectedNode.dialogueVoicePath || "";
     dialogueVoiceSustainInput.checked = Boolean(selectedNode.dialogueVoiceSustain);
-    dialogueVoiceResourceFieldEl.classList.toggle("hidden", dialogueVoiceMode !== "manual");
-    dialogueVoicePathFieldEl.classList.toggle("hidden", dialogueVoiceMode !== "manual");
-    dialogueVoiceSustainFieldEl.classList.toggle("hidden", dialogueVoiceMode !== "manual");
+    dialogueVoiceSettingsGroupEl.classList.toggle("hidden", !dialogueHasVoice);
+    dialogueVoiceResourceFieldEl.classList.toggle("hidden", !dialogueHasVoice || dialogueVoiceMode !== "manual");
+    dialogueVoicePathFieldEl.classList.toggle("hidden", !dialogueHasVoice || dialogueVoiceMode !== "manual");
+    dialogueVoiceSustainFieldEl.classList.toggle("hidden", !dialogueHasVoice || dialogueVoiceMode !== "manual");
     dialogueNodeContentInput.value = selectedNode.content || "";
     return;
   }
@@ -5604,6 +5628,9 @@ dialogueCharacterInput.addEventListener("change", (event) => {
     dialogueCharacterId: selectedCharacter.id,
     dialogueSpeaker: selectedCharacter.name,
   });
+});
+dialogueVoiceEnabledInput.addEventListener("change", (event) => {
+  updateSelectedNode({ dialogueVoiceEnabled: event.target.checked });
 });
 dialogueVoiceModeInput.addEventListener("change", (event) => {
   updateSelectedNode({ dialogueVoiceMode: event.target.value });
@@ -6584,7 +6611,8 @@ function createNodeForType(nodeType, graph, options = {}) {
       content: "New dialogue line.",
       dialogueCharacterId: "",
       dialogueSpeaker: "Narrator",
-      dialogueVoiceMode: "none",
+      dialogueVoiceEnabled: false,
+      dialogueVoiceMode: "manual",
       dialogueVoiceAudioId: "",
       dialogueVoiceAudioName: "",
       dialogueVoicePath: "",
