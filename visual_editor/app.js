@@ -176,14 +176,10 @@ const dialogueInspectorFormEl = document.getElementById("dialogueInspectorForm")
 const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
 const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
 const dialogueVoiceEnabledInput = document.getElementById("dialogueVoiceEnabledInput");
-const dialogueVoiceSettingsGroupEl = document.getElementById("dialogueVoiceSettingsGroup");
-const dialogueVoiceModeInput = document.getElementById("dialogueVoiceModeInput");
-const dialogueVoiceResourceFieldEl = document.getElementById("dialogueVoiceResourceField");
-const dialogueVoiceResourceInput = document.getElementById("dialogueVoiceResourceInput");
-const dialogueVoicePathFieldEl = document.getElementById("dialogueVoicePathField");
-const dialogueVoicePathInput = document.getElementById("dialogueVoicePathInput");
-const dialogueVoiceSustainFieldEl = document.getElementById("dialogueVoiceSustainField");
-const dialogueVoiceSustainInput = document.getElementById("dialogueVoiceSustainInput");
+const dialogueVoiceLinesGroupEl = document.getElementById("dialogueVoiceLinesGroup");
+const dialogueAddVoiceLineButton = document.getElementById("dialogueAddVoiceLineButton");
+const dialogueVoiceLineListEl = document.getElementById("dialogueVoiceLineList");
+const dialogueContentFieldEl = document.getElementById("dialogueContentField");
 const dialogueNodeContentInput = document.getElementById("dialogueNodeContentInput");
 const dialogueDeleteNodeButton = document.getElementById("dialogueDeleteNodeButton");
 const menuInspectorFormEl = document.getElementById("menuInspectorForm");
@@ -694,15 +690,13 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
   }
 
   if (node.type === "dialogue") {
-    const legacyVoiceMode = ["manual", "auto"].includes(node.dialogueVoiceMode)
-      ? node.dialogueVoiceMode
-      : "manual";
     const hasLegacyVoiceData = (
       node.dialogueVoiceMode === "manual"
       || node.dialogueVoiceMode === "auto"
       || `${node.dialogueVoicePath || ""}`.trim().length > 0
       || Boolean(node.dialogueVoiceAudioId)
       || Boolean(node.dialogueVoiceAudioName)
+      || (Array.isArray(node.dialogueLines) && node.dialogueLines.length > 0)
     );
 
     return {
@@ -713,11 +707,12 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
       dialogueVoiceEnabled: Object.prototype.hasOwnProperty.call(node, "dialogueVoiceEnabled")
         ? Boolean(node.dialogueVoiceEnabled)
         : hasLegacyVoiceData,
-      dialogueVoiceMode: legacyVoiceMode,
-      dialogueVoiceAudioId: node.dialogueVoiceAudioId || "",
-      dialogueVoiceAudioName: node.dialogueVoiceAudioName || "",
-      dialogueVoicePath: node.dialogueVoicePath || "",
-      dialogueVoiceSustain: Boolean(node.dialogueVoiceSustain),
+      dialogueLines: normalizeDialogueVoiceLines(node.dialogueLines, {
+        fallbackTextSource: node.content,
+        legacyVoiceAudioId: node.dialogueVoiceAudioId || "",
+        legacyVoiceAudioName: node.dialogueVoiceAudioName || "",
+        legacyVoicePath: node.dialogueVoicePath || "",
+      }),
     };
   }
 
@@ -1448,15 +1443,93 @@ function getDialogueVoiceEnabled(node) {
     return Boolean(node?.dialogueVoiceEnabled);
   }
 
-  return node?.dialogueVoiceMode === "manual" || node?.dialogueVoiceMode === "auto";
+  return (
+    node?.dialogueVoiceMode === "manual"
+    || node?.dialogueVoiceMode === "auto"
+    || (Array.isArray(node?.dialogueLines) && node.dialogueLines.length > 0)
+  );
 }
 
-function getDialogueVoiceMode(node) {
-  return node?.dialogueVoiceMode === "auto" ? "auto" : "manual";
+function createDialogueVoiceLine(index = 1) {
+  return {
+    id: `dialogue_line_${Date.now()}_${index}`,
+    text: "",
+    voiceAudioId: "",
+    voiceAudioName: "",
+    voicePath: "",
+  };
 }
 
-function getDialogueVoiceResource(node) {
-  const audioDefinition = getAudioDefinitionById(node?.dialogueVoiceAudioId || "");
+function normalizeDialogueVoiceLine(line, index, legacyPatch = {}) {
+  const baseLine = createDialogueVoiceLine(index);
+  const source = line && typeof line === "object"
+    ? line
+    : { text: `${line || ""}` };
+
+  return {
+    ...baseLine,
+    ...legacyPatch,
+    ...source,
+    id: source.id || baseLine.id,
+    text: `${source.text || ""}`,
+    voiceAudioId: source.voiceAudioId || legacyPatch.voiceAudioId || "",
+    voiceAudioName: source.voiceAudioName || legacyPatch.voiceAudioName || "",
+    voicePath: source.voicePath || legacyPatch.voicePath || "",
+  };
+}
+
+function splitDialogueTextIntoBlocks(content, { fallbackBlocks = ["..."] } = {}) {
+  const normalizedContent = `${content || ""}`.replace(/\r\n?/g, "\n").trim();
+
+  if (!normalizedContent) {
+    return fallbackBlocks;
+  }
+
+  const blocks = normalizedContent
+    .split(/\n\s*\n+/)
+    .map((block) => block.split("\n").map((line) => line.trimEnd()).join("\n").trim())
+    .filter(Boolean);
+
+  return blocks.length ? blocks : fallbackBlocks;
+}
+
+function normalizeDialogueVoiceLines(rawLines, {
+  fallbackTextSource = "",
+  legacyVoiceAudioId = "",
+  legacyVoiceAudioName = "",
+  legacyVoicePath = "",
+} = {}) {
+  const sourceLines = Array.isArray(rawLines) && rawLines.length
+    ? rawLines
+    : splitDialogueTextIntoBlocks(fallbackTextSource, { fallbackBlocks: [] }).map((text) => ({ text }));
+
+  return sourceLines.map((line, index) => normalizeDialogueVoiceLine(
+    line,
+    index + 1,
+    index === 0
+      ? {
+        voiceAudioId: legacyVoiceAudioId,
+        voiceAudioName: legacyVoiceAudioName,
+        voicePath: legacyVoicePath,
+      }
+      : {},
+  ));
+}
+
+function getDialogueVoiceLines(node, { ensureAtLeastOne = false } = {}) {
+  const lines = Array.isArray(node?.dialogueLines)
+    ? node.dialogueLines.map((line, index) => normalizeDialogueVoiceLine(line, index + 1))
+    : [];
+
+  if (!lines.length && ensureAtLeastOne) {
+    return [createDialogueVoiceLine(1)];
+  }
+
+  return lines;
+}
+
+function getDialogueLineVoiceResource(line) {
+  const audioDefinition = getAudioDefinitionById(line?.voiceAudioId || "");
 
   if (audioDefinition) {
     return {
@@ -1468,7 +1541,7 @@ function getDialogueVoiceResource(node) {
     };
   }
 
-  const legacyName = `${node?.dialogueVoiceAudioName || ""}`.trim();
+  const legacyName = `${line?.voiceAudioName || ""}`.trim();
 
   return {
     kind: legacyName ? "missing" : "empty",
@@ -1479,13 +1552,13 @@ function getDialogueVoiceResource(node) {
   };
 }
 
-function buildDialogueVoiceResourceOptions(selectEl, node) {
+function buildDialogueVoiceLineResourceOptions(selectEl, line) {
   if (!selectEl) {
     return;
   }
 
-  const currentResource = getDialogueVoiceResource(node);
-  const currentAudioDefinition = getAudioDefinitionById(node?.dialogueVoiceAudioId || "");
+  const currentResource = getDialogueLineVoiceResource(line);
+  const currentAudioDefinition = getAudioDefinitionById(line?.voiceAudioId || "");
   const hasMissingAudio = currentResource.kind === "missing" && currentResource.name;
   const hasNonVoiceAudio = currentAudioDefinition && currentAudioDefinition.channel !== "voice";
   const missingLabel = hasNonVoiceAudio
@@ -1533,14 +1606,14 @@ function buildDialogueVoiceResourceOptions(selectEl, node) {
   selectEl.value = "";
 }
 
-function getDialogueManualVoicePath(node) {
-  const customPath = `${node?.dialogueVoicePath || ""}`.trim();
+function getDialogueLineVoicePath(line) {
+  const customPath = `${line?.voicePath || ""}`.trim();
 
   if (customPath) {
     return customPath;
   }
 
-  const resource = getDialogueVoiceResource(node);
+  const resource = getDialogueLineVoiceResource(line);
 
   return `${resource.sourcePath || ""}`.trim();
 }
@@ -1550,21 +1623,12 @@ function getDialogueVoiceSummary(node) {
     return "";
   }
 
-  const voiceMode = getDialogueVoiceMode(node);
+  const voiceLines = getDialogueVoiceLines(node);
+  const voicedLineCount = voiceLines.filter((line) => getDialogueLineVoicePath(line)).length;
 
-  if (voiceMode === "auto") {
-    return "auto voice";
-  }
-
-  const voicePath = getDialogueManualVoicePath(node);
-
-  if (!voicePath) {
-    return "manual voice";
-  }
-
-  return node?.dialogueVoiceSustain
-    ? `voice:${voicePath} · sustain`
-    : `voice:${voicePath}`;
+  return voicedLineCount
+    ? `voice lines:${voicedLineCount}`
+    : "voice lines";
 }
 
 function getImageNodeMode(node) {
@@ -1979,6 +2043,70 @@ function normalizeOutputPortId(node, fromPortId) {
     : getDefaultOutputPortId(node);
 }
 
+function renderDialogueVoiceLineList(node) {
+  if (!dialogueVoiceLineListEl) {
+    return;
+  }
+
+  const dialogueLines = getDialogueVoiceLines(node);
+
+  if (!dialogueLines.length) {
+    dialogueVoiceLineListEl.innerHTML = `
+      <p class="panel-empty-state">No voice lines yet. Click New to add one.</p>
+    `;
+    return;
+  }
+
+  dialogueVoiceLineListEl.innerHTML = dialogueLines.map((line, index) => `
+    <div class="menu-choice-item">
+      <div class="menu-choice-item-header">
+        <span>Line ${index + 1}</span>
+        <button
+          class="danger-button menu-choice-remove-button"
+          type="button"
+          data-remove-dialogue-line-id="${escapeHtml(line.id)}"
+        >
+          Remove
+        </button>
+      </div>
+      <label class="dialogue-voice-line-field">
+        <span>Content</span>
+        <textarea
+          rows="3"
+          placeholder="One spoken line per item..."
+          data-dialogue-line-id="${escapeHtml(line.id)}"
+          data-dialogue-line-field="text"
+        >${escapeHtml(line.text || "")}</textarea>
+      </label>
+      <label class="dialogue-voice-line-field">
+        <span>Voice</span>
+        <select
+          data-dialogue-line-id="${escapeHtml(line.id)}"
+          data-dialogue-line-field="voiceAudioId"
+        ></select>
+      </label>
+      <label class="dialogue-voice-line-field dialogue-voice-line-field-optional">
+        <span>Custom Path</span>
+        <input
+          type="text"
+          value="${escapeHtml(line.voicePath || "")}"
+          placeholder="Optional override, e.g. audio/voice/eileen_001.ogg"
+          data-dialogue-line-id="${escapeHtml(line.id)}"
+          data-dialogue-line-field="voicePath"
+        />
+      </label>
+    </div>
+  `).join("");
+
+  dialogueLines.forEach((line) => {
+    const selectEl = dialogueVoiceLineListEl.querySelector(
+      `select[data-dialogue-line-id="${CSS.escape(line.id)}"][data-dialogue-line-field="voiceAudioId"]`,
+    );
+
+    buildDialogueVoiceLineResourceOptions(selectEl, line);
+  });
+}
+
 function renderMenuChoiceList(node) {
   if (!menuChoiceListEl) {
     return;
@@ -2266,18 +2394,15 @@ function getImageDefinitionMovieLoop(image) {
 }
 
 function getDialogueBlocks(node, { fallbackBlocks = ["..."] } = {}) {
-  const normalizedContent = `${node?.content || ""}`.replace(/\r\n?/g, "\n").trim();
+  if (getDialogueVoiceEnabled(node)) {
+    const voicedBlocks = getDialogueVoiceLines(node)
+      .map((line) => `${line.text || ""}`.trim())
+      .filter(Boolean);
 
-  if (!normalizedContent) {
-    return fallbackBlocks;
+    return voicedBlocks.length ? voicedBlocks : fallbackBlocks;
   }
 
-  const blocks = normalizedContent
-    .split(/\n\s*\n+/)
-    .map((block) => block.split("\n").map((line) => line.trimEnd()).join("\n").trim())
-    .filter(Boolean);
-
-  return blocks.length ? blocks : fallbackBlocks;
+  return splitDialogueTextIntoBlocks(node?.content || "", { fallbackBlocks });
 }
 
 function getNodeDisplay(node) {
@@ -3000,26 +3125,28 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
   if (node.type === "dialogue") {
     const speaker = getDialogueSpeaker(node);
-    const dialogueBlocks = getDialogueBlocks(node, { fallbackBlocks: ["..."] });
     const dialogueHasVoice = getDialogueVoiceEnabled(node);
-    const dialogueVoiceMode = getDialogueVoiceMode(node);
-    const manualVoicePath = dialogueHasVoice && dialogueVoiceMode === "manual"
-      ? getDialogueManualVoicePath(node)
-      : "";
+    const dialogueEntries = dialogueHasVoice
+      ? getDialogueVoiceLines(node, { ensureAtLeastOne: true }).map((line) => ({
+        text: `${line.text || ""}`.trim() || "...",
+        voicePath: getDialogueLineVoicePath(line),
+      }))
+      : getDialogueBlocks(node, { fallbackBlocks: ["..."] }).map((text) => ({
+        text,
+        voicePath: "",
+      }));
 
-    dialogueBlocks.forEach((dialogueText, index) => {
-      if (index === 0 && manualVoicePath) {
-        appendIndentedLine(lines, indentLevel, `voice "${escapeRenpyString(manualVoicePath)}"`);
-      } else if (index > 0 && manualVoicePath && node.dialogueVoiceSustain) {
-        appendIndentedLine(lines, indentLevel, "voice sustain");
+    dialogueEntries.forEach((entry) => {
+      if (entry.voicePath) {
+        appendIndentedLine(lines, indentLevel, `voice "${escapeRenpyString(entry.voicePath)}"`);
       }
 
       if (speaker.kind === "character" && speaker.id) {
-        appendIndentedLine(lines, indentLevel, `${speaker.id} "${escapeRenpyString(dialogueText)}"`);
+        appendIndentedLine(lines, indentLevel, `${speaker.id} "${escapeRenpyString(entry.text)}"`);
         return;
       }
 
-      appendIndentedLine(lines, indentLevel, `"${escapeRenpyString(dialogueText)}"`);
+      appendIndentedLine(lines, indentLevel, `"${escapeRenpyString(entry.text)}"`);
     });
   } else if (node.type === "audio") {
     const action = getAudioNodeAction(node);
@@ -4897,19 +5024,17 @@ function renderInspector() {
 
   if (selectedIsDialogue) {
     const dialogueHasVoice = getDialogueVoiceEnabled(selectedNode);
-    const dialogueVoiceMode = getDialogueVoiceMode(selectedNode);
 
     dialogueNodeTypeInput.value = "Dialogue";
     buildDialogueCharacterOptions(dialogueCharacterInput, selectedNode);
     dialogueVoiceEnabledInput.checked = dialogueHasVoice;
-    dialogueVoiceModeInput.value = dialogueVoiceMode;
-    buildDialogueVoiceResourceOptions(dialogueVoiceResourceInput, selectedNode);
-    dialogueVoicePathInput.value = selectedNode.dialogueVoicePath || "";
-    dialogueVoiceSustainInput.checked = Boolean(selectedNode.dialogueVoiceSustain);
-    dialogueVoiceSettingsGroupEl.classList.toggle("hidden", !dialogueHasVoice);
-    dialogueVoiceResourceFieldEl.classList.toggle("hidden", !dialogueHasVoice || dialogueVoiceMode !== "manual");
-    dialogueVoicePathFieldEl.classList.toggle("hidden", !dialogueHasVoice || dialogueVoiceMode !== "manual");
-    dialogueVoiceSustainFieldEl.classList.toggle("hidden", !dialogueHasVoice || dialogueVoiceMode !== "manual");
+    dialogueVoiceLinesGroupEl.classList.toggle("hidden", !dialogueHasVoice);
+    dialogueContentFieldEl.classList.toggle("hidden", dialogueHasVoice);
+
+    if (dialogueHasVoice) {
+      renderDialogueVoiceLineList(selectedNode);
+    }
+
     dialogueNodeContentInput.value = selectedNode.content || "";
     return;
   }
@@ -5062,6 +5187,34 @@ function updateSelectedMenuNode(updater) {
 
     return normalizeOutputPortId(nextNode, edge.fromPortId) === (edge.fromPortId || "output");
   });
+
+  render();
+}
+
+function updateSelectedDialogueNode(updater) {
+  const graph = getActiveGraph();
+
+  if (!graph || !graph.selectedNodeId) {
+    return;
+  }
+
+  const selectedNode = graph.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!selectedNode || selectedNode.type !== "dialogue") {
+    return;
+  }
+
+  const nextNode = typeof updater === "function"
+    ? updater(selectedNode)
+    : { ...selectedNode, ...updater };
+
+  if (Array.isArray(nextNode.dialogueLines)) {
+    nextNode.dialogueLines = nextNode.dialogueLines.map((line, index) => normalizeDialogueVoiceLine(line, index + 1));
+  }
+
+  graph.nodes = graph.nodes.map((node) => (
+    node.id === graph.selectedNodeId ? nextNode : node
+  ));
 
   render();
 }
@@ -5630,50 +5783,116 @@ dialogueCharacterInput.addEventListener("change", (event) => {
   });
 });
 dialogueVoiceEnabledInput.addEventListener("change", (event) => {
-  updateSelectedNode({ dialogueVoiceEnabled: event.target.checked });
+  const nextEnabled = event.target.checked;
+
+  updateSelectedDialogueNode((node) => ({
+    ...node,
+    dialogueVoiceEnabled: nextEnabled,
+    content: nextEnabled
+      ? node.content
+      : getDialogueVoiceLines(node)
+        .map((line) => `${line.text || ""}`.trim())
+        .filter(Boolean)
+        .join("\n\n"),
+    dialogueLines: nextEnabled && !getDialogueVoiceLines(node).length
+      ? (() => {
+        const nextLines = normalizeDialogueVoiceLines(node.dialogueLines, {
+          fallbackTextSource: node.content,
+        });
+
+        return nextLines.length ? nextLines : [createDialogueVoiceLine(1)];
+      })()
+      : getDialogueVoiceLines(node),
+  }));
 });
-dialogueVoiceModeInput.addEventListener("change", (event) => {
-  updateSelectedNode({ dialogueVoiceMode: event.target.value });
+dialogueAddVoiceLineButton.addEventListener("click", () => {
+  updateSelectedDialogueNode((node) => ({
+    ...node,
+    dialogueLines: [
+      ...getDialogueVoiceLines(node),
+      createDialogueVoiceLine(getDialogueVoiceLines(node).length + 1),
+    ],
+  }));
 });
-dialogueVoiceResourceInput.addEventListener("change", (event) => {
+dialogueVoiceLineListEl.addEventListener("input", (event) => {
+  const lineId = event.target.dataset.dialogueLineId;
+  const field = event.target.dataset.dialogueLineField;
+
+  if (!lineId || !field || !["text", "voicePath"].includes(field)) {
+    return;
+  }
+
+  updateSelectedDialogueNode((node) => ({
+    ...node,
+    dialogueLines: getDialogueVoiceLines(node).map((line) => (
+      line.id === lineId
+        ? { ...line, [field]: event.target.value }
+        : line
+    )),
+  }));
+});
+dialogueVoiceLineListEl.addEventListener("change", (event) => {
+  const lineId = event.target.dataset.dialogueLineId;
+  const field = event.target.dataset.dialogueLineField;
+
+  if (!lineId || field !== "voiceAudioId") {
+    return;
+  }
+
   const selectedValue = event.target.value;
 
-  if (!selectedValue) {
-    updateSelectedNode({
-      dialogueVoiceAudioId: "",
-      dialogueVoiceAudioName: "",
-    });
-    return;
-  }
+  updateSelectedDialogueNode((node) => ({
+    ...node,
+    dialogueLines: getDialogueVoiceLines(node).map((line) => {
+      if (line.id !== lineId) {
+        return line;
+      }
 
-  if (selectedValue.startsWith("__missing__:")) {
-    updateSelectedNode({
-      dialogueVoiceAudioId: "",
-      dialogueVoiceAudioName: selectedValue.slice("__missing__:".length),
-    });
-    return;
-  }
+      if (!selectedValue) {
+        return {
+          ...line,
+          voiceAudioId: "",
+          voiceAudioName: "",
+        };
+      }
 
-  const selectedAudio = getAudioDefinitionById(selectedValue);
+      if (selectedValue.startsWith("__missing__:")) {
+        return {
+          ...line,
+          voiceAudioId: "",
+          voiceAudioName: selectedValue.slice("__missing__:".length),
+        };
+      }
 
-  if (!selectedAudio) {
-    updateSelectedNode({
-      dialogueVoiceAudioId: "",
-      dialogueVoiceAudioName: "",
-    });
-    return;
-  }
+      const selectedAudio = getAudioDefinitionById(selectedValue);
 
-  updateSelectedNode({
-    dialogueVoiceAudioId: selectedAudio.id,
-    dialogueVoiceAudioName: selectedAudio.name,
-  });
+      if (!selectedAudio) {
+        return {
+          ...line,
+          voiceAudioId: "",
+          voiceAudioName: "",
+        };
+      }
+
+      return {
+        ...line,
+        voiceAudioId: selectedAudio.id,
+        voiceAudioName: selectedAudio.name,
+      };
+    }),
+  }));
 });
-dialogueVoicePathInput.addEventListener("input", (event) => {
-  updateSelectedNode({ dialogueVoicePath: event.target.value });
-});
-dialogueVoiceSustainInput.addEventListener("change", (event) => {
-  updateSelectedNode({ dialogueVoiceSustain: event.target.checked });
+dialogueVoiceLineListEl.addEventListener("click", (event) => {
+  const removeLineId = event.target.dataset.removeDialogueLineId;
+
+  if (!removeLineId) {
+    return;
+  }
+
+  updateSelectedDialogueNode((node) => ({
+    ...node,
+    dialogueLines: getDialogueVoiceLines(node).filter((line) => line.id !== removeLineId),
+  }));
 });
 dialogueNodeContentInput.addEventListener("input", (event) => {
   updateSelectedNode({ content: event.target.value });
@@ -6612,11 +6831,7 @@ function createNodeForType(nodeType, graph, options = {}) {
       dialogueCharacterId: "",
       dialogueSpeaker: "Narrator",
       dialogueVoiceEnabled: false,
-      dialogueVoiceMode: "manual",
-      dialogueVoiceAudioId: "",
-      dialogueVoiceAudioName: "",
-      dialogueVoicePath: "",
-      dialogueVoiceSustain: false,
+      dialogueLines: [],
     };
   }
 

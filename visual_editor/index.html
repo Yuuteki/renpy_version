@@ -1322,36 +1322,18 @@
               <span>Voice</span>
             </label>
 
-            <div id="dialogueVoiceSettingsGroup" class="definition-fields hidden">
-              <label>
-                Voice Mode
-                <select id="dialogueVoiceModeInput">
-                  <option value="manual">Manual Voice</option>
-                  <option value="auto">Auto Voice</option>
-                </select>
-              </label>
+            <div id="dialogueVoiceLinesGroup" class="menu-choice-group hidden">
+              <div class="menu-choice-group-header">
+                <strong>Content</strong>
+                <button id="dialogueAddVoiceLineButton" class="secondary menu-choice-add-button" type="button">New</button>
+              </div>
 
-              <label id="dialogueVoiceResourceField" class="hidden">
-                Imported Voice
-                <select id="dialogueVoiceResourceInput">
-                  <option value="">No imported voice audio</option>
-                </select>
-              </label>
-
-              <label id="dialogueVoicePathField" class="hidden">
-                Voice Path
-                <input id="dialogueVoicePathInput" type="text" placeholder="e.g. audio/voice/eileen_001.ogg" />
-              </label>
-
-              <label id="dialogueVoiceSustainField" class="character-checkbox hidden">
-                <input id="dialogueVoiceSustainInput" type="checkbox" />
-                <span>voice sustain across split blocks</span>
-              </label>
+              <div id="dialogueVoiceLineList" class="menu-choice-list"></div>
             </div>
 
-            <label>
+            <label id="dialogueContentField">
               Content
-              <textarea id="dialogueNodeContentInput" rows="8" placeholder="Leave a blank line to split dialogue blocks..."></textarea>
+              <textarea id="dialogueNodeContentInput" rows="8" placeholder="Use one blank line to split dialogue blocks..."></textarea>
             </label>
 
             <div class="inspector-actions">

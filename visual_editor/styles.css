@@ -792,6 +792,26 @@ button.danger-button:hover {
   font-size: 12px;
 }
 
+.dialogue-voice-line-field {
+  display: grid;
+  gap: 6px;
+}
+
+.dialogue-voice-line-field span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.dialogue-voice-line-field textarea,
+.dialogue-voice-line-field input,
+.dialogue-voice-line-field select {
+  width: 100%;
+}
+
+.dialogue-voice-line-field-optional {
+  padding-top: 2px;
+}
+
 .character-detail-form textarea,
 .inspector-form textarea {
   min-height: 124px;
