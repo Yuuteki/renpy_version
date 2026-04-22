@@ -1348,6 +1348,52 @@
               <textarea id="dialogueNodeContentInput" rows="8" placeholder="Use one blank line to split dialogue blocks..."></textarea>
             </label>
 
+            <details id="dialogueTextTools" class="dialogue-text-tools">
+              <summary class="dialogue-text-tools-summary">
+                <strong>Text Tools</strong>
+                <span>Insert tags, escapes, and pacing helpers.</span>
+              </summary>
+
+              <div class="dialogue-text-tools-body">
+                <div class="dialogue-text-tool-group">
+                  <span class="dialogue-text-tool-group-label">Insert</span>
+                  <div class="dialogue-text-tool-buttons">
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="interpolate">[var]</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="newline">\n</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="escapeBracket">[[</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="escapeBrace">{{</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="escapeRuby">【【</button>
+                  </div>
+                </div>
+
+                <div class="dialogue-text-tool-group">
+                  <span class="dialogue-text-tool-group-label">Style</span>
+                  <div class="dialogue-text-tool-buttons">
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="bold">Bold</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="italic">Italic</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="color">Color</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="size">Size</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="image">Image</button>
+                  </div>
+                </div>
+
+                <div class="dialogue-text-tool-group">
+                  <span class="dialogue-text-tool-group-label">Timing</span>
+                  <div class="dialogue-text-tool-buttons">
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="wait">{w}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="paragraph">{p}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="noWait">{nw}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="fast">{fast}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="done">{done}</button>
+                  </div>
+                </div>
+
+                <p class="dialogue-text-help">
+                  Supports Ren'Py interpolation, escape syntax, common text tags, and dialogue pacing tags.
+                </p>
+              </div>
+            </details>
+
             <div class="inspector-actions">
               <button id="dialogueDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>

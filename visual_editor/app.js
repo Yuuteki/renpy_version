@@ -179,6 +179,7 @@ const dialogueInspectorFormEl = document.getElementById("dialogueInspectorForm")
 const dialogueNodeTypeInput = document.getElementById("dialogueNodeTypeInput");
 const dialogueCharacterInput = document.getElementById("dialogueCharacterInput");
 const dialogueVoiceEnabledInput = document.getElementById("dialogueVoiceEnabledInput");
+const dialogueTextToolsEl = document.getElementById("dialogueTextTools");
 const dialogueVoiceLinesGroupEl = document.getElementById("dialogueVoiceLinesGroup");
 const dialogueAddVoiceLineButton = document.getElementById("dialogueAddVoiceLineButton");
 const dialogueVoiceLineListEl = document.getElementById("dialogueVoiceLineList");
@@ -528,6 +529,100 @@ let activeVariableId = null;
 let variableDetailOpen = false;
 let activeDefinitionId = null;
 let definitionDetailOpen = false;
+let dialogueTextTarget = {
+  kind: "content",
+  lineId: null,
+};
+
+const dialogueTextToolSpecs = {
+  interpolate: {
+    mode: "insert",
+    text: "[variable]",
+    selectionStartOffset: 1,
+    selectionEndOffset: 9,
+    status: "Inserted interpolation placeholder.",
+  },
+  newline: {
+    mode: "insert",
+    text: "\\n",
+    status: "Inserted a line break escape.",
+  },
+  escapeBracket: {
+    mode: "insert",
+    text: "[[",
+    status: "Inserted the escape for [.",
+  },
+  escapeBrace: {
+    mode: "insert",
+    text: "{{",
+    status: "Inserted the escape for {.",
+  },
+  escapeRuby: {
+    mode: "insert",
+    text: "【【",
+    status: "Inserted the escape for 【.",
+  },
+  bold: {
+    mode: "wrap",
+    before: "{b}",
+    after: "{/b}",
+    placeholder: "text",
+    status: "Wrapped text with a bold tag.",
+  },
+  italic: {
+    mode: "wrap",
+    before: "{i}",
+    after: "{/i}",
+    placeholder: "text",
+    status: "Wrapped text with an italic tag.",
+  },
+  color: {
+    mode: "wrap",
+    before: "{color=#ffffff}",
+    after: "{/color}",
+    placeholder: "text",
+    status: "Wrapped text with a color tag.",
+  },
+  size: {
+    mode: "wrap",
+    before: "{size=+10}",
+    after: "{/size}",
+    placeholder: "text",
+    status: "Wrapped text with a size tag.",
+  },
+  image: {
+    mode: "insert",
+    text: "{image=heart.png}",
+    selectionStartOffset: 7,
+    selectionEndOffset: 16,
+    status: "Inserted an inline image tag.",
+  },
+  wait: {
+    mode: "insert",
+    text: "{w}",
+    status: "Inserted a wait tag.",
+  },
+  paragraph: {
+    mode: "insert",
+    text: "{p}",
+    status: "Inserted a paragraph pause tag.",
+  },
+  noWait: {
+    mode: "insert",
+    text: "{nw}",
+    status: "Inserted a no-wait tag.",
+  },
+  fast: {
+    mode: "insert",
+    text: "{fast}",
+    status: "Inserted a fast tag.",
+  },
+  done: {
+    mode: "insert",
+    text: "{done}",
+    status: "Inserted a done tag.",
+  },
+};
 
 function loadState() {
   try {
@@ -2035,6 +2130,144 @@ function buildDialogueCharacterOptions(selectEl, node) {
   }
 
   selectEl.value = "";
+}
+
+function isDialogueTextField(field) {
+  return field === dialogueNodeContentInput || (
+    field?.dataset?.dialogueLineField === "text"
+  );
+}
+
+function updateDialogueTextTarget(field) {
+  if (!isDialogueTextField(field)) {
+    return;
+  }
+
+  if (field === dialogueNodeContentInput) {
+    dialogueTextTarget = {
+      kind: "content",
+      lineId: null,
+    };
+    return;
+  }
+
+  dialogueTextTarget = {
+    kind: "line",
+    lineId: field.dataset.dialogueLineId || null,
+  };
+}
+
+function getSelectedDialogueNode() {
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  return selectedNode?.type === "dialogue" ? selectedNode : null;
+}
+
+function resolveDialogueTextField() {
+  const activeElement = document.activeElement;
+
+  if (isDialogueTextField(activeElement)) {
+    updateDialogueTextTarget(activeElement);
+    return activeElement;
+  }
+
+  if (dialogueTextTarget.kind === "line" && dialogueTextTarget.lineId) {
+    const lineInput = dialogueVoiceLineListEl?.querySelector(
+      `input[data-dialogue-line-id="${CSS.escape(dialogueTextTarget.lineId)}"][data-dialogue-line-field="text"]`,
+    );
+
+    if (lineInput) {
+      return lineInput;
+    }
+  }
+
+  const selectedNode = getSelectedDialogueNode();
+
+  if (selectedNode && getDialogueVoiceEnabled(selectedNode)) {
+    return dialogueVoiceLineListEl?.querySelector('input[data-dialogue-line-field="text"]') || null;
+  }
+
+  return dialogueNodeContentInput;
+}
+
+function applyDialogueTextToolSpec(field, spec) {
+  if (!field || !spec) {
+    return;
+  }
+
+  field.focus();
+  updateDialogueTextTarget(field);
+
+  const currentValue = `${field.value || ""}`;
+  const start = typeof field.selectionStart === "number" ? field.selectionStart : currentValue.length;
+  const end = typeof field.selectionEnd === "number" ? field.selectionEnd : start;
+  const selectedText = currentValue.slice(start, end);
+  let nextValue = currentValue;
+  let selectionStart = start;
+  let selectionEnd = start;
+
+  if (spec.mode === "wrap") {
+    const innerText = selectedText || spec.placeholder || "";
+    const insertedText = `${spec.before || ""}${innerText}${spec.after || ""}`;
+    nextValue = `${currentValue.slice(0, start)}${insertedText}${currentValue.slice(end)}`;
+    selectionStart = start + `${spec.before || ""}`.length;
+    selectionEnd = selectionStart + innerText.length;
+  } else {
+    const insertedText = spec.text || "";
+    nextValue = `${currentValue.slice(0, start)}${insertedText}${currentValue.slice(end)}`;
+    selectionStart = start + (spec.selectionStartOffset ?? insertedText.length);
+    selectionEnd = start + (spec.selectionEndOffset ?? insertedText.length);
+  }
+
+  field.value = nextValue;
+  field.setSelectionRange(selectionStart, selectionEnd);
+  field.dispatchEvent(new Event("input", { bubbles: true }));
+
+  if (spec.status) {
+    setStatus(spec.status);
+  }
+}
+
+function insertDialogueTextTool(toolId) {
+  const spec = dialogueTextToolSpecs[toolId];
+  const selectedNode = getSelectedDialogueNode();
+
+  if (!spec || !selectedNode) {
+    return;
+  }
+
+  let field = resolveDialogueTextField();
+
+  if (!field && getDialogueVoiceEnabled(selectedNode)) {
+    const nextLine = createDialogueVoiceLine(getDialogueVoiceLines(selectedNode).length + 1);
+
+    dialogueTextTarget = {
+      kind: "line",
+      lineId: nextLine.id,
+    };
+
+    updateSelectedDialogueNode((node) => ({
+      ...node,
+      dialogueLines: [...getDialogueVoiceLines(node), nextLine],
+    }));
+
+    window.requestAnimationFrame(() => {
+      const nextField = resolveDialogueTextField();
+
+      if (nextField) {
+        applyDialogueTextToolSpec(nextField, spec);
+      }
+    });
+    return;
+  }
+
+  if (!field) {
+    setStatus("Select dialogue content or create a voice line first.");
+    return;
+  }
+
+  applyDialogueTextToolSpec(field, spec);
 }
 
 function isFlowNode(node) {
@@ -5925,6 +6158,20 @@ audioNodeVolumeInput.addEventListener("input", (event) => {
 });
 audioNodeIfChangedInput.addEventListener("change", (event) => {
   updateSelectedNode({ audioIfChanged: event.target.checked });
+});
+dialogueInspectorFormEl.addEventListener("focusin", (event) => {
+  if (isDialogueTextField(event.target)) {
+    updateDialogueTextTarget(event.target);
+  }
+});
+dialogueTextToolsEl.addEventListener("click", (event) => {
+  const toolButton = event.target.closest("[data-dialogue-tool]");
+
+  if (!toolButton) {
+    return;
+  }
+
+  insertDialogueTextTool(toolButton.dataset.dialogueTool);
 });
 dialogueCharacterInput.addEventListener("change", (event) => {
   const selectedValue = event.target.value;

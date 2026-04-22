@@ -586,6 +586,83 @@ button.danger-button:hover {
   color: var(--muted);
 }
 
+.dialogue-text-tools {
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.dialogue-text-tools-summary {
+  display: grid;
+  gap: 4px;
+  list-style: none;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.dialogue-text-tools-summary::-webkit-details-marker {
+  display: none;
+}
+
+.dialogue-text-tools-summary::marker {
+  content: "";
+}
+
+.dialogue-text-tools-summary:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.dialogue-text-tools-summary strong {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.dialogue-text-tools-summary span {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.dialogue-text-tools-body {
+  display: grid;
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+
+.dialogue-text-help {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.dialogue-text-tool-group {
+  display: grid;
+  gap: 8px;
+}
+
+.dialogue-text-tool-group-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dialogue-text-tool-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dialogue-text-tool-button {
+  min-height: 34px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1;
+}
+
 .field-with-action {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
