@@ -808,10 +808,6 @@ button.danger-button:hover {
   width: 100%;
 }
 
-.dialogue-voice-line-field-optional {
-  padding-top: 2px;
-}
-
 .character-detail-form textarea,
 .inspector-form textarea {
   min-height: 124px;

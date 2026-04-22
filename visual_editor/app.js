@@ -69,6 +69,8 @@ const audioDefinitionBackButton = document.getElementById("audioDefinitionBackBu
 const audioDefinitionBrowseButton = document.getElementById("audioDefinitionBrowseButton");
 const audioDefinitionFileInput = document.getElementById("audioDefinitionFileInput");
 const audioDefinitionCodePreviewEl = document.getElementById("audioDefinitionCodePreview");
+const audioDefinitionVoiceOwnerFieldEl = document.getElementById("audioDefinitionVoiceOwnerField");
+const audioDefinitionVoiceOwnerInput = document.getElementById("audioDefinitionVoiceOwnerInput");
 const characterListEl = document.getElementById("characterList");
 const characterListEmptyEl = document.getElementById("characterListEmpty");
 const charactersListViewEl = document.getElementById("charactersListView");
@@ -268,6 +270,8 @@ const audioChannelMeta = {
 const audioDefinitionFieldDefaults = {
   channel: "music",
   sourcePath: "",
+  voiceCharacterId: "",
+  voiceSpeaker: "Narrator",
 };
 
 const imageDefinitionFieldDefaults = {
@@ -1066,6 +1070,8 @@ function normalizeAudioDefinition(audioDefinition, index) {
       ? audioDefinition.channel
       : "music",
     sourcePath: audioDefinition.sourcePath || "",
+    voiceCharacterId: audioDefinition.voiceCharacterId || "",
+    voiceSpeaker: audioDefinition.voiceSpeaker || "Narrator",
   };
 }
 
@@ -1405,6 +1411,110 @@ function getAudioDefinitionById(audioId) {
   return state.audio.find((audioDefinition) => audioDefinition.id === audioId) ?? null;
 }
 
+function getAudioDefinitionVoiceOwner(audioDefinition) {
+  if (audioDefinition?.voiceCharacterId) {
+    const selectedCharacter = getCharacterById(audioDefinition.voiceCharacterId);
+
+    if (selectedCharacter) {
+      return {
+        kind: "character",
+        id: selectedCharacter.id,
+        name: selectedCharacter.name || selectedCharacter.id,
+      };
+    }
+
+    return {
+      kind: "character",
+      id: audioDefinition.voiceCharacterId,
+      name: audioDefinition.voiceSpeaker || audioDefinition.voiceCharacterId,
+    };
+  }
+
+  return {
+    kind: "narrator",
+    id: null,
+    name: "Narrator",
+  };
+}
+
+function buildAudioDefinitionVoiceOwnerOptions(selectEl, audioDefinition) {
+  if (!selectEl) {
+    return;
+  }
+
+  const owner = getAudioDefinitionVoiceOwner(audioDefinition);
+  const hasMissingCharacter = Boolean(audioDefinition?.voiceCharacterId) && !getCharacterById(audioDefinition.voiceCharacterId);
+  const missingValue = hasMissingCharacter ? `__missing__:${audioDefinition.voiceCharacterId}` : "";
+
+  selectEl.innerHTML = "";
+
+  const narratorOption = document.createElement("option");
+  narratorOption.value = "";
+  narratorOption.textContent = "Narrator";
+  selectEl.appendChild(narratorOption);
+
+  if (hasMissingCharacter) {
+    const missingOption = document.createElement("option");
+    missingOption.value = missingValue;
+    missingOption.textContent = `Legacy / Missing: ${owner.name}`;
+    selectEl.appendChild(missingOption);
+  }
+
+  state.characters.forEach((character) => {
+    const option = document.createElement("option");
+    option.value = character.id;
+    option.textContent = character.name || character.id;
+    selectEl.appendChild(option);
+  });
+
+  if (owner.kind === "character" && owner.id && !hasMissingCharacter) {
+    selectEl.value = owner.id;
+    return;
+  }
+
+  selectEl.value = missingValue || "";
+}
+
+function syncAudioDefinitionVoiceOwnerField(audioDefinition) {
+  const isVoiceAudio = audioDefinition?.channel === "voice";
+
+  if (audioDefinitionVoiceOwnerFieldEl) {
+    audioDefinitionVoiceOwnerFieldEl.classList.toggle("hidden", !isVoiceAudio);
+    audioDefinitionVoiceOwnerFieldEl.hidden = !isVoiceAudio;
+  }
+
+  buildAudioDefinitionVoiceOwnerOptions(audioDefinitionVoiceOwnerInput, audioDefinition);
+
+  if (!isVoiceAudio && audioDefinitionVoiceOwnerInput) {
+    audioDefinitionVoiceOwnerInput.value = "";
+  }
+}
+
+function doesAudioDefinitionMatchSpeaker(audioDefinition, speaker) {
+  if (!audioDefinition || audioDefinition.channel !== "voice") {
+    return false;
+  }
+
+  const owner = getAudioDefinitionVoiceOwner(audioDefinition);
+
+  if (speaker?.kind === "character") {
+    return owner.kind === "character" && owner.id === speaker.id;
+  }
+
+  return owner.kind === "narrator";
+}
+
+function getAudioDefinitionSubtitle(audioDefinition) {
+  const sourcePath = audioDefinition?.sourcePath || "No source path yet";
+
+  if (audioDefinition?.channel !== "voice") {
+    return sourcePath;
+  }
+
+  const owner = getAudioDefinitionVoiceOwner(audioDefinition);
+  return `${owner.name} · ${sourcePath}`;
+}
+
 function getActiveVariable() {
   return state.variables.find((variable) => variable.id === activeVariableId) ?? null;
 }
@@ -1552,48 +1662,51 @@ function getDialogueLineVoiceResource(line) {
   };
 }
 
-function buildDialogueVoiceLineResourceOptions(selectEl, line) {
+function buildDialogueVoiceLineResourceOptions(selectEl, node, line) {
   if (!selectEl) {
     return;
   }
 
+  const speaker = getDialogueSpeaker(node);
   const currentResource = getDialogueLineVoiceResource(line);
   const currentAudioDefinition = getAudioDefinitionById(line?.voiceAudioId || "");
-  const hasMissingAudio = currentResource.kind === "missing" && currentResource.name;
-  const hasNonVoiceAudio = currentAudioDefinition && currentAudioDefinition.channel !== "voice";
-  const missingLabel = hasNonVoiceAudio
-    ? `Non-voice Audio: ${currentAudioDefinition.name}`
-    : currentResource.name;
-  const missingValue = hasMissingAudio || hasNonVoiceAudio
-    ? `__missing__:${missingLabel}`
+  const matchingVoiceDefinitions = state.audio.filter((audioDefinition) => (
+    doesAudioDefinitionMatchSpeaker(audioDefinition, speaker)
+  ));
+  const hasLegacyMissingAudio = currentResource.kind === "missing" && currentResource.name;
+  const missingValue = hasLegacyMissingAudio
+    ? `__missing__:${currentResource.name}`
     : "";
 
   selectEl.innerHTML = "";
 
   const placeholderOption = document.createElement("option");
   placeholderOption.value = "";
-  placeholderOption.textContent = state.audio.some((audioDefinition) => audioDefinition.channel === "voice")
-    ? "Optional imported voice"
-    : "No imported voice audio";
+  placeholderOption.textContent = matchingVoiceDefinitions.length
+    ? `Select ${speaker.name} voice`
+    : `No voice audio for ${speaker.name}`;
   selectEl.appendChild(placeholderOption);
 
   if (missingValue) {
     const missingOption = document.createElement("option");
     missingOption.value = missingValue;
-    missingOption.textContent = `Legacy / Missing: ${missingLabel}`;
+    missingOption.textContent = `Legacy / Missing: ${currentResource.name}`;
     selectEl.appendChild(missingOption);
   }
 
-  state.audio
-    .filter((audioDefinition) => audioDefinition.channel === "voice")
-    .forEach((audioDefinition) => {
-      const option = document.createElement("option");
-      option.value = audioDefinition.id;
-      option.textContent = `${audioDefinition.name} · ${audioDefinition.sourcePath || "No source path yet"}`;
-      selectEl.appendChild(option);
-    });
+  matchingVoiceDefinitions.forEach((audioDefinition) => {
+    const option = document.createElement("option");
+    option.value = audioDefinition.id;
+    option.textContent = `${audioDefinition.name} · ${audioDefinition.sourcePath || "No source path yet"}`;
+    selectEl.appendChild(option);
+  });
 
-  if (currentResource.kind === "definition" && currentResource.id && currentAudioDefinition?.channel === "voice") {
+  if (
+    currentResource.kind === "definition"
+    && currentResource.id
+    && currentAudioDefinition
+    && doesAudioDefinitionMatchSpeaker(currentAudioDefinition, speaker)
+  ) {
     selectEl.value = currentResource.id;
     return;
   }
@@ -1606,11 +1719,11 @@ function buildDialogueVoiceLineResourceOptions(selectEl, line) {
   selectEl.value = "";
 }
 
-function getDialogueLineVoicePath(line) {
-  const customPath = `${line?.voicePath || ""}`.trim();
+function getDialogueLineVoicePath(line, speaker = null) {
+  const currentAudioDefinition = getAudioDefinitionById(line?.voiceAudioId || "");
 
-  if (customPath) {
-    return customPath;
+  if (currentAudioDefinition && speaker && !doesAudioDefinitionMatchSpeaker(currentAudioDefinition, speaker)) {
+    return "";
   }
 
   const resource = getDialogueLineVoiceResource(line);
@@ -1618,13 +1731,34 @@ function getDialogueLineVoicePath(line) {
   return `${resource.sourcePath || ""}`.trim();
 }
 
+function sanitizeDialogueVoiceLinesForSpeaker(dialogueLines, speaker) {
+  return getDialogueVoiceLines({ dialogueLines }).map((line) => {
+    const currentAudioDefinition = getAudioDefinitionById(line.voiceAudioId || "");
+
+    if (!currentAudioDefinition) {
+      return line;
+    }
+
+    if (doesAudioDefinitionMatchSpeaker(currentAudioDefinition, speaker)) {
+      return line;
+    }
+
+    return {
+      ...line,
+      voiceAudioId: "",
+      voiceAudioName: "",
+    };
+  });
+}
+
 function getDialogueVoiceSummary(node) {
   if (!getDialogueVoiceEnabled(node)) {
     return "";
   }
 
+  const speaker = getDialogueSpeaker(node);
   const voiceLines = getDialogueVoiceLines(node);
-  const voicedLineCount = voiceLines.filter((line) => getDialogueLineVoicePath(line)).length;
+  const voicedLineCount = voiceLines.filter((line) => getDialogueLineVoicePath(line, speaker)).length;
 
   return voicedLineCount
     ? `voice lines:${voicedLineCount}`
@@ -2070,13 +2204,14 @@ function renderDialogueVoiceLineList(node) {
         </button>
       </div>
       <label class="dialogue-voice-line-field">
-        <span>Content</span>
-        <textarea
-          rows="3"
+        <span>Line</span>
+        <input
+          type="text"
+          value="${escapeHtml(line.text || "")}"
           placeholder="One spoken line per item..."
           data-dialogue-line-id="${escapeHtml(line.id)}"
           data-dialogue-line-field="text"
-        >${escapeHtml(line.text || "")}</textarea>
+        />
       </label>
       <label class="dialogue-voice-line-field">
         <span>Voice</span>
@@ -2084,16 +2219,6 @@ function renderDialogueVoiceLineList(node) {
           data-dialogue-line-id="${escapeHtml(line.id)}"
           data-dialogue-line-field="voiceAudioId"
         ></select>
-      </label>
-      <label class="dialogue-voice-line-field dialogue-voice-line-field-optional">
-        <span>Custom Path</span>
-        <input
-          type="text"
-          value="${escapeHtml(line.voicePath || "")}"
-          placeholder="Optional override, e.g. audio/voice/eileen_001.ogg"
-          data-dialogue-line-id="${escapeHtml(line.id)}"
-          data-dialogue-line-field="voicePath"
-        />
       </label>
     </div>
   `).join("");
@@ -2103,8 +2228,20 @@ function renderDialogueVoiceLineList(node) {
       `select[data-dialogue-line-id="${CSS.escape(line.id)}"][data-dialogue-line-field="voiceAudioId"]`,
     );
 
-    buildDialogueVoiceLineResourceOptions(selectEl, line);
+    buildDialogueVoiceLineResourceOptions(selectEl, node, line);
   });
+}
+
+function syncDialogueInspectorVoiceMode(dialogueHasVoice) {
+  if (dialogueVoiceLinesGroupEl) {
+    dialogueVoiceLinesGroupEl.classList.toggle("hidden", !dialogueHasVoice);
+    dialogueVoiceLinesGroupEl.hidden = !dialogueHasVoice;
+  }
+
+  if (dialogueContentFieldEl) {
+    dialogueContentFieldEl.classList.toggle("hidden", dialogueHasVoice);
+    dialogueContentFieldEl.hidden = dialogueHasVoice;
+  }
 }
 
 function renderMenuChoiceList(node) {
@@ -3129,7 +3266,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
     const dialogueEntries = dialogueHasVoice
       ? getDialogueVoiceLines(node, { ensureAtLeastOne: true }).map((line) => ({
         text: `${line.text || ""}`.trim() || "...",
-        voicePath: getDialogueLineVoicePath(line),
+        voicePath: getDialogueLineVoicePath(line, speaker),
       }))
       : getDialogueBlocks(node, { fallbackBlocks: ["..."] }).map((text) => ({
         text,
@@ -4032,6 +4169,7 @@ function syncAudioDefinitionDetailFields() {
       const field = fieldEl.dataset.audioField;
       fieldEl.value = `${audioDefinitionFieldDefaults[field] ?? ""}`;
     });
+    syncAudioDefinitionVoiceOwnerField(null);
     audioDefinitionCodePreviewEl.textContent = "";
     return;
   }
@@ -4040,6 +4178,7 @@ function syncAudioDefinitionDetailFields() {
     const field = fieldEl.dataset.audioField;
     fieldEl.value = `${audioDefinition[field] ?? ""}`;
   });
+  syncAudioDefinitionVoiceOwnerField(audioDefinition);
   audioDefinitionCodePreviewEl.textContent = formatAudioDefinitionCode(audioDefinition);
 }
 
@@ -4108,7 +4247,7 @@ function renderAudioPanel() {
 
       item.innerHTML = `
         <strong>${escapeHtml(audioDefinition.name)}</strong>
-        <span>${escapeHtml(audioDefinition.sourcePath || "No source path yet")}</span>
+        <span>${escapeHtml(getAudioDefinitionSubtitle(audioDefinition))}</span>
       `;
 
       item.addEventListener("click", () => {
@@ -5028,8 +5167,7 @@ function renderInspector() {
     dialogueNodeTypeInput.value = "Dialogue";
     buildDialogueCharacterOptions(dialogueCharacterInput, selectedNode);
     dialogueVoiceEnabledInput.checked = dialogueHasVoice;
-    dialogueVoiceLinesGroupEl.classList.toggle("hidden", !dialogueHasVoice);
-    dialogueContentFieldEl.classList.toggle("hidden", dialogueHasVoice);
+    syncDialogueInspectorVoiceMode(dialogueHasVoice);
 
     if (dialogueHasVoice) {
       renderDialogueVoiceLineList(selectedNode);
@@ -5376,6 +5514,43 @@ function handleAudioDefinitionFieldChange(event) {
 
   if (field === "channel") {
     audioChannelSectionState[event.target.value] = true;
+    updateActiveAudioDefinition({ channel: event.target.value });
+    return;
+  }
+
+  if (field === "voiceCharacterId") {
+    const selectedValue = event.target.value;
+
+    if (!selectedValue) {
+      updateActiveAudioDefinition({
+        voiceCharacterId: "",
+        voiceSpeaker: "Narrator",
+      });
+      return;
+    }
+
+    if (selectedValue.startsWith("__missing__:")) {
+      updateActiveAudioDefinition({
+        voiceCharacterId: selectedValue.slice("__missing__:".length),
+      });
+      return;
+    }
+
+    const selectedCharacter = getCharacterById(selectedValue);
+
+    if (!selectedCharacter) {
+      updateActiveAudioDefinition({
+        voiceCharacterId: "",
+        voiceSpeaker: "Narrator",
+      });
+      return;
+    }
+
+    updateActiveAudioDefinition({
+      voiceCharacterId: selectedCharacter.id,
+      voiceSpeaker: selectedCharacter.name,
+    });
+    return;
   }
 
   updateActiveAudioDefinition({ [field]: event.target.value });
@@ -5747,10 +5922,16 @@ dialogueCharacterInput.addEventListener("change", (event) => {
   const selectedValue = event.target.value;
 
   if (!selectedValue) {
-    updateSelectedNode({
+    updateSelectedDialogueNode((node) => ({
+      ...node,
       dialogueCharacterId: "",
       dialogueSpeaker: "Narrator",
-    });
+      dialogueLines: sanitizeDialogueVoiceLinesForSpeaker(getDialogueVoiceLines(node), {
+        kind: "narrator",
+        id: null,
+        name: "Narrator",
+      }),
+    }));
     return;
   }
 
@@ -5770,20 +5951,33 @@ dialogueCharacterInput.addEventListener("change", (event) => {
   const selectedCharacter = getCharacterById(selectedValue);
 
   if (!selectedCharacter) {
-    updateSelectedNode({
+    updateSelectedDialogueNode((node) => ({
+      ...node,
       dialogueCharacterId: "",
       dialogueSpeaker: "Narrator",
-    });
+      dialogueLines: sanitizeDialogueVoiceLinesForSpeaker(getDialogueVoiceLines(node), {
+        kind: "narrator",
+        id: null,
+        name: "Narrator",
+      }),
+    }));
     return;
   }
 
-  updateSelectedNode({
+  updateSelectedDialogueNode((node) => ({
+    ...node,
     dialogueCharacterId: selectedCharacter.id,
     dialogueSpeaker: selectedCharacter.name,
-  });
+    dialogueLines: sanitizeDialogueVoiceLinesForSpeaker(getDialogueVoiceLines(node), {
+      kind: "character",
+      id: selectedCharacter.id,
+      name: selectedCharacter.name,
+    }),
+  }));
 });
 dialogueVoiceEnabledInput.addEventListener("change", (event) => {
   const nextEnabled = event.target.checked;
+  syncDialogueInspectorVoiceMode(nextEnabled);
 
   updateSelectedDialogueNode((node) => ({
     ...node,
@@ -5818,7 +6012,7 @@ dialogueVoiceLineListEl.addEventListener("input", (event) => {
   const lineId = event.target.dataset.dialogueLineId;
   const field = event.target.dataset.dialogueLineField;
 
-  if (!lineId || !field || !["text", "voicePath"].includes(field)) {
+  if (!lineId || field !== "text") {
     return;
   }
 
