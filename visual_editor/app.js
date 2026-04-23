@@ -59,6 +59,9 @@ const imageDefinitionMovieLoopInput = document.getElementById("imageDefinitionMo
 const imageDefinitionAddCompositeLayerButton = document.getElementById("imageDefinitionAddCompositeLayerButton");
 const imageDefinitionCompositeLayerListEl = document.getElementById("imageDefinitionCompositeLayerList");
 const imageDefinitionCompositeDisplayableOptionsEl = document.getElementById("imageDefinitionCompositeDisplayableOptions");
+const imageDefinitionAtlEditorEl = document.getElementById("imageDefinitionAtlEditor");
+const imageDefinitionAtlStepListEl = document.getElementById("imageDefinitionAtlStepList");
+const imageDefinitionAddAtlStepButton = document.getElementById("imageDefinitionAddAtlStepButton");
 const imageDefinitionZoomInput = document.getElementById("imageDefinitionZoomInput");
 const imageDefinitionXAnchorInput = document.getElementById("imageDefinitionXAnchorInput");
 const imageDefinitionYAnchorInput = document.getElementById("imageDefinitionYAnchorInput");
@@ -281,6 +284,50 @@ const imageDefinitionTypeMeta = {
   },
 };
 
+const builtInTransformPresets = [
+  "left",
+  "center",
+  "right",
+  "truecenter",
+  "top",
+  "topleft",
+  "topright",
+  "offscreenleft",
+  "offscreenright",
+  "reset",
+];
+
+const imageAtlStepTypeMeta = {
+  set: {
+    label: "Set Properties",
+  },
+  pause: {
+    label: "Pause",
+  },
+  interpolate: {
+    label: "Interpolate",
+  },
+  contains: {
+    label: "Contains",
+  },
+  repeat: {
+    label: "Repeat",
+  },
+};
+
+const imageAtlWarperOptions = [
+  "linear",
+  "ease",
+  "easein",
+  "easeout",
+  "pause",
+  "ease_quad",
+  "ease_cubic",
+  "ease_back",
+  "ease_bounce",
+  "ease_elastic",
+];
+
 const audioChannelMeta = {
   music: {
     label: "Music",
@@ -325,6 +372,8 @@ const imageDefinitionFieldDefaults = {
   placeholderFull: false,
   placeholderFlip: false,
   placeholderText: "",
+  atlEnabled: false,
+  atlSteps: [],
   pos: "",
   xpos: "",
   ypos: "",
@@ -407,6 +456,7 @@ const imageDefinitionBooleanFields = new Set([
   "movieKeepLastFrame",
   "placeholderFull",
   "placeholderFlip",
+  "atlEnabled",
 ]);
 
 const imageDefinitionCodePropertyOrder = [
@@ -1194,6 +1244,11 @@ function normalizeImageDefinition(image, index) {
       return;
     }
 
+    if (field === "atlSteps") {
+      normalizedFields.atlSteps = normalizeImageAtlSteps(image.atlSteps);
+      return;
+    }
+
     if (typeof defaultValue === "boolean") {
       normalizedFields[field] = Boolean(image[field]);
       return;
@@ -1525,6 +1580,34 @@ function normalizeCompositeLayers(rawLayers) {
   return rawLayers
     .filter((layer) => layer && typeof layer === "object")
     .map((layer, index) => createCompositeLayer(index + 1, layer));
+}
+
+function createImageAtlStep(index, overrides = {}) {
+  const normalizedType = Object.prototype.hasOwnProperty.call(imageAtlStepTypeMeta, overrides.type)
+    ? overrides.type
+    : "interpolate";
+  const defaultProperties = normalizedType === "interpolate"
+    ? "xalign 1.0"
+    : "xalign 0.5";
+
+  return {
+    id: overrides.id || `atl_step_${Date.now()}_${index}`,
+    type: normalizedType,
+    warper: imageAtlWarperOptions.includes(overrides.warper) ? overrides.warper : "linear",
+    duration: `${overrides.duration || ""}`.trim() || "1.0",
+    properties: `${overrides.properties || overrides.target || ""}`.trim() || defaultProperties,
+    expression: `${overrides.expression || ""}`.trim() || "\"images/example.png\"",
+  };
+}
+
+function normalizeImageAtlSteps(rawSteps) {
+  if (!Array.isArray(rawSteps)) {
+    return [];
+  }
+
+  return rawSteps
+    .filter((step) => step && typeof step === "object")
+    .map((step, index) => createImageAtlStep(index + 1, step));
 }
 
 function createBlankImageDefinition() {
@@ -2014,6 +2097,16 @@ function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   }
 
   selectEl.value = "";
+}
+
+function renderImageNodeAtOptions() {
+  if (!imageNodeAtOptionsEl) {
+    return;
+  }
+
+  imageNodeAtOptionsEl.innerHTML = builtInTransformPresets
+    .map((preset) => `<option value="${escapeHtml(preset)}"></option>`)
+    .join("");
 }
 
 function getAudioNodeAction(node) {
@@ -4247,20 +4340,19 @@ function deleteImageDefinition(imageId) {
   saveState(`Deleted image "${image.name}".`);
 }
 
-function formatImageDefinitionConstructorCode(imageName, constructorName, parts = []) {
+function formatDisplayableConstructorExpression(constructorName, parts = []) {
   if (!parts.length) {
-    return `image ${imageName} = ${constructorName}()`;
+    return `${constructorName}()`;
   }
 
-  return `image ${imageName} = ${constructorName}(\n    ${parts.join(",\n    ")}\n)`;
+  return `${constructorName}(\n    ${parts.join(",\n    ")}\n)`;
 }
 
-function formatImageDefinitionCode(image) {
+function formatImageDefinitionDisplayableExpression(image) {
   if (!image) {
     return "";
   }
 
-  const safeName = image.name.trim() || "image_name";
   const definitionType = getImageDefinitionType(image);
 
   if (definitionType === "movie") {
@@ -4317,12 +4409,12 @@ function formatImageDefinitionCode(image) {
       args.push("keep_last_frame=True");
     }
 
-    return formatImageDefinitionConstructorCode(safeName, "Movie", args);
+    return formatDisplayableConstructorExpression("Movie", args);
   }
 
   if (definitionType === "solid") {
     const solidColor = `${image.solidColor || ""}`.trim() || imageDefinitionFieldDefaults.solidColor;
-    return formatImageDefinitionConstructorCode(safeName, "Solid", [
+    return formatDisplayableConstructorExpression("Solid", [
       formatRenpyQuotedString(solidColor),
     ]);
   }
@@ -4343,7 +4435,7 @@ function formatImageDefinitionCode(image) {
       });
     }
 
-    return formatImageDefinitionConstructorCode(safeName, "Composite", parts);
+    return formatDisplayableConstructorExpression("Composite", parts);
   }
 
   if (definitionType === "placeholder") {
@@ -4367,14 +4459,25 @@ function formatImageDefinitionCode(image) {
       args.push(`text=${formatRenpyQuotedString(placeholderText)}`);
     }
 
-    return formatImageDefinitionConstructorCode(safeName, "Placeholder", args);
+    return formatDisplayableConstructorExpression("Placeholder", args);
   }
 
   const sourcePath = image.sourcePath.trim() || "images/example.png";
-  const lines = [
-    `image ${safeName}:`,
-    `    "${escapeRenpyString(sourcePath)}"`,
+  return formatRenpyQuotedString(sourcePath);
+}
+
+function formatAtlExpression(prefix, expression) {
+  const lines = `${expression || ""}`.trim().split("\n");
+  const firstLine = lines[0] || "Null()";
+
+  return [
+    `    ${prefix} ${firstLine}`,
+    ...lines.slice(1).map((line) => `    ${line}`),
   ];
+}
+
+function formatImageDefinitionTransformLines(image) {
+  const lines = [];
 
   imageDefinitionCodePropertyOrder.forEach((field) => {
     const value = image[field];
@@ -4392,6 +4495,79 @@ function formatImageDefinitionCode(image) {
       lines.push(`    ${field} ${normalizedValue}`);
     }
   });
+
+  return lines;
+}
+
+function formatImageAtlStepLines(image) {
+  if (!image?.atlEnabled) {
+    return [];
+  }
+
+  return normalizeImageAtlSteps(image.atlSteps).flatMap((step) => {
+    if (step.type === "pause") {
+      return [`    pause ${step.duration || "1.0"}`];
+    }
+
+    if (step.type === "repeat") {
+      return ["    repeat"];
+    }
+
+    if (step.type === "contains") {
+      return formatAtlExpression("contains", step.expression || "\"images/example.png\"");
+    }
+
+    if (step.type === "set") {
+      const properties = `${step.properties || "xalign 0.5"}`.trim();
+      return properties.split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .map((line) => `    ${line}`);
+    }
+
+    const warper = imageAtlWarperOptions.includes(step.warper) ? step.warper : "linear";
+    const duration = `${step.duration || ""}`.trim() || "1.0";
+    const properties = `${step.properties || "xalign 1.0"}`.trim();
+    const propertyLines = properties.split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    if (propertyLines.length <= 1) {
+      return [`    ${warper} ${duration} ${propertyLines[0] || "xalign 1.0"}`];
+    }
+
+    return [
+      `    ${warper} ${duration}`,
+      ...propertyLines.map((line) => `        ${line}`),
+    ];
+  });
+}
+
+function formatImageDefinitionCode(image) {
+  if (!image) {
+    return "";
+  }
+
+  const safeName = image.name.trim() || "image_name";
+  const definitionType = getImageDefinitionType(image);
+
+  if (!image.atlEnabled && definitionType !== "static") {
+    return `image ${safeName} = ${formatImageDefinitionDisplayableExpression(image)}`;
+  }
+
+  const displayableExpression = formatImageDefinitionDisplayableExpression(image);
+  const lines = [`image ${safeName}:`];
+
+  if (definitionType === "static") {
+    lines.push(`    ${displayableExpression}`);
+  } else {
+    lines.push(...formatAtlExpression("contains", displayableExpression));
+  }
+
+  lines.push(
+    ...formatImageDefinitionTransformLines(image),
+    ...formatImageAtlStepLines(image),
+  );
 
   return lines.join("\n");
 }
@@ -4469,6 +4645,165 @@ function renderCompositeLayerList(image) {
   `).join("");
 }
 
+function renderImageAtlStepTypeOptions(currentType) {
+  return Object.entries(imageAtlStepTypeMeta)
+    .map(([value, meta]) => `
+      <option value="${escapeHtml(value)}" ${currentType === value ? "selected" : ""}>${escapeHtml(meta.label)}</option>
+    `)
+    .join("");
+}
+
+function renderImageAtlStepWarperOptions(currentWarper) {
+  return imageAtlWarperOptions
+    .map((value) => `
+      <option value="${escapeHtml(value)}" ${currentWarper === value ? "selected" : ""}>${escapeHtml(value)}</option>
+    `)
+    .join("");
+}
+
+function renderImageAtlStepFields(step) {
+  if (step.type === "pause") {
+    return `
+      <div class="atl-step-fields">
+        <label>
+          Duration
+          <input
+            type="text"
+            value="${escapeHtml(step.duration || "")}"
+            placeholder="e.g. 1.0"
+            data-image-atl-step-id="${escapeHtml(step.id)}"
+            data-image-atl-step-field="duration"
+          />
+        </label>
+      </div>
+    `;
+  }
+
+  if (step.type === "contains") {
+    return `
+      <div class="atl-step-fields">
+        <label>
+          Displayable Expression
+          <textarea
+            rows="2"
+            placeholder='e.g. "images/pose.png" or Composite((300, 600), (0, 0), "body.png")'
+            data-image-atl-step-id="${escapeHtml(step.id)}"
+            data-image-atl-step-field="expression"
+          >${escapeHtml(step.expression || "")}</textarea>
+        </label>
+      </div>
+    `;
+  }
+
+  if (step.type === "repeat") {
+    return `
+      <p class="image-definition-help">Repeat loops the current ATL sequence from this point.</p>
+    `;
+  }
+
+  if (step.type === "set") {
+    return `
+      <div class="atl-step-fields">
+        <label>
+          Properties
+          <textarea
+            rows="2"
+            placeholder="e.g. xalign 0.5"
+            data-image-atl-step-id="${escapeHtml(step.id)}"
+            data-image-atl-step-field="properties"
+          >${escapeHtml(step.properties || "")}</textarea>
+        </label>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="atl-step-fields">
+      <label>
+        Warper
+        <select
+          data-image-atl-step-id="${escapeHtml(step.id)}"
+          data-image-atl-step-field="warper"
+        >
+          ${renderImageAtlStepWarperOptions(step.warper)}
+        </select>
+      </label>
+
+      <label>
+        Duration
+        <input
+          type="text"
+          value="${escapeHtml(step.duration || "")}"
+          placeholder="e.g. 1.0"
+          data-image-atl-step-id="${escapeHtml(step.id)}"
+          data-image-atl-step-field="duration"
+        />
+      </label>
+
+      <label>
+        Properties
+        <textarea
+          rows="2"
+          placeholder="e.g. xalign 1.0"
+          data-image-atl-step-id="${escapeHtml(step.id)}"
+          data-image-atl-step-field="properties"
+        >${escapeHtml(step.properties || "")}</textarea>
+      </label>
+    </div>
+  `;
+}
+
+function renderImageAtlStepList(image) {
+  if (!imageDefinitionAtlEditorEl || !imageDefinitionAtlStepListEl) {
+    return;
+  }
+
+  if (!image || !image.atlEnabled) {
+    imageDefinitionAtlEditorEl.classList.add("hidden");
+    imageDefinitionAtlStepListEl.innerHTML = "";
+    return;
+  }
+
+  imageDefinitionAtlEditorEl.classList.remove("hidden");
+
+  const steps = normalizeImageAtlSteps(image.atlSteps);
+  image.atlSteps = steps;
+
+  if (!steps.length) {
+    imageDefinitionAtlStepListEl.innerHTML = `
+      <p class="image-definition-empty">No ATL steps yet. Add one to start building animation timing.</p>
+    `;
+    return;
+  }
+
+  imageDefinitionAtlStepListEl.innerHTML = steps.map((step, index) => `
+    <div class="menu-choice-item image-atl-step">
+      <div class="menu-choice-item-header">
+        <span>Step ${index + 1}</span>
+        <button
+          class="danger-button menu-choice-remove-button"
+          type="button"
+          data-remove-atl-step-id="${escapeHtml(step.id)}"
+        >
+          Remove
+        </button>
+      </div>
+
+      <label>
+        Step Type
+        <select
+          data-image-atl-step-id="${escapeHtml(step.id)}"
+          data-image-atl-step-field="type"
+        >
+          ${renderImageAtlStepTypeOptions(step.type)}
+        </select>
+      </label>
+
+      ${renderImageAtlStepFields(step)}
+    </div>
+  `).join("");
+}
+
 function syncImageDefinitionDetailFields() {
   const image = getActiveImageDefinition();
 
@@ -4486,6 +4821,7 @@ function syncImageDefinitionDetailFields() {
     });
     setImageDefinitionTypeFieldVisibility("static");
     renderCompositeLayerList(null);
+    renderImageAtlStepList(null);
     imageDefinitionMovieLoopInput.disabled = false;
     imageDefinitionCodePreviewEl.textContent = "";
     return;
@@ -4503,6 +4839,7 @@ function syncImageDefinitionDetailFields() {
   });
   setImageDefinitionTypeFieldVisibility(getImageDefinitionType(image));
   renderCompositeLayerList(image);
+  renderImageAtlStepList(image);
   imageDefinitionMovieLoopInput.disabled = (
     getImageDefinitionType(image) === "movie"
     && Boolean(image.movieKeepLastFrame)
@@ -5624,6 +5961,7 @@ function renderInspector() {
     imageNodeTypeInput.value = "Image";
     imageNodeModeInput.value = imageMode;
     buildImageNodeResourceOptions(imageNodeNameInput, selectedNode, { mode: imageMode });
+    renderImageNodeAtOptions();
     imageNodeLayerInput.value = selectedNode.imageLayer || "";
     imageNodeAtInput.value = selectedNode.imageAt || "";
     imageNodeAliasInput.value = selectedNode.imageAlias || "";
@@ -6019,6 +6357,16 @@ function handleImageDefinitionFieldChange(event) {
     return;
   }
 
+  if (field === "atlEnabled") {
+    const currentSteps = normalizeImageAtlSteps(activeImage.atlSteps);
+
+    updateActiveImageDefinition({
+      atlEnabled: nextValue,
+      ...(nextValue && !currentSteps.length ? { atlSteps: [createImageAtlStep(1)] } : {}),
+    });
+    return;
+  }
+
   if (field === "movieKeepLastFrame") {
     updateActiveImageDefinition({
       movieKeepLastFrame: nextValue,
@@ -6036,6 +6384,35 @@ function handleImageDefinitionFieldChange(event) {
   }
 
   updateActiveImageDefinition({ [field]: nextValue });
+}
+
+function updateActiveImageAtlStep(stepId, patch) {
+  const image = getActiveImageDefinition();
+
+  if (!stepId || !image) {
+    return;
+  }
+
+  const nextSteps = normalizeImageAtlSteps(image.atlSteps).map((step, index) => {
+    if (step.id !== stepId) {
+      return step;
+    }
+
+    if (patch.type) {
+      return createImageAtlStep(index + 1, {
+        ...step,
+        type: patch.type,
+        id: step.id,
+      });
+    }
+
+    return {
+      ...step,
+      ...patch,
+    };
+  });
+
+  updateActiveImageDefinition({ atlSteps: nextSteps });
 }
 
 function handleAudioDefinitionFieldChange(event) {
@@ -6385,6 +6762,24 @@ imageNodeLayerInput.addEventListener("input", (event) => {
 });
 imageNodeAtInput.addEventListener("input", (event) => {
   updateSelectedNode({ imageAt: event.target.value });
+});
+imageNodeAtPresetChipsEl.addEventListener("click", (event) => {
+  const presetButton = event.target.closest("[data-image-at-preset]");
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!presetButton || !selectedNode || selectedNode.type !== "image") {
+    return;
+  }
+
+  const selectedPreset = presetButton.dataset.imageAtPreset;
+  const currentCustomTransforms = `${selectedNode.imageAt || ""}`
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item && !builtInTransformPresets.includes(item));
+  const nextTransforms = [selectedPreset, ...currentCustomTransforms];
+
+  updateSelectedNode({ imageAt: nextTransforms.join(", ") });
 });
 imageNodeAliasInput.addEventListener("input", (event) => {
   updateSelectedNode({ imageAlias: event.target.value });
@@ -7168,6 +7563,55 @@ imageDefinitionCompositeLayerListEl.addEventListener("click", (event) => {
   updateActiveImageDefinition({
     compositeLayers: normalizeCompositeLayers(image.compositeLayers)
       .filter((layer) => layer.id !== removeLayerId),
+  });
+});
+imageDefinitionAddAtlStepButton.addEventListener("click", () => {
+  const image = getActiveImageDefinition();
+
+  if (!image) {
+    return;
+  }
+
+  const currentSteps = normalizeImageAtlSteps(image.atlSteps);
+
+  updateActiveImageDefinition({
+    atlEnabled: true,
+    atlSteps: [...currentSteps, createImageAtlStep(currentSteps.length + 1)],
+  });
+});
+imageDefinitionAtlStepListEl.addEventListener("input", (event) => {
+  const stepId = event.target.dataset.imageAtlStepId;
+  const field = event.target.dataset.imageAtlStepField;
+
+  if (!stepId || !field) {
+    return;
+  }
+
+  updateActiveImageAtlStep(stepId, { [field]: event.target.value });
+});
+imageDefinitionAtlStepListEl.addEventListener("change", (event) => {
+  const stepId = event.target.dataset.imageAtlStepId;
+  const field = event.target.dataset.imageAtlStepField;
+
+  if (!stepId || !field) {
+    return;
+  }
+
+  updateActiveImageAtlStep(stepId, { [field]: event.target.value });
+});
+imageDefinitionAtlStepListEl.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-remove-atl-step-id]");
+  const image = getActiveImageDefinition();
+
+  if (!removeButton || !image) {
+    return;
+  }
+
+  const removeStepId = removeButton.dataset.removeAtlStepId;
+
+  updateActiveImageDefinition({
+    atlSteps: normalizeImageAtlSteps(image.atlSteps)
+      .filter((step) => step.id !== removeStepId),
   });
 });
 newAudioDefinitionButton.addEventListener("click", () => {

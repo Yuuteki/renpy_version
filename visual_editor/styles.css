@@ -559,6 +559,19 @@ button.danger-button:hover {
   line-height: 1.6;
 }
 
+.preset-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-chip-button {
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
 .character-detail-header {
   display: flex;
   align-items: center;
@@ -885,6 +898,11 @@ button.danger-button:hover {
 .menu-choice-remove-button {
   padding: 8px 12px;
   font-size: 12px;
+}
+
+.atl-step-fields {
+  display: grid;
+  gap: 8px;
 }
 
 .dialogue-voice-line-field {
