@@ -350,9 +350,79 @@
                   <input id="imageDefinitionBlendInput" data-image-field="blend" type="text" placeholder="e.g. additive" />
                 </label>
 
+                <div id="imageDefinitionMatrixColorBuilder" class="definition-fields matrixcolor-builder">
+                  <label>
+                    Matrix Color Preset
+                    <select id="imageDefinitionMatrixColorModeInput">
+                      <option value="none">None</option>
+                      <option value="identity">Identity / Reset</option>
+                      <option value="tint">Tint</option>
+                      <option value="saturation">Saturation</option>
+                      <option value="sepia">Sepia</option>
+                      <option value="invert">Invert</option>
+                      <option value="brightness">Brightness</option>
+                      <option value="hue">Hue</option>
+                      <option value="opacity">Opacity</option>
+                      <option value="colorize">Colorize</option>
+                      <option value="custom">Custom Expression</option>
+                    </select>
+                  </label>
+
+                  <p class="image-definition-help">
+                    Built-in presets write to the expression field below. Use Custom for multiplied matrices or a raw <code>Matrix([...])</code>.
+                  </p>
+
+                  <div id="imageDefinitionMatrixColorPresetFields" class="definition-fields">
+                    <label id="imageDefinitionMatrixColorTintField" class="hidden">
+                      Tint Color
+                      <input id="imageDefinitionMatrixColorTintInput" type="text" placeholder='e.g. #ffcccc' />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorSaturationField" class="hidden">
+                      Saturation Value
+                      <input id="imageDefinitionMatrixColorSaturationInput" type="text" placeholder="e.g. 0.0" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorSepiaField" class="hidden">
+                      Sepia Tint
+                      <input id="imageDefinitionMatrixColorSepiaInput" type="text" placeholder='e.g. #ffeec2' />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorInvertField" class="hidden">
+                      Invert Amount
+                      <input id="imageDefinitionMatrixColorInvertInput" type="text" placeholder="e.g. 1.0" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorBrightnessField" class="hidden">
+                      Brightness Value
+                      <input id="imageDefinitionMatrixColorBrightnessInput" type="text" placeholder="e.g. 0.15" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorHueField" class="hidden">
+                      Hue Degrees
+                      <input id="imageDefinitionMatrixColorHueInput" type="text" placeholder="e.g. 180" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorOpacityField" class="hidden">
+                      Opacity Value
+                      <input id="imageDefinitionMatrixColorOpacityInput" type="text" placeholder="e.g. 0.5" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorizeBlackField" class="hidden">
+                      Black Maps To
+                      <input id="imageDefinitionMatrixColorizeBlackInput" type="text" placeholder='e.g. #220044' />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorizeWhiteField" class="hidden">
+                      White Maps To
+                      <input id="imageDefinitionMatrixColorizeWhiteInput" type="text" placeholder='e.g. #ffe8ff' />
+                    </label>
+                  </div>
+                </div>
+
                 <label>
-                  matrixcolor
-                  <input id="imageDefinitionMatrixColorInput" data-image-field="matrixcolor" type="text" placeholder="e.g. SaturationMatrix(0.0)" />
+                  matrixcolor expression
+                  <input id="imageDefinitionMatrixColorInput" data-image-field="matrixcolor" type="text" placeholder='e.g. TintMatrix("#ffcccc") * SaturationMatrix(0.8)' />
                 </label>
 
                 <label>

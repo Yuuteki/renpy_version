@@ -67,6 +67,26 @@ const imageDefinitionXAnchorInput = document.getElementById("imageDefinitionXAnc
 const imageDefinitionYAnchorInput = document.getElementById("imageDefinitionYAnchorInput");
 const imageDefinitionXPosInput = document.getElementById("imageDefinitionXPosInput");
 const imageDefinitionYPosInput = document.getElementById("imageDefinitionYPosInput");
+const imageDefinitionMatrixColorModeInput = document.getElementById("imageDefinitionMatrixColorModeInput");
+const imageDefinitionMatrixColorPresetFieldsEl = document.getElementById("imageDefinitionMatrixColorPresetFields");
+const imageDefinitionMatrixColorTintFieldEl = document.getElementById("imageDefinitionMatrixColorTintField");
+const imageDefinitionMatrixColorTintInput = document.getElementById("imageDefinitionMatrixColorTintInput");
+const imageDefinitionMatrixColorSaturationFieldEl = document.getElementById("imageDefinitionMatrixColorSaturationField");
+const imageDefinitionMatrixColorSaturationInput = document.getElementById("imageDefinitionMatrixColorSaturationInput");
+const imageDefinitionMatrixColorSepiaFieldEl = document.getElementById("imageDefinitionMatrixColorSepiaField");
+const imageDefinitionMatrixColorSepiaInput = document.getElementById("imageDefinitionMatrixColorSepiaInput");
+const imageDefinitionMatrixColorInvertFieldEl = document.getElementById("imageDefinitionMatrixColorInvertField");
+const imageDefinitionMatrixColorInvertInput = document.getElementById("imageDefinitionMatrixColorInvertInput");
+const imageDefinitionMatrixColorBrightnessFieldEl = document.getElementById("imageDefinitionMatrixColorBrightnessField");
+const imageDefinitionMatrixColorBrightnessInput = document.getElementById("imageDefinitionMatrixColorBrightnessInput");
+const imageDefinitionMatrixColorHueFieldEl = document.getElementById("imageDefinitionMatrixColorHueField");
+const imageDefinitionMatrixColorHueInput = document.getElementById("imageDefinitionMatrixColorHueInput");
+const imageDefinitionMatrixColorOpacityFieldEl = document.getElementById("imageDefinitionMatrixColorOpacityField");
+const imageDefinitionMatrixColorOpacityInput = document.getElementById("imageDefinitionMatrixColorOpacityInput");
+const imageDefinitionMatrixColorizeBlackFieldEl = document.getElementById("imageDefinitionMatrixColorizeBlackField");
+const imageDefinitionMatrixColorizeBlackInput = document.getElementById("imageDefinitionMatrixColorizeBlackInput");
+const imageDefinitionMatrixColorizeWhiteFieldEl = document.getElementById("imageDefinitionMatrixColorizeWhiteField");
+const imageDefinitionMatrixColorizeWhiteInput = document.getElementById("imageDefinitionMatrixColorizeWhiteInput");
 const imageDefinitionCodePreviewEl = document.getElementById("imageDefinitionCodePreview");
 const audioDefinitionListEl = document.getElementById("audioDefinitionList");
 const audioDefinitionEmptyEl = document.getElementById("audioDefinitionEmpty");
@@ -327,6 +347,46 @@ const imageAtlWarperOptions = [
   "ease_bounce",
   "ease_elastic",
 ];
+
+const matrixColorBuilderDefaults = {
+  tintColor: "#ffffff",
+  saturationValue: "1.0",
+  sepiaTint: "#ffeec2",
+  invertValue: "1.0",
+  brightnessValue: "0.0",
+  hueValue: "0.0",
+  opacityValue: "1.0",
+  colorizeBlack: "#000000",
+  colorizeWhite: "#ffffff",
+};
+
+const matrixColorBuilderFieldMeta = {
+  tint: [
+    imageDefinitionMatrixColorTintFieldEl,
+  ],
+  saturation: [
+    imageDefinitionMatrixColorSaturationFieldEl,
+  ],
+  sepia: [
+    imageDefinitionMatrixColorSepiaFieldEl,
+  ],
+  invert: [
+    imageDefinitionMatrixColorInvertFieldEl,
+  ],
+  brightness: [
+    imageDefinitionMatrixColorBrightnessFieldEl,
+  ],
+  hue: [
+    imageDefinitionMatrixColorHueFieldEl,
+  ],
+  opacity: [
+    imageDefinitionMatrixColorOpacityFieldEl,
+  ],
+  colorize: [
+    imageDefinitionMatrixColorizeBlackFieldEl,
+    imageDefinitionMatrixColorizeWhiteFieldEl,
+  ],
+};
 
 const audioChannelMeta = {
   music: {
@@ -2940,6 +3000,125 @@ function formatRenpyQuotedString(value) {
   return `"${escapeRenpyString(unquotedValue)}"`;
 }
 
+function parseRenpyQuotedString(value) {
+  const normalizedValue = `${value || ""}`.trim();
+  const isQuotedString = (
+    (normalizedValue.startsWith("\"") && normalizedValue.endsWith("\""))
+    || (normalizedValue.startsWith("'") && normalizedValue.endsWith("'"))
+  );
+
+  if (!isQuotedString) {
+    return null;
+  }
+
+  return normalizedValue
+    .slice(1, -1)
+    .replace(/\\\\/g, "\\")
+    .replace(/\\"/g, "\"")
+    .replace(/\\'/g, "'")
+    .replace(/\\n/g, "\n");
+}
+
+function parseSimpleMatrixColorExpression(expression) {
+  const normalizedExpression = `${expression || ""}`.trim();
+
+  if (!normalizedExpression) {
+    return { mode: "none" };
+  }
+
+  if (/^IdentityMatrix\(\s*\)$/.test(normalizedExpression)) {
+    return { mode: "identity" };
+  }
+
+  const tintMatch = normalizedExpression.match(/^TintMatrix\(\s*(.+)\s*\)$/);
+
+  if (tintMatch) {
+    const tintColor = parseRenpyQuotedString(tintMatch[1]);
+
+    if (tintColor !== null) {
+      return {
+        mode: "tint",
+        tintColor,
+      };
+    }
+  }
+
+  const saturationMatch = normalizedExpression.match(/^SaturationMatrix\(\s*([^,()]+)\s*\)$/);
+
+  if (saturationMatch) {
+    return {
+      mode: "saturation",
+      saturationValue: saturationMatch[1].trim(),
+    };
+  }
+
+  const sepiaMatch = normalizedExpression.match(/^SepiaMatrix\(\s*(.+)\s*\)$/);
+
+  if (sepiaMatch) {
+    const sepiaTint = parseRenpyQuotedString(sepiaMatch[1]);
+
+    if (sepiaTint !== null) {
+      return {
+        mode: "sepia",
+        sepiaTint,
+      };
+    }
+  }
+
+  const invertMatch = normalizedExpression.match(/^InvertMatrix\(\s*([^,()]+)\s*\)$/);
+
+  if (invertMatch) {
+    return {
+      mode: "invert",
+      invertValue: invertMatch[1].trim(),
+    };
+  }
+
+  const brightnessMatch = normalizedExpression.match(/^BrightnessMatrix\(\s*([^,()]+)\s*\)$/);
+
+  if (brightnessMatch) {
+    return {
+      mode: "brightness",
+      brightnessValue: brightnessMatch[1].trim(),
+    };
+  }
+
+  const hueMatch = normalizedExpression.match(/^HueMatrix\(\s*([^,()]+)\s*\)$/);
+
+  if (hueMatch) {
+    return {
+      mode: "hue",
+      hueValue: hueMatch[1].trim(),
+    };
+  }
+
+  const opacityMatch = normalizedExpression.match(/^OpacityMatrix\(\s*([^,()]+)\s*\)$/);
+
+  if (opacityMatch) {
+    return {
+      mode: "opacity",
+      opacityValue: opacityMatch[1].trim(),
+    };
+  }
+
+  const colorizeMatch = normalizedExpression.match(/^ColorizeMatrix\(\s*(.+?)\s*,\s*(.+?)\s*\)$/);
+
+  if (colorizeMatch) {
+    const colorizeBlack = parseRenpyQuotedString(colorizeMatch[1]);
+    const colorizeWhite = parseRenpyQuotedString(colorizeMatch[2]);
+
+    if (colorizeBlack !== null && colorizeWhite !== null) {
+      return {
+        mode: "colorize",
+        colorizeBlack,
+        colorizeWhite,
+      };
+    }
+  }
+
+  return { mode: "custom" };
+}
+
 function getImageDefinitionSummary(image) {
   const definitionType = getImageDefinitionType(image);
 
@@ -4804,6 +4983,88 @@ function renderImageAtlStepList(image) {
   `).join("");
 }
 
+function setMatrixColorBuilderModeVisibility(mode) {
+  Object.entries(matrixColorBuilderFieldMeta).forEach(([fieldMode, fieldEls]) => {
+    fieldEls.forEach((fieldEl) => {
+      fieldEl.classList.toggle("hidden", fieldMode !== mode);
+    });
+  });
+}
+
+function buildMatrixColorExpressionFromBuilder() {
+  const mode = imageDefinitionMatrixColorModeInput.value;
+
+  if (mode === "none") {
+    return "";
+  }
+
+  if (mode === "identity") {
+    return "IdentityMatrix()";
+  }
+
+  if (mode === "tint") {
+    const tintColor = imageDefinitionMatrixColorTintInput.value.trim() || matrixColorBuilderDefaults.tintColor;
+    return `TintMatrix(${formatRenpyQuotedString(tintColor)})`;
+  }
+
+  if (mode === "saturation") {
+    const saturationValue = imageDefinitionMatrixColorSaturationInput.value.trim() || matrixColorBuilderDefaults.saturationValue;
+    return `SaturationMatrix(${saturationValue})`;
+  }
+
+  if (mode === "sepia") {
+    const sepiaTint = imageDefinitionMatrixColorSepiaInput.value.trim() || matrixColorBuilderDefaults.sepiaTint;
+    return `SepiaMatrix(${formatRenpyQuotedString(sepiaTint)})`;
+  }
+
+  if (mode === "invert") {
+    const invertValue = imageDefinitionMatrixColorInvertInput.value.trim() || matrixColorBuilderDefaults.invertValue;
+    return `InvertMatrix(${invertValue})`;
+  }
+
+  if (mode === "brightness") {
+    const brightnessValue = imageDefinitionMatrixColorBrightnessInput.value.trim() || matrixColorBuilderDefaults.brightnessValue;
+    return `BrightnessMatrix(${brightnessValue})`;
+  }
+
+  if (mode === "hue") {
+    const hueValue = imageDefinitionMatrixColorHueInput.value.trim() || matrixColorBuilderDefaults.hueValue;
+    return `HueMatrix(${hueValue})`;
+  }
+
+  if (mode === "opacity") {
+    const opacityValue = imageDefinitionMatrixColorOpacityInput.value.trim() || matrixColorBuilderDefaults.opacityValue;
+    return `OpacityMatrix(${opacityValue})`;
+  }
+
+  if (mode === "colorize") {
+    const colorizeBlack = imageDefinitionMatrixColorizeBlackInput.value.trim() || matrixColorBuilderDefaults.colorizeBlack;
+    const colorizeWhite = imageDefinitionMatrixColorizeWhiteInput.value.trim() || matrixColorBuilderDefaults.colorizeWhite;
+    return `ColorizeMatrix(${formatRenpyQuotedString(colorizeBlack)}, ${formatRenpyQuotedString(colorizeWhite)})`;
+  }
+
+  return imageDefinitionMatrixColorInput.value.trim();
+}
+
+function syncMatrixColorBuilder(expression) {
+  const builderState = {
+    ...matrixColorBuilderDefaults,
+    ...parseSimpleMatrixColorExpression(expression),
+  };
+
+  imageDefinitionMatrixColorModeInput.value = builderState.mode;
+  imageDefinitionMatrixColorTintInput.value = builderState.tintColor;
+  imageDefinitionMatrixColorSaturationInput.value = builderState.saturationValue;
+  imageDefinitionMatrixColorSepiaInput.value = builderState.sepiaTint;
+  imageDefinitionMatrixColorInvertInput.value = builderState.invertValue;
+  imageDefinitionMatrixColorBrightnessInput.value = builderState.brightnessValue;
+  imageDefinitionMatrixColorHueInput.value = builderState.hueValue;
+  imageDefinitionMatrixColorOpacityInput.value = builderState.opacityValue;
+  imageDefinitionMatrixColorizeBlackInput.value = builderState.colorizeBlack;
+  imageDefinitionMatrixColorizeWhiteInput.value = builderState.colorizeWhite;
+  setMatrixColorBuilderModeVisibility(builderState.mode);
+}
+
 function syncImageDefinitionDetailFields() {
   const image = getActiveImageDefinition();
 
@@ -4822,6 +5083,7 @@ function syncImageDefinitionDetailFields() {
     setImageDefinitionTypeFieldVisibility("static");
     renderCompositeLayerList(null);
     renderImageAtlStepList(null);
+    syncMatrixColorBuilder("");
     imageDefinitionMovieLoopInput.disabled = false;
     imageDefinitionCodePreviewEl.textContent = "";
     return;
@@ -4840,6 +5102,7 @@ function syncImageDefinitionDetailFields() {
   setImageDefinitionTypeFieldVisibility(getImageDefinitionType(image));
   renderCompositeLayerList(image);
   renderImageAtlStepList(image);
+  syncMatrixColorBuilder(image.matrixcolor);
   imageDefinitionMovieLoopInput.disabled = (
     getImageDefinitionType(image) === "movie"
     && Boolean(image.movieKeepLastFrame)
@@ -6415,6 +6678,24 @@ function updateActiveImageAtlStep(stepId, patch) {
   updateActiveImageDefinition({ atlSteps: nextSteps });
 }
 
+function handleMatrixColorBuilderChange() {
+  if (!getActiveImageDefinition()) {
+    return;
+  }
+
+  const mode = imageDefinitionMatrixColorModeInput.value;
+
+  setMatrixColorBuilderModeVisibility(mode);
+
+  if (mode === "custom") {
+    return;
+  }
+
+  updateActiveImageDefinition({
+    matrixcolor: buildMatrixColorExpressionFromBuilder(),
+  });
+}
+
 function handleAudioDefinitionFieldChange(event) {
   const field = event.target.dataset.audioField;
 
@@ -7466,6 +7747,21 @@ imageDefinitionBackButton.addEventListener("click", () => {
 });
 imageDefinitionDetailFormEl.addEventListener("input", handleImageDefinitionFieldChange);
 imageDefinitionDetailFormEl.addEventListener("change", handleImageDefinitionFieldChange);
+[
+  imageDefinitionMatrixColorModeInput,
+  imageDefinitionMatrixColorTintInput,
+  imageDefinitionMatrixColorSaturationInput,
+  imageDefinitionMatrixColorSepiaInput,
+  imageDefinitionMatrixColorInvertInput,
+  imageDefinitionMatrixColorBrightnessInput,
+  imageDefinitionMatrixColorHueInput,
+  imageDefinitionMatrixColorOpacityInput,
+  imageDefinitionMatrixColorizeBlackInput,
+  imageDefinitionMatrixColorizeWhiteInput,
+].forEach((fieldEl) => {
+  fieldEl.addEventListener("input", handleMatrixColorBuilderChange);
+  fieldEl.addEventListener("change", handleMatrixColorBuilderChange);
+});
 imageDefinitionBrowseButton.addEventListener("click", () => {
   if (!getActiveImageDefinition()) {
     setStatus("Create or select an image definition before browsing for a file.");

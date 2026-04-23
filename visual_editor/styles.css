@@ -559,6 +559,13 @@ button.danger-button:hover {
   line-height: 1.6;
 }
 
+.matrixcolor-builder {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .preset-chip-row {
   display: flex;
   flex-wrap: wrap;
