@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>界面语言优化 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/screen_optimization.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="配置项变量" href="config.html" />
+    <link rel="prev" title="特殊界面名称" href="screen_special.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">界面语言优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-list">参数列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prediction">预加载</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#displayable-reuse">可视组件的复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#const-expressions-and-pure-functions">常表达式和纯函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#definitions">定义</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-const-optimizes-screen-language">如何使用常量优化界面语言</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#const-text">常量文本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#const-functions">常函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#renpy.const"><code class="docutils literal notranslate"><span class="pre">renpy.const()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renpy.not_const"><code class="docutils literal notranslate"><span class="pre">renpy.not_const()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renpy.pure"><code class="docutils literal notranslate"><span class="pre">renpy.pure()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#profiling">性能分析</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.profile_screen"><code class="docutils literal notranslate"><span class="pre">renpy.profile_screen</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#const-names">常量名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pure-names">纯函数名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">界面语言优化</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/screen_optimization.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="screen-language-optimization">
+<span id="id1"></span><h1>界面语言优化<a class="headerlink" href="#screen-language-optimization" title="Link to this heading"> link</a></h1>
+<p>Ren’Py有一些技巧能优化界面语言的速度。当使用Ren’Py创建复杂的UI时，例如模拟游戏使用的接口，理解界面语言的工作机制有助于创作者实现最佳的画面表现。</p>
+<p>这篇指导适用于界面语言的第二种实现方式，其是在Ren’Py的6.18版本中加入的。如果你的项目使用Ren’Py6.17或者更早的版本创建，最好在启动器(launcher)选择“强制重新编译”，确保界面工具升级到最新版本。</p>
+<p>本指导并不能替代良好养成编程习惯的练习。如果某个界面使用循环嵌套实现一大堆无效的工作，就会比不需要这种循环的界面运行得慢。由于理解本指导中的技巧十分重要，完全避免这种辣鸡行为总是比让Ren’Py优化你的项目代码更好。</p>
+<section id="parameter-list">
+<span id="id2"></span><h2>参数列表<a class="headerlink" href="#parameter-list" title="Link to this heading"> link</a></h2>
+<p>为了实现最好的画面效果，所有界面都应该定义一个参数列表。如果某个界面不使用参数，应该使用一个空的参数列表。这个界面：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">test</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+            <span class="k">text</span> <span class="s2">&quot;[i]&quot;</span>
+</pre></div>
+</div>
+<p>比下面那个运行得更快：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">test</span><span class="p">:</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+            <span class="k">text</span> <span class="s2">&quot;[i]&quot;</span>
+</pre></div>
+</div>
+<p>当不使用参数列表定义一个界面时，界面使用的任何名称都可以在界面显示时被重定义。这要求Ren’Py分析界面时更加保守，限制优化级别。</p>
+</section>
+<section id="prediction">
+<span id="id3"></span><h2>预加载<a class="headerlink" href="#prediction" title="Link to this heading"> link</a></h2>
+<p>提前预加载界面可以提升表现效果。因为Ren’Py在预加载时间内依然会执行界面，并加载界面使用的图像。</p>
+<p>总共有两种Ren’Py自动预加载界面的方法：</p>
+<ul class="simple">
+<li><p>Ren’Py会预加载通过 <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">screen</span></code> 和 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 语句显示的界面。</p></li>
+<li><p>Ren’Py会预加载通过 <a class="reference internal" href="screen_actions.html#Show" title="Show"><code class="xref py py-func docutils literal notranslate"><span class="pre">Show()</span></code></a> 和 <a class="reference internal" href="screen_actions.html#ShowMenu" title="ShowMenu"><code class="xref py py-func docutils literal notranslate"><span class="pre">ShowMenu()</span></code></a> 行为显示的界面。</p></li>
+</ul>
+<p>如果界面直接通过Python语句显示，最好在显示之前就开始预加载界面。开始预加载某个界面可以使用
+<a class="reference internal" href="screen_python.html#renpy.start_predict_screen" title="renpy.start_predict_screen"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.start_predict_screen()</span></code></a> 函数。停止预加载某个界面可以使用 <a class="reference internal" href="screen_python.html#renpy.stop_predict_screen" title="renpy.stop_predict_screen"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.stop_predict_screen()</span></code></a>  函数。</p>
+</section>
+<section id="displayable-reuse">
+<span id="id4"></span><h2>可视组件的复用<a class="headerlink" href="#displayable-reuse" title="Link to this heading"> link</a></h2>
+<p>当编译解释界面语言中创建某个可视组件时，Ren’Py会检查固定位置参数和特性(property)是否与最近编译解释过的语句中有一样的。如果存在同样的可视组件，Ren’Py就不会创建新的，而是复用原来的。</p>
+<p>可视组件的复用具有一系列性能表现方面的意义。它节省了创建新可视组件的消耗，很明显新创建可视组件包含大量的内部环节。更为重要的是，很多情况下的可视组件复用，Ren’Py显示时就不需要重新渲染了，可以导致另一项明显的速度提升。</p>
+<p>要比较固定位置参数和特性(property)时，Ren’Py使用的相等概念即Python内嵌的 “==” 操作符。我们已经扩展了行为(action)的相等概念，可以判断两个行为是否相等，也就是行为间没有差异的情况——当无论哪个行为被调用，行为的需求和最终作用于组件的可用性和可选择性都相同。</p>
+<p>所有Ren’Py提供的行为(action)都符合该定义。当定义你自己的行为(action)时，也需要让行为符合同样的相等概念。可以通过提供一个合适的 <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> 函数实现。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TargetShip</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ship</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ship</span> <span class="o">=</span> <span class="n">ship</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="k">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TargetShip</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ship</span> <span class="k">is</span> <span class="n">other</span><span class="o">.</span><span class="n">ship</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">target</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ship</span>
+</pre></div>
+</div>
+<p>认真细致地定义 <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> 函数很重要，确保这个函数可以比较行为的所有字段(field)，并可以合适地使用相等符号(==)和标识(is)比较。</p>
+</section>
+<section id="const-expressions-and-pure-functions">
+<span id="id5"></span><h2>常表达式和纯函数<a class="headerlink" href="#const-expressions-and-pure-functions" title="Link to this heading"> link</a></h2>
+<p>Ren’Py可以检索常变量和纯函数的特性(property)，并提升界面赋值式的运行速度，且避免界面某些部分的赋值运算。</p>
+<section id="definitions">
+<span id="id6"></span><h3>定义<a class="headerlink" href="#definitions" title="Link to this heading"> link</a></h3>
+<p>如果一个表达式计算结果总是同样的值，那么这个表达式就是 <strong>const</strong> 的(constant常量的缩写)。出于Ren’Py的需要，只有在表达式计算结果为常量或者表达式被定义为常量时，表达式才是常表达式。</p>
+<ul class="simple">
+<li><p>将任何一元，二元或三元运算符应用于表达式，前提是其他操作数也是常量。</p></li>
+<li><p>访问表达式上的字段。</p></li>
+<li><p>使用数字或对象为表达式建立索引。</p></li>
+</ul>
+<p>Python的数值和字符串都是常量，由常量数值和字符串组成的列表、元组、集和字典类型数据也都是常量。Ren’Py中使用 <code class="docutils literal notranslate"><span class="pre">define</span></code> 语句将变量定义为常量。
+<a class="reference internal" href="#renpy.const" title="renpy.const"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.const()</span></code></a> 和 <a class="reference internal" href="#renpy.not_const" title="renpy.not_const"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.not_const()</span></code></a> 函数可以用于在Ren’Py判断是否为常量的问题上进行更细致的操作。在下面的 <a class="reference internal" href="#const-names"><span class="std std-ref">常量名称</span></a>
+中会列出默认的常量名。</p>
+<p>如果你使用的某个变量从来不会改变，使用 <code class="docutils literal notranslate"><span class="pre">define</span></code> 将其定义和声明为常量是合理的。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">GRID_WIDTH</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="k">define</span> <span class="n">GRID_HEIGHT</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p>当某个可调用的函数、类(class)或者行为(action)的入参都是常量，返回值也始终是同一个常量，那么这个函数、类或者行为就是 <strong>pure</strong> (纯粹的)。除此之外，一个使用常表达式调用纯函数的表达式也总是一个常表达式。</p>
+<p>大量的默认函数、类和行为都已被标记为“pure”。这些函数会在后面的 <a class="reference internal" href="#pure-names"><span class="std std-ref">纯函数名</span></a>
+章节中列出。</p>
+<p>函数可以使用 <a class="reference internal" href="#renpy.pure" title="renpy.pure"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.pure()</span></code></a> 定义为纯函数，并在默认存储区中用作函数修饰器(decorator)。</p>
+<p>常表达式和纯函数在下列事件消息中不需要可以维护同一个值：</p>
+<ul class="simple">
+<li><p>初始化段落的结尾。</p></li>
+<li><p>语言的改变。</p></li>
+<li><p>重建样式。</p></li>
+</ul>
+</section>
+<section id="how-const-optimizes-screen-language">
+<span id="id7"></span><h3>如何使用常量优化界面语言<a class="headerlink" href="#how-const-optimizes-screen-language" title="Link to this heading"> link</a></h3>
+<p>确保界面语言入参和特性(property)是常量，会带来三点优势。</p>
+<p>第一点优势是，常量入参和特性(property)在界面准备阶段就可以计算和简化，比如在初始化阶段结束时、语言改变时、重建样式时。在那之后，就不需要再浪费时间计算常量入参和特性了。</p>
+<p>第二点优势是，常量与可视组件复用功能的相性很好。如果某个可视组件的入参和特性都是常量，那么这个可视组件就总是可以被复用的，获得了可视组件复用的最大收益。</p>
+<p>最后一点优势是，当Ren’Py遇到可视组件的树(tree)，整个树的所有入参、特性和作用主控流程的表达式都是常量的话，Ren’Py就不在重新计算表达式或创建新的可视组件，而会重用整个树。这种规格的复用会带来明显的性能飞升。</p>
+<p>例如，下列的界面不执行任何Python语句，仅在首次预加载或者显示时创建可视组件：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">mood_picker</span><span class="p">():</span>
+    <span class="k">hbox</span><span class="p">:</span>
+        <span class="na">xalign</span> <span class="mf">1.0</span>
+        <span class="na">yalign</span> <span class="mf">0.0</span>
+
+        <span class="k">textbutton</span> <span class="s2">&quot;Happy&quot;</span> <span class="na">action</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;mood&quot;</span><span class="p">,</span> <span class="s2">&quot;happy&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Sad&quot;</span> <span class="na">action</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;mood&quot;</span><span class="p">,</span> <span class="s2">&quot;sad&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Angry&quot;</span> <span class="na">action</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;mood&quot;</span><span class="p">,</span> <span class="s2">&quot;angry&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="const-text">
+<span id="id8"></span><h3>常量文本<a class="headerlink" href="#const-text" title="Link to this heading"> link</a></h3>
+<p>定义文本时请注意，包含新样式文本替代的字符串都是常量：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;Hello, world.&quot;</span>
+<span class="k">text</span> <span class="s2">&quot;[t]&quot;</span>
+</pre></div>
+</div>
+<p>直接包含某个文本变量的字符串，一般不是常量：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;Hello, world.&quot;</span>
+<span class="k">text</span> <span class="n">t</span>
+</pre></div>
+</div>
+<p>使用百分号替代格式的字符串，也不是常量：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;Hello, world.&quot;</span>
+<span class="k">text</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">t</span>
+</pre></div>
+</div>
+<p>最后需要注意的是，文本多语言支持函数下划线(_)是纯函数，所以如果这个函数包含一个字符串，整个表达式是常表达式：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">text</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Your score is: [score]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果变量中包含文本替换，就需要使用 <code class="docutils literal notranslate"><span class="pre">!i</span></code> 转义符：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">who</span> <span class="o">=</span> <span class="s2">&quot;Jane&quot;</span>
+<span class="k">$</span> <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;Hello, [who]!&quot;</span>
+<span class="k">text</span> <span class="s1">&#39;Then I told her, &quot;[t!i]&quot;&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="const-functions">
+<span id="id9"></span><h3>常函数<a class="headerlink" href="#const-functions" title="Link to this heading"> link</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.const">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">const</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.const" title="Link to this definition"> link</a></dt>
+<dd><p>将某个存储区的变量声明为常量。</p>
+<p>如果没有什么可以改变一个变量的值，或者无法建立索引抵达变量，或者不能存取变量的各种属性(attribute)，那这个变量就是常量。变量必须在定义、初始化和多语言支持Python语句块(block)之外保持一个常值。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>一个字符串，表示声明为常量的变量名。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.not_const">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">not_const</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.not_const" title="Link to this definition"> link</a></dt>
+<dd><p>将某个存储区的变量声明不是常量。</p>
+<p>这个函数会取消 <a class="reference internal" href="#renpy.const" title="renpy.const"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.const()</span></code></a> 和 <a class="reference internal" href="#renpy.pure" title="renpy.pure"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.pure()</span></code></a> 的效果。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>声明不为常量的变量名。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.pure">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">pure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.pure" title="Link to this definition"> link</a></dt>
+<dd><p>声明某个函数为纯函数。纯函数必须在定义、初始化和多语言支持Python语句块(block)之外总是使用同样的入参并返回同样的值。</p>
+<dl class="simple">
+<dt><cite>fn</cite></dt><dd><p>声明为纯函数的函数名。可以是包含函数名的字符串，或者函数本身。</p>
+</dd>
+</dl>
+<p>返回 <cite>fn</cite> ，允许函数用作修饰器(decorator)。</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="profiling">
+<span id="id10"></span><h2>性能分析<a class="headerlink" href="#profiling" title="Link to this heading"> link</a></h2>
+<p>Ren’Py支持使用 <code class="docutils literal notranslate"><span class="pre">renpy.profile_screen</span></code> 函数对界面执行进行性能分析。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="renpy.profile_screen">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">profile_screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.profile_screen" title="Link to this definition"> link</a></dt>
+<dd><p>请求对名为 <cite>name</cite> 的界面进行界面分析， <cite>name</cite> 必须是个字符串。</p>
+<p>除了 <cite>name</cite> ，所有入参都必须以关键词入参形式提供。该函数使用三组入参。</p>
+<dl class="simple">
+<dt><cite>predict</cite></dt><dd><p>若为真(True)，在界面预加载时进行性能分析。</p>
+</dd>
+<dt><cite>show</cite></dt><dd><p>若为真(True)，在界面第一次显示时进行性能分析。</p>
+</dd>
+<dt><cite>update</cite></dt><dd><p>若为真(True)，在界面更新时进行性能分析。</p>
+</dd>
+<dt><cite>request</cite></dt><dd><p>若为真(True)，在按下F8时进行性能分析。</p>
+</dd>
+</dl>
+<p>第二组入参控制性能分析的输出结果。</p>
+<dl class="simple">
+<dt><cite>time</cite></dt><dd><p>若为真(True)，Ren’Py会记录界面运算消耗的时间。</p>
+</dd>
+<dt><cite>debug</cite></dt><dd><p>若为真(True)，Ren’Py会记录界面运算的相关信息，包括：</p>
+<ul class="simple">
+<li><p>哪些可视组件被Ren’Py处理为常量。</p></li>
+<li><p>哪些入参需要被运算。</p></li>
+<li><p>哪些可视组件被复用。</p></li>
+</ul>
+</dd>
+</dl>
+<p>产生和记录这些调试信息会消耗可观的时间。所以当 <em>debug</em> 为真(True)时，输出的 <em>time</em> 时间应该就不是完全可信的。</p>
+<p>最后一组入参控制每次Ren’Py运行时的输出结果。</p>
+<dl class="simple">
+<dt><cite>const</cite></dt><dd><p>显示在界面中标记为常量和非常量的变量。</p>
+</dd>
+</dl>
+<p>所有性能分析输出都会记录在游戏目录的profile_screen.txt文件中。</p>
+</dd></dl>
+
+</section>
+<section id="const-names">
+<span id="id11"></span><h2>常量名<a class="headerlink" href="#const-names" title="Link to this heading"> link</a></h2>
+<p>以下是默认的常量名：</p>
+<ul class="simple">
+<li><p>False</p></li>
+<li><p>None</p></li>
+<li><p>True</p></li>
+<li><p>config</p></li>
+<li><p>style</p></li>
+</ul>
+</section>
+<section id="pure-names">
+<span id="id12"></span><h2>纯函数名<a class="headerlink" href="#pure-names" title="Link to this heading"> link</a></h2>
+<p>以下是默认为纯函数或常量名。</p>
+<ul class="simple">
+<li><p>ADVCharacter</p></li>
+<li><p>ADVSpeaker</p></li>
+<li><p>AddToSet()</p></li>
+<li><p>Alpha</p></li>
+<li><p>AlphaBlend()</p></li>
+<li><p>AlphaDissolve()</p></li>
+<li><p>AlphaMask()</p></li>
+<li><p>AnimatedValue()</p></li>
+<li><p>Animation</p></li>
+<li><p>At()</p></li>
+<li><p>AudioPositionValue()</p></li>
+<li><p>Call()</p></li>
+<li><p>Character()</p></li>
+<li><p>Color</p></li>
+<li><p>ComposeTransition()</p></li>
+<li><p>ConditionSwitch()</p></li>
+<li><p>Confirm()</p></li>
+<li><p>CropMove()</p></li>
+<li><p>DictInputValue()</p></li>
+<li><p>DictValue()</p></li>
+<li><p>DisableAllInputValues()</p></li>
+<li><p>Dissolve()</p></li>
+<li><p>Drag</p></li>
+<li><p>DynamicCharacter</p></li>
+<li><p>DynamicDisplayable()</p></li>
+<li><p>EndReplay()</p></li>
+<li><p>FactorZoom</p></li>
+<li><p>Fade()</p></li>
+<li><p>FieldInputValue()</p></li>
+<li><p>FieldValue()</p></li>
+<li><p>FileDelete()</p></li>
+<li><p>FilePage()</p></li>
+<li><p>FilePageNameInputValue()</p></li>
+<li><p>FileTakeScreenshot()</p></li>
+<li><p>Fixed()</p></li>
+<li><p>Flatten()</p></li>
+<li><p>FontGroup()</p></li>
+<li><p>Frame()</p></li>
+<li><p>Grid()</p></li>
+<li><p>HBox()</p></li>
+<li><p>Help()</p></li>
+<li><p>Hide()</p></li>
+<li><p>HideInterface()</p></li>
+<li><p>If()</p></li>
+<li><p>Image()</p></li>
+<li><p>ImageDissolve()</p></li>
+<li><p>ImageReference</p></li>
+<li><p>InputValue</p></li>
+<li><p>InvertSelected()</p></li>
+<li><p>Jump()</p></li>
+<li><p>Language()</p></li>
+<li><p>LiveComposite()</p></li>
+<li><p>LiveCrop()</p></li>
+<li><p>LiveTile()</p></li>
+<li><p>MainMenu()</p></li>
+<li><p>MixerValue()</p></li>
+<li><p>Motion</p></li>
+<li><p>MouseMove()</p></li>
+<li><p>Move</p></li>
+<li><p>MoveFactory</p></li>
+<li><p>MoveIn</p></li>
+<li><p>MoveOut</p></li>
+<li><p>MoveTransition()</p></li>
+<li><p>Movie()</p></li>
+<li><p>MultipleTransition()</p></li>
+<li><p>NVLCharacter</p></li>
+<li><p>Notify()</p></li>
+<li><p>Null()</p></li>
+<li><p>NullAction()</p></li>
+<li><p>OldMoveTransition</p></li>
+<li><p>OpenURL()</p></li>
+<li><p>Pan</p></li>
+<li><p>ParameterizedText()</p></li>
+<li><p>Particles</p></li>
+<li><p>Pause()</p></li>
+<li><p>PauseAudio()</p></li>
+<li><p>Pixellate()</p></li>
+<li><p>Play</p></li>
+<li><p>PlayCharacterVoice()</p></li>
+<li><p>Position</p></li>
+<li><p>Preference()</p></li>
+<li><p>PushMove()</p></li>
+<li><p>Queue()</p></li>
+<li><p>QueueEvent()</p></li>
+<li><p>QuickLoad()</p></li>
+<li><p>QuickSave()</p></li>
+<li><p>Quit()</p></li>
+<li><p>RemoveFromSet()</p></li>
+<li><p>Replay()</p></li>
+<li><p>RestartStatement()</p></li>
+<li><p>Return()</p></li>
+<li><p>Revolve</p></li>
+<li><p>RevolveInOut</p></li>
+<li><p>RollForward()</p></li>
+<li><p>Rollback()</p></li>
+<li><p>RotoZoom</p></li>
+<li><p>ScreenVariableValue()</p></li>
+<li><p>Screenshot()</p></li>
+<li><p>SelectedIf()</p></li>
+<li><p>SensitiveIf()</p></li>
+<li><p>SetCharacterVolume()</p></li>
+<li><p>SetDict()</p></li>
+<li><p>SetField()</p></li>
+<li><p>SetMixer()</p></li>
+<li><p>SetMute()</p></li>
+<li><p>SetScreenVariable()</p></li>
+<li><p>SetVariable()</p></li>
+<li><p>SetVoiceMute()</p></li>
+<li><p>Show()</p></li>
+<li><p>ShowMenu()</p></li>
+<li><p>ShowTransient()</p></li>
+<li><p>ShowingSwitch()</p></li>
+<li><p>SizeZoom</p></li>
+<li><p>Skip()</p></li>
+<li><p>SnowBlossom()</p></li>
+<li><p>Solid()</p></li>
+<li><p>Speaker</p></li>
+<li><p>Start()</p></li>
+<li><p>StaticValue()</p></li>
+<li><p>Stop</p></li>
+<li><p>StylePreference()</p></li>
+<li><p>SubTransition</p></li>
+<li><p>Text()</p></li>
+<li><p>ToggleDict()</p></li>
+<li><p>ToggleField()</p></li>
+<li><p>ToggleMute()</p></li>
+<li><p>ToggleScreen()</p></li>
+<li><p>ToggleScreenVariable()</p></li>
+<li><p>ToggleSetMembership()</p></li>
+<li><p>ToggleVariable()</p></li>
+<li><p>ToggleVoiceMute()</p></li>
+<li><p>Transform</p></li>
+<li><p>Update</p></li>
+<li><p>VBox()</p></li>
+<li><p>VariableInputValue()</p></li>
+<li><p>VariableValue()</p></li>
+<li><p>Viewport</p></li>
+<li><p>VoiceReplay()</p></li>
+<li><p>Window</p></li>
+<li><p>Zoom</p></li>
+<li><p>ZoomInOut</p></li>
+<li><p>_()</p></li>
+<li><p>_DisplayReset</p></li>
+<li><p>_InputValueAction</p></li>
+<li><p>_m1_00gallery__GalleryAction</p></li>
+<li><p>_m1_00gallery__GalleryToggleSlideshow</p></li>
+<li><p>_m1_00musicroom__MusicRoomPlay</p></li>
+<li><p>_m1_00musicroom__MusicRoomRandomPlay</p></li>
+<li><p>_m1_00musicroom__MusicRoomStop</p></li>
+<li><p>_m1_00musicroom__MusicRoomTogglePlay</p></li>
+<li><p>_m1_00preferences__DisplayAction</p></li>
+<li><p>_movebottom</p></li>
+<li><p>_moveleft</p></li>
+<li><p>_moveright</p></li>
+<li><p>_movetop</p></li>
+<li><p>_narrator</p></li>
+<li><p>_notify_transform</p></li>
+<li><p>_p()</p></li>
+<li><p>abs</p></li>
+<li><p>all</p></li>
+<li><p>any</p></li>
+<li><p>apply</p></li>
+<li><p>bin</p></li>
+<li><p>blinds</p></li>
+<li><p>bool</p></li>
+<li><p>bytes</p></li>
+<li><p>callable</p></li>
+<li><p>centered</p></li>
+<li><p>chr</p></li>
+<li><p>cmp</p></li>
+<li><p>color</p></li>
+<li><p>dict</p></li>
+<li><p>dissolve</p></li>
+<li><p>divmod</p></li>
+<li><p>fade</p></li>
+<li><p>filter</p></li>
+<li><p>float</p></li>
+<li><p>frozenset</p></li>
+<li><p>getattr</p></li>
+<li><p>globals</p></li>
+<li><p>gui.SetPreference()</p></li>
+<li><p>gui.TogglePreference()</p></li>
+<li><p>gui.preference()</p></li>
+<li><p>hasattr</p></li>
+<li><p>hash</p></li>
+<li><p>hex</p></li>
+<li><p>hpunch</p></li>
+<li><p>int</p></li>
+<li><p>irisin</p></li>
+<li><p>irisout</p></li>
+<li><p>isinstance</p></li>
+<li><p>len</p></li>
+<li><p>list</p></li>
+<li><p>long</p></li>
+<li><p>map</p></li>
+<li><p>max</p></li>
+<li><p>min</p></li>
+<li><p>name_only</p></li>
+<li><p>narrator</p></li>
+<li><p>oct</p></li>
+<li><p>ord</p></li>
+<li><p>pixellate</p></li>
+<li><p>pow</p></li>
+<li><p>pushdown</p></li>
+<li><p>pushleft</p></li>
+<li><p>pushright</p></li>
+<li><p>pushup</p></li>
+<li><p>range</p></li>
+<li><p>reduce</p></li>
+<li><p>renpy.Keymap</p></li>
+<li><p>renpy.ParameterizedText()</p></li>
+<li><p>renpy.check_text_tags()</p></li>
+<li><p>renpy.curried_call_in_new_context</p></li>
+<li><p>renpy.curried_invoke_in_new_context</p></li>
+<li><p>renpy.curry</p></li>
+<li><p>renpy.easy_displayable</p></li>
+<li><p>renpy.exists()</p></li>
+<li><p>renpy.filter_text_tags()</p></li>
+<li><p>renpy.fsdecode()</p></li>
+<li><p>renpy.fsencode()</p></li>
+<li><p>renpy.get_all_labels()</p></li>
+<li><p>renpy.has_label()</p></li>
+<li><p>renpy.has_screen</p></li>
+<li><p>renpy.image_exists</p></li>
+<li><p>renpy.image_size()</p></li>
+<li><p>renpy.known_languages()</p></li>
+<li><p>renpy.license</p></li>
+<li><p>renpy.list_files()</p></li>
+<li><p>renpy.loadable()</p></li>
+<li><p>renpy.munged_filename</p></li>
+<li><p>renpy.partial</p></li>
+<li><p>renpy.unelide_filename</p></li>
+<li><p>renpy.variant()</p></li>
+<li><p>renpy.version()</p></li>
+<li><p>renpy.version_name</p></li>
+<li><p>renpy.version_only</p></li>
+<li><p>renpy.version_string</p></li>
+<li><p>renpy.version_tuple</p></li>
+<li><p>repr</p></li>
+<li><p>round</p></li>
+<li><p>set</p></li>
+<li><p>slideawaydown</p></li>
+<li><p>slideawayleft</p></li>
+<li><p>slideawayright</p></li>
+<li><p>slideawayup</p></li>
+<li><p>slidedown</p></li>
+<li><p>slideleft</p></li>
+<li><p>slideright</p></li>
+<li><p>slideup</p></li>
+<li><p>sorted</p></li>
+<li><p>squares</p></li>
+<li><p>str</p></li>
+<li><p>sum</p></li>
+<li><p>tuple</p></li>
+<li><p>ui.callsinnewcontext</p></li>
+<li><p>ui.gamemenus</p></li>
+<li><p>ui.invokesinnewcontext</p></li>
+<li><p>ui.jumps</p></li>
+<li><p>ui.jumpsoutofcontext</p></li>
+<li><p>ui.returns</p></li>
+<li><p>unichr</p></li>
+<li><p>unicode</p></li>
+<li><p>vars</p></li>
+<li><p>vcentered</p></li>
+<li><p>vpunch</p></li>
+<li><p>wipedown</p></li>
+<li><p>wipeleft</p></li>
+<li><p>wiperight</p></li>
+<li><p>wipeup</p></li>
+<li><p>zip</p></li>
+<li><p>zoomin</p></li>
+<li><p>zoominout</p></li>
+<li><p>zoomout</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="screen_special.html" class="btn btn-neutral float-left" title="特殊界面名称" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config.html" class="btn btn-neutral float-right" title="配置项变量" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

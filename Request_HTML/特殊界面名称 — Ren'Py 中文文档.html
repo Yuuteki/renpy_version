@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>特殊界面名称 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/screen_special.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="界面语言优化" href="screen_optimization.html" />
+    <link rel="prev" title="界面行为(action)、值(value)和函数" href="screen_actions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">特殊界面名称</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#in-game-screens">游戏内界面</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#say">Say</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#choice">Choice</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#caption"><code class="docutils literal notranslate"><span class="pre">caption</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action"><code class="docutils literal notranslate"><span class="pre">action</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#chosen"><code class="docutils literal notranslate"><span class="pre">chosen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#args"><code class="docutils literal notranslate"><span class="pre">args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kwargs"><code class="docutils literal notranslate"><span class="pre">kwargs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nvl">NVL</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#current"><code class="docutils literal notranslate"><span class="pre">current</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#who"><code class="docutils literal notranslate"><span class="pre">who</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#what"><code class="docutils literal notranslate"><span class="pre">what</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple"><code class="docutils literal notranslate"><span class="pre">multiple</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#notify">Notify</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#skip-indicator">跳过提示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ctc">CTC(点击继续)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#out-of-game-menu-screens">游戏外菜单界面</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main-menu">主菜单(Main Menu)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#navigation">Navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#save">Save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load">Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preferences">Preferences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#confirm">Confirm</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">特殊界面名称</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/screen_special.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="special-screen-names">
+<span id="screen-special"></span><span id="id1"></span><h1>特殊界面名称<a class="headerlink" href="#special-screen-names" title="Link to this heading"> link</a></h1>
+<p>在Ren’Py中总共有两类特殊界面名称。第一类是在Ren’Py脚本语言命令(或者等效的程序)运行时自动显示的部分。另一类是菜单界面。这些界面沿袭惯用名称，实现惯用功能，但界面名可以省略或者修改为不需要实际写出来。</p>
+<p>在本页内容中，我们会给出一些界面样例。需要意识到的重点是，一些界面必须包含精简的功能，界面系统允许在界面上添加额外的功能。例如，标准的say界面只能显示文本，使用界面系统就很容易添加跳过(skipping)、自动前进(auto-forwar)模式及静音(muting)。</p>
+<p>一些特殊界面会使用参数。这些参数可以在界面的作用域(scope)中，以变量的形式访问。</p>
+<p>一些界面也还有关联的专属id。专属id会被分配给指定类型的可视组件。其还可以导致特性(property)分配给对应的可视组件，并可以让Ren’Py显示界面的其他部分可以访问这个可视组件。</p>
+<section id="in-game-screens">
+<span id="id2"></span><h2>游戏内界面<a class="headerlink" href="#in-game-screens" title="Link to this heading"> link</a></h2>
+<p>当某个Ren’Py语句执行时，这些界面会自动显示。</p>
+<section id="say">
+<span id="say-screen"></span><h3>Say<a class="headerlink" href="#say" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">say</span></code> 界面在ADV模式对话时，通过say语句被调用。其显示时使用下列参数：</p>
+<dl class="simple">
+<dt><cite>who</cite></dt><dd><p>发言角色名的文本。</p>
+</dd>
+<dt><cite>what</cite></dt><dd><p>发言角色说的内容。</p>
+</dd>
+</dl>
+<p>需要使用下列id声明可视组件：</p>
+<dl class="simple">
+<dt>“who”</dt><dd><p>一个文本组件，显示发言角色名。character对象可以使用入参提供组件样式。</p>
+</dd>
+<dt>“what”</dt><dd><p>一个文本组件，显示发言角色说的内容。character对象可以使用入参提供组件样式。 <strong>带有该id的可视组件必须被定义</strong> ，因为Ren’Py会使用它继续按自动前进模式的时间，点击继续等。</p>
+</dd>
+<dt>“window”</dt><dd><p>一个窗口或者框架。按照习惯其包含who和what文本。character对象可以使用入参提供组件样式。</p>
+</dd>
+</dl>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">say</span><span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+
+    <span class="k">window</span> <span class="na">id</span> <span class="s2">&quot;window&quot;</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">if</span> <span class="n">who</span><span class="p">:</span>
+            <span class="k">text</span> <span class="n">who</span> <span class="na">id</span> <span class="s2">&quot;who&quot;</span>
+
+        <span class="k">text</span> <span class="n">what</span> <span class="na">id</span> <span class="s2">&quot;what&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="choice">
+<span id="choice-screen"></span><h3>Choice<a class="headerlink" href="#choice" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">choice</span></code> 界面使用menu语句显示游戏内选项。其会使用下列参数：</p>
+<dl>
+<dt><cite>items</cite></dt><dd><p>这是一个菜单入口对象列表，表示菜单中的各个选项。每个菜单入口对象包含以下的字段(field)：</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="caption">
+<span class="sig-name descname"><span class="pre">caption</span></span><a class="headerlink" href="#caption" title="Link to this definition"> link</a></dt>
+<dd><p>菜单选项标题字符串。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#action" title="Link to this definition"> link</a></dt>
+<dd><p>当菜单选项被选择时执行的行为。如果这是菜单行为(action)的话，可以为None，且
+<a class="reference internal" href="config.html#var-config.narrator_menu"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.narrator_menu</span></code></a> 的值为False。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chosen">
+<span class="sig-name descname"><span class="pre">chosen</span></span><a class="headerlink" href="#chosen" title="Link to this definition"> link</a></dt>
+<dd><p>整个游戏流程中该选项至少被选择过一次，则为True。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#args" title="Link to this definition"> link</a></dt>
+<dd><p>一个元组，包含所以传入菜单选项的固定位置入参。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kwargs">
+<span class="sig-name descname"><span class="pre">kwargs</span></span><a class="headerlink" href="#kwargs" title="Link to this definition"> link</a></dt>
+<dd><p>一个字典，包含所有传入菜单选项的关键词参数。</p>
+</dd></dl>
+
+<p>以上内容和行为，都会在menu语句接受后失效。</p>
+</dd>
+</dl>
+<p>另外，传入menu语句的所有入参都在调用对应界面时才真正执行传参。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="k">choice</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+
+    <span class="k">window</span><span class="p">:</span>
+        <span class="k">style</span> <span class="s2">&quot;menu_window&quot;</span>
+
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="k">style</span> <span class="s2">&quot;menu&quot;</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">items</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="na">action</span><span class="p">:</span>
+
+                    <span class="k">button</span><span class="p">:</span>
+                        <span class="na">action</span> <span class="n">i</span><span class="o">.</span><span class="na">action</span>
+                        <span class="k">style</span> <span class="s2">&quot;menu_choice_button&quot;</span>
+
+                        <span class="k">text</span> <span class="n">i</span><span class="o">.</span><span class="na">caption</span> <span class="k">style</span> <span class="s2">&quot;menu_choice&quot;</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">text</span> <span class="n">i</span><span class="o">.</span><span class="na">caption</span> <span class="k">style</span> <span class="s2">&quot;menu_caption&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="input">
+<span id="input-screen"></span><h3>Input<a class="headerlink" href="#input" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">input</span></code> 界面用于显示 <a class="reference internal" href="input.html#renpy.input" title="renpy.input"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.input()</span></code></a>。其使用一项参数。</p>
+<dl class="simple">
+<dt><cite>prompt</cite></dt><dd><p>应用于renpy.input的提示文本。</p>
+</dd>
+</dl>
+<p>通常使用下面的id定义一个可视组件：</p>
+<dl class="simple">
+<dt><strong>“input”</strong></dt><dd><p>一个必须存在的输入组件。其所有参数都会应用于renpy.input，所以必须存在。</p>
+</dd>
+</dl>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="nb">input</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+
+    <span class="k">window</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">text</span> <span class="n">prompt</span>
+        <span class="nb">input</span> <span class="na">id</span> <span class="s2">&quot;input&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="nvl">
+<span id="nvl-screen"></span><h3>NVL<a class="headerlink" href="#nvl" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">nvl</span></code> 界面用于显示NVL模式的对话。其使用下列参数：</p>
+<dl>
+<dt><cite>dialogue</cite></dt><dd><p>NVL层(entry)对象列表。每一个对象对应一行显示的对话。每一层(entry)都有如下的字段(field)：</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="current">
+<span class="sig-name descname"><span class="pre">current</span></span><a class="headerlink" href="#current" title="Link to this definition"> link</a></dt>
+<dd><p>若是对话的当前行则返回True。对话当前行必须必须使用名为“what”的id来显示文本。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="who">
+<span class="sig-name descname"><span class="pre">who</span></span><a class="headerlink" href="#who" title="Link to this definition"> link</a></dt>
+<dd><p>发言角色名字，如果没有对应的角色则为None。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="what">
+<span class="sig-name descname"><span class="pre">what</span></span><a class="headerlink" href="#what" title="Link to this definition"> link</a></dt>
+<dd><p>发言内容文本。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">who_id,</span> <span class="pre">what_id,</span> <span class="pre">window_id</span></span></dt>
+<dd><p>分别对应相关的层(entry)上发言者、对话和窗口的id。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">who_args,</span> <span class="pre">what_args,</span> <span class="pre">window_args</span></span></dt>
+<dd><p>发言者、对话和窗口相关的特性(property)。这些字段(field)会自动被应用，前提是上述的id被正确配置。但也可以分开配置使这些字段(field)可用。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiple">
+<span class="sig-name descname"><span class="pre">multiple</span></span><a class="headerlink" href="#multiple" title="Link to this definition"> link</a></dt>
+<dd><p>如果使用 <a class="reference internal" href="multiple.html"><span class="doc">多角色对话</span></a>，这就是个具有2个元素的元组。第一个元素是个从1开始的对话语句块(block)编号，第二个参数是multiple语句的对话语句块(block)总数。</p>
+</dd></dl>
+
+</dd>
+<dt><cite>items</cite></dt><dd><p>这是所有会用在
+<a class="reference internal" href="#choice-screen"><span class="std std-ref">选择界面</span></a> 中的item列表。如果列表是空的，则菜单就不会显示。</p>
+</dd>
+</dl>
+<p>如果 <cite>items</cite> 不存在，NVL界面通常会给出id为“what”的文本部件(widget)。Ren’Py使用这个文本不见计算自动前进模式时间、点击继续等。(如果使用默认what_id的话，就能启用自动模式。)</p>
+<p>Ren’Py 也支持 <code class="docutils literal notranslate"><span class="pre">nvl_choice</span></code> 界面，这个界面与 <code class="docutils literal notranslate"><span class="pre">nvl</span></code> 界面使用相同的参数，而且当向用户展示游戏内选项时会使用这些参数作为显示环境设定。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="k">nvl</span><span class="p">(</span><span class="n">dialogue</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">window</span><span class="p">:</span>
+        <span class="k">style</span> <span class="s2">&quot;nvl_window&quot;</span>
+
+        <span class="k">has</span> <span class="k">vbox</span><span class="p">:</span>
+            <span class="k">style</span> <span class="s2">&quot;nvl_vbox&quot;</span>
+
+        <span class="c1"># 显示对话。</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="k">in</span> <span class="n">dialogue</span><span class="p">:</span>
+            <span class="k">window</span><span class="p">:</span>
+                <span class="na">id</span> <span class="n">d</span><span class="o">.</span><span class="n">window_id</span>
+
+                <span class="k">has</span> <span class="k">hbox</span><span class="p">:</span>
+                    <span class="na">spacing</span> <span class="mi">10</span>
+
+                <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">who</span> <span class="k">is</span> <span class="k">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">text</span> <span class="n">d</span><span class="o">.</span><span class="n">who</span> <span class="na">id</span> <span class="n">d</span><span class="o">.</span><span class="n">who_id</span>
+
+                <span class="k">text</span> <span class="n">d</span><span class="o">.</span><span class="n">what</span> <span class="na">id</span> <span class="n">d</span><span class="o">.</span><span class="n">what_id</span>
+
+        <span class="c1"># 如果存在菜单就显示。</span>
+        <span class="k">if</span> <span class="n">items</span><span class="p">:</span>
+
+            <span class="k">vbox</span><span class="p">:</span>
+                <span class="na">id</span> <span class="s2">&quot;menu&quot;</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">items</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="na">action</span><span class="p">:</span>
+
+                        <span class="k">button</span><span class="p">:</span>
+                            <span class="k">style</span> <span class="s2">&quot;nvl_menu_choice_button&quot;</span>
+                            <span class="na">action</span> <span class="n">i</span><span class="o">.</span><span class="na">action</span>
+
+                            <span class="k">text</span> <span class="n">i</span><span class="o">.</span><span class="na">caption</span> <span class="k">style</span> <span class="s2">&quot;nvl_menu_choice&quot;</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+
+                        <span class="k">text</span> <span class="n">i</span><span class="o">.</span><span class="na">caption</span> <span class="k">style</span> <span class="s2">&quot;nvl_dialogue&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="notify">
+<span id="notify-screen"></span><h3>Notify<a class="headerlink" href="#notify" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">notify</span></code> 界面被 <a class="reference internal" href="other.html#renpy.notify" title="renpy.notify"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.notify()</span></code></a> 函数用于向用户显示通知消息。其主要用于连接某个transform，以处理整个通知任务。它仅使用一个参数：</p>
+<dl class="simple">
+<dt><cite>message</cite></dt><dd><p>显示的信息。</p>
+</dd>
+</dl>
+<p>默认的notify界面和关联的transform如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">notify</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">zorder</span> <span class="mi">100</span>
+
+    <span class="k">text</span> <span class="s2">&quot;[message!tq]&quot;</span> <span class="k">at</span> <span class="n">_notify_transform</span>
+
+    <span class="c1"># 这控制界面第一次显示和隐藏之间的时间。</span>
+    <span class="k">timer</span> <span class="mf">3.25</span> <span class="na">action</span> <span class="n">Hide</span><span class="p">(</span><span class="s1">&#39;notify&#39;</span><span class="p">)</span>
+
+<span class="k">transform</span> <span class="n">_notify_transform</span><span class="p">:</span>
+    <span class="c1"># 这些控制位置</span>
+    <span class="na">xalign</span> <span class="mf">.02</span> <span class="na">yalign</span> <span class="mf">.015</span>
+
+    <span class="c1"># 这些控制显示隐藏的行为。</span>
+    <span class="k">on</span> <span class="k">show</span><span class="p">:</span>
+        <span class="na">alpha</span> <span class="mi">0</span>
+        <span class="n">linear</span> <span class="mf">.25</span> <span class="na">alpha</span> <span class="mf">1.0</span>
+    <span class="k">on</span> <span class="k">hide</span><span class="p">:</span>
+        <span class="n">linear</span> <span class="mf">.5</span> <span class="na">alpha</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+</section>
+<section id="skip-indicator">
+<span id="id3"></span><h3>跳过提示<a class="headerlink" href="#skip-indicator" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">skip_indicator</span></code> 界面在“跳过”过程中出现，完成“跳过”后隐藏。其不使用任何参数。</p>
+<p>这是一个非常简单的跳过提示界面：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">skip_indicator</span><span class="p">():</span>
+
+    <span class="k">zorder</span> <span class="mi">100</span>
+
+    <span class="k">text</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Skipping&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ctc">
+<span id="ctc-screen"></span><h3>CTC(点击继续)<a class="headerlink" href="#ctc" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">ctc</span></code> 界面会在对话显示完毕，提示用户点击显示更多文本的情况下出现。其可能会使用一个参数。</p>
+<dl class="simple">
+<dt><cite>arg</cite></dt><dd><p>如果 <a class="reference internal" href="dialogue.html#Character" title="Character"><code class="xref py py-func docutils literal notranslate"><span class="pre">Character()</span></code></a> 对象有一个 <cite>ctc</cite> 入参，就会被作为第一个固定位置入参传入ctc界面。</p>
+</dd>
+</dl>
+<p>这是一个非常简单的ctc界面：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">ctc</span><span class="p">(</span><span class="n">arg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">zorder</span> <span class="mi">100</span>
+
+    <span class="k">text</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Click to Continue&quot;</span><span class="p">):</span>
+        <span class="na">size</span> <span class="mi">12</span>
+        <span class="na">xalign</span> <span class="mf">0.98</span>
+        <span class="na">yalign</span> <span class="mf">0.98</span>
+
+        <span class="k">add</span> <span class="n">arg</span>
+
+        <span class="k">text</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;点击继续&quot;</span><span class="p">):</span>
+            <span class="na">size</span> <span class="mi">12</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="out-of-game-menu-screens">
+<span id="id4"></span><h2>游戏外菜单界面<a class="headerlink" href="#out-of-game-menu-screens" title="Link to this heading"> link</a></h2>
+<p>这些是菜单界面。 <code class="docutils literal notranslate"><span class="pre">main_menu</span></code> 和 <code class="docutils literal notranslate"><span class="pre">yesno_prompt</span></code> 会被隐式调用。当用户调用游戏菜单时，名为 <code class="xref py py-data docutils literal notranslate"><span class="pre">_game_menu_screen</span></code> 的界面就会显示。(默认与 <code class="docutils literal notranslate"><span class="pre">save</span></code> 相同。)</p>
+<p>记住，菜单界面可以任意组合和修改。</p>
+<section id="main-menu">
+<span id="main-menu-screen"></span><h3>主菜单(Main Menu)<a class="headerlink" href="#main-menu" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">main_menu</span></code> 界面是游戏开始时显示的第一个界面。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">main_menu</span><span class="p">():</span>
+
+    <span class="c1"># 这步确保任何其他菜单界面都会被替换。</span>
+    <span class="k">tag</span> <span class="k">menu</span>
+
+    <span class="c1"># 主菜单背景。</span>
+    <span class="k">window</span><span class="p">:</span>
+        <span class="k">style</span> <span class="s2">&quot;mm_root&quot;</span>
+
+    <span class="c1"># 主菜单按钮。</span>
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="na">style_prefix</span> <span class="s2">&quot;mm&quot;</span>
+        <span class="na">xalign</span> <span class="mf">.98</span>
+        <span class="na">yalign</span> <span class="mf">.98</span>
+
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Start Game&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Start</span><span class="p">()</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Load Game&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;load&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Preferences&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Help&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Help</span><span class="p">()</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Quit&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Quit</span><span class="p">(</span><span class="n">confirm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">style</span> <span class="n">mm_button</span><span class="p">:</span>
+    <span class="na">size_group</span> <span class="s2">&quot;mm&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="navigation">
+<span id="navigation-screen"></span><h3>Navigation<a class="headerlink" href="#navigation" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">navigation</span></code> 界面在Ren’Py中并不特殊。但按照惯例，我们会在名为 <code class="docutils literal notranslate"><span class="pre">navigation</span></code> 的界面放置游戏菜单导航，并在那个界面导向存档、读档和环境设定界面。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">navigation</span><span class="p">():</span>
+
+    <span class="c1"># 游戏菜单背景。</span>
+    <span class="k">window</span><span class="p">:</span>
+        <span class="k">style</span> <span class="s2">&quot;gm_root&quot;</span>
+
+    <span class="c1"># 变化后的按钮。</span>
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="na">style_prefix</span> <span class="s2">&quot;gm_nav&quot;</span>
+        <span class="na">xalign</span> <span class="mf">.98</span>
+        <span class="na">yalign</span> <span class="mf">.98</span>
+
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Return&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Return</span><span class="p">()</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Preferences&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Save Game&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;save&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Load Game&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;load&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Main Menu&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">MainMenu</span><span class="p">()</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Help&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Help</span><span class="p">()</span>
+        <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Quit&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Quit</span><span class="p">()</span>
+
+<span class="k">style</span> <span class="n">gm_nav_button</span><span class="p">:</span>
+    <span class="na">size_group</span> <span class="s2">&quot;gm_nav&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="save">
+<span id="save-screen"></span><h3>Save<a class="headerlink" href="#save" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">save</span></code> 界面用于选择一个文件保存游戏进度。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">save</span><span class="p">():</span>
+
+    <span class="c1"># 这步确保任何其他菜单界面都会被替换。</span>
+    <span class="k">tag</span> <span class="k">menu</span>
+
+    <span class="k">use</span> <span class="n">navigation</span>
+
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="c1"># 最顶部的按钮允许用户选取文件的某个页面(page)。</span>
+        <span class="k">hbox</span><span class="p">:</span>
+            <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Previous&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePagePrevious</span><span class="p">()</span>
+            <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Auto&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePage</span><span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+                <span class="k">textbutton</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePage</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+            <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Next&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePageNext</span><span class="p">()</span>
+
+        <span class="c1"># 显示一个文件槽位的网格。</span>
+        <span class="k">grid</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="na">transpose</span> <span class="kc">True</span>
+            <span class="na">xfill</span> <span class="kc">True</span>
+
+            <span class="c1"># 显示10个文件槽位，编号1到10。</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+
+                <span class="c1"># 每个文件槽位都是一个按钮。</span>
+                <span class="k">button</span><span class="p">:</span>
+                    <span class="na">action</span> <span class="n">FileAction</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="na">xfill</span> <span class="kc">True</span>
+                    <span class="k">style</span> <span class="s2">&quot;large_button&quot;</span>
+
+                    <span class="k">has</span> <span class="k">hbox</span>
+
+                    <span class="c1"># 对按钮添加截屏和描述。</span>
+                    <span class="k">add</span> <span class="n">FileScreenshot</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="k">text</span> <span class="p">(</span> <span class="s2">&quot; </span><span class="si">%2d</span><span class="s2">. &quot;</span> <span class="o">%</span> <span class="n">i</span>
+                           <span class="o">+</span> <span class="n">FileTime</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Empty Slot.&quot;</span><span class="p">))</span>
+                           <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="o">+</span> <span class="n">FileSaveName</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">style</span> <span class="s2">&quot;large_button_text&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="load">
+<span id="load-screen"></span><h3>Load<a class="headerlink" href="#load" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">load</span></code> 界面用户选取一个文件加载游戏进度。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">load</span><span class="p">():</span>
+
+    <span class="c1"># 这步确保任何其他菜单界面都会被替换。</span>
+    <span class="k">tag</span> <span class="k">menu</span>
+
+    <span class="k">use</span> <span class="n">navigation</span>
+
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="c1"># 最顶部的按钮允许用户选取文件的某个页面(page)。</span>
+        <span class="k">hbox</span><span class="p">:</span>
+            <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Previous&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePagePrevious</span><span class="p">()</span>
+            <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Auto&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePage</span><span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+                <span class="k">textbutton</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePage</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+            <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Next&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">FilePageNext</span><span class="p">()</span>
+
+        <span class="c1"># 显示一个文件槽位的网格。</span>
+        <span class="k">grid</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="na">transpose</span> <span class="kc">True</span>
+            <span class="na">xfill</span> <span class="kc">True</span>
+
+            <span class="c1"># 显示10个文件槽位，编号1到10。</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+
+                <span class="c1"># 每个文件槽位都是一个按钮。</span>
+                <span class="k">button</span><span class="p">:</span>
+                    <span class="na">action</span> <span class="n">FileAction</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="na">xfill</span> <span class="kc">True</span>
+                    <span class="k">style</span> <span class="s2">&quot;large_button&quot;</span>
+
+                    <span class="k">has</span> <span class="k">hbox</span>
+
+                    <span class="c1"># 对按钮添加截屏和描述。</span>
+                    <span class="k">add</span> <span class="n">FileScreenshot</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="k">text</span> <span class="p">(</span> <span class="s2">&quot; </span><span class="si">%2d</span><span class="s2">. &quot;</span> <span class="o">%</span> <span class="n">i</span>
+                           <span class="o">+</span> <span class="n">FileTime</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Empty Slot.&quot;</span><span class="p">))</span>
+                           <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="o">+</span> <span class="n">FileSaveName</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">style</span> <span class="s2">&quot;large_button_text&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="preferences">
+<span id="preferences-screen"></span><h3>Preferences<a class="headerlink" href="#preferences" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">preference</span></code> 界面用于提供游戏显示方面的环境设定选项。</p>
+<p>环境设定主要是 <a class="reference internal" href="screen_actions.html#Preference" title="Preference"><code class="xref py py-func docutils literal notranslate"><span class="pre">Preference()</span></code></a> 返回的行为或者条(bar)值。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">preferences</span><span class="p">():</span>
+
+    <span class="k">tag</span> <span class="k">menu</span>
+
+    <span class="c1"># 包含导航。</span>
+    <span class="k">use</span> <span class="n">navigation</span>
+
+    <span class="c1"># 将每行导航放入三列宽度的网格中。</span>
+    <span class="k">grid</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="na">style_prefix</span> <span class="s2">&quot;prefs&quot;</span>
+        <span class="na">xfill</span> <span class="kc">True</span>
+
+        <span class="c1"># 左列。</span>
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Display&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Window&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;window&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Fullscreen&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;fullscreen&quot;</span><span class="p">)</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Transitions&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;All&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;transitions&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;None&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;transitions&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">)</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Text Speed&quot;</span><span class="p">)</span>
+                <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;text speed&quot;</span><span class="p">)</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Joystick...&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;joystick_preferences&quot;</span><span class="p">)</span>
+
+        <span class="k">vbox</span><span class="p">:</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Skip&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Seen Messages&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;skip&quot;</span><span class="p">,</span> <span class="s2">&quot;seen&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;All Messages&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;skip&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Begin Skipping&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Skip</span><span class="p">()</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;After Choices&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Stop Skipping&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;after choices&quot;</span><span class="p">,</span> <span class="s2">&quot;stop&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Keep Skipping&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;after choices&quot;</span><span class="p">,</span> <span class="s2">&quot;skip&quot;</span><span class="p">)</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Auto-Forward Time&quot;</span><span class="p">)</span>
+                <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;auto-forward time&quot;</span><span class="p">)</span>
+
+        <span class="k">vbox</span><span class="p">:</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Music Volume&quot;</span><span class="p">)</span>
+                <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;music volume&quot;</span><span class="p">)</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sound Volume&quot;</span><span class="p">)</span>
+                <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;sound volume&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="s2">&quot;Test&quot;</span> <span class="na">action</span> <span class="n">Play</span><span class="p">(</span><span class="s2">&quot;sound&quot;</span><span class="p">,</span> <span class="s2">&quot;sound_test.ogg&quot;</span><span class="p">)</span> <span class="k">style</span> <span class="s2">&quot;soundtest_button&quot;</span>
+
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">style_prefix</span> <span class="s2">&quot;pref&quot;</span>
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Voice Volume&quot;</span><span class="p">)</span>
+                <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;voice volume&quot;</span><span class="p">)</span>
+                <span class="k">textbutton</span> <span class="s2">&quot;Test&quot;</span> <span class="na">action</span> <span class="n">Play</span><span class="p">(</span><span class="s2">&quot;voice&quot;</span><span class="p">,</span> <span class="s2">&quot;voice_test.ogg&quot;</span><span class="p">)</span> <span class="k">style</span> <span class="s2">&quot;soundtest_button&quot;</span>
+
+<span class="k">style</span> <span class="n">pref_frame</span><span class="p">:</span>
+    <span class="na">xfill</span> <span class="kc">True</span>
+    <span class="na">xmargin</span> <span class="mi">5</span>
+    <span class="na">top_margin</span> <span class="mi">5</span>
+
+<span class="k">style</span> <span class="n">pref_vbox</span><span class="p">:</span>
+    <span class="na">xfill</span> <span class="kc">True</span>
+
+<span class="k">style</span> <span class="n">pref_button</span><span class="p">:</span>
+    <span class="na">size_group</span> <span class="s2">&quot;pref&quot;</span>
+    <span class="na">xalign</span> <span class="mf">1.0</span>
+
+<span class="k">style</span> <span class="n">pref_slider</span><span class="p">:</span>
+    <span class="na">xmaximum</span> <span class="mi">192</span>
+    <span class="na">xalign</span> <span class="mf">1.0</span>
+
+<span class="k">style</span> <span class="n">soundtest_button</span><span class="p">:</span>
+    <span class="na">xalign</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+</section>
+<section id="confirm">
+<span id="confirm-screen"></span><span id="yesno-prompt-screen"></span><h3>Confirm<a class="headerlink" href="#confirm" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">confirm</span></code> 界面用于让用户做出“yes/no”类型的选择。其使用下列参数：</p>
+<dl>
+<dt><cite>message</cite></dt><dd><p>显示给用户的信息。Ren’Py中用到的提示信息至少有以下几种：</p>
+<ul class="simple">
+<li><p>gui.ARE_YOU_SURE - “Are you sure?” 如果没有匹配到合适的信息，这项就是默认的提示信息。</p></li>
+<li><p>gui.DELETE_SAVE - “Are you sure you want to delete this save?”</p></li>
+<li><p>gui.OVERWRITE_SAVE - “Are you sure you want to overwrite your save?”</p></li>
+<li><p>gui.LOADING - “Loading will lose unsaved progress.nAre you sure you want to do this?”</p></li>
+<li><p>gui.QUIT - “Are you sure you want to quit?”</p></li>
+<li><p>gui.MAIN_MENU - “Are you sure you want to return to the mainnmenu? This will lose unsaved progress.”</p></li>
+<li><p>gui.CONTINUE - “Are you sure you want to continue where you left off?”</p></li>
+<li><p>gui.END_REPLAY - “Are you sure you want to end the replay?”</p></li>
+<li><p>gui.SLOW_SKIP = “Are you sure you want to begin skipping?”</p></li>
+<li><p>gui.FAST_SKIP_SEEN = “Are you sure you want to skip to the next choice?”</p></li>
+<li><p>gui.FAST_SKIP_UNSEEN = “Are you sure you want to skip unseen dialogue to the next choice?”</p></li>
+<li><p>UNKNOWN_TOKEN - This save was created on a different device. Maliciously constructed save files can harm your computer. Do you trust this save’s
+creator and everyone who could have changed the file?</p></li>
+<li><p>TRUST_TOKEN - Do you trust the device the save was created on? You should only choose yes if you are the device’s sole user.</p></li>
+</ul>
+<p>这些变量的值都是字符串，表示都可以使用文本组件显示。</p>
+</dd>
+<dt><cite>yes_action</cite></dt><dd><p>当用户选择“Yes”时执行的行为。</p>
+</dd>
+<dt><cite>no_action</cite></dt><dd><p>当用户选择“No”时执行的行为。</p>
+</dd>
+</dl>
+<p>直到Ren’Py的6.99.10版本为止，该界面都称之为 <code class="docutils literal notranslate"><span class="pre">yesno_prompt</span></code> 界面。如果没有出现 <code class="docutils literal notranslate"><span class="pre">confirm</span></code> 界面，就是用 <code class="docutils literal notranslate"><span class="pre">yesno_prompt</span></code> 界面替代。</p>
+<p>此界面也可以使用 <a class="reference internal" href="other.html#renpy.confirm" title="renpy.confirm"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.confirm()</span></code></a> 函数和 <a class="reference internal" href="screen_actions.html#Confirm" title="Confirm"><code class="xref py py-func docutils literal notranslate"><span class="pre">Confirm()</span></code></a> 行为唤起。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">confirm</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">yes_action</span><span class="p">,</span> <span class="n">no_action</span><span class="p">):</span>
+
+    <span class="na">modal</span> <span class="kc">True</span>
+
+    <span class="k">window</span><span class="p">:</span>
+        <span class="k">style</span> <span class="s2">&quot;gm_root&quot;</span>
+
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="na">style_prefix</span> <span class="s2">&quot;confirm&quot;</span>
+
+        <span class="na">xfill</span> <span class="kc">True</span>
+        <span class="na">xmargin</span> <span class="mi">50</span>
+        <span class="na">ypadding</span> <span class="mi">25</span>
+        <span class="na">yalign</span> <span class="mf">.25</span>
+
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="na">xfill</span> <span class="kc">True</span>
+            <span class="na">spacing</span> <span class="mi">25</span>
+
+            <span class="k">text</span> <span class="n">_</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+                <span class="na">text_align</span> <span class="mf">0.5</span>
+                <span class="na">xalign</span> <span class="mf">0.5</span>
+
+            <span class="k">hbox</span><span class="p">:</span>
+                <span class="na">spacing</span> <span class="mi">100</span>
+                <span class="na">xalign</span> <span class="mf">.5</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Yes&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">yes_action</span>
+                <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;No&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">no_action</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="screen_actions.html" class="btn btn-neutral float-left" title="界面行为(action)、值(value)和函数" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="screen_optimization.html" class="btn btn-neutral float-right" title="界面语言优化" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

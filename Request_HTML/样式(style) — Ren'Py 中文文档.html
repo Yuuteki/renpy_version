@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>样式(style) &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/style.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="样式特性(property)" href="style_properties.html" />
+    <link rel="prev" title="Live2D Cubism" href="live2d.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">样式(style)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-styles-and-style-inheritance">使用样式和样式继承</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#style-inspector">样式检查器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-styles-style-statement">定义样式：style语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python">定义样式：Python语句</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Style"><code class="docutils literal notranslate"><span class="pre">Style</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Style.clear"><code class="docutils literal notranslate"><span class="pre">Style.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Style.set_parent"><code class="docutils literal notranslate"><span class="pre">Style.set_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Style.take"><code class="docutils literal notranslate"><span class="pre">Style.take()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#indexed-styles">索引化的样式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#style-preferences">样式个性化设置</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#StylePreference"><code class="docutils literal notranslate"><span class="pre">StylePreference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renpy.get_style_preference"><code class="docutils literal notranslate"><span class="pre">renpy.get_style_preference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renpy.register_style_preference"><code class="docutils literal notranslate"><span class="pre">renpy.register_style_preference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#renpy.set_style_preference"><code class="docutils literal notranslate"><span class="pre">renpy.set_style_preference()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#other-style-functions">其他样式函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#style.rebuild"><code class="docutils literal notranslate"><span class="pre">style.rebuild()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">样式(style)</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/style.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="style">
+<span id="styles"></span><h1>样式(style)<a class="headerlink" href="#style" title="Link to this heading"> link</a></h1>
+<p>样式(style)允许定制 <a class="reference internal" href="displayables.html"><span class="doc">可视组件</span></a> 的外观。修改可视组件样式特性(property)的值可以实现这一点。例如，改变 <a class="reference internal" href="style_properties.html#style-property-background"><code class="xref std std-propref docutils literal notranslate"><span class="pre">background</span></code></a> 特性，就可以实现窗口或者按钮之类背景图的定制化。</p>
+<p>样式特性名由两部分构成，前缀部分指定了特性的使用场景，后半部分是特性本身。例如，按钮的 <code class="docutils literal notranslate"><span class="pre">hover_background</span></code> 特性的使用场景是按钮得到焦点(未被按下)，而按钮的 <code class="docutils literal notranslate"><span class="pre">idle_background</span></code> 特性的使用场景是按钮未得到焦点。(设置 <code class="docutils literal notranslate"><span class="pre">background</span></code> 特性会同时修改 <code class="docutils literal notranslate"><span class="pre">idle_background</span></code> 和 <code class="docutils literal notranslate"><span class="pre">hover_background</span></code> 等background类特性。)</p>
+<p>由于Ren’Py拥有超过100种的样式特性，本节内容只涉及其中很小一部分。除了 <code class="docutils literal notranslate"><span class="pre">background</span></code> 之外，我们还会使用 <code class="docutils literal notranslate"><span class="pre">color</span></code> 、 <code class="docutils literal notranslate"><span class="pre">font</span></code> 、 <code class="docutils literal notranslate"><span class="pre">outlines</span></code> 和 <code class="docutils literal notranslate"><span class="pre">size</span></code> 等样式特性。需要完整的样式特性列表的话，可以查看 <a class="reference internal" href="style_properties.html"><span class="doc">样式特性</span></a>
+文档。</p>
+<section id="using-styles-and-style-inheritance">
+<span id="id1"></span><h2>使用样式和样式继承<a class="headerlink" href="#using-styles-and-style-inheritance" title="Link to this heading"> link</a></h2>
+<p>每个可视组件都有内建的一个样式。无论是直接创建还是使用界面系统，某个可视组件被创建后就可以在组件上应用样式特性，并且样式生效后更新可视组件的外观。在下面的样例中：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">big</span> <span class="n">hello</span> <span class="n">world</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;Hello, World&quot;</span><span class="p">,</span> <span class="na">size</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="style_properties.html#style-property-size"><code class="xref std std-propref docutils literal notranslate"><span class="pre">size</span></code></a> 特性将应用于一个文本组件，允许我们修改文本的字号。如此定制化之后的文本组件会显示40像素高度的文本。</p>
+<p>类似的，当使用screen语言时，每个用户接口语句都使用相关的样式特性：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">big_hello_world</span><span class="p">:</span>
+    <span class="k">text</span> <span class="s2">&quot;Hello, World&quot;</span> <span class="na">size</span> <span class="mi">40</span>
+</pre></div>
+</div>
+<p>单个样式可以将多个特性组合起来，应用到可视组件上。例如，下面两个文本组件显示的内容相同：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">big</span> <span class="n">one</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;Hello, World&quot;</span><span class="p">,</span> <span class="na">size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="na">color</span><span class="o">=</span><span class="s2">&quot;#f00&quot;</span><span class="p">)</span>
+<span class="k">image</span> <span class="n">big</span> <span class="n">two</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;Hello, World&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">=</span><span class="s2">&quot;big_red&quot;</span><span class="p">)</span>
+
+<span class="k">style</span> <span class="n">big_red</span><span class="p">:</span>
+    <span class="na">size</span> <span class="mi">40</span>
+    <span class="na">color</span> <span class="s2">&quot;#f00&quot;</span>
+</pre></div>
+</div>
+<p>每个样式都有一个特性的集，每个特性集至少包含一种特性。
+当指定某个样式应用到可视组件时，(可视组件需要用到的)每个样式特性都会优先从样式的特性中尝试匹配。
+如果未匹配到，则会从父样式中再尝试搜索。如果依然未匹配到，则从父样式的父样式中尝试，以此类推。</p>
+<p>每个可视组件都使用一个名为 <code class="docutils literal notranslate"><span class="pre">style</span></code> 的特性，该特性给定了这个可视组件样式的父类。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">big</span> <span class="n">hello</span> <span class="n">world</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span>
+
+<span class="k">screen</span> <span class="n">hello_world</span><span class="p">:</span>
+    <span class="k">text</span> <span class="s2">&quot;Hello, World&quot;</span> <span class="k">style</span> <span class="s2">&quot;big&quot;</span>
+</pre></div>
+</div>
+<p>当没有给定 <code class="docutils literal notranslate"><span class="pre">style</span></code> 特性的情况下，父类会基于可视组件的应用类型进行选择。父类的选择可以被  <a class="reference internal" href="screens.html#style-prefix"><span class="std std-ref">style_prefix</span></a> 影响，样式前缀出现在界面语言用户接口语句的样式特性中。</p>
+<p>当某个样式被定义位没有指定父类，就会指定一个默认的父类。如果该样式名中包含一个下划线(_)，父类就是把下划线之前的内容移除后的结果。例如，某个样式名为 <code class="docutils literal notranslate"><span class="pre">my_button</span></code> 就继承自 <code class="docutils literal notranslate"><span class="pre">button</span></code> 。继承关系可以使用style语句或者调用某个style对象方法改变。当某种不存在的样式被使用时，并且样式名中包含一个下划线，Ren’Py会使用默认的父类创建一种样式。</p>
+<p>以下划线开头的样式名是预留给Ren’Py使用的。</p>
+<p>Ren’Py在起始阶段建立的各类样式，除了style语句或者 <a class="reference internal" href="lifecycle.html#init-phase"><span class="std std-ref">初始化阶段</span></a> 语句块(block)之外就不应该再修改已命名的样式。</p>
+</section>
+<section id="style-inspector">
+<span id="id2"></span><h2>样式检查器<a class="headerlink" href="#style-inspector" title="Link to this heading"> link</a></h2>
+<p>当 <a class="reference internal" href="config.html#var-config.developer"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.developer</span></code></a> 的值为true时，样式检查器可用于查看某个可视组件使用的样式名。</p>
+<p>若要启用样式检查器，将鼠标移动到某个可视组件上，按下键盘的shift+I。Ren’Py会在鼠标位置展现一个可视组件列表，列表中的组件按照在界面被绘制的先后顺序排列。(这表示，最后一个可视组件是在绘制在其他组件上层的。)</p>
+<p>点击样式名可以展示可视组件继承的父辈类，以及每种父辈类贡献给最终组件的每一种样式特性。</p>
+</section>
+<section id="defining-styles-style-statement">
+<span id="id3"></span><h2>定义样式：style语句<a class="headerlink" href="#defining-styles-style-statement" title="Link to this heading"> link</a></h2>
+<p>更好的定义样式方法是使用style语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="n">my_text</span> <span class="k">is</span> <span class="k">text</span><span class="p">:</span>
+    <span class="na">size</span> <span class="mi">40</span>
+    <span class="na">font</span> <span class="s2">&quot;gentium.ttf&quot;</span>
+</pre></div>
+</div>
+<p>如果某种样式名不存在，style语句就会创建那种样式。相反，style语句会修改已存在的样式。</p>
+<p>style语句一关键词 <code class="docutils literal notranslate"><span class="pre">style</span></code> 开头，后接需要定义的样式名。style语句第一行后面可以跟0个或多个分句，以及一个可选用的英文冒号(:)。</p>
+<p>如果出现了英文冒号，下面必然有一个语句块(block)。语句块中每一行都包含一个或多个分句。如果style语句第一行没有冒号，整个语句就是完整的。</p>
+<p>style语句接受使用以下分句：</p>
+<dl class="simple">
+<dt><cite>style-property</cite> <cite>simple-expression</cite></dt><dd><p>声明的简单表达式的值，会赋值给样式特性。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">is</span></code> <cite>parent</cite></dt><dd><p>设置该样式的父类。 <em>parent</em> 是一个样式名。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">clear</span></code></dt><dd><p>在style语句运行前，移除声明的样式所有特性。这个功能对继承自父类的特性值无效。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">take</span></code> <cite>style-name</cite></dt><dd><p>在style语句运行前，移除声明的样式所有特性，并替换为 <em>style-name</em> 样式的特性。这个功能不会修改样式的父类。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">variant</span></code> <cite>simple-expression</cite></dt><dd><p>计算 <em>simple-expression</em> 这个简单表达式，生成一个字符串或者字符串列表，详见 <a class="reference internal" href="screens.html#screen-variants"><span class="std std-ref">界面变种</span></a>。 如果给定的界面变形之一是激活状态，style语句会执行，否则会被忽略。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">properties</span></code> <cite>simple-expression</cite></dt><dd><p>计算 <em>simple-expression</em> 这个简单表达式，得到一个字典型数据。该字段能用于将样式特性名映射到具体的值，而这些值被声明为向style语句提供特性值。</p>
+</dd>
+</dl>
+<p>style语句的样例如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 创建一个新的样式，使用默认(default)继承。</span>
+<span class="k">style</span> <span class="n">big_red</span><span class="p">:</span>
+    <span class="na">size</span> <span class="mi">40</span>
+
+<span class="c1"># 更新样式。</span>
+<span class="k">style</span> <span class="n">big_red</span> <span class="na">color</span> <span class="s2">&quot;#f00&quot;</span>
+
+<span class="c1"># 名为label_text的样式使用big_red的特性，</span>
+<span class="c1"># 前提是我们使用触控(touch)系统。</span>
+
+<span class="k">style</span> <span class="n">label_text</span><span class="p">:</span>
+    <span class="na">variant</span> <span class="s2">&quot;touch&quot;</span>
+    <span class="k">take</span> <span class="n">big_red</span>
+</pre></div>
+</div>
+<p>style语句通常都在初始化阶段运行。如果某个style语句没有放在初始化语句块中，其被会自动移动被初始化init 0语句块中。</p>
+</section>
+<section id="python">
+<span id="defining-styles-python"></span><h2>定义样式：Python语句<a class="headerlink" href="#python" title="Link to this heading"> link</a></h2>
+<p>在全局 <code class="docutils literal notranslate"><span class="pre">style</span></code> 对象中作为作用域存在着一些命名过的样式。需要创建一种新样式时，就创建一个Style类的实例，并在 <code class="docutils literal notranslate"><span class="pre">style</span></code> 对象的某个作用域中声明该样式。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+     <span class="k">style</span><span class="o">.</span><span class="n">big_red</span> <span class="o">=</span> <span class="n">Style</span><span class="p">(</span><span class="k">style</span><span class="o">.</span><span class="k">default</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>样式特性可以通过在类似于Style对象作用域的特性中声明。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+     <span class="k">style</span><span class="o">.</span><span class="n">big_red</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="s2">&quot;#f00&quot;</span>
+     <span class="k">style</span><span class="o">.</span><span class="n">big_red</span><span class="o">.</span><span class="na">size</span> <span class="o">=</span> <span class="mi">42</span>
+</pre></div>
+</div>
+<p>但是样式特性的值不能通过这种方式读取，只能被写入。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Style">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Style</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Style" title="Link to this definition"> link</a></dt>
+<dd><dl class="simple">
+<dt><cite>parent</cite></dt><dd><p>样式父类。可以是另一个样式对象，或者一个字符串。</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Style.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Style.clear" title="Link to this definition"> link</a></dt>
+<dd><p>该函数移除样式对象的所有样式特性。对象父辈继承的值不会变。</p>
+<p>等效于样式语句中的 <code class="docutils literal notranslate"><span class="pre">clear</span></code> 从句。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Style.set_parent">
+<span class="sig-name descname"><span class="pre">set_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Style.set_parent" title="Link to this definition"> link</a></dt>
+<dd><p>将样式对象的父类设置为 <code class="docutils literal notranslate"><span class="pre">parent</span></code> 。</p>
+<p>等效于样式语句中的 <code class="docutils literal notranslate"><span class="pre">is</span></code> 从句。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Style.take">
+<span class="sig-name descname"><span class="pre">take</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Style.take" title="Link to this definition"> link</a></dt>
+<dd><p>使用 <code class="docutils literal notranslate"><span class="pre">other</span></code> 的所有样式特性。 <code class="docutils literal notranslate"><span class="pre">other</span></code> 必须是一个样式对象。</p>
+<p>等效于样式语句中的 <code class="docutils literal notranslate"><span class="pre">take</span></code> 从句。</p>
+</dd></dl>
+
+</dd></dl>
+
+<section id="indexed-styles">
+<span id="id4"></span><h3>索引化的样式<a class="headerlink" href="#indexed-styles" title="Link to this heading"> link</a></h3>
+<p>索引化的样式是一些轻量级样式，可基于可视组件的数据定制化组件的外观。通过使用一个字符串或者整数为某个样式对象提供索引，可以创建索引化的样式。如果某个索引化样式不存在，索引系统会创建一个原来样式对象的子样式。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">style</span><span class="o">.</span><span class="k">button</span><span class="p">[</span><span class="s2">&quot;Foo&quot;</span><span class="p">]</span><span class="o">.</span><span class="na">background</span> <span class="o">=</span> <span class="s2">&quot;#f00&quot;</span>
+    <span class="k">style</span><span class="o">.</span><span class="k">button</span><span class="p">[</span><span class="s2">&quot;Bar&quot;</span><span class="p">]</span><span class="o">.</span><span class="na">background</span> <span class="o">=</span> <span class="s2">&quot;#00f&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">indexed_style_test</span><span class="p">:</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Foo&quot;</span> <span class="k">style</span> <span class="k">style</span><span class="o">.</span><span class="k">button</span><span class="p">[</span><span class="s2">&quot;Foo&quot;</span><span class="p">]</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Bar&quot;</span> <span class="k">style</span> <span class="k">style</span><span class="o">.</span><span class="k">button</span><span class="p">[</span><span class="s2">&quot;Bar&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="style-preferences">
+<span id="id5"></span><h3>样式个性化设置<a class="headerlink" href="#style-preferences" title="Link to this heading"> link</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="gui_advanced.html#gui-preferences"><span class="std std-ref">GUI环境设定设置</span></a> ( GUI的个性化设置 )可能是实现同样目标的更高方式，因为GUI个性化可以改变某一个参数并用到多个样式上。</p>
+</div>
+<p>用户总是有自己调整用于界面各种特性的需求，在样式方面尤其突出。例如，创作者可能想要让玩家能自己调整文本的文本外观、颜色及字体大小。样式个性化允许这样的定制化操作。</p>
+<p>样式个性化可以控制一个或者多个样式的特性(property)。样式个性化拥有一个名字及一个或多个可选项。被选中的选项会保存在持久化数据中，第一个可选项会注册为样式特性的默认项。</p>
+<p>一个可选项会有一个或多个关联样式、特性和变量值，并保证选中的选项和给定的特性值会被应用于样式。Ren’Py首次初始化就会实现这点，并在任何新选项被选中时都会生效。</p>
+<p>创作者应该确认每个选项作用于相同的样式特性集。否则，某些样式中没有声明的变量，会导致不可预料的结果。</p>
+<p>下面的例子中，注册了一个样式特性，允许用户选择大号字体、简单文本和小一些带轮廓线的问被。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="c1"># “text”设置项中的“decorated”会将样式中的say_dialogue特性代表的字号设置为22。</span>
+
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;decorated&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;decorated&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;outlines&quot;</span><span class="p">,</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;#000&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">])</span>
+
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;outlines&quot;</span><span class="p">,</span> <span class="p">[</span> <span class="p">])</span>
+
+    <span class="c1"># 注册之后“decorated”就会成为“text”设置项中的默认样式。</span>
+</pre></div>
+</div>
+<p>下面的代码定义按钮，用户可以点击按钮启用不同的样式：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">textbutton</span> <span class="s2">&quot;Decorated&quot;</span> <span class="na">action</span> <span class="n">StylePreference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;decorated&quot;</span><span class="p">)</span>
+<span class="k">textbutton</span> <span class="s2">&quot;Large&quot;</span> <span class="na">action</span> <span class="n">StylePreference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>样式个性化函数如下：</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="StylePreference">
+<span class="sig-name descname"><span class="pre">StylePreference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#StylePreference" title="Link to this definition"> link</a></dt>
+<dd><p>给定样式特性，将 <code class="docutils literal notranslate"><span class="pre">alternative</span></code> 设置为被选择的选项。</p>
+<dl class="simple">
+<dt><cite>preference</cite></dt><dd><p>给定样式个性化名称的字符串。</p>
+</dd>
+<dt><cite>alternative</cite></dt><dd><p>给定选项名称的字符串。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.get_style_preference">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">get_style_preference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preference</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.get_style_preference" title="Link to this definition"> link</a></dt>
+<dd><p>通过给定了个性化名称返回对应被选中的选项名称字符串。</p>
+<dl class="simple">
+<dt><cite>preference</cite></dt><dd><p>给定样式个性化名称的字符串。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.register_style_preference">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">register_style_preference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.register_style_preference" title="Link to this definition"> link</a></dt>
+<dd><blockquote>
+<div><p>注册某个选项对应的样式个性化信息。</p>
+</div></blockquote>
+<dl>
+<dt><cite>preference</cite></dt><dd><p>样式个性化名称字符串。</p>
+<dl class="simple">
+<dt><cite>alternative</cite></dt><dd><p>选项名称字符串。</p>
+</dd>
+<dt><cite>style</cite></dt><dd><p>待更新的样式名。可以是样式对象，或者样式名称的字符串。</p>
+</dd>
+<dt><cite>property</cite></dt><dd><p>待更新样式特性名称的字符串。</p>
+</dd>
+<dt><cite>value</cite></dt><dd><p>赋值给样式特性的值。</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.set_style_preference">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">set_style_preference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.set_style_preference" title="Link to this definition"> link</a></dt>
+<dd><p>将选中的选项设置为样式个性化。</p>
+<dl class="simple">
+<dt><cite>preference</cite></dt><dd><p>样式个性化名称的字符串。</p>
+</dd>
+<dt><cite>alternative</cite></dt><dd><p>选项名称的字符串。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>以下是一个样例，注册了一个样式特性，允许用户在大号简单文本和小号带轮廓线文本之间自由选择。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;decorated&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;outlines&quot;</span><span class="p">,</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;#000&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">])</span>
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;decorated&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;outlines&quot;</span><span class="p">,</span> <span class="p">[</span> <span class="p">])</span>
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_style_preference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="k">style</span><span class="o">.</span><span class="n">say_dialogue</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>下面这段代码允许用户使用按钮进行选择：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">textbutton</span> <span class="s2">&quot;Decorated&quot;</span> <span class="na">action</span> <span class="n">StylePreference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;decorated&quot;</span><span class="p">)</span>
+<span class="k">textbutton</span> <span class="s2">&quot;Large&quot;</span> <span class="na">action</span> <span class="n">StylePreference</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="other-style-functions">
+<span id="id6"></span><h3>其他样式函数<a class="headerlink" href="#other-style-functions" title="Link to this heading"> link</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="style.rebuild">
+<span class="sig-prename descclassname"><span class="pre">style.</span></span><span class="sig-name descname"><span class="pre">rebuild</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#style.rebuild" title="Link to this definition"> link</a></dt>
+<dd><p>该函数触发已命名的样式重建，允许初始化阶段之后的样式变更。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>已命名的样式不会作为游戏存档的一部分被保存。这意味着存档和读档过程的数据不能保持一致。</p>
+</div>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="live2d.html" class="btn btn-neutral float-left" title="Live2D Cubism" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="style_properties.html" class="btn btn-neutral float-right" title="样式特性(property)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

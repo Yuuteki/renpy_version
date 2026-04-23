@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>存储区配置项 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/store_variables.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="定制鼠标光标" href="mouse.html" />
+    <link rel="prev" title="环境设定配置" href="preferences.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">存储区配置项</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/store_variables.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="store-variables">
+<span id="id1"></span><h1>存储区配置项<a class="headerlink" href="#store-variables" title="Link to this heading"> link</a></h1>
+<p>Ren’Py有一些存储区配置项，控制存储区的功能。存储区配置项可以随时改变。如果在游戏启动后某个存储区配置项发生改变，配置项值会通过存档系统保存和读取，在发生回滚操作时也跟着回滚。</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-adv">
+<span class="sig-name descname"><span class="pre">adv</span></span> <span class="pre">=</span> <span class="pre">Character(...)</span><a class="headerlink" href="#var-adv" title="Link to this definition"> link</a></dt>
+<dd><p>这是一个ADV模式的模板角色，也是调用 <a class="reference internal" href="dialogue.html#Character" title="Character"><code class="xref py py-func docutils literal notranslate"><span class="pre">Character()</span></code></a> 时产生的默认角色类型。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_autosave">
+<span class="sig-name descname"><span class="pre">_autosave</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_autosave" title="Link to this definition"> link</a></dt>
+<dd><p>该项设置为False可以禁用自动保存。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_confirm_quit">
+<span class="sig-name descname"><span class="pre">_confirm_quit</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_confirm_quit" title="Link to this definition"> link</a></dt>
+<dd><p>这项决定了退出游戏时是否需要确认。在splashscreeen上这个值是False，在主菜单则会被忽略。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_constant">
+<span class="sig-name descname"><span class="pre">_constant</span></span><a class="headerlink" href="#var-_constant" title="Link to this definition"> link</a></dt>
+<dd><p>某存储区中该项设置为True时，表示该存储区为常量存储区。
+详见 <a class="reference internal" href="python.html#constant-stores"><span class="std std-ref">常量存储区</span></a>。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-default_mouse">
+<span class="sig-name descname"><span class="pre">default_mouse</span></span><a class="headerlink" href="#var-default_mouse" title="Link to this definition"> link</a></dt>
+<dd><p>该项默认不做定义。如果定义该项，并且 <a class="reference internal" href="config.html#var-config.mouse"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.mouse</span></code></a> 有设置过，而且游戏启动后在 config.mouse 中没有找到对应的图片资源，该项将作为鼠标光标图片的默认值。
+该项被用于 <a class="reference internal" href="config.html#var-config.mouse"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.mouse</span></code></a> 和 <a class="reference internal" href="mouse.html#MouseDisplayable" title="MouseDisplayable"><code class="xref py py-func docutils literal notranslate"><span class="pre">MouseDisplayable()</span></code></a>。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_dismiss_pause">
+<span class="sig-name descname"><span class="pre">_dismiss_pause</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_dismiss_pause" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，用户可以跳过暂停和转场(transition)。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_game_menu_screen">
+<span class="sig-name descname"><span class="pre">_game_menu_screen</span></span> <span class="pre">=</span> <span class="pre">&quot;save&quot;</span><a class="headerlink" href="#var-_game_menu_screen" title="Link to this definition"> link</a></dt>
+<dd><p>这项配置的是一个界面名，当进入游戏菜单而没有指定界面时，就会显示这个界面。(例如，右键点击、按下Esc键、不带入参调用 <a class="reference internal" href="screen_actions.html#ShowMenu" title="ShowMenu"><code class="xref py py-func docutils literal notranslate"><span class="pre">ShowMenu()</span></code></a> 等。)若为None，则禁止进入游戏菜单。</p>
+<p>在splashscreeen启动阶段，这项会设置为None。直到splashscreen结束后会恢复为原来的值。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_greedy_rollback">
+<span class="sig-name descname"><span class="pre">_greedy_rollback</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_greedy_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>该项决定读档后是否允许“贪婪回滚”。“贪婪回滚”可以直接回到上一条带互动的语句，而不仅仅是存档位置的上一条语句。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_history">
+<span class="sig-name descname"><span class="pre">_history</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_history" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，Ren’Py会在显示一行对话后，将其记录在对话历史中。(注意， <code class="xref std std-var docutils literal notranslate"><span class="pre">config.history_list_length</span></code> 也需要同时设置。)</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_history_list">
+<span class="sig-name descname"><span class="pre">_history_list</span></span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">]</span><a class="headerlink" href="#var-_history_list" title="Link to this definition"> link</a></dt>
+<dd><p>这是一个历史对象列表，分别对应从历史记录中从最早到最新的每一行。详见 <a class="reference internal" href="history.html"><span class="doc">历史记录</span></a> 章节内容。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_ignore_action">
+<span class="sig-name descname"><span class="pre">_ignore_action</span></span> <span class="pre">=</span> <span class="pre">None</span><a class="headerlink" href="#var-_ignore_action" title="Link to this definition"> link</a></dt>
+<dd><p>当这项不为None时，表示在错误处理界面点击忽略(ignore)时运行的行为(action)。这个行为通常是 <a class="reference internal" href="screen_actions.html#Jump" title="Jump"><code class="xref py py-func docutils literal notranslate"><span class="pre">Jump()</span></code></a>，跳转到游戏中能从错误中恢复的某个地方。若为None，主控流程会从下一个Ren’Py语句继续执行。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-main_menu">
+<span class="sig-name descname"><span class="pre">main_menu</span></span> <span class="pre">=</span> <span class="pre">False</span><a class="headerlink" href="#var-main_menu" title="Link to this definition"> link</a></dt>
+<dd><p>当处于主菜单时，Ren’Py会把这项设置为True。这项可以用来处于主菜单时显示的界面有所差异。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_menu">
+<span class="sig-name descname"><span class="pre">_menu</span></span> <span class="pre">=</span> <span class="pre">False</span><a class="headerlink" href="#var-_menu" title="Link to this definition"> link</a></dt>
+<dd><p>当进入一个主菜单或者游戏菜单上下文(context)时，Ren’Py会将这项设置为True。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-menu">
+<span class="sig-name descname"><span class="pre">menu</span></span> <span class="pre">=</span> <span class="pre">renpy.display_menu</span><a class="headerlink" href="#var-menu" title="Link to this definition"> link</a></dt>
+<dd><p>调用时显示游戏内菜单的函数。这个函数应使用与 <a class="reference internal" href="statement_equivalents.html#renpy.display_menu" title="renpy.display_menu"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.display_menu()</span></code></a> 相同的入参。声明为 <a class="reference internal" href="nvl_mode.html#nvl_menu" title="nvl_menu"><code class="xref py py-func docutils literal notranslate"><span class="pre">nvl_menu()</span></code></a> 就会显示nvl模式菜单。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-mouse_visible">
+<span class="sig-name descname"><span class="pre">mouse_visible</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-mouse_visible" title="Link to this definition"> link</a></dt>
+<dd><p>控制鼠标指针是否可见。当进入一个标准游戏菜单时，这项会被自动设置为True。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-name_only">
+<span class="sig-name descname"><span class="pre">name_only</span></span> <span class="pre">=</span> <span class="pre">Character(...)</span><a class="headerlink" href="#var-name_only" title="Link to this definition"> link</a></dt>
+<dd><p>当某个say语句中的一个字符串作为一个角色名称时，这项就是创建的模板角色。这条语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;Eileen&quot;</span> <span class="s2">&quot;Hello, world.&quot;</span>
+</pre></div>
+</div>
+<p>等效于：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">temp_char</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;Eileen&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">name_only</span><span class="p">)</span>
+<span class="n">temp_char</span> <span class="s2">&quot;Hello, world.&quot;</span>
+</pre></div>
+</div>
+<p>除非 temp_char 变量没有使用。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-narrator">
+<span class="sig-name descname"><span class="pre">narrator</span></span> <span class="pre">=</span> <span class="pre">Character(...)</span><a class="headerlink" href="#var-narrator" title="Link to this definition"> link</a></dt>
+<dd><p>旁白角色(say语句中不需要给定角色名)。这条语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;Hello, world.&quot;</span>
+</pre></div>
+</div>
+<p>等效于：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">narrator</span> <span class="s2">&quot;Hello, world.&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_rollback">
+<span class="sig-name descname"><span class="pre">_rollback</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>控制是否允许回滚。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-say">
+<span class="sig-name descname"><span class="pre">say</span></span> <span class="pre">:</span> <span class="pre">Callable</span><a class="headerlink" href="#var-say" title="Link to this definition"> link</a></dt>
+<dd><p>Ren’Py显示对话时调用的函数，可以使用一个字符串代替角色对象：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;Eileen&quot;</span><span class="p">,</span> <span class="n">who_color</span><span class="o">=</span><span class="s2">&quot;#0f0&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="s2">&quot;Eileen&quot;</span> <span class="s2">&quot;My name is Eileen.&quot;</span> <span class="c1"># 这条会调用say函数</span>
+    <span class="n">e</span> <span class="s2">&quot;I like trains !&quot;</span> <span class="c1"># 这条不会调用say函数</span>
+</pre></div>
+</div>
+<p>该函数与 <a class="reference internal" href="statement_equivalents.html#renpy.say" title="renpy.say"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.say()</span></code></a> 具有相同签名。并且不能调用 <a class="reference internal" href="statement_equivalents.html#renpy.say" title="renpy.say"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.say()</span></code></a>，
+而应该使用其他 <a class="reference internal" href="statement_equivalents.html"><span class="doc">say语句等效</span></a>。</p>
+<p>直接调用这个函数的情况很稀少，因为我们可以使用对话方便地调用一个角色。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-save_name">
+<span class="sig-name descname"><span class="pre">save_name</span></span> <span class="pre">=</span> <span class="pre">&quot;&quot;</span><a class="headerlink" href="#var-save_name" title="Link to this definition"> link</a></dt>
+<dd><p>在存档中使用的名称。如果 <a class="reference internal" href="achievement.html#var-config.automatic_steam_timeline"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.automatic_steam_timeline</span></code></a> 为True，该项还会用于Steam时间线，建议用作章节名称。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_scene_show_hide_transition">
+<span class="sig-name descname"><span class="pre">_scene_show_hide_transition</span></span> <span class="pre">=</span> <span class="pre">None</span><a class="headerlink" href="#var-_scene_show_hide_transition" title="Link to this definition"> link</a></dt>
+<dd><p>若该项不是None，则遇到不带with从句的scene、show和hide语句时，将自动使用该项作为转场。</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="transitions.html#scene-show-hide-transition"><span class="std std-ref">在scene、show和hide语句后自动应用转场</span></a></p>
+</div>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_screenshot_pattern">
+<span class="sig-name descname"><span class="pre">_screenshot_pattern</span></span> <span class="pre">=</span> <span class="pre">None</span><a class="headerlink" href="#var-_screenshot_pattern" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，该项是一个字符串，用于设置 <a class="reference internal" href="config.html#var-config.screenshot_pattern"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.screenshot_pattern</span></code></a> 决定截屏文件名的规则。
+详见文档中 <a class="reference internal" href="config.html#var-config.screenshot_pattern"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.screenshot_pattern</span></code></a> 的部分。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_skipping">
+<span class="sig-name descname"><span class="pre">_skipping</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_skipping" title="Link to this definition"> link</a></dt>
+<dd><p>控制是否允许跳过(skipping)。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_window">
+<span class="sig-name descname"><span class="pre">_window</span></span> <span class="pre">=</span> <span class="pre">False</span><a class="headerlink" href="#var-_window" title="Link to this definition"> link</a></dt>
+<dd><p>该项通过 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">show</span></code> 和 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">hide</span></code> 语句设置，也可以通过 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">auto</span></code> 语句间接设置。若为True，对话窗口在非对话型居于中依然显示。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_window_auto">
+<span class="sig-name descname"><span class="pre">_window_auto</span></span> <span class="pre">=</span> <span class="pre">False</span><a class="headerlink" href="#var-_window_auto" title="Link to this definition"> link</a></dt>
+<dd><p>该项会被 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">auto</span></code> 语句设置为True，被 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">show</span></code> 和 <code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">hide</span></code> 语句设置为False。若为True，窗口显示调整为自动检测。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_window_subtitle">
+<span class="sig-name descname"><span class="pre">_window_subtitle</span></span> <span class="pre">=</span> <span class="pre">''</span><a class="headerlink" href="#var-_window_subtitle" title="Link to this definition"> link</a></dt>
+<dd><p>这项会添加到 <a class="reference internal" href="config.html#var-config.window_title"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.window_title</span></code></a> 作为游戏窗口的标题。在游戏菜单内，这项会自动设置为 <a class="reference internal" href="config.html#var-config.menu_window_subtitle"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.menu_window_subtitle</span></code></a> 的值。</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="preferences.html" class="btn btn-neutral float-left" title="环境设定配置" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mouse.html" class="btn btn-neutral float-right" title="定制鼠标光标" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

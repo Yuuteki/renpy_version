@@ -202,6 +202,14 @@ const imageNodeAtPresetChipsEl = document.getElementById("imageNodeAtPresetChips
 const imageNodeAliasInput = document.getElementById("imageNodeAliasInput");
 const imageNodeBehindInput = document.getElementById("imageNodeBehindInput");
 const imageNodeZorderInput = document.getElementById("imageNodeZorderInput");
+const imageNodeLive2DFieldsEl = document.getElementById("imageNodeLive2DFields");
+const imageNodeLive2DHelpEl = document.getElementById("imageNodeLive2DHelp");
+const imageNodeLive2DMotionInput = document.getElementById("imageNodeLive2DMotionInput");
+const imageNodeLive2DExpressionInput = document.getElementById("imageNodeLive2DExpressionInput");
+const imageNodeLive2DNonexclusiveListEl = document.getElementById("imageNodeLive2DNonexclusiveList");
+const imageNodeLive2DRemovalListEl = document.getElementById("imageNodeLive2DRemovalList");
+const imageNodeLive2DStillInput = document.getElementById("imageNodeLive2DStillInput");
+const imageNodeLive2DAdditionalInput = document.getElementById("imageNodeLive2DAdditionalInput");
 const imageNodeLayeredFieldsEl = document.getElementById("imageNodeLayeredFields");
 const imageNodeLayeredHelpEl = document.getElementById("imageNodeLayeredHelp");
 const imageNodeLayeredGroupListEl = document.getElementById("imageNodeLayeredGroupList");
@@ -1008,6 +1016,12 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
       imageAlias: node.imageAlias || "",
       imageBehind: node.imageBehind || "",
       imageZorder: node.imageZorder || "",
+      imageLive2DMotion: `${node.imageLive2DMotion || ""}`.trim(),
+      imageLive2DExpression: `${node.imageLive2DExpression || ""}`.trim(),
+      imageLive2DNonexclusive: normalizeLive2DAttributeSelectionList(node.imageLive2DNonexclusive),
+      imageLive2DRemovals: normalizeLive2DAttributeSelectionList(node.imageLive2DRemovals),
+      imageLive2DStill: Boolean(node.imageLive2DStill),
+      imageLive2DAdditionalAttributes: `${node.imageLive2DAdditionalAttributes || ""}`.trim(),
       imageLayeredSelections: normalizeImageNodeLayeredSelectionState(node.imageLayeredSelections),
     };
   }
@@ -2347,6 +2361,30 @@ function getImageNodeName(node) {
   return (node.imageName || "").trim();
 }
 
+function normalizeLive2DAttributeSelectionList(rawValue) {
+  const sourceValues = Array.isArray(rawValue)
+    ? rawValue
+    : typeof rawValue === "string"
+      ? splitLive2DList(rawValue)
+      : [];
+
+  return sourceValues
+    .map((value) => `${value || ""}`.trim())
+    .filter(Boolean)
+    .filter((value, index, source) => source.indexOf(value) === index);
+}
+
+function getImageNodeLive2DState(node) {
+  return {
+    motion: `${node?.imageLive2DMotion || ""}`.trim(),
+    expression: `${node?.imageLive2DExpression || ""}`.trim(),
+    nonexclusive: normalizeLive2DAttributeSelectionList(node?.imageLive2DNonexclusive),
+    removals: normalizeLive2DAttributeSelectionList(node?.imageLive2DRemovals),
+    still: Boolean(node?.imageLive2DStill),
+    additionalAttributes: `${node?.imageLive2DAdditionalAttributes || ""}`.trim(),
+  };
+}
+
 function normalizeImageNodeLayeredSelectionState(rawSelections) {
   if (!rawSelections || typeof rawSelections !== "object" || Array.isArray(rawSelections)) {
     return {};
@@ -2471,6 +2509,78 @@ function getImageNodeLayeredAttributeNames(node, imageDefinition = null) {
   return attributeNames;
 }
 
+function getLive2DDefinitionMotionOptions(definition) {
+  return splitLive2DList(definition?.motions);
+}
+
+function getLive2DDefinitionExpressionOptions(definition) {
+  const options = splitLive2DList(definition?.expressions);
+
+  if (!options.includes("null")) {
+    options.unshift("null");
+  }
+
+  return options.filter((value, index, source) => source.indexOf(value) === index);
+}
+
+function getLive2DDefinitionNonexclusiveOptions(definition) {
+  return splitLive2DList(definition?.nonexclusive);
+}
+
+function getLive2DDefinitionAliasKeys(definition) {
+  return parseLive2DAliases(definition?.aliases)
+    .map(([aliasKey]) => aliasKey)
+    .filter((value, index, source) => source.indexOf(value) === index);
+}
+
+function getImageNodeLive2DAttributeTokens(node, definition = null) {
+  const selectedDefinition = definition || getLive2DDefinitionById(node?.imageDefinitionId || "");
+
+  if (!selectedDefinition) {
+    return [];
+  }
+
+  const live2dState = getImageNodeLive2DState(node);
+  const tokens = [];
+
+  if (live2dState.motion) {
+    tokens.push(live2dState.motion);
+  }
+
+  if (live2dState.expression) {
+    tokens.push(live2dState.expression);
+  }
+
+  tokens.push(...live2dState.nonexclusive);
+
+  if (live2dState.still) {
+    tokens.push("still");
+  }
+
+  tokens.push(...live2dState.removals.map((attribute) => `-${attribute}`));
+  tokens.push(...splitLive2DList(live2dState.additionalAttributes));
+
+  return tokens.filter((value, index, source) => source.indexOf(value) === index);
+}
+
+function getImageNodeResourceAttributeTokens(node, resource = null) {
+  const selectedResource = resource || getVisualResourceById(node?.imageDefinitionId || "");
+
+  if (!selectedResource) {
+    return [];
+  }
+
+  if (getVisualResourceKind(selectedResource) === "live2d") {
+    return getImageNodeLive2DAttributeTokens(node, selectedResource);
+  }
+
+  if (getImageDefinitionType(selectedResource) === "layered") {
+    return getImageNodeLayeredAttributeNames(node, selectedResource);
+  }
+
+  return [];
+}
+
 function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   if (!selectEl) {
     return;
@@ -2523,6 +2633,44 @@ function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   }
 
   selectEl.value = "";
+}
+
+function populateInspectorSelectWithOptionalLegacy(selectEl, options, {
+  placeholderText,
+  value = "",
+} = {}) {
+  if (!selectEl) {
+    return;
+  }
+
+  const normalizedOptions = options
+    .map((option) => `${option || ""}`.trim())
+    .filter(Boolean)
+    .filter((option, index, source) => source.indexOf(option) === index);
+  const normalizedValue = `${value || ""}`.trim();
+
+  selectEl.innerHTML = "";
+
+  const placeholderOption = document.createElement("option");
+  placeholderOption.value = "";
+  placeholderOption.textContent = placeholderText;
+  selectEl.appendChild(placeholderOption);
+
+  if (normalizedValue && !normalizedOptions.includes(normalizedValue)) {
+    const missingOption = document.createElement("option");
+    missingOption.value = normalizedValue;
+    missingOption.textContent = `Current / Missing: ${normalizedValue}`;
+    selectEl.appendChild(missingOption);
+  }
+
+  normalizedOptions.forEach((optionValue) => {
+    const option = document.createElement("option");
+    option.value = optionValue;
+    option.textContent = optionValue;
+    selectEl.appendChild(option);
+  });
+
+  selectEl.value = normalizedValue || "";
 }
 
 function renderImageNodeAtOptions() {
@@ -2620,6 +2768,116 @@ function renderImageNodeLayeredInspector(node) {
       </div>
     `;
   }).join("");
+}
+
+function renderImageNodeLive2DInspector(node) {
+  if (
+    !imageNodeLive2DFieldsEl
+    || !imageNodeLive2DHelpEl
+    || !imageNodeLive2DMotionInput
+    || !imageNodeLive2DExpressionInput
+    || !imageNodeLive2DNonexclusiveListEl
+    || !imageNodeLive2DRemovalListEl
+    || !imageNodeLive2DStillInput
+    || !imageNodeLive2DAdditionalInput
+  ) {
+    return;
+  }
+
+  const definition = getLive2DDefinitionById(node?.imageDefinitionId || "");
+  const shouldShow = Boolean(
+    node
+    && node.type === "image"
+    && getImageNodeMode(node) !== "hide"
+    && definition,
+  );
+
+  imageNodeLive2DFieldsEl.classList.toggle("hidden", !shouldShow);
+
+  if (!shouldShow) {
+    imageNodeLive2DHelpEl.textContent = "";
+    imageNodeLive2DMotionInput.innerHTML = '<option value="">No explicit motion</option>';
+    imageNodeLive2DExpressionInput.innerHTML = '<option value="">Use default expression</option>';
+    imageNodeLive2DNonexclusiveListEl.innerHTML = "";
+    imageNodeLive2DRemovalListEl.innerHTML = "";
+    imageNodeLive2DStillInput.checked = false;
+    imageNodeLive2DAdditionalInput.value = "";
+    return;
+  }
+
+  const live2dState = getImageNodeLive2DState(node);
+  const motionOptions = getLive2DDefinitionMotionOptions(definition);
+  const expressionOptions = getLive2DDefinitionExpressionOptions(definition);
+  const nonexclusiveOptions = getLive2DDefinitionNonexclusiveOptions(definition);
+  const aliasKeys = getLive2DDefinitionAliasKeys(definition);
+  const aliasPreview = aliasKeys.slice(0, 4).join(", ");
+
+  imageNodeLive2DHelpEl.textContent = aliasPreview
+    ? `Choose the explicit motion and expression for this Live2D model. Additional Attributes can include aliases such as ${aliasPreview}.`
+    : "Choose the explicit motion and expression for this Live2D model. Use Additional Attributes for aliases or custom tags.";
+
+  populateInspectorSelectWithOptionalLegacy(
+    imageNodeLive2DMotionInput,
+    motionOptions,
+    {
+      placeholderText: "No explicit motion",
+      value: live2dState.motion,
+    },
+  );
+  populateInspectorSelectWithOptionalLegacy(
+    imageNodeLive2DExpressionInput,
+    expressionOptions,
+    {
+      placeholderText: "Use default expression",
+      value: live2dState.expression,
+    },
+  );
+
+  imageNodeLive2DNonexclusiveListEl.innerHTML = nonexclusiveOptions.length
+    ? `
+      <div class="menu-choice-item">
+        <div class="layered-inline-grid">
+          ${nonexclusiveOptions.map((attribute) => `
+            <label class="character-checkbox">
+              <input
+                data-image-live2d-role="nonexclusive"
+                data-image-live2d-attribute="${escapeHtml(attribute)}"
+                type="checkbox"
+                ${live2dState.nonexclusive.includes(attribute) ? "checked" : ""}
+              />
+              <span>${escapeHtml(attribute)}</span>
+            </label>
+          `).join("")}
+        </div>
+      </div>
+    `
+    : '<p class="image-definition-empty">No nonexclusive attributes defined for this model.</p>';
+
+  imageNodeLive2DRemovalListEl.innerHTML = nonexclusiveOptions.length
+    ? `
+      <div class="menu-choice-item">
+        <div class="layered-inline-grid">
+          ${nonexclusiveOptions.map((attribute) => `
+            <label class="character-checkbox">
+              <input
+                data-image-live2d-role="removal"
+                data-image-live2d-attribute="${escapeHtml(attribute)}"
+                type="checkbox"
+                ${live2dState.removals.includes(attribute) ? "checked" : ""}
+              />
+              <span>-${escapeHtml(attribute)}</span>
+            </label>
+          `).join("")}
+        </div>
+      </div>
+    `
+    : '<p class="image-definition-empty">No removable nonexclusive attributes defined for this model.</p>';
+
+  imageNodeLive2DStillInput.checked = live2dState.still;
+  imageNodeLive2DAdditionalInput.value = live2dState.additionalAttributes;
+  imageNodeLive2DAdditionalInput.placeholder = aliasPreview
+    ? `e.g. ${aliasPreview}`
+    : "e.g. smile_alias, costume_alt";
 }
 
 function getAudioNodeAction(node) {
@@ -3810,7 +4068,7 @@ function getNodeDisplay(node) {
     const mode = getImageNodeMode(node);
     const name = getImageNodeName(node);
     const selectedResource = getVisualResourceById(node.imageDefinitionId);
-    const layeredAttributes = mode === "hide" ? [] : getImageNodeLayeredAttributeNames(node);
+    const resourceAttributes = mode === "hide" ? [] : getImageNodeResourceAttributeTokens(node, selectedResource);
     const layer = (node.imageLayer || "").trim();
     const at = (node.imageAt || "").trim();
     const title = `${capitalize(mode)} Image`;
@@ -3824,8 +4082,8 @@ function getNodeDisplay(node) {
       detailParts.push("Live2D");
     }
 
-    if (layeredAttributes.length) {
-      detailParts.push(`attrs:${layeredAttributes.join(", ")}`);
+    if (resourceAttributes.length) {
+      detailParts.push(`attrs:${resourceAttributes.join(", ")}`);
     }
 
     if (layer) {
@@ -4665,7 +4923,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
   } else if (node.type === "image") {
     const mode = getImageNodeMode(node);
     const imageName = getImageNodeName(node);
-    const layeredAttributes = mode === "hide" ? [] : getImageNodeLayeredAttributeNames(node);
+    const resourceAttributes = mode === "hide" ? [] : getImageNodeResourceAttributeTokens(node);
     const layer = (node.imageLayer || "").trim();
     const at = (node.imageAt || "").trim();
     const alias = (node.imageAlias || "").trim();
@@ -4678,7 +4936,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
       if (imageName) {
         parts.push(imageName);
-        parts.push(...layeredAttributes);
+        parts.push(...resourceAttributes);
       }
 
       if (at) {
@@ -4696,7 +4954,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
       }
     } else {
       parts.push("show", imageName || "image_name");
-      parts.push(...layeredAttributes);
+      parts.push(...resourceAttributes);
 
       if (alias) {
         parts.push("as", alias);
@@ -7457,6 +7715,7 @@ function renderInspector() {
     imageAliasFieldEl.classList.toggle("hidden", imageMode !== "show");
     imageBehindFieldEl.classList.toggle("hidden", imageMode !== "show");
     imageZorderFieldEl.classList.toggle("hidden", imageMode !== "show");
+    renderImageNodeLive2DInspector(selectedNode);
     renderImageNodeLayeredInspector(selectedNode);
     return;
   }
@@ -8366,7 +8625,17 @@ imageNodeNameInput.addEventListener("change", (event) => {
   const selectedValue = event.target.value;
 
   if (!selectedValue) {
-    updateSelectedNode({ imageDefinitionId: "", imageName: "", imageLayeredSelections: {} });
+    updateSelectedNode({
+      imageDefinitionId: "",
+      imageName: "",
+      imageLayeredSelections: {},
+      imageLive2DMotion: "",
+      imageLive2DExpression: "",
+      imageLive2DNonexclusive: [],
+      imageLive2DRemovals: [],
+      imageLive2DStill: false,
+      imageLive2DAdditionalAttributes: "",
+    });
     return;
   }
 
@@ -8375,6 +8644,12 @@ imageNodeNameInput.addEventListener("change", (event) => {
       imageDefinitionId: "",
       imageName: selectedValue.slice("__legacy__:".length),
       imageLayeredSelections: {},
+      imageLive2DMotion: "",
+      imageLive2DExpression: "",
+      imageLive2DNonexclusive: [],
+      imageLive2DRemovals: [],
+      imageLive2DStill: false,
+      imageLive2DAdditionalAttributes: "",
     });
     return;
   }
@@ -8382,7 +8657,17 @@ imageNodeNameInput.addEventListener("change", (event) => {
   const selectedImage = getVisualResourceById(selectedValue);
 
   if (!selectedImage) {
-    updateSelectedNode({ imageDefinitionId: "", imageName: "", imageLayeredSelections: {} });
+    updateSelectedNode({
+      imageDefinitionId: "",
+      imageName: "",
+      imageLayeredSelections: {},
+      imageLive2DMotion: "",
+      imageLive2DExpression: "",
+      imageLive2DNonexclusive: [],
+      imageLive2DRemovals: [],
+      imageLive2DStill: false,
+      imageLive2DAdditionalAttributes: "",
+    });
     return;
   }
 
@@ -8390,6 +8675,12 @@ imageNodeNameInput.addEventListener("change", (event) => {
     imageDefinitionId: selectedImage.id,
     imageName: selectedImage.name,
     imageLayeredSelections: {},
+    imageLive2DMotion: "",
+    imageLive2DExpression: "",
+    imageLive2DNonexclusive: [],
+    imageLive2DRemovals: [],
+    imageLive2DStill: false,
+    imageLive2DAdditionalAttributes: "",
   });
 });
 imageNodeLayerInput.addEventListener("input", (event) => {
@@ -8489,6 +8780,63 @@ imageNodeLayeredGroupListEl.addEventListener("change", (event) => {
     }, selectedImage),
   });
 });
+imageNodeLive2DMotionInput.addEventListener("change", (event) => {
+  updateSelectedNode({ imageLive2DMotion: `${event.target.value || ""}`.trim() });
+});
+imageNodeLive2DExpressionInput.addEventListener("change", (event) => {
+  updateSelectedNode({ imageLive2DExpression: `${event.target.value || ""}`.trim() });
+});
+imageNodeLive2DStillInput.addEventListener("change", (event) => {
+  updateSelectedNode({ imageLive2DStill: event.target.checked });
+});
+imageNodeLive2DAdditionalInput.addEventListener("input", (event) => {
+  updateSelectedNode({ imageLive2DAdditionalAttributes: event.target.value });
+});
+const handleImageNodeLive2DAttributeToggle = (event) => {
+  const role = event.target.dataset.imageLive2dRole;
+  const attribute = `${event.target.dataset.imageLive2dAttribute || ""}`.trim();
+
+  if (!role || !attribute) {
+    return;
+  }
+
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+  const selectedDefinition = getLive2DDefinitionById(selectedNode?.imageDefinitionId || "");
+
+  if (!selectedNode || selectedNode.type !== "image" || !selectedDefinition) {
+    return;
+  }
+
+  const live2dState = getImageNodeLive2DState(selectedNode);
+  const nextNonexclusive = [...live2dState.nonexclusive];
+  const nextRemovals = [...live2dState.removals];
+
+  if (role === "nonexclusive") {
+    const updatedNonexclusive = event.target.checked
+      ? [...nextNonexclusive, attribute].filter((value, index, source) => source.indexOf(value) === index)
+      : nextNonexclusive.filter((value) => value !== attribute);
+
+    updateSelectedNode({
+      imageLive2DNonexclusive: updatedNonexclusive,
+      imageLive2DRemovals: nextRemovals.filter((value) => value !== attribute),
+    });
+    return;
+  }
+
+  if (role === "removal") {
+    const updatedRemovals = event.target.checked
+      ? [...nextRemovals, attribute].filter((value, index, source) => source.indexOf(value) === index)
+      : nextRemovals.filter((value) => value !== attribute);
+
+    updateSelectedNode({
+      imageLive2DRemovals: updatedRemovals,
+      imageLive2DNonexclusive: nextNonexclusive.filter((value) => value !== attribute),
+    });
+  }
+};
+imageNodeLive2DNonexclusiveListEl.addEventListener("change", handleImageNodeLive2DAttributeToggle);
+imageNodeLive2DRemovalListEl.addEventListener("change", handleImageNodeLive2DAttributeToggle);
 animationNodeTransitionInput.addEventListener("change", (event) => {
   updateSelectedNode({ animationTransition: event.target.value });
 });
@@ -9963,6 +10311,12 @@ function createNodeForType(nodeType, graph, options = {}) {
       imageAlias: "",
       imageBehind: "",
       imageZorder: "",
+      imageLive2DMotion: "",
+      imageLive2DExpression: "",
+      imageLive2DNonexclusive: [],
+      imageLive2DRemovals: [],
+      imageLive2DStill: false,
+      imageLive2DAdditionalAttributes: "",
       imageLayeredSelections: {},
     };
   }

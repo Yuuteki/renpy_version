@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>样式特性(property) &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/style_properties.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="界面和界面语言" href="screens.html" />
+    <link rel="prev" title="样式(style)" href="style.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">样式特性(property)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#style-property-prefixes">样式特性前缀</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#style-property-values">样式特性的值</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#absolute"><code class="docutils literal notranslate"><span class="pre">absolute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#position"><code class="docutils literal notranslate"><span class="pre">position()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#style-prefix-search">样式前缀搜索</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#list-of-all-style-properties">所有样式特性的列表</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#position-style-properties">位置样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text-style-properties">文本样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#window-style-properties">窗口样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#button-style-properties">按钮样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bar">条(bar)样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#box">方框(box)样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid">网格(grid)样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixed-style-properties">固定布局的样式特性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#margin-style-properties">边距样式特性</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">样式特性(property)</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/style_properties.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="property">
+<span id="style-properties"></span><h1>样式特性(property)<a class="headerlink" href="#property" title="Link to this heading"> link</a></h1>
+<p>(译者注：property一词通常翻译成“属性”。鉴于文档中的attribute也可以翻译成“属性”。为了防止混淆，将property翻译为“特性”。)</p>
+<p>样式特性与 <a class="reference internal" href="style.html"><span class="doc">样式</span></a> 相关，控制可视组件的显示方式。样式特性出现时可以没有前缀，这种情况下样式特性应用于所有状态的可视组件；带前缀的样式特性则限制了应用组件的状态。</p>
+<section id="style-property-prefixes">
+<span id="id1"></span><h2>样式特性前缀<a class="headerlink" href="#style-property-prefixes" title="Link to this heading"> link</a></h2>
+<p>增加前缀可以从样式特性名称上就能看出作用于哪些状态的可视组件，比如得到焦点或者被选择状态。例如，某个按钮可以在鼠标悬停其上的时候改变颜色，或者提示按钮对应的选项就是目前使用的选项。</p>
+<p>可视组件总共有5种状态可用作样式特性前缀。</p>
+<dl class="simple">
+<dt><em class="dfn">insensitive</em></dt><dd><p>当用户与无法与可视组件互动时使用。</p>
+</dd>
+<dt><em class="dfn">idle</em></dt><dd><p>当可视组件即没有获得焦点也没有被选中时使用。</p>
+</dd>
+<dt><em class="dfn">hover</em></dt><dd><p>当可视组件获得焦点但没有被选中时使用。</p>
+</dd>
+<dt><em class="dfn">selected_idle</em></dt><dd><p>当可视组件未获得焦点但被选中时使用。</p>
+</dd>
+<dt><em class="dfn">selected_hover</em></dt><dd><p>当可视组件获得焦点且被选中时使用。</p>
+</dd>
+</dl>
+<p>按钮和条类可视组件(包括他们的各类变种)在收到事件消息后，会更新自身和子组件的状态。例如，当用户把鼠标移动到某个未被选择的按钮上方，按钮及其子组件都会把状态改为hover。</p>
+<p>样式特性前缀名允许外延。这里是一个前缀状态及其能外延的所有可视组件状态映射关系。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>prefix</p></th>
+<th class="head"><p>states implied by prefix</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>(no prefix)</p></td>
+<td><p>insensitive, idle, hover, selected_idle, selected_hover</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">idle_</span></code></p></td>
+<td><p>idle, selected_idle</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hover_</span></code></p></td>
+<td><p>hover, selected_hover</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">selected_</span></code></p></td>
+<td><p>selected_idle, selected_hover</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">insensitive_</span></code></p></td>
+<td><p>insensitive</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">selected_idle_</span></code></p></td>
+<td><p>selected_idle</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">selected_hover_</span></code></p></td>
+<td><p>selected_hover</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">selected_insensitive_</span></code></p></td>
+<td><p>selected_insensitive</p></td>
+</tr>
+</tbody>
+</table>
+<p>我们可以使用一个文本按钮实际演示一下。文本按钮使用两个默认的样式： <code class="docutils literal notranslate"><span class="pre">button</span></code> 用于按钮本身， <code class="docutils literal notranslate"><span class="pre">button_text</span></code> 用于按钮上的文本。 <a class="reference internal" href="#style-property-background"><code class="xref std std-propref docutils literal notranslate"><span class="pre">background</span></code></a> 样式特性设置按钮的背景， <a class="reference internal" href="#style-property-color"><code class="xref std std-propref docutils literal notranslate"><span class="pre">color</span></code></a> 特性设置文本颜色：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 当按钮为insensitive状态时，背景为灰色；hover状态是，背景为浅蓝；</span>
+<span class="c1"># 其他情况下，背景为深蓝。</span>
+<span class="k">style</span> <span class="k">button</span><span class="p">:</span>
+    <span class="na">background</span> <span class="s2">&quot;#006&quot;</span>
+    <span class="na">insensitive_background</span> <span class="s2">&quot;#444&quot;</span>
+    <span class="na">hover_background</span> <span class="s2">&quot;#00a&quot;</span>
+
+<span class="c1"># 当按钮为selected状态时，文本为黄色；其他情况下为白色。</span>
+<span class="k">style</span> <span class="n">button_text</span><span class="p">:</span>
+    <span class="na">color</span> <span class="s2">&quot;#fff&quot;</span>
+    <span class="na">selected_color</span> <span class="s2">&quot;#ff0&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="style-property-values">
+<span id="id2"></span><h2>样式特性的值<a class="headerlink" href="#style-property-values" title="Link to this heading"> link</a></h2>
+<p>每种样式特性对应每种特定类型的数据。许多特性值都是标准的python数据类型，有一些是novel类型。这里会对这些novel类型的数据进行详细说明。</p>
+<dl class="glossary">
+<dt id="term-position">position<a class="headerlink" href="#term-position" title="Link to this term"> link</a></dt><dd><p>position用于指定以左上角为原点的坐标系中的位置。(对position来说，可用区域由可视组件所在的图层给定，如果没有图层就是整个界面。对anchor来说，可用区域是其自身可视组件的大小。)</p>
+<p>position值的表示结果与数据类型有关：</p>
+<dl class="simple">
+<dt>int (比如 0、1、37或42)</dt><dd><p>整数的表示结果为像素数，从可用区域最左边或顶边算起。</p>
+</dd>
+<dt>float (比如 0.0、0.5或1.0)</dt><dd><p>浮点数的表示结果为可用区域的一个比例。例如，0.5表示区域内某条边的中点，1.0表示右侧边或者底边。</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="absolute">
+<span class="sig-name descname"><span class="pre">absolute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#absolute" title="Link to this definition"> link</a></dt>
+<dd><p>例如，当 <code class="docutils literal notranslate"><span class="pre">a</span></code> 和 <code class="docutils literal notranslate"><span class="pre">b</span></code> 类型相同，均为float或int型时，可以使用 <code class="docutils literal notranslate"><span class="pre">absolute(100.25)</span></code> 或 <code class="docutils literal notranslate"><span class="pre">absolute(a+b)</span></code> 。</p>
+<p>当启用精确子像素(subpixel-precise)渲染时，<code class="docutils literal notranslate"><span class="pre">absolute</span></code> 类型的值表示以界面左上角开始计的像素数，</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="position">
+<span class="sig-name descname"><span class="pre">position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">absolute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#position" title="Link to this definition"> link</a></dt>
+<dd><p>例如，<code class="docutils literal notranslate"><span class="pre">position(-10,</span> <span class="pre">.5)</span></code>。</p>
+<p><cite>absolute</cite> 表示绝对坐标，<cite>relative</cite> 表示相对比例。两者(都换算成absolute类型后)相加的结果决定最后坐标。</p>
+<p>使用该函数时必须传两个参数，否则会产生不确定的结果。</p>
+</dd></dl>
+
+</dd>
+<dt id="term-displayable">displayable<a class="headerlink" href="#term-displayable" title="Link to this term"> link</a></dt><dd><p>任意可视组件。若某个可视组件名包含某个类似“[prefix_]”的子串，就会按照如下描述进行前缀搜索。</p>
+</dd>
+<dt id="term-color">color<a class="headerlink" href="#term-color" title="Link to this term"> link</a></dt><dd><p>Ren’Py中的color可以写作以符号(#)开头、后面接十六进制的字符串。十六进制字符串长度可以为3或4的整数倍，分别对应几种颜色。</p>
+<p>十六进制字符串为3的整数倍时，分别对应红、绿、蓝三种颜色。十六进制字符串为4的整数倍时，分别对应红、绿、蓝和alpha通道值。举例：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;#f00&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;#ff0000&quot;</span></code> 表现为不透明的纯红。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;#0f08&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">#00ff0080&quot;</span></code> 表现为某种半透明的绿色。</p></li>
+</ul>
+<p>颜色代码规律和用于HTML的颜色代码相同。</p>
+<p>color也可以用一个4元素的元组，每个元素都是介于0到255的整数，顺序对应红、绿、蓝和alpha通道值。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">255,</span> <span class="pre">255)</span></code> 表现为完全不透明的蓝色。</p></li>
+</ul>
+<p>最后，color可以是 <a class="reference internal" href="color_class.html#Color" title="Color"><code class="xref py py-class docutils literal notranslate"><span class="pre">Color</span></code></a> 类的一个实例。</p>
+</dd>
+</dl>
+<section id="style-prefix-search">
+<span id="id3"></span><h3>样式前缀搜索<a class="headerlink" href="#style-prefix-search" title="Link to this heading"> link</a></h3>
+<p>当某个样式特性包含“[prefix_]”可替换前缀，就会进行前缀搜索。前缀搜索会查找没一种状态前缀，根据原特性已经明确声明过的信息。</p>
+<p>举例，如果我们有如下脚本：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="k">button</span><span class="p">:</span>
+    <span class="na">hover_background</span> <span class="s2">&quot;[prefix_]background.png&quot;</span>
+</pre></div>
+</div>
+<p>样式前缀搜索会分别搜索hover和selected_hover状态。前缀的搜索基于样式特性定义语句中的state值。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>state</p></th>
+<th class="head"><p>search order</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>idle</p></td>
+<td><p>“idle_”, “”</p></td>
+</tr>
+<tr class="row-odd"><td><p>hover</p></td>
+<td><p>“hover_”, “”,</p></td>
+</tr>
+<tr class="row-even"><td><p>insensitive</p></td>
+<td><p>“insensitive_”, “”, “idle_”</p></td>
+</tr>
+<tr class="row-odd"><td><p>selected_idle</p></td>
+<td><p>“selected_idle_”, “idle_”, “selected_”, “”</p></td>
+</tr>
+<tr class="row-even"><td><p>selected_hover</p></td>
+<td><p>“selected_hover_”, “hover_”, “selected_”, “”</p></td>
+</tr>
+<tr class="row-odd"><td><p>selected_insensitive</p></td>
+<td><p>“selected_insensitive_”, “hover_”, “selected_”, “”, “selected_idle_”, “idle_”</p></td>
+</tr>
+</tbody>
+</table>
+<p>样式前缀搜索按上面表格给出的顺序进行。然后Ren’Py会坚持是否有符合那个名称的可加载文件或者图像存在。如果文件或图像存在，样式前缀搜索就会结束，并且使用找到的可视组件。否则，搜索会继续尝试下一个前缀。</p>
+<p>样式前缀会传给可视组件，不需要用户输入。</p>
+<p>这里是一个样例，演示这个功能如何使用。假设文件“idel_button.png”和“hover_button.png”存在(并且不存在其他以“button.png”字符串结尾的其他文件)：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="k">button</span><span class="p">:</span>
+    <span class="na">background</span> <span class="s2">&quot;[prefix_]button.png&quot;</span>
+</pre></div>
+</div>
+<p>等效于：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="k">button</span><span class="p">:</span>
+    <span class="na">idle_background</span> <span class="s2">&quot;idle_button.png&quot;</span>
+    <span class="na">hover_background</span> <span class="s2">&quot;hover_button.png&quot;</span>
+    <span class="na">insensitive_background</span> <span class="s2">&quot;idle_button.png&quot;</span>
+
+    <span class="na">selected_idle_background</span> <span class="s2">&quot;idle_button.png&quot;</span>
+    <span class="na">selected_hover_background</span> <span class="s2">&quot;hover_button.png&quot;</span>
+    <span class="na">selected_insensitive_background</span> <span class="s2">&quot;idle_button.png&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="list-of-all-style-properties">
+<span id="id4"></span><h2>所有样式特性的列表<a class="headerlink" href="#list-of-all-style-properties" title="Link to this heading"> link</a></h2>
+<p>样式特性控制各种可视组件的外观。但并不是所有特性都能应用于所有可视组件，所以我们将特性分了几个组。</p>
+<section id="position-style-properties">
+<span id="id5"></span><h3>位置样式特性<a class="headerlink" href="#position-style-properties" title="Link to this heading"> link</a></h3>
+<p>这类特性可以应用于所有可视组件，大部分通过布局(layout)控制可视组件在区域内的位置，或者不使用布局(layout)时直接控制在整个界面的位置。</p>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-alt">
+<span class="sig-name descname"><span class="pre">alt</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-alt" title="Link to this definition"> link</a></dt>
+<dd><p>当self-voicing启用时，备选文本会用于可视组件。详见 <a class="reference internal" href="self_voicing.html"><span class="doc">自动语音</span></a> 章节内容。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xpos">
+<span class="sig-name descname"><span class="pre">xpos</span></span> <span class="pre">-</span>&#160; <span class="pre">position</span><a class="headerlink" href="#style-property-xpos" title="Link to this definition"> link</a></dt>
+<dd><p>可视组件相对于可选区域左端的位置。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ypos">
+<span class="sig-name descname"><span class="pre">ypos</span></span> <span class="pre">-</span>&#160; <span class="pre">position</span><a class="headerlink" href="#style-property-ypos" title="Link to this definition"> link</a></dt>
+<dd><p>可视组件相对于可选区域顶端的位置。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-pos">
+<span class="sig-name descname"><span class="pre">pos</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(position,</span> <span class="pre">position)</span><a class="headerlink" href="#style-property-pos" title="Link to this definition"> link</a></dt>
+<dd><p>将xpos和ypos放入一个元组，分别作为元组的第一个和第二个元素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xanchor">
+<span class="sig-name descname"><span class="pre">xanchor</span></span> <span class="pre">-</span>&#160; <span class="pre">position</span><a class="headerlink" href="#style-property-xanchor" title="Link to this definition"> link</a></dt>
+<dd><p>锚点相对于可选区域左端的位置。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-yanchor">
+<span class="sig-name descname"><span class="pre">yanchor</span></span> <span class="pre">-</span>&#160; <span class="pre">position</span><a class="headerlink" href="#style-property-yanchor" title="Link to this definition"> link</a></dt>
+<dd><p>锚点相对于可选区域顶端的位置。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-anchor">
+<span class="sig-name descname"><span class="pre">anchor</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(position,</span> <span class="pre">position)</span><a class="headerlink" href="#style-property-anchor" title="Link to this definition"> link</a></dt>
+<dd><p>将xanchor和yanchor放入一个元组，分别作为元组的第一个和第二个元素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xalign">
+<span class="sig-name descname"><span class="pre">xalign</span></span> <span class="pre">-</span>&#160; <span class="pre">float</span><a class="headerlink" href="#style-property-xalign" title="Link to this definition"> link</a></dt>
+<dd><p>将xpos和xanchor设置为相同值。根据该值将可视组件显示在界面的某个相对位置上，0.0表示左对齐，0.5表示居中，1.0表示右对齐。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-yalign">
+<span class="sig-name descname"><span class="pre">yalign</span></span> <span class="pre">-</span>&#160; <span class="pre">float</span><a class="headerlink" href="#style-property-yalign" title="Link to this definition"> link</a></dt>
+<dd><p>将ypos和yanchor设置为相同值。根据该值将可视组件显示在界面的某个相对位置上，0.0表示顶端对齐，0.5表示居中，1.0表示底端对齐。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-align">
+<span class="sig-name descname"><span class="pre">align</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(float,</span> <span class="pre">float)</span><a class="headerlink" href="#style-property-align" title="Link to this definition"> link</a></dt>
+<dd><p>将xalign和yalign放入一个元组，分别作为元组的第一个和第二个元素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xcenter">
+<span class="sig-name descname"><span class="pre">xcenter</span></span> <span class="pre">-</span>&#160; <span class="pre">position</span><a class="headerlink" href="#style-property-xcenter" title="Link to this definition"> link</a></dt>
+<dd><p>将xpos设为该特性的值，将xanchor设为0.5。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ycenter">
+<span class="sig-name descname"><span class="pre">ycenter</span></span> <span class="pre">-</span>&#160; <span class="pre">position</span><a class="headerlink" href="#style-property-ycenter" title="Link to this definition"> link</a></dt>
+<dd><p>将ypos设为该特性的值，将yanchor设为0.5。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xoffset">
+<span class="sig-name descname"><span class="pre">xoffset</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-xoffset" title="Link to this definition"> link</a></dt>
+<dd><p>给出了水平方向的偏移值，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-yoffset">
+<span class="sig-name descname"><span class="pre">yoffset</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-yoffset" title="Link to this definition"> link</a></dt>
+<dd><p>给出了垂直方向的偏移值，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-offset">
+<span class="sig-name descname"><span class="pre">offset</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(int,</span> <span class="pre">int)</span><a class="headerlink" href="#style-property-offset" title="Link to this definition"> link</a></dt>
+<dd><p>将元祖的第一和第二元素分别设为xoffset和yoffset的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-offset_alt">
+<span class="sig-name descname"><span class="pre">offset</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(position,</span> <span class="pre">position)</span><a class="headerlink" href="#style-property-offset_alt" title="Link to this definition"> link</a></dt>
+<dd><p>同时给出水平和垂直方向的偏移值，分别使用元组的第一个和第二个元素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xmaximum">
+<span class="sig-name descname"><span class="pre">xmaximum</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-xmaximum" title="Link to this definition"> link</a></dt>
+<dd><p>指定可视组件水平方向尺寸最大值，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ymaximum">
+<span class="sig-name descname"><span class="pre">ymaximum</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-ymaximum" title="Link to this definition"> link</a></dt>
+<dd><p>指定可视组件垂直方向尺寸最大值，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-maximum">
+<span class="sig-name descname"><span class="pre">maximum</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(int,</span> <span class="pre">int)</span><a class="headerlink" href="#style-property-maximum" title="Link to this definition"> link</a></dt>
+<dd><p>使用元组指定可视组件尺寸最大值，水平和垂直方向分别使用元组的第一个和第二个元素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xminimum">
+<span class="sig-name descname"><span class="pre">xminimum</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-xminimum" title="Link to this definition"> link</a></dt>
+<dd><p>设置可视组件的最小宽度，单位为像素。仅对可以改变尺寸的可视组件有效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-yminimum">
+<span class="sig-name descname"><span class="pre">yminimum</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-yminimum" title="Link to this definition"> link</a></dt>
+<dd><p>设置可视组件的最小高度，单位为像素。仅对可以改变尺寸的可视组件有效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-minimum">
+<span class="sig-name descname"><span class="pre">minimum</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(int,</span> <span class="pre">int)</span><a class="headerlink" href="#style-property-minimum" title="Link to this definition"> link</a></dt>
+<dd><p>使用元组设置xminimum和yminimum。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xsize">
+<span class="sig-name descname"><span class="pre">xsize</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span> <span class="pre">or</span> <span class="pre">float</span><a class="headerlink" href="#style-property-xsize" title="Link to this definition"> link</a></dt>
+<dd><p>将xminimum和xmaximum设置为相同值。该特性对可视组件的宽度生效。如果值是一个浮点数，表示区域宽度的一个比例值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ysize">
+<span class="sig-name descname"><span class="pre">ysize</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span> <span class="pre">or</span> <span class="pre">float</span><a class="headerlink" href="#style-property-ysize" title="Link to this definition"> link</a></dt>
+<dd><p>将yminimum和ymaximum设置为相同值。该特性对可视组件的高度生效。如果值是一个浮点数，表示区域高度的一个比例值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xysize">
+<span class="sig-name descname"><span class="pre">xysize</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(int</span> <span class="pre">or</span> <span class="pre">float,</span> <span class="pre">int</span> <span class="pre">or</span> <span class="pre">float)</span><a class="headerlink" href="#style-property-xysize" title="Link to this definition"> link</a></dt>
+<dd><p>使用元组第一个元素设置xminimum和xmaximum，使用元组的第二个元素设置yminimum和ymaximum。该特性对可视组件的尺寸生效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xfill">
+<span class="sig-name descname"><span class="pre">xfill</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-xfill" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，可视组件会在水平方向填满所有可用空间。若不为True，可视组件只占用包含所有子组件的空间。</p>
+<p>仅对可以改变尺寸的可视组件有效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-yfill">
+<span class="sig-name descname"><span class="pre">yfill</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-yfill" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，可视组件会在垂直方向填满所有可用空间。若不为True，可视组件只占用包含所有子组件的空间。</p>
+<p>仅对可以改变尺寸的可视组件有效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-area">
+<span class="sig-name descname"><span class="pre">area</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(int,</span> <span class="pre">int,</span> <span class="pre">int,</span> <span class="pre">int)</span><a class="headerlink" href="#style-property-area" title="Link to this definition"> link</a></dt>
+<dd><p>元组内元素可解释为 (<cite>xpos</cite>, <cite>ypos</cite>, <cite>width</cite>, <cite>height</cite>)。如果把某个可视组件的左上角放在 <cite>xpos</cite> 和 <cite>ypos</cite> 对应的位置，那么它的尺寸就是 <cite>width</cite> 和 <cite>height</cite>。</p>
+<p>这个特性会把xpos、ypos、xanchor、yanchor、xmaximum、ymaximum、xminimum、yminimum、xfill和yfill自动设置为合适的值。</p>
+<p>但这个特性并不适用于所有的可视组件和布局(layout)。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-mipmap">
+<span class="sig-name descname"><span class="pre">mipmap</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span> <span class="pre">或</span> <span class="pre">None</span><a class="headerlink" href="#style-property-mipmap" title="Link to this definition"> link</a></dt>
+<dd><p>该特性控制可视组件创建的纹理是否使用mipmap。该特性只适用于某些可视组件，包括 <a class="reference internal" href="text.html#Text" title="Text"><code class="xref py py-func docutils literal notranslate"><span class="pre">Text()</span></code></a>，<a class="reference internal" href="movie.html#Movie" title="Movie"><code class="xref py py-func docutils literal notranslate"><span class="pre">Movie()</span></code></a> 和 dissolve。</p>
+<p>若非None，默认值从配置项 <a class="reference internal" href="config.html#var-config.mipmap_text"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.mipmap_text</span></code></a>，<a class="reference internal" href="config.html#var-config.mipmap_movies"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.mipmap_movies</span></code></a> 和
+<a class="reference internal" href="config.html#var-config.mipmap_dissolves"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.mipmap_dissolves</span></code></a> 获取。</p>
+</dd></dl>
+
+</section>
+<section id="text-style-properties">
+<span id="id6"></span><h3>文本样式特性<a class="headerlink" href="#text-style-properties" title="Link to this heading"> link</a></h3>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-antialias">
+<span class="sig-name descname"><span class="pre">antialias</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-antialias" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，默认情况，全真字体(truetype font)文本会使用抗锯齿渲染。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-adjust_spacing">
+<span class="sig-name descname"><span class="pre">adjust_spacing</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span> <span class="pre">or</span> <span class="pre">str</span><a class="headerlink" href="#style-property-adjust_spacing" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，Ren’Py会调整绘制分辨率下文本间隙以匹配虚拟分辨率下渲染的文本间隙，确保frame和其他容器类内的文本不会被改变。</p>
+<p>若设置为False，文本不会改变字号，但确保在任何窗口大小下布局文本都有足够空间，这是创作者的职责。</p>
+<p>当字符串设置为“horizontal”时，仅在水平方向调整文本。
+当字符串设置为“vertical”时，仅在垂直方向调整文本。</p>
+<p>对大多数文本来说都是用默认值True，但在需要 <code class="docutils literal notranslate"><span class="pre">input</span></code> 输入的情况下使用False。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-altruby_style">
+<span class="sig-name descname"><span class="pre">altruby_style</span></span> <span class="pre">-</span>&#160; <span class="pre">style</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-altruby_style" title="Link to this definition"> link</a></dt>
+<dd><p>如果为值非None，这应是一个样式对象。它会用作转换的ruby文本样式。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-axis">
+<span class="sig-name descname"><span class="pre">axis</span></span> <span class="pre">-</span>&#160; <span class="pre">dict</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-axis" title="Link to this definition"> link</a></dt>
+<dd><p>该特性可以设置 <a class="reference internal" href="text.html#variable-fonts"><span class="std std-ref">可变字体</span></a> 的圆形区域轴线(axis)。
+若非None，其应是一个字典，可以根据轴线名查找对应的值。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="k">default</span><span class="p">:</span>
+    <span class="na">font</span> <span class="s2">&quot;VariableFont.ttf&quot;</span>
+    <span class="na">axis</span> <span class="p">{</span> <span class="s2">&quot;weight&quot;</span> <span class="p">:</span> <span class="mi">500</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span> <span class="p">:</span> <span class="mi">95</span> <span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-black_color">
+<span class="sig-name descname"><span class="pre">black_color</span></span> <span class="pre">-</span>&#160; <span class="pre">color</span><a class="headerlink" href="#style-property-black_color" title="Link to this definition"> link</a></dt>
+<dd><p>当渲染某个基于图像的字体时，黑色会被映射为需要的颜色。这个特性对truetype字体无效。</p>
+<p>在处理ruby/片假名文本时，该特性可以是None，表示使用主文本同样的颜色。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bold">
+<span class="sig-name descname"><span class="pre">bold</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-bold" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，使用粗体渲染。对全真(truetype)字体来说，这个特性会会综合提升字体的重量(weight)。这个特性也可能会触发字体映射，使用
+<a class="reference internal" href="config.html#var-config.font_replacement_map"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.font_replacement_map</span></code></a> 配置的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-caret">
+<span class="sig-name descname"><span class="pre">caret</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-caret" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，其应是一个可视组件。输入部件会使用这个可视组件显示在文本的末尾。若为空，会有一条1像素宽的线在行尾闪烁。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-color">
+<span class="sig-name descname"><span class="pre">color</span></span> <span class="pre">-</span>&#160; <span class="pre">color</span><a class="headerlink" href="#style-property-color" title="Link to this definition"> link</a></dt>
+<dd><p>文本渲染使用的色彩。当使用某个全真(truetype)字体时，字体会直接使用色彩渲染。当使用基于图像的字体时，白色会映射为指定的色彩。</p>
+<p>在处理ruby/片假名文本时，该特性可以是None，表示使用主文本同样的颜色。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-emoji_font">
+<span class="sig-name descname"><span class="pre">emoji_font</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-emoji_font" title="Link to this definition"> link</a></dt>
+<dd><p>该字体用作Emoji表情。遇到一个或多个Emoji表情时会自动替换，但不能使用文本标签(text tag)。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-first_indent">
+<span class="sig-name descname"><span class="pre">first_indent</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-first_indent" title="Link to this definition"> link</a></dt>
+<dd><p>首行缩进量，单位是像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-font">
+<span class="sig-name descname"><span class="pre">font</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-font" title="Link to this definition"> link</a></dt>
+<dd><p>用于渲染文本的字体名称字符串。</p>
+<p>对于全真(truetype)字体文件来说，该字符串通常就是包含字体的文件名(例如 <code class="docutils literal notranslate"><span class="pre">&quot;DejaVuSans.ttf&quot;</span></code>)。如果需要使用字体集的第二种字体，就在字体名前面加一个数字和&#64;符号，(例如 <code class="docutils literal notranslate"><span class="pre">“0&#64;font.ttc”</span></code> 或 <code class="docutils literal notranslate"><span class="pre">“1&#64;font.ttc”</span></code>)。对于基于图像的字体来说，该字符串是字体注册时使用的名称。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-font_features">
+<span class="sig-name descname"><span class="pre">font_features</span></span> <span class="pre">-</span>&#160; <span class="pre">dict</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-font_features" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，该项是一个字典，对应OpenType布局功能特性的值。
+字典的键是OpenType功能特性的4字符标签，值则是布尔型。</p>
+<p>样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="k">default</span><span class="p">:</span>
+    <span class="na">font</span> <span class="s2">&quot;SomeFont.ttf&quot;</span>
+    <span class="na">font_features</span> <span class="p">{</span> <span class="s2">&quot;liga&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;smcp&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;calt&quot;</span> <span class="p">:</span> <span class="kc">False</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>OpenType布局功能特性的列表可以参考 <a class="reference external" href="https://learn.microsoft.com/en-us/typography/opentype/spec/featuretags">这里</a> 。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-hinting">
+<span class="sig-name descname"><span class="pre">hinting</span></span> <span class="pre">-</span>&#160; <span class="pre">str</span><a class="headerlink" href="#style-property-hinting" title="Link to this definition"> link</a></dt>
+<dd><p>控制字体如何进行微调。可以是以下几个字符串之一：</p>
+<dl class="simple">
+<dt>“auto”</dt><dd><p>默认值，使用Freetype自动微调。</p>
+</dd>
+<dt>“auto-light”</dt><dd><p>在light模式下，强制使用Freetype自动在竖直方向上微调。</p>
+</dd>
+<dt>“bytecode”</dt><dd><p>使用字体中的bytecode微调信息。</p>
+</dd>
+<dt>“none”</dt><dd><p>对字体不进行微调。</p>
+</dd>
+</dl>
+<p>若该项为True，则会查找和应用 <a class="reference internal" href="config.html#var-config.font_hinting"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.font_hinting</span></code></a> 的配置。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-hyperlink_functions">
+<span class="sig-name descname"><span class="pre">hyperlink_functions</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(function,</span> <span class="pre">function,</span> <span class="pre">function)</span><a class="headerlink" href="#style-property-hyperlink_functions" title="Link to this definition"> link</a></dt>
+<dd><p>这是由三个与超链接有关的函数构成的元组。</p>
+<p>第一个元素是超链接样式函数。当使用一个入参(超链接)调用函数时，会返回得到用于该超链接的样式对象，比如 <code class="docutils literal notranslate"><span class="pre">style.hyperlink_text</span></code> 。需要注意，样式对象并不是一个字符串。</p>
+<p>第二个元素是超链接点击函数。当超链接被用户选中的时候，该函数会被调用。如果该函数返回一个值并且不是None，这个值也会作为互动行为的返回值。</p>
+<p>第三个元素是超链接焦点函数。当超链接获取焦点时，该函数会被调用，并将超链接作为入参；当超链接失去焦点时，该函数也会被调用，入参使用空值(None)。如果该函数返回一个值并且非空，这个值也会作为互动行为的返回值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-instance">
+<span class="sig-name descname"><span class="pre">instance</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-instance" title="Link to this definition"> link</a></dt>
+<dd><p>该项是一个字符串，指定 <a class="reference internal" href="text.html#variable-fonts"><span class="std std-ref">可变字体</span></a> 的字体实例。
+例如某个字体具有“Bold”(粗体)实例，就可以将该项设置为“Bold”，显示的字体就是粗体。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-italic">
+<span class="sig-name descname"><span class="pre">italic</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-italic" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，使用斜体渲染文本。对全真(truetype)字体来说，这个特性会会综合提升字体的倾斜度(slant)。这个特性也可能会触发字体映射，使用
+<a class="reference internal" href="config.html#var-config.font_replacement_map"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.font_replacement_map</span></code></a> 配置的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-justify">
+<span class="sig-name descname"><span class="pre">justify</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-justify" title="Link to this definition"> link</a></dt>
+<dd><p>若该值为True，单词之间会插入额外的空白，每行文字左右两端的空白也会增加。段落最后一行的结尾不会发生变化。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-kerning">
+<span class="sig-name descname"><span class="pre">kerning</span></span> <span class="pre">-</span>&#160; <span class="pre">float</span><a class="headerlink" href="#style-property-kerning" title="Link to this definition"> link</a></dt>
+<dd><p>字偶距调整，任意两个字符之间的空白像素数会增加。(如果要缩小字符之间的空白，该值应该是负数。)</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-language">
+<span class="sig-name descname"><span class="pre">language</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-language" title="Link to this definition"> link</a></dt>
+<dd><p>控制语言文字族断行。合法值如下：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;unicode&quot;</span></code> (default)</dt><dd><p>使用unicode断行算法，大多数语言的默认项。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;japanese-strict&quot;</span></code></dt><dd><p>使用“strict”法格式化日语文本。禁止在小写的假名和延音记号前断行。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;japanese-normal&quot;</span></code></dt><dd><p>使用“normal”法格式化日语文本。允许在小写的假名、延音标记和某些连字符号后断行。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;japanese-loose&quot;</span></code></dt><dd><p>使用“loose”法格式化日语文本。允许在小写的假名、延音标记、叠字符号、不可分割字符、中心化标点符号和后缀的后面断行；也允许在前缀的前面断行。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;korean-with-spaces&quot;</span></code></dt><dd><p>使用空白定界的韩语文本。防止临近的韩语字符之间出现断行。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;thaic90&quot;</span></code></dt><dd><p>用于泰语文本，使用支持C90编码的字体。将字符序列映射为PUA字形代码点，以实现正确的字形位置。
+断行使用Unicode算法。大多数情况下，泰语文本应该使用 <code class="docutils literal notranslate"><span class="pre">&quot;unicode&quot;</span></code> (默认值)。
+只有在使用Ren’Py 8.4之前的版本，或者使用 <code class="docutils literal notranslate"><span class="pre">&quot;freetype&quot;</span></code> 作为字体渲染器时才需要使用。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;western&quot;</span></code></dt><dd><p>只循序在空白处断行。适用于大多数语言。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;anywhere&quot;</span></code></dt><dd><p>没有ruby的任意地方都可以断行。</p>
+</dd>
+</dl>
+<p>三种日语的断行模式来源于 <a class="reference external" href="http://www.w3.org/TR/css3-text/#line-break">CSS3文本模块</a>。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-layout">
+<span class="sig-name descname"><span class="pre">layout</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-layout" title="Link to this definition"> link</a></dt>
+<dd><p>控制每行单词(字)的分配方式。合法值如下：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;tex&quot;</span></code> (default)</dt><dd><p>使用Knuth-Plass断行算法。该算法能让除最后一行之外，各行的长度差异尽可能小。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;subtitle&quot;</span></code></dt><dd><p>使用Knuth-Plass断行算法，但会使用空格尽可能让每行长度一致。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;greedy&quot;</span></code></dt><dd><p>每行尽可能多得放入单词(字)。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;nobreak&quot;</span></code></dt><dd><p>不断行。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-line_leading">
+<span class="sig-name descname"><span class="pre">line_leading</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-line_leading" title="Link to this definition"> link</a></dt>
+<dd><p>每行所占空间的像素数。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-line_overlap_split">
+<span class="sig-name descname"><span class="pre">line_overlap_split</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-line_overlap_split" title="Link to this definition"> link</a></dt>
+<dd><p>在慢速文本模式下两行文本有重叠部分，这部分重叠像素分配给上面那行文本。如果上面那行文本的底部出现了被裁减的情况，就增加该特性的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-line_spacing">
+<span class="sig-name descname"><span class="pre">line_spacing</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-line_spacing" title="Link to this definition"> link</a></dt>
+<dd><p>每一行下面空间的像素数。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-min_width">
+<span class="sig-name descname"><span class="pre">min_width</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-min_width" title="Link to this definition"> link</a></dt>
+<dd><p>设置每行的最小宽度。如果某行的宽度小于该值，会使用两侧留白填充至该值。<code class="docutils literal notranslate"><span class="pre">text_align</span></code> 用于指定填充方式。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-newline_indent">
+<span class="sig-name descname"><span class="pre">newline_indent</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-newline_indent" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，  <a class="reference internal" href="#style-property-first_indent"><code class="xref std std-propref docutils literal notranslate"><span class="pre">first_indent</span></code></a> 的缩进量会应用于每个新行。否则使用 <a class="reference internal" href="#style-property-rest_indent"><code class="xref std std-propref docutils literal notranslate"><span class="pre">rest_indent</span></code></a>
+的缩进量。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-outlines">
+<span class="sig-name descname"><span class="pre">outlines</span></span> <span class="pre">-</span>&#160; <span class="pre">list</span> <span class="pre">of</span> <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(int,</span> <span class="pre">color,</span> <span class="pre">int,</span> <span class="pre">int)</span><a class="headerlink" href="#style-property-outlines" title="Link to this definition"> link</a></dt>
+<dd><p>这是一个文本后绘制的轮廓线列表。每个元组指定一种轮廓线，轮廓线从后往前绘制。</p>
+<p>列表中包含 (<cite>size</cite>, <cite>color</cite>, <cite>xoffset</cite>, <cite>yoffset</cite>)
+形式的元组。 <cite>Size</cite> 是字体外沿尺寸，单位为像素。 <cite>Color</cite> 是轮廓线色彩。 <cite>xoffset</cite> 和
+<cite>yoffset</cite> 是轮廓线的位移，单位为像素。</p>
+<p>轮廓线功能可以用于给字体添加投影，方法是将size设为0，偏移量设为非0。</p>
+<p>默认情况下， <cite>size</cite>, <cite>xoffset</cite> 和 <cite>yoffset</cite> 会随文本一同拉伸。当我们给定absolute类型时，就能禁止拉伸。举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="k">default</span><span class="p">:</span>
+    <span class="na">outlines</span> <span class="p">[</span> <span class="p">(</span><span class="n">absolute</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;#000&quot;</span><span class="p">,</span> <span class="n">absolute</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">absolute</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>这段脚本产生了1像素宽的边界。</p>
+<p>轮廓线只对全真(truetype)字体有效。
+轮廓线只能对整个文本组件应用时才生效。
+无法应该用在超链接、文本标签和文本的部分内容。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-outline_scaling">
+<span class="sig-name descname"><span class="pre">outline_scaling</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-outline_scaling" title="Link to this definition"> link</a></dt>
+<dd><p>游戏窗口缩放后，该特性决定文字轮廓线的大小和偏移如何缩放。</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;linear&quot;</span></code></dt><dd><p>默认值，粗轮廓线的最佳方案。窗口缩放系数直接乘以轮廓线大小的值，然后取整。
+轮廓线越粗越好，否则同心的相近粗细轮廓线可能会混在一起看不清。</p>
+<p>缩放后的轮廓线粗细值至少为1像素。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;step&quot;</span></code></dt><dd><p>细轮廓线或多重轮廓线的最佳方案。
+窗口缩放系数向下取整，然后乘以轮廓线粗细和偏移值。
+这样可以确保多重轮廓线可以同时缩放，不会发生互相遮挡。
+但在不同游戏窗口尺寸条件下，视觉效果会略有不同。</p>
+<p>窗口缩放系数不小于1。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-prefer_emoji">
+<span class="sig-name descname"><span class="pre">prefer_emoji</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-prefer_emoji" title="Link to this definition"> link</a></dt>
+<dd><p>某些Unicode字符可以同时解释为Emoji表情或其他文本。该样式特性决定这种字符的优先显示为Emoji表情。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-reading_order">
+<span class="sig-name descname"><span class="pre">reading_order</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-reading_order" title="Link to this definition"> link</a></dt>
+<dd><p>该特性控制启用RTL(right-to-left)支持后的文本显示方式，主要用于控制无法判断左右阅读顺序的部分，
+比如完全由标点组成的一行。</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><p>默认值，阅读顺序完全取决于文本。大多数无法判断阅读顺序的行都会视为从左往右。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;ltr&quot;</span></code></dt><dd><p>强制从左往右，即使一行中主要内容都是从右往左阅读的文字。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;rtl&quot;</span></code></dt><dd><p>强制从右往左，即使一行中主要内容都是从左往右阅读的文字。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;wltr&quot;</span></code></dt><dd><p>偏向于从左往右，但根据实际内容可能会切换为从右往左显示。可以用在完全由标点组成的部分，例如 <code class="docutils literal notranslate"><span class="pre">&quot;..!&quot;</span></code>。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;wrtl&quot;</span></code></dt><dd><p>偏向于从右往左，但根据实际内容可能会切换为从左往右显示。可以用在完全由标点组成的部分，例如 <code class="docutils literal notranslate"><span class="pre">&quot;..!&quot;</span></code>。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-rest_indent">
+<span class="sig-name descname"><span class="pre">rest_indent</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-rest_indent" title="Link to this definition"> link</a></dt>
+<dd><p>指定段落首行之外的缩进量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ruby_line_leading">
+<span class="sig-name descname"><span class="pre">ruby_line_leading</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-ruby_line_leading" title="Link to this definition"> link</a></dt>
+<dd><p>含有 <a class="reference internal" href="text.html#ruby-text"><span class="std std-ref">ruby文本</span></a> 的文本行间距，单位是像素。该项会加在 <a class="reference internal" href="#style-property-line_leading"><code class="xref std std-propref docutils literal notranslate"><span class="pre">line_leading</span></code></a> 上并产生最终效果。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ruby_style">
+<span class="sig-name descname"><span class="pre">ruby_style</span></span> <span class="pre">-</span>&#160; <span class="pre">style</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-ruby_style" title="Link to this definition"> link</a></dt>
+<dd><p>如果非None，该值是一个样式对象，用于ruby文本。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-shaper">
+<span class="sig-name descname"><span class="pre">shaper</span></span> <span class="pre">-</span>&#160; <span class="pre">&quot;harfbuzz&quot;</span> <span class="pre">or</span> <span class="pre">&quot;freetype&quot;.</span><a class="headerlink" href="#style-property-shaper" title="Link to this definition"> link</a></dt>
+<dd><p>文本渲染使用的字体引擎(shaper)。该项只能是“harfbuzz”和“freetype”两者其中之一。
+harfbuzz用途更广，但只能在Ren’Py 8上运行。而freetype还能在Ren’Py 7上运行。</p>
+<p>字体引擎(shaper)会将一系列字符转为一串固定位置的字形(glyphs)。其用在连写字符、印地/婆罗米文以及Emoji表情。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-size">
+<span class="sig-name descname"><span class="pre">size</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-size" title="Link to this definition"> link</a></dt>
+<dd><p>界面中字体的字号。通常字号大小就是字体高度的像素值，字体文件中可能还会插入几个像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-slow_abortable">
+<span class="sig-name descname"><span class="pre">slow_abortable</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-slow_abortable" title="Link to this definition"> link</a></dt>
+<dd><p>如果为True，能传到文本对象的点击事件会触发退出慢速文本模式，这意味着后面部分的文本会立刻显示。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-slow_cps">
+<span class="sig-name descname"><span class="pre">slow_cps</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span> <span class="pre">or</span> <span class="pre">True</span><a class="headerlink" href="#style-property-slow_cps" title="Link to this definition"> link</a></dt>
+<dd><p>如果是一个整数，表示每秒显示的字符速率。如果为True，使用个性化配置中的“文本速度”。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-slow_cps_multiplier">
+<span class="sig-name descname"><span class="pre">slow_cps_multiplier</span></span> <span class="pre">-</span>&#160; <span class="pre">float</span><a class="headerlink" href="#style-property-slow_cps_multiplier" title="Link to this definition"> link</a></dt>
+<dd><p>文本显示速度会乘上该值。可以用于表现某个角色的说话速度比正常速率略快的情况。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-strikethrough">
+<span class="sig-name descname"><span class="pre">strikethrough</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-strikethrough" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，每行文字会添加删除线。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-textalign">
+<span class="sig-name descname"><span class="pre">textalign</span></span> <span class="pre">-</span>&#160; <span class="pre">float</span><a class="headerlink" href="#style-property-textalign" title="Link to this definition"> link</a></dt>
+<dd><p>当一行文本的宽度比文本组件的宽度小时，该项起作用。其决定文本左边会有多少留白。(也就是文本的对齐。)</p>
+<p>0.0表示左对齐，0.5表示中央对齐，1.0表示右对齐。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-underline">
+<span class="sig-name descname"><span class="pre">underline</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-underline" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，文本会添加下划线。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-vertical">
+<span class="sig-name descname"><span class="pre">vertical</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-vertical" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，文本内容会渲染为垂直文本。</p>
+<p>There are multiple caveats:</p>
+<ul class="simple">
+<li><p>若 <a class="reference internal" href="#style-property-shaper"><code class="xref std std-propref docutils literal notranslate"><span class="pre">shaper</span></code></a> 的值是“freetype”。垂直文本会有问题。</p></li>
+<li><p>harfbuzz渲染器遇到字体中存在的格式(form)时，会从水平格式转成垂直格式。</p></li>
+<li><p>字符会从按“从上到下，从右往左”的顺序排列，而不会旋转。即，各个字符会呈现叠罗汉似的排列方式。</p></li>
+<li><p>如果字体中没有垂直文本的相关信息，字体渲染器则会尝试合成，但不保证结果正确。
+总体来说，表意文字的合成效果比非表意文字要好。</p></li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="window-style-properties">
+<span id="id8"></span><h3>窗口样式特性<a class="headerlink" href="#window-style-properties" title="Link to this heading"> link</a></h3>
+<p>窗口特性用于指定窗口、框架和按钮的外观。</p>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-background">
+<span class="sig-name descname"><span class="pre">background</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-background" title="Link to this definition"> link</a></dt>
+<dd><p>用作窗口背景的可视组件。通常是一个 <a class="reference internal" href="displayables.html#Frame" title="Frame"><code class="xref py py-func docutils literal notranslate"><span class="pre">Frame()</span></code></a>，能根据窗口大小拉伸背景的尺寸。</p>
+<p>若为None，不绘制背景。但其他特性函数会假设背景存在。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-foreground">
+<span class="sig-name descname"><span class="pre">foreground</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-foreground" title="Link to this definition"> link</a></dt>
+<dd><p>若不为None，该可视组件会在窗口内容上绘制并覆盖。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-left_margin">
+<span class="sig-name descname"><span class="pre">left_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-left_margin" title="Link to this definition"> link</a></dt>
+<dd><p>背景左端的透明空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-right_margin">
+<span class="sig-name descname"><span class="pre">right_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-right_margin" title="Link to this definition"> link</a></dt>
+<dd><p>背景右端的透明空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xmargin">
+<span class="sig-name descname"><span class="pre">xmargin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-xmargin" title="Link to this definition"> link</a></dt>
+<dd><p>等效于将left_margin和right_margin设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-top_margin">
+<span class="sig-name descname"><span class="pre">top_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-top_margin" title="Link to this definition"> link</a></dt>
+<dd><p>背景顶端的透明空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bottom_margin">
+<span class="sig-name descname"><span class="pre">bottom_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-bottom_margin" title="Link to this definition"> link</a></dt>
+<dd><p>背景底端的透明空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ymargin">
+<span class="sig-name descname"><span class="pre">ymargin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-ymargin" title="Link to this definition"> link</a></dt>
+<dd><p>等效于将top_margin和bottom_margin设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-margin">
+<span class="sig-name descname"><span class="pre">margin</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span><a class="headerlink" href="#style-property-margin" title="Link to this definition"> link</a></dt>
+<dd><p>如果出现的是2个元素的元组，分别将xmargin和ymargin设置为对应的两个元素值。如果出现的是4元素元组，分别将left_margin、top_margin、right_margin和bottom_margin设置为对应的4个元素值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-left_padding">
+<span class="sig-name descname"><span class="pre">left_padding</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-left_padding" title="Link to this definition"> link</a></dt>
+<dd><p>背景与窗口内容左边的空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-right_padding">
+<span class="sig-name descname"><span class="pre">right_padding</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-right_padding" title="Link to this definition"> link</a></dt>
+<dd><p>背景与窗口内容右边的空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xpadding">
+<span class="sig-name descname"><span class="pre">xpadding</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-xpadding" title="Link to this definition"> link</a></dt>
+<dd><p>等效于将left_padding和right_padding设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-top_padding">
+<span class="sig-name descname"><span class="pre">top_padding</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-top_padding" title="Link to this definition"> link</a></dt>
+<dd><p>背景与窗口内容顶边的空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bottom_padding">
+<span class="sig-name descname"><span class="pre">bottom_padding</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-bottom_padding" title="Link to this definition"> link</a></dt>
+<dd><p>背景与窗口内容底边的空间量，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ypadding">
+<span class="sig-name descname"><span class="pre">ypadding</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-ypadding" title="Link to this definition"> link</a></dt>
+<dd><p>等效于将top_padding和bottom_padding设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-padding">
+<span class="sig-name descname"><span class="pre">padding</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span><a class="headerlink" href="#style-property-padding" title="Link to this definition"> link</a></dt>
+<dd><p>如果出现的是2个元素的元组，分别将xpadding和ypadding设置为对应的两个元素值。如果出现的是4元素元组，分别将left_padding、top_padding、right_padding和bottom_padding设置为对应的4个元素值</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-size_group">
+<span class="sig-name descname"><span class="pre">size_group</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-size_group" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，该值是一个字符串。Ren’Py会使用size_group值相同的尺寸渲染所有窗口。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-modal">
+<span class="sig-name descname"><span class="pre">modal</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span> <span class="pre">or</span> <span class="pre">callable</span><a class="headerlink" href="#style-property-modal" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，窗口设为模态。鼠标点击事件值对当前窗口内的window或按钮组件有效，不会广播穿透。
+若为False，窗口设为非模态。</p>
+<p>该项也可以是一个可调用的函数。
+其为函数时，入参使用(ev, x, y, w, h)形式的四元元组。其中ev是pygame事件消息，也可能是None笼统表示一个鼠标事件；x和y表示窗口坐标，w和h表示窗口的宽和高。函数返回为True时，窗口视为模态，否则视为非模态。</p>
+</dd></dl>
+
+</section>
+<section id="button-style-properties">
+<span id="id9"></span><h3>按钮样式特性<a class="headerlink" href="#button-style-properties" title="Link to this heading"> link</a></h3>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-child">
+<span class="sig-name descname"><span class="pre">child</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-child" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，给出的可视组件会替换按钮的子组件。例如，该可视组件(作为insensitive_child)可以用于替换insensitive的按钮图片内容，insensitive表示按钮被锁住无法使用。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-hover_sound">
+<span class="sig-name descname"><span class="pre">hover_sound</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-hover_sound" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮获取焦点时，将播放一个音效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-activate_sound">
+<span class="sig-name descname"><span class="pre">activate_sound</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-activate_sound" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮被点击时，将播放一个音效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-hover_sound_alt">
+<span class="sig-name descname"><span class="pre">hover_sound</span></span> <span class="pre">-</span>&#160; <span class="pre">-</span> <span class="pre">string</span><a class="headerlink" href="#style-property-hover_sound_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮获得焦点时，将播放一个音效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-activate_sound_alt">
+<span class="sig-name descname"><span class="pre">activate_sound</span></span> <span class="pre">-</span> <a class="headerlink" href="#style-property-activate_sound_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮被激活(点击)时，将播放一个音效。
+也会在条(bar)和拖拽组件激活时播放该音效。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-mouse">
+<span class="sig-name descname"><span class="pre">mouse</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-mouse" title="Link to this definition"> link</a></dt>
+<dd><p>鼠标样式用于按钮获得焦点状态。这是定义在 <a class="reference internal" href="config.html#var-config.mouse"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.mouse</span></code></a> 中的样式之一。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-focus_mask">
+<span class="sig-name descname"><span class="pre">focus_mask</span></span> <span class="pre">-</span>&#160; <span class="pre">multiple</span><a class="headerlink" href="#style-property-focus_mask" title="Link to this definition"> link</a></dt>
+<dd><p>一个mask遮罩，用于控制按钮哪些区域可以获得焦点，哪些区域不响应点击。该特性的类型决定了其如何被解释。</p>
+<dl>
+<dt>Displayable</dt><dd><p>可视组件的不透明区域，可以让按钮获得焦点。</p>
+</dd>
+<dt>True</dt><dd><p>按钮自身用作可视组件(按钮的非透明区域可以让按钮获得焦点)。</p>
+</dd>
+<dt>callable</dt><dd><p>如果一个不可视组件被调用(像函数、方法或者带有__call__方法的对象)，该该函数被使用两个入参调用，从对应可视组件左上角算起，x和y轴的两个偏移量。</p>
+<p>如果使用两个入参调用该函数，则函数返回一个可调用对象。
+返回对象可以使用4个参数调用，x和y的偏移值，以及可视组件的宽度和高度。</p>
+<p>若函数返回结果为True，可视组件获得焦点。</p>
+</dd>
+<dt>None</dt><dd><p>如果该值为None，整个按钮都可以获得焦点。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-keyboard_focus">
+<span class="sig-name descname"><span class="pre">keyboard_focus</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-keyboard_focus" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，也是默认值，按钮可以通过键盘的焦点机制获得焦点，前提是这个按钮本身允许获得焦点。若为False，键盘焦点机制会跳过这个按钮。(键盘焦点机制使用键盘或者类似键盘的设备，比如游戏手柄。)</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-keyboard_focus_insets">
+<span class="sig-name descname"><span class="pre">keyboard_focus_insets</span></span> <span class="pre">-</span>&#160; <span class="pre">(int,</span> <span class="pre">int,</span> <span class="pre">int,</span> <span class="pre">int)</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-keyboard_focus_insets" title="Link to this definition"> link</a></dt>
+<dd><p>若不是None，该项应该是一个包含4个整数的元组，表示一个矩形区域4个角能收缩的像素数。
+当使用键盘让组件获取焦点时，将会用到该特性。</p>
+<p>在有按钮相互覆盖的情况下，该特性会有用。处理键盘来控制焦点的算法，无法处理按钮相互覆盖的情况。
+如果使用该特性提前在内部处理，就能解决类似问题。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-key_events">
+<span class="sig-name descname"><span class="pre">key_events</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-key_events" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，键盘生成的事件消息会传给键盘的子组件。若为False，这些事件就不会向下广播。默认样式中，按钮上有鼠标悬停时该值为True，其他情况下该值为False。</p>
+<p>将这个值设置为True可以用于广播键盘事件消息至某个按钮内的输入框，而那个按键并不需要获得焦点。</p>
+</dd></dl>
+
+</section>
+<section id="bar">
+<span id="bar-style-properties"></span><h3>条(bar)样式特性<a class="headerlink" href="#bar" title="Link to this heading"> link</a></h3>
+<p>条(bar)是一个左右两边带有沟槽的组件，点击后触发滑块在条内平移一小段距离。滑块与左右两端的间隔就是还允许移动的距离。</p>
+<p>滑块是条(bar)中允许用户拖拽的部分。</p>
+<p>当绘制一个条(bar)后，滑块的阴影首先被绘制。然后是滑块本身，最后是条(bar)的左/底边和右/顶边。</p>
+<p>需要注意条(bar)的边取决于bar_vertical特性的值。若bar_vertical为True，顶边和底边会实际绘制。否则，只有左边和右边。</p>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bar_vertical">
+<span class="sig-name descname"><span class="pre">bar_vertical</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-bar_vertical" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，纵向条(bar)。若为False，横向条(bar)。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bar_invert">
+<span class="sig-name descname"><span class="pre">bar_invert</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-bar_invert" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，条(bar)上滑块对应的值显示在右/上侧；否则，显示在左/下侧。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bar_resizing">
+<span class="sig-name descname"><span class="pre">bar_resizing</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-bar_resizing" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，重新调整条(bar)的尺寸。若为False，使用全尺寸渲染各条边，然后裁剪。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-left_gutter">
+<span class="sig-name descname"><span class="pre">left_gutter</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-left_gutter" title="Link to this definition"> link</a></dt>
+<dd><p>左边沟槽尺寸，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-right_gutter">
+<span class="sig-name descname"><span class="pre">right_gutter</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-right_gutter" title="Link to this definition"> link</a></dt>
+<dd><p>右边沟槽尺寸，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-top_gutter">
+<span class="sig-name descname"><span class="pre">top_gutter</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-top_gutter" title="Link to this definition"> link</a></dt>
+<dd><p>顶边沟槽尺寸，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bottom_gutter">
+<span class="sig-name descname"><span class="pre">bottom_gutter</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-bottom_gutter" title="Link to this definition"> link</a></dt>
+<dd><p>底边沟槽尺寸，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-left_bar">
+<span class="sig-name descname"><span class="pre">left_bar</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span><a class="headerlink" href="#style-property-left_bar" title="Link to this definition"> link</a></dt>
+<dd><p>用于左边的可视组件。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-right_bar">
+<span class="sig-name descname"><span class="pre">right_bar</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span><a class="headerlink" href="#style-property-right_bar" title="Link to this definition"> link</a></dt>
+<dd><p>用于右边的可视组件。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-top_bar">
+<span class="sig-name descname"><span class="pre">top_bar</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span><a class="headerlink" href="#style-property-top_bar" title="Link to this definition"> link</a></dt>
+<dd><p>用于顶边的可视组件。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bottom_bar">
+<span class="sig-name descname"><span class="pre">bottom_bar</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span><a class="headerlink" href="#style-property-bottom_bar" title="Link to this definition"> link</a></dt>
+<dd><p>用于底边的可视组件。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-base_bar">
+<span class="sig-name descname"><span class="pre">base_bar</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span><a class="headerlink" href="#style-property-base_bar" title="Link to this definition"> link</a></dt>
+<dd><p>单个可视组件用于left_bar/right_bar或者top_bar/bottom_bar，自动适配。(带滑块的情况下，还可以用作滑动条或者滑动栏。)</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-thumb">
+<span class="sig-name descname"><span class="pre">thumb</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-thumb" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，这是一个绘制在条(bar)的各条边空间内的可视组件。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-thumb_align">
+<span class="sig-name descname"><span class="pre">thumb_align</span></span> <span class="pre">-</span>&#160; <span class="pre">float</span><a class="headerlink" href="#style-property-thumb_align" title="Link to this definition"> link</a></dt>
+<dd><p>滑块与条(bar)的对齐方式。
+如果条(bar)和滑块的尺寸不同——例如，滑块比水平条(bar)还要高——可以把thumb_align设置为0.5，使滑块与条(bar)居中对齐。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-thumb_shadow">
+<span class="sig-name descname"><span class="pre">thumb_shadow</span></span> <span class="pre">-</span>&#160; <span class="pre">displayable</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-thumb_shadow" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，这是一个绘制在条(bar)的各条边空间内的可视组件。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-thumb_offset">
+<span class="sig-name descname"><span class="pre">thumb_offset</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span> <span class="pre">or</span> <span class="pre">tuple</span> <span class="pre">of</span> <span class="pre">(int,</span> <span class="pre">int)</span><a class="headerlink" href="#style-property-thumb_offset" title="Link to this definition"> link</a></dt>
+<dd><p>滑块与条(bar)重叠部分的大小，单位为像素。如果想让条(bar)的左右两边看起来不像被截断的样子，就把该值设为滑块(thumb)宽度的一半。
+该值也可以是一个(int, int)元组。第一个元素用于滑块向左/向上的偏移量，第二个元素用于滑块向右/向下的偏移量。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-mouse_alt">
+<span class="sig-name descname"><span class="pre">mouse</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span><a class="headerlink" href="#style-property-mouse_alt" title="Link to this definition"> link</a></dt>
+<dd><p>鼠标样式，用于按钮获得焦点时。该字符串应是 <a class="reference internal" href="config.html#var-config.mouse"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.mouse</span></code></a> 定义的样式之一。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-unscrollable">
+<span class="sig-name descname"><span class="pre">unscrollable</span></span> <span class="pre">-</span>&#160; <span class="pre">string</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-unscrollable" title="Link to this definition"> link</a></dt>
+<dd><p>当无法滚动时，控制条(bar)的行为表现(如果滚动范围设置为0，视点范围内的可视组件小于其自身)。总共有3种可能的值：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><p>正常渲染条(bar)。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;insensitive&quot;</span></code></dt><dd><p>渲染insensitive状态下条(bar)。这个值允许条(bar)改变自身样式，尽管那很少使用。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;hide&quot;</span></code></dt><dd><p>不渲染条(bar)。空间会预留给条(bar)，不会那段空间不绘制任何东西。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-keyboard_focus_alt">
+<span class="sig-name descname"><span class="pre">keyboard_focus</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-keyboard_focus_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，也是默认值，按钮可以通过键盘的焦点机制获得焦点，前提是这个按钮本身允许获得焦点。若为False，键盘焦点机制会跳过这个按钮。(键盘焦点机制使用键盘或者类似键盘的设备，比如游戏手柄。)</p>
+</dd></dl>
+
+</section>
+<section id="box">
+<span id="box-style-properties"></span><h3>方框(box)样式特性<a class="headerlink" href="#box" title="Link to this heading"> link</a></h3>
+<p>这些样式特性用于横向和纵向的方块布局。</p>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-spacing">
+<span class="sig-name descname"><span class="pre">spacing</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-spacing" title="Link to this definition"> link</a></dt>
+<dd><p>方块内成员之间的空间距离，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-first_spacing">
+<span class="sig-name descname"><span class="pre">first_spacing</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-first_spacing" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，表示，方框内的第一个跟第二个成员间的空间距离，单位为像素。该值覆盖spacing特性。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-box_reverse">
+<span class="sig-name descname"><span class="pre">box_reverse</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-box_reverse" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，方块内物品位置将被翻转。hbox左右镜像翻转，vbox上下镜像翻转。默认情况下的值为False。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-box_wrap">
+<span class="sig-name descname"><span class="pre">box_wrap</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-box_wrap" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，当到达方块最后一行或列时会发生扭转(warp)。若为False，会在每一行的结尾扩展。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-box_wrap_spacing">
+<span class="sig-name descname"><span class="pre">box_wrap_spacing</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-box_wrap_spacing" title="Link to this definition"> link</a></dt>
+<dd><p>当box_wrap为True时，box_wrap_spacing项用于指定被wrap的行或列的间距。
+(行间距就是被warp的hbox在垂直方向空间，列间距就是被warp的vbox在水平方向的空间。)</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-box_align">
+<span class="sig-name descname"><span class="pre">box_align</span></span> <span class="pre">-</span>&#160; <span class="pre">float</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-box_align" title="Link to this definition"> link</a></dt>
+<dd><p>该特性决定了box组件内行或列的对齐方式。
+若为默认值0.0，列使用左对齐，行使用上对齐。
+若为0.5，则居中对齐。</p>
+<p>若该特性值为None，且设置了 <a class="reference internal" href="#style-property-xfill"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xfill</span></code></a> 或 <a class="reference internal" href="#style-property-yfill"><code class="xref std std-propref docutils literal notranslate"><span class="pre">yfill</span></code></a> 的值，则不会给子组件添加额外的空白，
+并忽略box主方向内子组件的坐标值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-order_reverse">
+<span class="sig-name descname"><span class="pre">order_reverse</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-order_reverse" title="Link to this definition"> link</a></dt>
+<dd><p>若为False，也就是默认值，方框内元素会从前往后绘制，第一个元素下面是第二个元素。若为True，顺序会倒过来，第一个元素会在方框最底层。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-box_justify">
+<span class="sig-name descname"><span class="pre">box_justify</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span> <span class="pre">or</span> <span class="pre">&quot;first&quot;</span> <span class="pre">or</span> <span class="pre">&quot;all&quot;</span><a class="headerlink" href="#style-property-box_justify" title="Link to this definition"> link</a></dt>
+<dd><p>若不为False，box中的内容两端对齐——即一行中的各元素间会被添加合适的空间，使首尾正好充满一行。
+若为True，则除了最后一行都将两端对齐。
+若为“first”，则只有首行两端对齐。
+若为“all”，则每一行都两端对齐，包括最后一行。
+设置两端对齐后，其他对齐效果不再生效，除非某行只有一个元素。</p>
+<p>若该特性值不为False，且设置了 <a class="reference internal" href="#style-property-xfill"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xfill</span></code></a> 或 <a class="reference internal" href="#style-property-yfill"><code class="xref std std-propref docutils literal notranslate"><span class="pre">yfill</span></code></a> 的值，则不会给子组件添加额外的空白，
+并忽略box主方向内子组件的坐标值。</p>
+</dd></dl>
+
+</section>
+<section id="grid">
+<span id="grid-style-properties"></span><h3>网格(grid)样式特性<a class="headerlink" href="#grid" title="Link to this heading"> link</a></h3>
+<p>这些特性用于网格(grid)和虚拟样机网格(vpgrid)可视组件中。</p>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-spacing_alt">
+<span class="sig-name descname"><span class="pre">spacing</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-spacing_alt" title="Link to this definition"> link</a></dt>
+<dd><p>各网格单元之间的空间，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xspacing">
+<span class="sig-name descname"><span class="pre">xspacing</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-xspacing" title="Link to this definition"> link</a></dt>
+<dd><p>各网格单元之间水平方向的空间，单位为像素。当这个值不是None时，优先级比spacing特性高。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-yspacing">
+<span class="sig-name descname"><span class="pre">yspacing</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span> <span class="pre">or</span> <span class="pre">None</span><a class="headerlink" href="#style-property-yspacing" title="Link to this definition"> link</a></dt>
+<dd><p>各网格单元之间垂直方向的空间，单位为像素。当这个值不是None时，优先级比spacing特性高。</p>
+</dd></dl>
+
+</section>
+<section id="fixed-style-properties">
+<span id="id10"></span><h3>固定布局的样式特性<a class="headerlink" href="#fixed-style-properties" title="Link to this heading"> link</a></h3>
+<p>这些特性用于固定布局(layout)。</p>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-fit_first">
+<span class="sig-name descname"><span class="pre">fit_first</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span> <span class="pre">or</span> <span class="pre">&quot;width&quot;</span> <span class="pre">or</span> <span class="pre">&quot;height&quot;</span><a class="headerlink" href="#style-property-fit_first" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，固定宽度的布局所有单元尺寸都会严格等于第一个单元内元素的尺寸。如果是“width”，只有单元格宽度能改变(固定布局会在垂直方向上填满界面)。类似的，“height”值能改变单元跟高度。</p>
+<p>由于 fit_first 的原因，子组件的位置将被忽略。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xfit">
+<span class="sig-name descname"><span class="pre">xfit</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-xfit" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，固定布局的尺寸在水平方向会严格匹配最右侧子组件的尺寸。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-yfit">
+<span class="sig-name descname"><span class="pre">yfit</span></span> <span class="pre">-</span>&#160; <span class="pre">boolean</span><a class="headerlink" href="#style-property-yfit" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，固定布局的尺寸在垂直方向会严格匹配最底部子组件的尺寸。</p>
+</dd></dl>
+
+<p>提供了以上特性时，固定布局的子组件们会首先根据指定整块区域。一旦获得子组件的尺寸和位置，再根据固定布局的尺寸应该对应的特性。</p>
+</section>
+<section id="margin-style-properties">
+<span id="id11"></span><h3>边距样式特性<a class="headerlink" href="#margin-style-properties" title="Link to this heading"> link</a></h3>
+<p>边距(margin)样式特性用于增加某些可视组件周围的透明空间。可用于：window、frame、button、grid和vpgrid。</p>
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-left_margin_alt">
+<span class="sig-name descname"><span class="pre">left_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-left_margin_alt" title="Link to this definition"> link</a></dt>
+<dd><p>可视组件左边距，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-right_margin_alt">
+<span class="sig-name descname"><span class="pre">right_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-right_margin_alt" title="Link to this definition"> link</a></dt>
+<dd><p>可视组件右边距，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-xmargin_alt">
+<span class="sig-name descname"><span class="pre">xmargin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-xmargin_alt" title="Link to this definition"> link</a></dt>
+<dd><p>等效于，将左边距和右边距设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-top_margin_alt">
+<span class="sig-name descname"><span class="pre">top_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-top_margin_alt" title="Link to this definition"> link</a></dt>
+<dd><p>可视组件上边距，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-bottom_margin_alt">
+<span class="sig-name descname"><span class="pre">bottom_margin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-bottom_margin_alt" title="Link to this definition"> link</a></dt>
+<dd><p>可视组件下边距，单位为像素。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-ymargin_alt">
+<span class="sig-name descname"><span class="pre">ymargin</span></span> <span class="pre">-</span>&#160; <span class="pre">int</span><a class="headerlink" href="#style-property-ymargin_alt" title="Link to this definition"> link</a></dt>
+<dd><p>等效于，将上边距和下边距设置为相同的值。</p>
+</dd></dl>
+
+<dl class="std style-property">
+<dt class="sig sig-object std" id="style-property-margin_alt">
+<span class="sig-name descname"><span class="pre">margin</span></span> <span class="pre">-</span>&#160; <span class="pre">tuple</span><a class="headerlink" href="#style-property-margin_alt" title="Link to this definition"> link</a></dt>
+<dd><p>该值可以是一个2元元组，分别设置xmargin和ymargin。
+该值也可以是一个4元元组，分别设置left_margin、top_margin、right_margin和bottom_margin。</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="style.html" class="btn btn-neutral float-left" title="样式(style)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="screens.html" class="btn btn-neutral float-right" title="界面和界面语言" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

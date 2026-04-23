@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文本着色器 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/textshaders.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="启动器" href="launcher.html" />
+    <link rel="prev" title="定制鼠标光标" href="mouse.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">文本着色器</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-text-shaders">使用文本着色器</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-text-shaders">指定文本着色器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text-shader-callback">文本着色器回调</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#built-in-text-shaders">内建的文本着色器</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dissolve"><code class="docutils literal notranslate"><span class="pre">dissolve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flip"><code class="docutils literal notranslate"><span class="pre">flip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jitter"><code class="docutils literal notranslate"><span class="pre">jitter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linetexture"><code class="docutils literal notranslate"><span class="pre">linetexture()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#offset"><code class="docutils literal notranslate"><span class="pre">offset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slowalpha"><code class="docutils literal notranslate"><span class="pre">slowalpha()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#texture"><code class="docutils literal notranslate"><span class="pre">texture()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#typewriter"><code class="docutils literal notranslate"><span class="pre">typewriter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wave"><code class="docutils literal notranslate"><span class="pre">wave()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zoom"><code class="docutils literal notranslate"><span class="pre">zoom()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-text-shaders">创建文本着色器</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.register_textshader"><code class="docutils literal notranslate"><span class="pre">renpy.register_textshader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variables-in-text-shaders">文本着色器中的变量</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#uniform">uniform变量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attribute">attribute变量</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pseudo-glyphs">伪字形</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text-shaders-example">样例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">文本着色器</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/textshaders.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="text-shaders">
+<span id="id1"></span><h1>文本着色器<a class="headerlink" href="#text-shaders" title="Link to this heading"> link</a></h1>
+<p>Ren’Py中包含一个文本着色器(text shader)系统，可以控制文本的显示效果。
+启用文本着色器系统后，会使用两个三角面片 <a class="reference internal" href="model.html"><span class="doc">基于模型的渲染器</span></a> 来渲染每一个Unicode字符。
+创作者自定义或Ren’Py内置的着色器程序都可以通过这种方式应用在模型上，并控制文本显示效果。</p>
+<p>文本着色器的文档有三块内容：</p>
+<ol class="arabic simple">
+<li><p>如何使用文本着色器</p></li>
+<li><p>Ren’Py内置哪些文本着色器</p></li>
+<li><p>如何创建新的文本着色器</p></li>
+</ol>
+<p>需要注意，文本着色器系统本身不复杂，游戏创作者可以很容易掌握。
+但制作符合自己要求的文本着色器需要很多基础知识，比如GLSL(OpenGL Shading Language)和 <a class="reference internal" href="model.html"><span class="doc">基于模型的渲染器</span></a> 等。
+其中大部分基础知识都与Ren’Py的功能特性无关。</p>
+<section id="using-text-shaders">
+<span id="id2"></span><h2>使用文本着色器<a class="headerlink" href="#using-text-shaders" title="Link to this heading"> link</a></h2>
+<p>总共有三种方法可以使用文本着色器：</p>
+<p><strong>默认文本着色器</strong> 第一种方法，使用 <code class="xref std std-var docutils literal notranslate"><span class="pre">config.default_textshader</span></code> 设置默认的文本着色器。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">default_textshader</span> <span class="o">=</span> <span class="s2">&quot;wave:10&quot;</span>
+</pre></div>
+</div>
+<p>这样设置后，指定的文本着色器将用于所有文本，除了某些额外指定了文本着色器的内容。
+该设置项还可以合并多个文本着色器，其中大部分都是默认着色器。</p>
+<p>默认文本着色器需要小心慢速文本的情况，并且不应产生副作用。</p>
+<p><strong>样式</strong> 第二种方法，使用样式特性 <code class="xref std std-propref docutils literal notranslate"><span class="pre">textshader</span></code>。可以直接指定样式特性，也可以使用Ren’Py提供的多种样式设置方式。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">style</span> <span class="k">default</span><span class="p">:</span>
+    <span class="na">textshader</span> <span class="s2">&quot;dissolve&quot;</span>
+
+<span class="k">define</span> <span class="n">goldfinger</span> <span class="o">=</span> <span class="n">Character</span><span class="p">(</span><span class="s2">&quot;金手指&quot;</span><span class="p">,</span> <span class="n">what_textshader</span><span class="o">=</span><span class="s2">&quot;linetexture:gold.png&quot;</span><span class="p">)</span>
+
+<span class="k">screen</span> <span class="n">purchase</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">text</span> <span class="s2">&quot;购买DLC内容！&quot;</span> <span class="na">textshader</span> <span class="s2">&quot;wave&quot;</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;立刻购买&quot;</span><span class="p">:</span>
+            <span class="na">text_textshader</span> <span class="s2">&quot;wave&quot;</span> <span class="na">action</span> <span class="n">iap</span><span class="o">.</span><span class="n">Purchase</span><span class="p">(</span><span class="s2">&quot;dlc&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>文本标签</strong> 第三种方法，使用 <a class="reference internal" href="text.html#text-tag-shader"><code class="xref std std-tt docutils literal notranslate"><span class="pre">对应的文本标签</span></code></a> 修改部分文本的显示效果。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;这是什么？  {shader=zoom}突然出现{/shader} 的一封信？&quot;</span>
+</pre></div>
+</div>
+<p><strong>注意</strong> 一个文本段落要么都使用文本着色器，要么都不使用，不能混着用。
+例如，应该通过设置 <code class="xref std std-var docutils literal notranslate"><span class="pre">config.default_textshader</span></code> 或样式特性 <code class="xref std std-propref docutils literal notranslate"><span class="pre">textshader</span></code>，再使用文本标签显示效果。</p>
+<section id="specifying-text-shaders">
+<span id="id3"></span><h3>指定文本着色器<a class="headerlink" href="#specifying-text-shaders" title="Link to this heading"> link</a></h3>
+<p>在脚本中可以使用字符串来指定文本着色器：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;dissolve&quot;</span>
+<span class="s2">&quot;jitter:u__jitter=1.0, 3.0&quot;</span>
+<span class="s2">&quot;texture:gold.png&quot;</span>
+</pre></div>
+</div>
+<p>字符串的第一部分，即第一个冒号前的内容，表示文本着色器的名称。
+字符串的其他部分，对应传给着色器的一些uniform变量，使用冒号分隔。
+(uniform变量是着色器程序的控制变量。)</p>
+<p>uniform变量可以使用等号(=)赋值。也可以省略uniform变量名，按顺序依次对所有uniform变量赋值。(Ren’Py 7不支持省略uniform变量名。)
+所有内置变量名均以 u_ 开头，处于简洁也可以省略这个 u_ 。</p>
+<p>uniform变量的值可能是以下类型：</p>
+<ul class="simple">
+<li><p>至少1个至多4个的数字，使用逗号分隔。分别用于float、vec2、vec3和vec4类型的变量。</p></li>
+<li><p>以#开头，表示颜色。(例如，#f00和#ff0000都表示红色。)该值会创建一个颜色对应的vec4向量。颜色会预乘上alpha通道的值。</p></li>
+<li><p>一个 <a class="reference internal" href="displayables.html"><span class="doc">可视组件</span></a>，会用做一张纹理。纹理会创建一个sampler2D对象，并用于纹理采样。</p></li>
+</ul>
+<p>uniform值不能使用表达式或从某个变量读取，但可以使用文本内插创建一个字符串并计算出某个文本着色器的标签或参数。</p>
+<p>最后，文本着色器可以使用 | 符号联用。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;jitter:1.0, 3.0|wave&quot;</span>
+</pre></div>
+</div>
+<p>上面这句脚本会在文本中同时应用jitter和wave两个着色器，前提是两个着色器互相兼容，并且没有同名的uniform变量
+(或具有同名且同类型的uniform变量，能够互相兼容，取值固定使用着色器列表中最后一个同名uniform变量的值)。</p>
+<p>除非文本着色器显式将 <cite>include_default</cite> 设置为False，通过样式或文本标签应用文本着色器时都将联用默认的文本着色器。</p>
+</section>
+<section id="text-shader-callback">
+<span id="id4"></span><h3>文本着色器回调<a class="headerlink" href="#text-shader-callback" title="Link to this heading"> link</a></h3>
+<p>配置项 <a class="reference internal" href="config.html#var-config.textshader_callbacks"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.textshader_callbacks</span></code></a> 可以设置回调函数，在启用某个文本着色器之后就会调用设置的回调函数。
+该功能可以基于个人设置(preference)定制文本着色器。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">default</span> <span class="n">persistent</span><span class="o">.</span><span class="n">dissolve_text</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_default_textshader</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">persistent</span><span class="o">.</span><span class="n">dissolve_text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;dissolve&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;typewriter&quot;</span>
+
+<span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">default_textshader</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+<span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">textshader_callbacks</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_default_textshader</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="built-in-text-shaders">
+<span id="id5"></span><h2>内建的文本着色器<a class="headerlink" href="#built-in-text-shaders" title="Link to this heading"> link</a></h2>
+<p>以下是Ren’Py内建的文本着色器：</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="dissolve">
+<span class="sig-name descname"><span class="pre">dissolve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dissolve" title="Link to this definition"> link</a></dt>
+<dd><p>dissolve文本着色器可以将文本以溶解(dissolve)形式缓慢显示出来。dissolve指定范围的字符，按顺序依次显示，直到显示完最后一个字符。</p>
+<dl class="simple">
+<dt><cite>u__duration = 10.0</cite></dt><dd><p>过渡效果持续时间。若设为0，立刻显示没有过渡效果。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flip">
+<span class="sig-name descname"><span class="pre">flip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flip" title="Link to this definition"> link</a></dt>
+<dd><p>flip文本着色器会将文本在水平方向上翻转。开头的字符先翻转，最后的字符最后翻转。</p>
+<dl class="simple">
+<dt><cite>u__duration = 10.0</cite></dt><dd><p>过渡效果持续时间。若设为0，立刻翻转没有过渡效果。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="jitter">
+<span class="sig-name descname"><span class="pre">jitter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jitter" title="Link to this definition"> link</a></dt>
+<dd><p>jitter文本着色器会让文本抖动，即根据文本原显示位置添加一个随机偏移量，且每帧的位置偏移量都重新计算。</p>
+<dl class="simple">
+<dt><cite>u__jitter=(3.0, 3.0)</cite></dt><dd><p>抖动幅度，单位为像素。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linetexture">
+<span class="sig-name descname"><span class="pre">linetexture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#linetexture" title="Link to this definition"> link</a></dt>
+<dd><p>将文本与某个纹理相乘，各行单独计算。用到的纹理在水平方向会与文本左端对齐。
+纹理的中心点在垂直方向上会与文本底部对齐，这也意味着纹理下半部分几乎就看不到了。</p>
+<dl class="simple">
+<dt><cite>u__texture = …</cite></dt><dd><p>与文本相乘使用的纹理。</p>
+</dd>
+<dt><cite>u__scale = (1.0, 1.0)</cite></dt><dd><p>纹理的缩放系数。例如(1.0, 0.5)可以让纹理变为原本的一半高度。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#offset" title="Link to this definition"> link</a></dt>
+<dd><p>offset文本着色器可以让文本位置偏移一个固定的值。</p>
+<dl class="simple">
+<dt><cite>u__offset = (0.0, 0.0)</cite></dt><dd><p>文本偏移量，单位为像素。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="slowalpha">
+<span class="sig-name descname"><span class="pre">slowalpha</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#slowalpha" title="Link to this definition"> link</a></dt>
+<dd><p>slowalpha着色器用于配合另一个慢速文本着色器，比如typewriter或dissolve。
+它可以让未被其他文本着色器生效的文本内容以一个半透明的状态显示而不是完全不可见，即参数u__alpha的值。</p>
+<dl class="simple">
+<dt><cite>u__alpha = 0.2</cite></dt><dd><p>其他文本着色器还未生效部分的文本不透明度。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="texture">
+<span class="sig-name descname"><span class="pre">texture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#texture" title="Link to this definition"> link</a></dt>
+<dd><p>texture文本着色器会将多行文本与某个纹理的颜色相乘。
+它不对轮廓线(outline)和偏移(offset)生效。用到的纹理将与整段文本的左上角对齐。</p>
+<dl class="simple">
+<dt><cite>u__texture = …</cite></dt><dd><p>与文本相乘使用的纹理。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="typewriter">
+<span class="sig-name descname"><span class="pre">typewriter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#typewriter" title="Link to this definition"> link</a></dt>
+<dd><p>typewriter文本着色器配合低速文本，可以让字符逐个出现，模仿人类打字员的行为。</p>
+<p>使用该着色器后，默认文本着色器将不生效。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="wave">
+<span class="sig-name descname"><span class="pre">wave</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wave" title="Link to this definition"> link</a></dt>
+<dd><p>wave文本着色器可以让文本向波浪一样上下弹跳。</p>
+<dl class="simple">
+<dt><cite>u__amplitude = 5.0</cite></dt><dd><p>文本的上下位移幅度，单位为像素。</p>
+</dd>
+<dt><cite>u__frequency = 2.0</cite></dt><dd><p>移动频率，表示每秒完成整个弹跳的次数。</p>
+</dd>
+<dt><cite>u__wavelength = 20.0</cite></dt><dd><p>整个波长范围涉及的字符数。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="zoom">
+<span class="sig-name descname"><span class="pre">zoom</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#zoom" title="Link to this definition"> link</a></dt>
+<dd><p>zoom文本着色器可以让低速文本从某个初始大小逐步放大到完整尺寸。初始大小的值由参数u__zoom决定，默认为0.0。</p>
+<dl class="simple">
+<dt><cite>u__zoom = 0.0</cite></dt><dd><p>字符显示时的初始大小。</p>
+</dd>
+<dt><cite>u__duration = 10.0</cite></dt><dd><p>过渡效果持续时间。若设为0，立刻变大没有过渡效果。</p>
+</dd>
+</dl>
+<p>使用该着色器后，默认文本着色器将不生效。</p>
+</dd></dl>
+
+</section>
+<section id="creating-text-shaders">
+<span id="id6"></span><h2>创建文本着色器<a class="headerlink" href="#creating-text-shaders" title="Link to this heading"> link</a></h2>
+<p>文本着色器是运行在GPU上的GLSL程序。可以使用 renpy.register_text_shader 函数注册文本着色器。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.register_textshader">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">register_textshader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_slow_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_slow_duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redraw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redraw_when_slow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.register_textshader" title="Link to this definition"> link</a></dt>
+<dd><p>该函数会创建一个文本着色器，并注册着色器名 <cite>name</cite> 。</p>
+<p>该函数使用下列入参：</p>
+<dl>
+<dt><cite>name</cite></dt><dd><p>文本着色器名。同时也会注册一个名为 <cite>name</cite> 的着色器程序。</p>
+</dd>
+<dt><cite>shaders</cite></dt><dd><p>应用到文本的着色器程序。该项可以是一个字符串，字符串列表或字符串元组。
+该项中包含的着色器程序必须是通过 <a class="reference internal" href="model.html#renpy.register_shader" title="renpy.register_shader"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.register_shader()</span></code></a> 或本函数注册过的着色器。
+如果着色器名前带一个‘-’，表示从着色器列表中移除对应的着色器程序。
+(例如，“-textshader.typewriter”表示移除typerwriter着色器。)</p>
+<p>注意，通过该函数注册的着色器名自动添加了前缀“textshader.”，在作为参数时需要传入完整的着色器名。</p>
+</dd>
+<dt><cite>extra_slow_time</cite></dt><dd><p>添加一个额外的时间。Ren’Py计算当前字符的效果时间时将加上该时间。
+某些着色器做字符过渡效果时间不足时，该参数就可以用上。</p>
+</dd>
+<dt><cite>extra_slow_duration</cite></dt><dd><p>该参数也是一个时间值，会除以同时生效字符总数然后再加到 <cite>extra_slow_time</cite> 上。</p>
+</dd>
+<dt><cite>redraw</cite></dt><dd><p>所有低速文本显示并且经过 <cite>extra_slow_time</cite> 时间后，再次重新绘制的时间间隔，单位为秒。</p>
+</dd>
+<dt><cite>redraw_when_slow</cite></dt><dd><p>文本已绘制并且显示低速文本时，再次重新绘制的时间间隔，单位为秒。</p>
+</dd>
+<dt><cite>include_default</cite></dt><dd><p>若为True，将会联用 <code class="xref std std-var docutils literal notranslate"><span class="pre">config.default_textshader</span></code> 中的着色器。</p>
+</dd>
+<dt><cite>adjust_function</cite></dt><dd><p>该参数是一个函数，通过某个对象调用。传给文本着色器的uniform变量会先使用该函数处理。
+该函数可以设置来源对象的 <cite>extra_slow_time</cite>、<cite>extra_slow_duration</cite>、
+<cite>redraw</cite> 和 <cite>redraw_when_slow</cite> 这4个字段。</p>
+</dd>
+<dt><cite>doc</cite></dt><dd><p>包含文档信息的一个字符串。该参数为Ren’Py的文档系统所设计。</p>
+</dd>
+</dl>
+<p>以 <code class="docutils literal notranslate"><span class="pre">u_</span></code> 开头的关键字入参会传给着色器作为uniform变量，以 <code class="docutils literal notranslate"><span class="pre">#</span></code> 开头的字符串会识别为某种颜色。
+大多数uniform变量都应该以 <code class="docutils literal notranslate"><span class="pre">u__</span></code> 开头，使用 <a class="reference internal" href="model.html#shader-local-variables"><span class="std std-ref">着色器本地变量</span></a> 防止与其他着色器发生变量名冲突。</p>
+<p>名为 <cite>variables</cite> 的关键字入参和所有以 <cite>fragment_</cite>、<cite>vertex_</cite> 开头的关键字入参都会传给 <a class="reference internal" href="model.html#renpy.register_shader" title="renpy.register_shader"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.register_shader()</span></code></a> 函数，
+并注册对应的着色器。</p>
+</dd></dl>
+
+<section id="variables-in-text-shaders">
+<span id="id7"></span><h3>文本着色器中的变量<a class="headerlink" href="#variables-in-text-shaders" title="Link to this heading"> link</a></h3>
+<p>除了创作者自己设计文本着色器时指定的uniform变量(通常以 <code class="docutils literal notranslate"><span class="pre">u__</span></code> 开头)，Ren’Py还使下列变量可以直接在文本着色器中使用。
+若要在文本着色器中使用某个变量，需要将变量名通过 <cite>variables</cite> 参数传入 renpy.register_text_shader 函数。</p>
+<p>除此之外，针对模型还可以使用 <a class="reference internal" href="model.html#model-uniforms"><span class="std std-ref">uniform和attribute变量</span></a>，
+常用的包括 <cite>a_position</cite>、<cite>a_tex_coord</cite>、<cite>u_time</cite> 和 <cite>u_random</cite>。</p>
+<section id="uniform">
+<span id="uniforms"></span><h4>uniform变量<a class="headerlink" href="#uniform" title="Link to this heading"> link</a></h4>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_depth</span></code></dt><dd><p>从最顶层算起，文本的深度(depth)。最顶层的文本深度为0.0，第一层轮廓线或投影的深度为1.0，第二层罗廓线或投影的深度为2.0，以此类推。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_main</span></code></dt><dd><p>若该变量值为1.0，则对应文本为主要文本。若该变量值为0.0，则对应文本为主要文本的轮廓线或投影。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_max_depth</span></code></dt><dd><p>u_text_depth的最大值，表示能绘制的轮廓线和投影总数量。
+当u_text_depth等于u_text_max_depth时，意味着当前文本是最后一层轮廓线或投影，该功能在绘制背景时可能有用。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vec2</span> <span class="pre">u_text_offset</span></code></dt><dd><p>文本相对字符中心点的偏移量。按照先在x轴方向偏移再y轴方向偏移的顺序计算，单位为像素。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_outline</span></code></dt><dd><p>文本轮廓线宽度。轮廓线只考虑能绘制的像素点。该变量表示从文本外缘到轮廓线外援的距离，单位为像素。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_slow_duration</span></code></dt><dd><p>使用低速文本时，单个字符的效果时间。设置为0.0表示不显示低速文本。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_slow_time</span></code></dt><dd><p>低速文本效果的时间戳，从效果生效开始计算，单位为秒。仅当低速文本效果结束时该值才会增加，并输出最大值。
+如果用户点击并结束了低速文本，也会输出最大值。其应只能用于低速文本。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_to_drawable</span></code></dt><dd><p>虚拟像素向可绘制像素的转换比例。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">u_text_to_virtual</span></code></dt><dd><p>可绘制像素向虚拟像素的转换比例。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sampler2D</span> <span class="pre">tex0</span></code></dt><dd><p>在当前深度(depth)包含渲染文本的对应纹理。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vec2</span> <span class="pre">res0</span></code></dt><dd><p>tex0的分辨率，以可绘制像素计。</p>
+</dd>
+</dl>
+</section>
+<section id="attribute">
+<span id="attributes"></span><h4>attribute变量<a class="headerlink" href="#attribute" title="Link to this heading"> link</a></h4>
+<p>绘制文本时，每个字形(glyph)都有自身对应的顶点(vertex)。多个字形可能会有一些顶点的坐标是相同的，但依然会看作不同顶点传入着色器。</p>
+<p>(译者注：baseline、ascent和descent是字母型文字才需要考虑的东西，纯中文用户完全不用管。)</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">a_text_ascent</span></code></dt><dd><p>当前字形的字体在基线以上的ascent高度，以可绘制像素计。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vec2</span> <span class="pre">a_text_center</span></code></dt><dd><p>字形基线的中心坐标，以可绘制像素计。该坐标并不是三角形中心，由基线与字符中心的距离决定。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">a_text_descent</span></code></dt><dd><p>The descent of the current glyph below the baseline, in drawable pixels.
+当前字形的字体在基线以下的descent高度，以可绘制像素计。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">a_text_index</span></code></dt><dd><p>正在绘制字形的索引号。顶点索引从0开始，依次递增。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vec2</span> <span class="pre">a_text_min_time</span></code></dt><dd><p>所有字形的任意顶点需要显示的最小时间。从左往右显示时，即最左端顶点的显示时间。
+若要让文本立刻显示，但 <code class="docutils literal notranslate"><span class="pre">u_text_slow_duration</span></code> 的值又不是0.0，该项应设置为-3600.0。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vec2</span> <span class="pre">a_text_max_time</span></code></dt><dd><p>所有字形的任意顶点需要显示的最大时间。从左往右显示时，即最右端顶点的显示时间。
+若要让文本立刻显示，但 <code class="docutils literal notranslate"><span class="pre">u_text_slow_duration</span></code> 的值又不是0.0，该项应设置为-3600.0。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">a_text_time</span></code></dt><dd><p>对应顶点的显示时间。
+若要让文本立刻显示，但 <code class="docutils literal notranslate"><span class="pre">u_text_slow_duration</span></code> 的值又不是0.0，该项应设置为-3600.0。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vec4</span> <span class="pre">a_text_pos_rect</span></code></dt><dd><p>整个字形的包围框，以可绘制像素计。该变量是一个vec4类型，分别表示包围狂的x、y、宽度和高度，以可绘制像素计。
+可以通过除以 <code class="docutils literal notranslate"><span class="pre">res0</span></code> 来获得纹理坐标值。</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="pseudo-glyphs">
+<span id="id8"></span><h3>伪字形<a class="headerlink" href="#pseudo-glyphs" title="Link to this heading"> link</a></h3>
+<p>Ren’Py绘制带轮廓线的文本时，会创建覆盖文本开头和结尾的伪字形(pseudo-glyph)。
+如果遇到空行，则会创建覆盖整行的伪字形。
+这些伪字形用于计算轮廓线超出文字顶部和底部的区域。</p>
+</section>
+<section id="text-shaders-example">
+<span id="id9"></span><h3>样例<a class="headerlink" href="#text-shaders-example" title="Link to this heading"> link</a></h3>
+<p>这是一个文本着色器样例，能让文本显示后转动。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">adjust_extra_slow_time</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">u__delay</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        调整文本着色器的额外显示时间，以支持旋转文本着色器。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">extra_slow_time</span> <span class="o">=</span> <span class="n">u__delay</span>
+
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_textshader</span><span class="p">(</span>
+        <span class="s2">&quot;spin&quot;</span><span class="p">,</span>
+        <span class="n">adjust_function</span> <span class="o">=</span> <span class="n">adjust_extra_slow_time</span><span class="p">,</span>
+
+        <span class="n">variables</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        uniform float u__delay;</span>
+<span class="s2">        uniform float u__offset;</span>
+<span class="s2">        uniform float u_text_slow_time;</span>
+<span class="s2">        attribute vec2 a_text_center;</span>
+<span class="s2">        attribute float a_text_min_time;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span>
+
+        <span class="n">vertex_50</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        float l__angle = clamp((u_text_slow_time - a_text_min_time) / u__delay, 0.0, 1.0) * 2.0 * 3.1415926536;</span>
+<span class="s2">        float l__sin = sin(l__angle);</span>
+<span class="s2">        float l__cos = cos(l__angle);</span>
+
+<span class="s2">        gl_Position.y -= u__offset;</span>
+<span class="s2">        gl_Position.xy -= a_text_center;</span>
+<span class="s2">        gl_Position = vec4(</span>
+<span class="s2">            gl_Position.x * l__cos - gl_Position.y * l__sin,</span>
+<span class="s2">            gl_Position.x * l__sin + gl_Position.y * l__cos,</span>
+<span class="s2">            gl_Position.z,</span>
+<span class="s2">            gl_Position.w</span>
+<span class="s2">            );</span>
+<span class="s2">        gl_Position.xy += a_text_center;</span>
+<span class="s2">        gl_Position.y += u__offset;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span>
+
+        <span class="n">u__delay</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">u__offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>之后就可以在如下脚本中使用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">default_textshader</span> <span class="o">=</span> <span class="s2">&quot;typewriter&quot;</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+
+    <span class="s2">&quot;这是一个 {shader=spin:0.5:-5}旋转{/shader} 文本着色器测试。&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mouse.html" class="btn btn-neutral float-left" title="定制鼠标光标" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="launcher.html" class="btn btn-neutral float-right" title="启动器" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,2481 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>界面和界面语言 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/screens.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="界面行为(action)、值(value)和函数" href="screen_actions.html" />
+    <link rel="prev" title="样式特性(property)" href="style_properties.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">界面和界面语言</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#screen-language">界面语言</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#screen-language-syntax">界面语言语法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#screen">screen语句</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#user-interface-statements">用户接口语句</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bar">bar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#button">按钮(button)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dismiss">dismiss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixed">fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frame">框架(frame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid">grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hbox">hbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#imagebutton">图片按钮(imagebutton)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input">输入框(input)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key">key语句</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#label">脚本标签(label)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sl-mousearea">mousearea</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nearrect">nearrect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#null">null</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#side">side</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text">text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#textbutton">textbutton</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#timer">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transform">transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vbar">vbar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vbox">vbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#viewport">viewport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vpgrid">vpgrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#window">window</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#imagemap">imagemap语句</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sl-imagemap">imagemap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hotspot">hotspot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hotbar">hotbar</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#add">add语句</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sl-add">add</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sl-advanced-displayables">高级可视组件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#areapicker">areapicker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drag">Drag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#draggroup">Draggroup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#has">has语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sl-control-statements">控制语句</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for">for</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#if">if</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#on">on</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use">use</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#usetransclude">use和transclude语句</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#showif">showif语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#screen-statements">screen语句</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#show-screen-statement">show screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hide-screen">hide screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#call-screen">call screen</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#screen-variants">界面变种</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#screen-see-also">其他参考</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">界面和界面语言</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/screens.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="screens-and-screen-language">
+<span id="screens"></span><span id="id1"></span><h1>界面和界面语言<a class="headerlink" href="#screens-and-screen-language" title="Link to this heading"> link</a></h1>
+<p>用户在Ren’Py游戏中所有的可见元素可以分为图像和用户接口两大类。图像通过scene、show和hide语句向用户展示，也是故事叙述的大头。其他所有可见的元素都属于用户接口。用户接口可以通过界面实现定制化。</p>
+<p>界面有下列4种方式显示：</p>
+<ul class="simple">
+<li><p>隐含在脚本语句执行中。例如，say语句会触发 <cite>say</cite> 界面的显示。</p></li>
+<li><p>自动显示。例如，Ren’Py启动后或者用户退回到主菜单时，会显示 <cite>main_menu</cite> 界面。</p></li>
+<li><p>作为一个用户行为，与按钮、鼠标按键或者键盘按键相关联。默认情况下， <cite>save</cite> 界面是用户鼠标右击或者按下退出(Esc)键才会展示。也可以定义一个on-screen按钮用于显示 <cite>save</cite> 界面。</p></li>
+<li><p>明确使用某些语句触发界面显示的情况。</p></li>
+</ul>
+<p>可以一次显示多个界面。</p>
+<p>界面有两个主要功能。第一个是向用户显示信息。信息的显示可以使用文本、条(bar)和图像(image)。使用这种方法显示某些信息是游戏的需要。例如， <cite>say</cite> 界面用于向用户显示对话，包括说话人的名字和说话内容。</p>
+<p>界面的另一个功能是允许用户与游戏交互。按钮和条(bar)允许用户触发某些行为(action)和调整数值。Ren’Py包含一个预定义行为的池，允许用户快进、个性化控制、读档和存档等。创作者还可以使用Python编写新的行为。</p>
+<p>每次交互行为的启动或重启，都会更新界面。注意 <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">None</span></code> 语句不会触发互动，也不会更新界面。</p>
+<p><strong>界面的改变不应该引发界面之外可视区域的副作用。</strong> Ren’Py会根据需要多次运行同一个界面。Ren’Py会在界面显示之前运行一些运行图像预加载进程。因此，如果界面有副作用，在预加载阶段就会发生。</p>
+<p>每个界面有一个作用范围(scope)与其关联，并有一些给定的变量值。如果某些界面中包含变量，首先在界面的作用范围(scope)内查找变量，然后再查找全局变量。</p>
+<section id="screen-language">
+<span id="id2"></span><h2>界面语言<a class="headerlink" href="#screen-language" title="Link to this heading"> link</a></h2>
+<p>界面语言是显示界面最正式的办法。它包含定义新界面的语句、添加可视组件至界面的语句和控制型语句。</p>
+<p>这是一个界面的样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">say</span><span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+    <span class="k">window</span> <span class="na">id</span> <span class="s2">&quot;window&quot;</span><span class="p">:</span>
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="na">spacing</span> <span class="mi">10</span>
+
+            <span class="k">text</span> <span class="n">who</span> <span class="na">id</span> <span class="s2">&quot;who&quot;</span>
+            <span class="k">text</span> <span class="n">what</span> <span class="na">id</span> <span class="s2">&quot;what&quot;</span>
+</pre></div>
+</div>
+<p>这段脚本的第一行是一个screen语句。Ren’Py中使用screen语句定义一个界面。界面的名字是
+<cite>say</cite>，所以该界面用于显示对话。其有两个入参，分别是 <cite>who</cite> 和 <cite>what</cite>。</p>
+<p>界面包含一个窗口，窗口id就叫“window”。窗口中包含一个垂直的框(box)，框内的空间为10个像素。它包含两个文本字段(field)，一个是发言者的名字，另一个是发言者的id。</p>
+<section id="screen-language-syntax">
+<span id="id3"></span><h3>界面语言语法<a class="headerlink" href="#screen-language-syntax" title="Link to this heading"> link</a></h3>
+<p>大多数界面语言语句使用通用的语法。(某些控制语句使用其他语法。)语句的开头以某个关键词进入。</p>
+<p>如果语句使用参数，参数就跟着开头的关键词后面。参数列表是使用空格分隔的简单表达式，除非有特殊情况。</p>
+<p>固定位置参数后面会跟一个特性(property)列表。一个特性包括特性名称和特性值组成。特性值是简单表达式，除非有特殊情况。特性列表中各个特性使用空格分隔。</p>
+<p>如果某个语句以英文冒号(:)结尾，后面就会跟一个语句块(block)。语句块的每一行可能是以下两者之一：</p>
+<ul class="simple">
+<li><p>一个特性列表。</p></li>
+<li><p>一条界面语言语句。</p></li>
+</ul>
+</section>
+<section id="screen">
+<span id="screen-statement"></span><h3>screen语句<a class="headerlink" href="#screen" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">screen</span></code> 语句在Ren’Py脚本语言中用于定义一个新的界面。其使用界面语言通用语法。</p>
+<p>screen语句使用一个参数，即界面名。界面名不是一个简单表达式，可以使用以下特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-modal">
+<span class="sig-name descname"><span class="pre">modal</span></span><a class="headerlink" href="#screen-property-modal" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，该界面是一个模态框(modal)。一个模态框界面防止用于与它下层的可视组件发生互动，除了默认的keymap类。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-sensitive">
+<span class="sig-name descname"><span class="pre">sensitive</span></span><a class="headerlink" href="#screen-property-sensitive" title="Link to this definition"> link</a></dt>
+<dd><p>决定界面是否被启用的表达式。每次交互行为时，该表达式都至少会被计算一次。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><a class="headerlink" href="#screen-property-tag" title="Link to this definition"> link</a></dt>
+<dd><p>被当作一个变量名处理，而不是一个表达式。该特性指定一个与界面关联的图像标签(tag)。显示某个界面会替换带用相同图像标签的其他界面。这可以用来确保在相同的上下文环境下，同一时间只有显示一个菜单界面。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-zorder">
+<span class="sig-name descname"><span class="pre">zorder</span></span><a class="headerlink" href="#screen-property-zorder" title="Link to this definition"> link</a></dt>
+<dd><p>该特性用于控制向用户显示界面的远近。数值越大，界面距离用户越近。默认值是0。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-variant">
+<span class="sig-name descname"><span class="pre">variant</span></span><a class="headerlink" href="#screen-property-variant" title="Link to this definition"> link</a></dt>
+<dd><p>如果该特性出现，应该是一个字符串或者字符串的列表，给定了待定义的变种界面。详见 <a class="reference internal" href="#screen-variants"><span class="std std-ref">界面变种</span></a>。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-style_prefix">
+<span class="sig-name descname"><span class="pre">style_prefix</span></span><a class="headerlink" href="#screen-property-style_prefix" title="Link to this definition"> link</a></dt>
+<dd><p>该特性是一个字符串，用于向界面所有子组件的样式提供一个前缀， <a class="reference internal" href="#style-prefix"><span class="std std-ref">如下描述</span></a>。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-layer">
+<span class="sig-name descname"><span class="pre">layer</span></span><a class="headerlink" href="#screen-property-layer" title="Link to this definition"> link</a></dt>
+<dd><p>该特性是一个字符串，给定了显示界面的默认图层(layer)名。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-roll_forward">
+<span class="sig-name descname"><span class="pre">roll_forward</span></span><a class="headerlink" href="#screen-property-roll_forward" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，使用 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 语句时将启用前向滚动。
+若为False，禁用前向滚动。
+若为None或没有指定，则使用 <a class="reference internal" href="config.html#var-config.call_screen_roll_forward"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.call_screen_roll_forward</span></code></a> 的值。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 语句启用前向滚动后，将保留返回值和待跳转标签，但不会引发副作用。
+这意味着，如果界面中只包含 <a class="reference internal" href="screen_actions.html#Jump" title="Jump"><code class="xref py py-func docutils literal notranslate"><span class="pre">Jump()</span></code></a> 和 <a class="reference internal" href="screen_actions.html#Return" title="Return"><code class="xref py py-func docutils literal notranslate"><span class="pre">Return()</span></code></a> 行为，启用 <cite>roll-forward</cite> 是安全的。
+其他行为则在前向更难懂时可能会引发副作用。</p>
+</dd></dl>
+
+<p>如果界面定义中的第一行是一个Python字符串，通常是界面的描述信息。
+该描述信息可以使用 <code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.get_screen_docstring()</span></code> 检索。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">hello_world</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    显示hello world信息。</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">tag</span> <span class="n">example</span>
+    <span class="k">zorder</span> <span class="mi">1</span>
+    <span class="na">modal</span> <span class="kc">False</span>
+
+    <span class="k">text</span> <span class="s2">&quot;Hello, World.&quot;</span>
+</pre></div>
+</div>
+<p>界面可以使用一个参数列表：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">center_text</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="na">size</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="k">text</span> <span class="n">s</span> <span class="na">size</span> <span class="na">size</span>
+</pre></div>
+</div>
+<p>如果界面不带任何参数，依然需要给一对空的圆括号。
+其他界面用 <code class="docutils literal notranslate"><span class="pre">use</span></code> 语句直接引用该界面并不带参数，详细的差异在 <a class="reference internal" href="#sl-use"><span class="std std-ref">use语句</span></a> 中有说明。
+不使用 <code class="docutils literal notranslate"><span class="pre">use</span></code> 语句引用界面或不带圆括号的界面，都会使Ren’Py内部效率降低，详见 <a class="reference internal" href="screen_optimization.html"><span class="doc">界面优化</span></a> 章节。</p>
+</section>
+</section>
+<section id="user-interface-statements">
+<span id="id4"></span><h2>用户接口语句<a class="headerlink" href="#user-interface-statements" title="Link to this heading"> link</a></h2>
+<p>用户接口语句用于创建可视组件并添加至界面或某个封闭的可视组件。它们允许向用户显示信息，用户与游戏的互动，以及游戏中各种事件消息的相互作用。</p>
+<p id="common-properties">所有用户接口语句使用下列通用特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-at">
+<span class="sig-name descname"><span class="pre">at</span></span><a class="headerlink" href="#screen-property-at" title="Link to this definition"> link</a></dt>
+<dd><p>一个transform、transform的列表或者匿名transform(未定义直接在at中使用的transform)。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">hello_t</span><span class="p">:</span>
+    <span class="na">align</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="na">alpha</span> <span class="mf">0.0</span>
+    <span class="n">linear</span> <span class="mf">0.5</span> <span class="na">alpha</span> <span class="mf">1.0</span>
+
+<span class="k">screen</span> <span class="n">hello_title</span><span class="p">():</span>
+    <span class="k">text</span> <span class="s2">&quot;Hello.&quot;</span> <span class="k">at</span> <span class="n">hello_t</span>
+    <span class="k">text</span> <span class="s2">&quot;Hello.&quot;</span><span class="p">:</span>
+        <span class="k">at</span> <span class="k">transform</span><span class="p">:</span>
+            <span class="na">align</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="na">alpha</span> <span class="mf">0.0</span>
+            <span class="n">linear</span> <span class="mf">0.5</span> <span class="na">alpha</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>可用于wrap可视组件。show、hide、replace和replaced external事件消息会传入transform，前提是transform是被直接添加到界面上的。</p>
+<p>例如，如果某个vbox在某transform中被wrap，并直接添加到界面上，事件消息就会传给那个transform。但如果某个按键文本是添加到vbox再被加入transform中被warp，那么第二层的transform就不会接收到事件消息。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-default_focus">
+<span class="sig-name descname"><span class="pre">default_focus</span></span><a class="headerlink" href="#screen-property-default_focus" title="Link to this definition"> link</a></dt>
+<dd><p>如果出现了该特性，并且值为True，默认情况下该可视组件会得到焦点。只有一个可视组件可以拥有该特性。</p>
+<p>只有当最后一次互动不是鼠标点击、鼠标移动或触控点击时，才会使用默认焦点。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-extra_alt">
+<span class="sig-name descname"><span class="pre">extra_alt</span></span><a class="headerlink" href="#screen-property-extra_alt" title="Link to this definition"> link</a></dt>
+<dd><p>该特性是在 <a class="reference internal" href="self_voicing.html"><span class="doc">自动语音</span></a> 中提到的额外语音。
+启用自动语音后，当玩家按下键盘问号“?”键时，将播放设置的额外语音。</p>
+<p>可视组件的所有子组件都会继承该 <code class="docutils literal notranslate"><span class="pre">extra_alt</span></code> 特性。
+除非子组件设置了自己的  <code class="docutils literal notranslate"><span class="pre">extra_alt</span></code> 特性。</p>
+<p>额外文本的设计，为视力不佳的玩家提供各种可视组件的更多信息。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-focus">
+<span class="sig-name descname"><span class="pre">focus</span></span><a class="headerlink" href="#screen-property-focus" title="Link to this definition"> link</a></dt>
+<dd><p>该特性使用一个字符串或整数，并出于获取焦点的需求，给出一个可视组件的名称。
+Ren’Py会搜索与focus结构相似的特性名，并决定在某交互行为开始后最先获取到focus的可视组件。
+如果某个框(box)给定了一个focus名，并且框内的第三个按钮在交互行为结束时获取到焦点，某个同名框(box)的第三个按钮会在下一个交互行为开头显示为高亮。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-group_alt">
+<span class="sig-name descname"><span class="pre">group_alt</span></span><a class="headerlink" href="#screen-property-group_alt" title="Link to this definition"> link</a></dt>
+<dd><p>该特性是在 <a class="reference internal" href="self_voicing.html"><span class="doc">自动语音</span></a> 中提到的额外语音组前缀。
+启动自动语音后，带有该特性匹配前缀的可视组件首次获得焦点时，将播放设置的文本转语音。
+但相同前缀的组件获得焦点后不会重复播放，直到不同前缀的组件获得焦点。</p>
+<p>可视组件的所有子组件都会继承该 <code class="docutils literal notranslate"><span class="pre">group_alt</span></code> 特性。
+除非子组件设置了自己的  <code class="docutils literal notranslate"><span class="pre">group_alt</span></code> 特性。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#screen-property-id" title="Link to this definition"> link</a></dt>
+<dd><p>用户接口语句的标识号。当某个界面显示时，特性值可以通过给定的标识符提供给可视组件。某些界面会根据创建的标识号请求某个可视组件。</p>
+<p>使用某个id创建可视组件后，该id就会存储为可视组件对象的id属性，类型为字符串。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-prefer_screen_to_id">
+<span class="sig-name descname"><span class="pre">prefer_screen_to_id</span></span><a class="headerlink" href="#screen-property-prefer_screen_to_id" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，当遇到界面和可视组件提供了相同特性的值时，选用界面的特性。
+若为默认值False，则选用可视组件的特性。
+(该项可以用于，角色对象设置覆盖界面特性的需求。)</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-style">
+<span class="sig-name descname"><span class="pre">style</span></span><a class="headerlink" href="#screen-property-style" title="Link to this definition"> link</a></dt>
+<dd><p>应用于可视组件的样式名。其可能是一个字符串名，也可能是一个样式对象。该样式指定样式特性的默认值。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-style_prefix_alt">
+<span class="sig-name descname"><span class="pre">style_prefix</span></span><a class="headerlink" href="#screen-property-style_prefix_alt" title="Link to this definition"> link</a></dt>
+<dd><p id="style-prefix">向可视组件及其子组件的样式提供了一个前缀，例外情况是某些子组件用一个指定的样式或样式前缀。</p>
+<p>样式名由样式前缀、下划线和样式后缀组成。样式后缀通过样式后缀
+<cite>style_suffix</cite> 或可视组件决定。</p>
+<p>例如，如果某个vbox有一个样式前缀 <code class="docutils literal notranslate"><span class="pre">&quot;pref&quot;</span></code> ，这个vbox的样式名就是 <code class="docutils literal notranslate"><span class="pre">&quot;pref_vbox&quot;</span></code> 。除非设置了某个指定的样式或者样式前缀，vbox内的按钮会用样式
+<code class="docutils literal notranslate"><span class="pre">&quot;pref_button&quot;</span></code>。</p>
+<p>如果样式不存在的话，使用这种方式接入的样式会被自动创建。将前缀设置为 <code class="docutils literal notranslate"><span class="pre">None</span></code> 会将可视组件及其子组件的所有前缀都移除。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-style_group">
+<span class="sig-name descname"><span class="pre">style_group</span></span><a class="headerlink" href="#screen-property-style_group" title="Link to this definition"> link</a></dt>
+<dd><p><cite>style_prefix</cite> 的一个别名，用在旧版本的Ren’Py中。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-style_suffix">
+<span class="sig-name descname"><span class="pre">style_suffix</span></span><a class="headerlink" href="#screen-property-style_suffix" title="Link to this definition"> link</a></dt>
+<dd><p>指定后缀，与 <cite>style_prefix</cite> 连在一起创建一个样式名。如果后缀是 <code class="docutils literal notranslate"><span class="pre">&quot;small_button&quot;</span></code> ，前缀是 <code class="docutils literal notranslate"><span class="pre">&quot;pref&quot;</span></code> ，实用的样式名就是 <code class="docutils literal notranslate"><span class="pre">&quot;pref_small_button&quot;</span></code> 。</p>
+<p>如果不使用样式前缀，就是直接使用样式名。样式后缀就会只应用于某一个可视组件，而不会用于其子组件。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-tooltip">
+<span class="sig-name descname"><span class="pre">tooltip</span></span><a class="headerlink" href="#screen-property-tooltip" title="Link to this definition"> link</a></dt>
+<dd><p>声明某个可视组件的工具提示框。当可视组件获得焦点时，该特性值会启用
+<a class="reference internal" href="screen_actions.html#GetTooltip" title="GetTooltip"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetTooltip()</span></code></a> 函数。详见 <a class="reference internal" href="screen_actions.html#tooltips"><span class="std std-ref">Tooltips</span></a> 章节。
+传入工具提示框的对象必须支持相等性(equality)。如果不支持比较相等，可能会导致无限死循环。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-arguments">
+<span class="sig-name descname"><span class="pre">arguments</span></span><a class="headerlink" href="#screen-property-arguments" title="Link to this definition"> link</a></dt>
+<dd><p>一个元组或列表，包含传入可视组件的额外固定位置入参。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-properties">
+<span class="sig-name descname"><span class="pre">properties</span></span><a class="headerlink" href="#screen-property-properties" title="Link to this definition"> link</a></dt>
+<dd><p>一个字典，包含传入可视组件的额外特性。</p>
+</dd></dl>
+
+<p>许多用户接口语句使用样式特性类或者transform特性。这些特性可以使用相关联的样式前缀，前缀决定了特性被应用的时机。例如，如果带有 <code class="docutils literal notranslate"><span class="pre">hover_size</span></code> 特性，就会设置文本在鼠标悬停状态时的文本字号。</p>
+<p>UI语句可以使用 <code class="docutils literal notranslate"><span class="pre">as</span></code> 从句，后面带一个变量名，不需要引号。
+语句创建的可视组件对象将声明为变量。(在这里可以找到一个样例 <a class="reference internal" href="drag_drop.html#as-example"><span class="std std-ref">拖拽组件</span></a> 。)</p>
+<section id="bar">
+<span id="sl-bar"></span><h3>bar<a class="headerlink" href="#bar" title="Link to this heading"> link</a></h3>
+<p>创建一个原本水平的条(bar)，可用于查看和调整数据。其使用以下特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-value">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#screen-property-value" title="Link to this definition"> link</a></dt>
+<dd><p>条(bar)的当前值。可以是一个 <a class="reference internal" href="screen_actions.html#input-values"><span class="std std-ref">条(bar)值</span></a>
+对象，或者一个数值。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-range">
+<span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#screen-property-range" title="Link to this definition"> link</a></dt>
+<dd><p>条(bar)的最大值。如果 <cite>value</cite> 是一个数值的话，这个特性是必须的。如果 <cite>value</cite> 是一个条=值对象的话，该特性会被忽略。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-adjustment">
+<span class="sig-name descname"><span class="pre">adjustment</span></span><a class="headerlink" href="#screen-property-adjustment" title="Link to this definition"> link</a></dt>
+<dd><p>该条(bar)所调整的 <a class="reference internal" href="screen_python.html#ui.adjustment" title="ui.adjustment"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.adjustment()</span></code></a> 对象。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-changed">
+<span class="sig-name descname"><span class="pre">changed</span></span><a class="headerlink" href="#screen-property-changed" title="Link to this definition"> link</a></dt>
+<dd><p>若该值存在，应该是一个Python函数。当 <em>adjustment</em> 改变时，这个函数会用调整后的值被调用。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hovered">
+<span class="sig-name descname"><span class="pre">hovered</span></span><a class="headerlink" href="#screen-property-hovered" title="Link to this definition"> link</a></dt>
+<dd><p>当条(bar)获取焦点后的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-unhovered">
+<span class="sig-name descname"><span class="pre">unhovered</span></span><a class="headerlink" href="#screen-property-unhovered" title="Link to this definition"> link</a></dt>
+<dd><p>当条(bar)失去焦点后的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-released">
+<span class="sig-name descname"><span class="pre">released</span></span><a class="headerlink" href="#screen-property-released" title="Link to this definition"> link</a></dt>
+<dd><p>在条(bar)被释放时执行指定的行为。甚至条的数值没有发生变化时依然会被调用执行。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action" title="Link to this definition"> link</a></dt>
+<dd><p>当条(bar)值改变时执行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-thumb_align">
+<span class="sig-name descname"><span class="pre">thumb_align</span></span><a class="headerlink" href="#screen-property-thumb_align" title="Link to this definition"> link</a></dt>
+<dd><p>滑块的对齐方式，表示与bar的相对位置。
+如果bar与滑块的尺寸不同——例如，滑块比水平bar还要高——thumb_align可以设置为0.5，让滑块与bar居中对齐。</p>
+</dd></dl>
+
+<p><cite>value</cite> 或者 <cite>adjustment</cite> 之一必须给定。除此之外，该函数还是用以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#bar-style-properties"><span class="std std-ref">条(bar)样式特性</span></a></p></li>
+</ul>
+<p>条(bar)不包含任何子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">volume_controls</span><span class="p">():</span>
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;sound volume&quot;</span><span class="p">)</span> <span class="na">released</span> <span class="n">Play</span><span class="p">(</span><span class="s2">&quot;sound&quot;</span><span class="p">,</span> <span class="s2">&quot;audio/sample_sound.ogg&quot;</span><span class="p">)</span>
+        <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;music volume&quot;</span><span class="p">)</span>
+        <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;voice volume&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="button">
+<span id="sl-button"></span><h3>按钮(button)<a class="headerlink" href="#button" title="Link to this heading"> link</a></h3>
+<p>创建界面的一块区域，可以通过点击激活并运行一个行为。按钮(button)不接受参数，可以拥有下列特性。</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按键激活时会执行的行为。按钮被点击时会被激活，用户也可以使用其他方法选中按钮并按下键盘“Enter”键。在 <cite>sensitive</cite>
+特性没有提供的情况下，它还能控制让按钮改为sensitive(启用)状态；同样，在 <cite>selected</cite> 特性没有提供的情况下，它也能控制按钮被选中。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate">
+<span class="sig-name descname"><span class="pre">alternate</span></span><a class="headerlink" href="#screen-property-alternate" title="Link to this definition"> link</a></dt>
+<dd><p>使用转化过的办法在按钮激活后运行的行为。当用户在基于鼠标的平台上那个点击鼠标右键，或者用户在基于触控的平台上长按某个按钮，都会触发。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hovered_alt">
+<span class="sig-name descname"><span class="pre">hovered</span></span><a class="headerlink" href="#screen-property-hovered_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮获取焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-unhovered_alt">
+<span class="sig-name descname"><span class="pre">unhovered</span></span><a class="headerlink" href="#screen-property-unhovered_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮失去焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected">
+<span class="sig-name descname"><span class="pre">selected</span></span><a class="headerlink" href="#screen-property-selected" title="Link to this definition"> link</a></dt>
+<dd><p>决定按钮是否被选择的表达式。每次交互行为时，该表达式都至少会被计算一次。如果该特性没有提供，用户行为会最终决定按钮是否被选择。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-sensitive_alt">
+<span class="sig-name descname"><span class="pre">sensitive</span></span><a class="headerlink" href="#screen-property-sensitive_alt" title="Link to this definition"> link</a></dt>
+<dd><p>决定按钮是否被启用的表达式。每次交互行为时，该表达式都至少会被计算一次。如果该特性没有提供，用户行为会最终决定按钮是否被启用。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-keysym">
+<span class="sig-name descname"><span class="pre">keysym</span></span><a class="headerlink" href="#screen-property-keysym" title="Link to this definition"> link</a></dt>
+<dd><p>给定了一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> 的字符串。字符串描述了键盘对应的按键，当那个按键被按下后，会调用按钮的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate_keysym">
+<span class="sig-name descname"><span class="pre">alternate_keysym</span></span><a class="headerlink" href="#screen-property-alternate_keysym" title="Link to this definition"> link</a></dt>
+<dd><p>给定了一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> 的字符串。字符串描述了键盘对应的按键，当那个按键被按下后，会调用按钮的可选变换行为。</p>
+</dd></dl>
+
+<p>它还可以拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#window-style-properties"><span class="std std-ref">窗口样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#button-style-properties"><span class="std std-ref">按钮样式特性</span></a></p></li>
+</ul>
+<p>按钮拥有一个子组件。如果0个、两个或者更多子组件被应用，他们全部会自动整合为一个固定布局(fixed)，并添加到按钮上。</p>
+</section>
+<section id="dismiss">
+<span id="sl-dismiss"></span><h3>dismiss<a class="headerlink" href="#dismiss" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">dismiss</span></code> 语句创建一个高度特化的dismiss可视组件，在其他可视组件都没有获得焦点时，dismiss组件就会获得焦点，并在激活后执行一个行为。
+从效果上来说类似say语句。</p>
+<p>dismiss组件的应用场景不多，大多数时候与某个模态frame搭配，当用户点击frame之外的区域时激活dismiss。此外，偶尔也能用作弹窗。</p>
+<p>该组件可拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当dismiss组件激活时执行的行为。该特性必须指定。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-keysym_alt">
+<span class="sig-name descname"><span class="pre">keysym</span></span><a class="headerlink" href="#screen-property-keysym_alt" title="Link to this definition"> link</a></dt>
+<dd><p>指定一个字符串，代替默认的 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> 字典中dismiss键对应的值。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-modal_alt">
+<span class="sig-name descname"><span class="pre">modal</span></span><a class="headerlink" href="#screen-property-modal_alt" title="Link to this definition"> link</a></dt>
+<dd><p>默认情况下，dismiss组件是模态的，不允许向其“背后”的其他可视组件传递事件消息。</p>
+</dd></dl>
+
+<p>该组件还可拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#style-property-hover_sound"><code class="xref std std-propref docutils literal notranslate"><span class="pre">hover_sound</span></code></a> 和 <a class="reference internal" href="style_properties.html#style-property-activate_sound"><code class="xref std std-propref docutils literal notranslate"><span class="pre">activate_sound</span></code></a> 样式特性。</p></li>
+</ul>
+<p>这是一个dismiss的使用样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">dismiss_test</span><span class="p">():</span>
+
+    <span class="k">dismiss</span> <span class="na">action</span> <span class="n">Return</span><span class="p">()</span>
+
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="na">modal</span> <span class="kc">True</span>
+
+        <span class="na">align</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.3</span><span class="p">)</span>
+        <span class="na">padding</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">text</span> <span class="s2">&quot;这是一条非常重要的信息。&quot;</span><span class="p">:</span>
+            <span class="na">xalign</span> <span class="mf">0.5</span>
+            <span class="na">text_align</span> <span class="mf">0.5</span>
+
+        <span class="c1"># Dismiss can be confusing on its own, so we&#39;ll add a button as well.</span>
+        <span class="c1"># 译者注：上面一句注释似乎是作者在玩梗，但是太冷导致不知道如何翻译。</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Dismiss&quot;</span><span class="p">:</span>
+            <span class="na">xalign</span> <span class="mf">0.5</span>
+            <span class="na">action</span> <span class="n">Return</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>dismiss组件还可以与 <a class="reference internal" href="#sl-nearrect"><span class="std std-ref">nearrect</span></a> 协同实现其他效果。</p>
+</section>
+<section id="fixed">
+<span id="sl-fixed"></span><h3>fixed<a class="headerlink" href="#fixed" title="Link to this heading"> link</a></h3>
+<p>fixed创建了一块用于添加子组件的区域。默认情况下，固定布局(fixed)会扩展并填充整个可用区域，但 <a class="reference internal" href="style_properties.html#style-property-xmaximum"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xmaximum</span></code></a>
+和 <a class="reference internal" href="style_properties.html#style-property-ymaximum"><code class="xref std std-propref docutils literal notranslate"><span class="pre">ymaximum</span></code></a> 特性可以改变这点。</p>
+<p>子组件们使用自身的位置样式特性实现布局。如果没有合适的设置位置，它们可能会重叠。</p>
+<p>fixed语句不接受参数，后面跟以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#fixed-style-properties"><span class="std std-ref">固定布局的样式特性</span></a></p></li>
+</ul>
+<p>fix使用多个子组件，它们会被添加到固定布局中。</p>
+<p>显示创建一个固定布局可视组件通常并不是必要的。每个界面都被包含在一个固定布局可视组件中，并且很多界面语言语句会自动创建一个固定布局的可视组件，前提是他们有两个或更多子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">ask_are_you_sure</span><span class="p">:</span>
+    <span class="k">fixed</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;Are you sure?&quot;</span> <span class="na">xalign</span> <span class="mf">0.5</span> <span class="na">yalign</span> <span class="mf">0.3</span>
+         <span class="k">textbutton</span> <span class="s2">&quot;Yes&quot;</span> <span class="na">xalign</span> <span class="mf">0.33</span> <span class="na">yalign</span> <span class="mf">0.5</span> <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+         <span class="k">textbutton</span> <span class="s2">&quot;No&quot;</span> <span class="na">xalign</span> <span class="mf">0.66</span> <span class="na">yalign</span> <span class="mf">0.5</span> <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="frame">
+<span id="sl-frame"></span><h3>框架(frame)<a class="headerlink" href="#frame" title="Link to this heading"> link</a></h3>
+<p>框架(frame)是一个窗口。该窗口包含一个背景，可用于显示用户接口元素，例如按钮、条(bar)和文本。其拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#window-style-properties"><span class="std std-ref">窗口样式特性</span></a></p></li>
+</ul>
+<p>frame拥有一个子组件。如果0个、两个或者更多子组件被应用，他们全部会自动整合为一个固定布局(fixed)，并添加到按钮上。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">test_frame</span><span class="p">():</span>
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="na">xpadding</span> <span class="mi">10</span>
+        <span class="na">ypadding</span> <span class="mi">10</span>
+        <span class="na">xalign</span> <span class="mf">0.5</span>
+        <span class="na">yalign</span> <span class="mf">0.5</span>
+
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="k">text</span> <span class="s2">&quot;Display&quot;</span>
+            <span class="k">null</span> <span class="na">height</span> <span class="mi">10</span>
+            <span class="k">textbutton</span> <span class="s2">&quot;Fullscreen&quot;</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;fullscreen&quot;</span><span class="p">)</span>
+            <span class="k">textbutton</span> <span class="s2">&quot;Window&quot;</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;window&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="grid">
+<span id="sl-grid"></span><h3>grid<a class="headerlink" href="#grid" title="Link to this heading"> link</a></h3>
+<p>grid在一个网格系统中显示其子组件。每个子组件都会分配相同的区域大小，这个区域大小可以容纳最大的子组件。</p>
+<p>grid使用两个参数。第一个参数是网格的行号，第二个参数是网格的列号。其拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-transpose">
+<span class="sig-name descname"><span class="pre">transpose</span></span><a class="headerlink" href="#screen-property-transpose" title="Link to this definition"> link</a></dt>
+<dd><p>若值为False，网格转置。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-right_to_left">
+<span class="sig-name descname"><span class="pre">right_to_left</span></span><a class="headerlink" href="#screen-property-right_to_left" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，按从右往左的顺序填充网格单元。默认则是按从左往右的顺序填充网格单元。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-bottom_to_top">
+<span class="sig-name descname"><span class="pre">bottom_to_top</span></span><a class="headerlink" href="#screen-property-bottom_to_top" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，按从下往上的顺序填充网格单元。默认则是按从上往下的顺序填充网格单元。</p>
+</dd></dl>
+
+<p>其还使用以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#grid-style-properties"><span class="std std-ref">网格样式特性</span></a></p></li>
+</ul>
+<p>grid中必须给定“行数×列数”的子组件。如果给出其他数量的子组件会发生错误。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">grid_test</span><span class="p">:</span>
+     <span class="k">grid</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;Top-Left&quot;</span>
+         <span class="k">text</span> <span class="s2">&quot;Top-Right&quot;</span>
+
+         <span class="k">text</span> <span class="s2">&quot;Center-Left&quot;</span>
+         <span class="k">text</span> <span class="s2">&quot;Center-Right&quot;</span>
+
+         <span class="k">text</span> <span class="s2">&quot;Bottom-Left&quot;</span>
+         <span class="k">text</span> <span class="s2">&quot;Bottom-Right&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="hbox">
+<span id="sl-hbox"></span><h3>hbox<a class="headerlink" href="#hbox" title="Link to this heading"> link</a></h3>
+<p>hbox的各个子组件会边靠着边显示，都在一个不可见的水平方块(box)内。其不接受参数，后面跟以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#box-style-properties"><span class="std std-ref">方框样式特性</span></a></p></li>
+</ul>
+<p>UI可视组件的子组件会被添加到方框(box)中。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">hbox_text</span><span class="p">():</span>
+    <span class="k">hbox</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;Left&quot;</span>
+         <span class="k">text</span> <span class="s2">&quot;Right&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="imagebutton">
+<span id="sl-imagebutton"></span><h3>图片按钮(imagebutton)<a class="headerlink" href="#imagebutton" title="Link to this heading"> link</a></h3>
+<p>创建一个包含图像的按钮，当指针悬停在按钮上时，图像状态会发生改变。其不接受参数，拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-auto">
+<span class="sig-name descname"><span class="pre">auto</span></span><a class="headerlink" href="#screen-property-auto" title="Link to this definition"> link</a></dt>
+<dd><p>按钮使用图片自动定义。这个特性是个包含 %s 的字符串。如果某个图片特性是省略的，%s会被替换为对应特性名称，并使用对应值作为对应特性的默认值。</p>
+<p>例如，如果 <cite>auto</cite> 是 “button_%s.png”，并且  <cite>idle</cite> 特性省略，那么idle的默认值就是 “button_idle.png”。类似的，如果 <cite>auto</cite> 是”button %s”，那么 <code class="docutils literal notranslate"><span class="pre">button</span> <span class="pre">idle</span></code> 图像就会被应用。</p>
+<p><cite>auto</cite> 特性的具体行为可以修改
+<a class="reference internal" href="config.html#var-config.imagemap_auto_function"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.imagemap_auto_function</span></code></a> 实现定制化。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-insensitive">
+<span class="sig-name descname"><span class="pre">insensitive</span></span><a class="headerlink" href="#screen-property-insensitive" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮不可用状态时，使用在按钮上的图像。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-idle">
+<span class="sig-name descname"><span class="pre">idle</span></span><a class="headerlink" href="#screen-property-idle" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮没有得到焦点状态时，使用在按钮上的图像。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hover">
+<span class="sig-name descname"><span class="pre">hover</span></span><a class="headerlink" href="#screen-property-hover" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮得到焦点状态时，使用在按钮上的图像。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected_idle">
+<span class="sig-name descname"><span class="pre">selected_idle</span></span><a class="headerlink" href="#screen-property-selected_idle" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮被选中但是没有得到焦点状态时，使用在按钮上的图像。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected_hover">
+<span class="sig-name descname"><span class="pre">selected_hover</span></span><a class="headerlink" href="#screen-property-selected_hover" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮被选中而且得到焦点状态时，使用在按钮上的图像。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮被激活时运行的行为。当  <cite>sensitive</cite> 和  <cite>selected</cite> 特性没有提供的情况下， <em>action</em> 特性也控制那两种特性表现。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate_alt">
+<span class="sig-name descname"><span class="pre">alternate</span></span><a class="headerlink" href="#screen-property-alternate_alt" title="Link to this definition"> link</a></dt>
+<dd><p>使用转化过的办法在按钮激活后运行的行为。当用户在基于鼠标的平台上那个点击鼠标右键，或者用户在基于触控的平台上长按某个按钮，都会触发。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hovered_alt_alt">
+<span class="sig-name descname"><span class="pre">hovered</span></span><a class="headerlink" href="#screen-property-hovered_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮获取焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-unhovered_alt_alt">
+<span class="sig-name descname"><span class="pre">unhovered</span></span><a class="headerlink" href="#screen-property-unhovered_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮失去焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected_alt">
+<span class="sig-name descname"><span class="pre">selected</span></span><a class="headerlink" href="#screen-property-selected_alt" title="Link to this definition"> link</a></dt>
+<dd><p>决定按钮是否被选择的表达式。每次交互行为时，该表达式都至少会被计算一次。如果该特性没有提供，用户行为会最终决定按钮是否被选择。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-sensitive_alt_alt">
+<span class="sig-name descname"><span class="pre">sensitive</span></span><a class="headerlink" href="#screen-property-sensitive_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>决定按钮是否被启用的表达式。每次交互行为时，该表达式都至少会被计算一次。如果该特性没有提供，用户行为会最终决定按钮是否被启用。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-keysym_alt_alt">
+<span class="sig-name descname"><span class="pre">keysym</span></span><a class="headerlink" href="#screen-property-keysym_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>给定了一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> 的字符串。字符串描述了键盘对应的按键，当那个按键被按下后，会调用按钮的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate_keysym_alt">
+<span class="sig-name descname"><span class="pre">alternate_keysym</span></span><a class="headerlink" href="#screen-property-alternate_keysym_alt" title="Link to this definition"> link</a></dt>
+<dd><p>给定了一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> 的字符串。字符串描述了键盘对应的按键，当那个按键被按下后，会调用按钮的变换行为。</p>
+</dd></dl>
+
+<p>它还可以拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#window-style-properties"><span class="std std-ref">窗口样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#button-style-properties"><span class="std std-ref">按钮样式特性</span></a></p></li>
+</ul>
+<p>图片按钮没有子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">gui_game_menu</span><span class="p">():</span>
+     <span class="k">vbox</span> <span class="na">xalign</span> <span class="mf">1.0</span> <span class="na">yalign</span> <span class="mf">1.0</span><span class="p">:</span>
+          <span class="k">imagebutton</span> <span class="k">auto</span> <span class="s2">&quot;save_</span><span class="si">%s</span><span class="s2">.png&quot;</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">)</span>
+          <span class="k">imagebutton</span> <span class="k">auto</span> <span class="s2">&quot;prefs_</span><span class="si">%s</span><span class="s2">.png&quot;</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s1">&#39;preferences&#39;</span><span class="p">)</span>
+          <span class="k">imagebutton</span> <span class="k">auto</span> <span class="s2">&quot;skip_</span><span class="si">%s</span><span class="s2">.png&quot;</span> <span class="na">action</span> <span class="n">Skip</span><span class="p">()</span>
+          <span class="k">imagebutton</span> <span class="k">auto</span> <span class="s2">&quot;afm_</span><span class="si">%s</span><span class="s2">.png&quot;</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;auto-forward mode&quot;</span><span class="p">,</span> <span class="s2">&quot;toggle&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="input">
+<span id="sl-input"></span><h3>输入框(input)<a class="headerlink" href="#input" title="Link to this heading"> link</a></h3>
+<p>创建一个文本输入区域，允许用户输入文本。当用户按下回车键，输入的文本会通过交互行为返回。(如果界面是通过 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 唤起的，输入结果会存放在 <code class="docutils literal notranslate"><span class="pre">_return</span></code> 变量中。)</p>
+<p>受限于支持的库，在安卓和Web平替上，输入框只支持英文字母。</p>
+<p>input语句不接受参数，可以跟下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-value_alt">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#screen-property-value_alt" title="Link to this definition"> link</a></dt>
+<dd><p>此次输入使用的 <a class="reference internal" href="screen_actions.html#input-values"><span class="std std-ref">input value</span></a> 对象。输入值对象决定了以下情况的默认处理方式：默认值从哪里获取，文本改变时会发生什么，用户输入回车后会发生什么，以及文本是否可编辑。</p>
+<p><cite>value</cite> 应跟 <cite>default</cite> 和 <cite>changed</cite> 在相同的时间点给定。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-default">
+<span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#screen-property-default" title="Link to this definition"> link</a></dt>
+<dd><p>在输入框中的默认文本。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-length">
+<span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#screen-property-length" title="Link to this definition"> link</a></dt>
+<dd><p>输入框中允许的最大文本长度。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-pixel_width">
+<span class="sig-name descname"><span class="pre">pixel_width</span></span><a class="headerlink" href="#screen-property-pixel_width" title="Link to this definition"> link</a></dt>
+<dd><p>输入框最大像素宽度。如果输入一个字符会导致输入超出这个宽度，按键(keypress)事件消息就会被忽略。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-allow">
+<span class="sig-name descname"><span class="pre">allow</span></span><a class="headerlink" href="#screen-property-allow" title="Link to this definition"> link</a></dt>
+<dd><p>包含所有允许输入字符的字符串。(默认情况下允许输入任何字符。)</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-exclude">
+<span class="sig-name descname"><span class="pre">exclude</span></span><a class="headerlink" href="#screen-property-exclude" title="Link to this definition"> link</a></dt>
+<dd><p>包含不允许输入字符的字符串。(默认情况下为空“{}”。)</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-copypaste">
+<span class="sig-name descname"><span class="pre">copypaste</span></span><a class="headerlink" href="#screen-property-copypaste" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，可以在这个输入栏中启用复制粘贴功能。(默认禁用。)</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-prefix">
+<span class="sig-name descname"><span class="pre">prefix</span></span><a class="headerlink" href="#screen-property-prefix" title="Link to this definition"> link</a></dt>
+<dd><p>一个不可变的字符串，自动添加在用户输入前面。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-suffix">
+<span class="sig-name descname"><span class="pre">suffix</span></span><a class="headerlink" href="#screen-property-suffix" title="Link to this definition"> link</a></dt>
+<dd><p>一个不可变的字符串，自动添加在用户输入后面。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-changed_alt">
+<span class="sig-name descname"><span class="pre">changed</span></span><a class="headerlink" href="#screen-property-changed_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当用于输入字符串改变时，使用输入字符串调用的一个Python函数。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-mask">
+<span class="sig-name descname"><span class="pre">mask</span></span><a class="headerlink" href="#screen-property-mask" title="Link to this definition"> link</a></dt>
+<dd><p>该值是一个字符串，可将文本中的字符都替换显示为指定字符串。可用于表现一个密码。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-caret_blink">
+<span class="sig-name descname"><span class="pre">caret_blink</span></span><a class="headerlink" href="#screen-property-caret_blink" title="Link to this definition"> link</a></dt>
+<dd><p>若非False，指定光标闪烁间隔时间。此项将覆盖 <a class="reference internal" href="config.html#var-config.input_caret_blink"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.input_caret_blink</span></code></a> 配置项。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-multiline">
+<span class="sig-name descname"><span class="pre">multiline</span></span><a class="headerlink" href="#screen-property-multiline" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，可以使用键盘将光标移动到下一行(默认键盘输入为Shift+Enter换行，可以修改config.keymap[‘input_next_line’]来改为其他按键方式)。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若不是None，该项是一个动作(action)，在按下回车(Enter)并激活输入结果时运行。
+默认的输入后行为会直接返回输入值，该项可以覆盖默认行为。</p>
+<p>该项主要用于对输入结果 <cite>value</cite> 做预处理的需求场景。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-arrowkeys">
+<span class="sig-name descname"><span class="pre">arrowkeys</span></span><a class="headerlink" href="#screen-property-arrowkeys" title="Link to this definition"> link</a></dt>
+<dd><p>若为True(默认值)，键盘的方向键可以让输入框中的光标左右移动。
+若为False，键盘的方向键不能移动输入光标，而实现其他功能，比如在不同组件间切换焦点。</p>
+</dd></dl>
+
+<p>输入框还拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#text-style-properties"><span class="std std-ref">文本样式特性</span></a></p></li>
+</ul>
+<p>输入框不包含子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">input_screen</span><span class="p">():</span>
+    <span class="k">window</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">text</span> <span class="s2">&quot;Enter your name.&quot;</span>
+        <span class="nb">input</span> <span class="k">default</span> <span class="s2">&quot;Joseph P. Blow, ESQ.&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="key">
+<span id="sl-key"></span><h3>key语句<a class="headerlink" href="#key" title="Link to this heading"> link</a></h3>
+<p>key语句创建一个键盘按键绑定，可以通过按键运行某个行为。key语句的应用场景比较宽泛，可以支持手柄和鼠标事件。</p>
+<p>key语句有一个固定位置参数，一个需要绑定的按键名字符串。详见 <a class="reference internal" href="keymap.html"><span class="doc">定制按键映射</span></a> 。key语句使用两个特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>这个特性给定了按键(keypress)事件发生后触发的行为。该特性必须存在。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-capture">
+<span class="sig-name descname"><span class="pre">capture</span></span><a class="headerlink" href="#screen-property-capture" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，即默认值，捕获事件并不会由其他可视组件处理。
+若为False，则按键行为不会结束此次交互，其他可视组件会处理事件。</p>
+</dd></dl>
+
+<p>key不包含子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">keymap_screen</span><span class="p">():</span>
+    <span class="k">key</span> <span class="s2">&quot;game_menu&quot;</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">)</span>
+    <span class="k">key</span> <span class="s2">&quot;p&quot;</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s1">&#39;preferences&#39;</span><span class="p">)</span>
+    <span class="k">key</span> <span class="p">[</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">]</span> <span class="na">action</span> <span class="n">Screenshot</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="label">
+<span id="sl-label"></span><h3>脚本标签(label)<a class="headerlink" href="#label" title="Link to this heading"> link</a></h3>
+<p>使用脚本标签(label)样式创建一个窗口(window)，并且将文本内容放置在窗口内。这种联合体用于在某个框架(frame)中将某些元素标签化。</p>
+<p>label语句包含一个固定位置参数，即标签的文本。其拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-text_style">
+<span class="sig-name descname"><span class="pre">text_style</span></span><a class="headerlink" href="#screen-property-text_style" title="Link to this definition"> link</a></dt>
+<dd><p>用于按钮文本的样式名。如果未提供并且样式特性是一个字符串的话， <code class="docutils literal notranslate"><span class="pre">&quot;_text&quot;</span></code> 会自动添加到字符串后面作为默认的文本样式。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-text_">
+<span class="sig-name descname"><span class="pre">text_-</span></span><a class="headerlink" href="#screen-property-text_" title="Link to this definition"> link</a></dt>
+<dd><p>其他有 <a class="reference internal" href="#text">text</a> 前缀的特性会把前缀去掉，然后传给文本组件(text displayable)。</p>
+</dd></dl>
+
+<p>label语句还可以使用以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#window-style-properties"><span class="std std-ref">窗口样式特性</span></a></p></li>
+</ul>
+<p>label语句不包含任何子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">display_preference</span><span class="p">():</span>
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="k">label</span> <span class="s2">&quot;Display&quot;</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Fullscreen&quot;</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;fullscreen&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Window&quot;</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;window&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="sl-mousearea">
+<span id="mousearea"></span><span id="id5"></span><h3>mousearea<a class="headerlink" href="#sl-mousearea" title="Link to this heading"> link</a></h3>
+<p>mousearea是界面上划出一块区域，用于检测鼠标的进入或离开。与按钮(button)不同的是，鼠标区域不能获得焦点，所以在按钮内部可以存在一块鼠标区域。mousearea语句不接受参数，可以拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hovered_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">hovered</span></span><a class="headerlink" href="#screen-property-hovered_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当鼠标进入鼠标区域时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-unhovered_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">unhovered</span></span><a class="headerlink" href="#screen-property-unhovered_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当鼠标离开鼠标区域时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-focus_mask">
+<span class="sig-name descname"><span class="pre">focus_mask</span></span><a class="headerlink" href="#screen-property-focus_mask" title="Link to this definition"> link</a></dt>
+<dd><p><a class="reference internal" href="style_properties.html#style-property-focus_mask"><code class="xref std std-propref docutils literal notranslate"><span class="pre">focus_mask</span></code></a> 样式特性，可以是某个可视组件或者None。如果是一个可视组件，鼠标区域值应只放在可视组件不透明的部分上面。(那个可视组件不会展示给用户。)</p>
+</dd></dl>
+
+<p>mousearea语句拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+</ul>
+<p>mousearea语句不含子组件。</p>
+<p>通常来说，mousearea语句会给定区域样式特性，控制鼠标区域的大小和坐标。如果不控制鼠标区域大小，就会自动占用整个界面，那种行为的用处比较小。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>由于Ren’Py游戏可以使用键盘和手柄，所以复用鼠标区域功能就往往有其他的意义。</p>
+</div>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">button_overlay</span><span class="p">():</span>
+    <span class="k">mousearea</span><span class="p">:</span>
+        <span class="na">area</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="na">hovered</span> <span class="n">Show</span><span class="p">(</span><span class="s2">&quot;buttons&quot;</span><span class="p">,</span> <span class="n">transition</span><span class="o">=</span><span class="n">dissolve</span><span class="p">)</span>
+        <span class="na">unhovered</span> <span class="n">Hide</span><span class="p">(</span><span class="s2">&quot;buttons&quot;</span><span class="p">,</span> <span class="n">transition</span><span class="o">=</span><span class="n">dissolve</span><span class="p">)</span>
+
+<span class="k">screen</span> <span class="n">buttons</span><span class="p">():</span>
+    <span class="k">hbox</span><span class="p">:</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Save&quot;</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;save&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Prefs&quot;</span> <span class="na">action</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Skip&quot;</span> <span class="na">action</span> <span class="n">Skip</span><span class="p">()</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Auto&quot;</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;auto-forward&quot;</span><span class="p">,</span> <span class="s2">&quot;toggle&quot;</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">show</span> <span class="k">screen</span> <span class="n">button_overlay</span>
+</pre></div>
+</div>
+</section>
+<section id="nearrect">
+<span id="sl-nearrect"></span><h3>nearrect<a class="headerlink" href="#nearrect" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">nearrect</span></code> 语句后面带一个子组件名，并把对应的子组件放在附近的一个矩形区域中。
+通常使用 <a class="reference internal" href="screen_actions.html#CaptureFocus" title="CaptureFocus"><code class="xref py py-func docutils literal notranslate"><span class="pre">CaptureFocus()</span></code></a> 行为函数获取焦点附近的矩形区域。
+nearrect可以用于提示信息和下落、下拉菜单。</p>
+<p>nearrect组件拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-rect">
+<span class="sig-name descname"><span class="pre">rect</span></span><a class="headerlink" href="#screen-property-rect" title="Link to this definition"> link</a></dt>
+<dd><p>若给定，参数应该是一个(x, y, w, h)形式的矩形，将子组件的位置信息与矩形关联。具体关联方式见下面的描述。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-focus_alt">
+<span class="sig-name descname"><span class="pre">focus</span></span><a class="headerlink" href="#screen-property-focus_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若给定，该参数应该是一个字符串。字符串传递给 <a class="reference internal" href="screen_actions.html#GetFocusRect" title="GetFocusRect"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetFocusRect()</span></code></a> 函数并寻找合适的矩形区域。
+若找到了合适的矩形，则渲染对应子组件。</p>
+<p>将参数设置为“tooltip”时，将会在最后获得焦点的可视组件位置显示提示信息。</p>
+<p>该特性会覆盖 <cite>rect</cite>。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-preferred_side">
+<span class="sig-name descname"><span class="pre">preferred_side</span></span><a class="headerlink" href="#screen-property-preferred_side" title="Link to this definition"> link</a></dt>
+<dd><p>取值可以是 <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code>、<code class="docutils literal notranslate"><span class="pre">&quot;top&quot;</span></code>、<code class="docutils literal notranslate"><span class="pre">&quot;right&quot;</span></code>、<code class="docutils literal notranslate"><span class="pre">&quot;bottom&quot;</span></code> 其中一个，表示优先贴近哪条边。
+如果某条边空间不足，则选择对边。默认值为”botton”。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-prefer_top">
+<span class="sig-name descname"><span class="pre">prefer_top</span></span><a class="headerlink" href="#screen-property-prefer_top" title="Link to this definition"> link</a></dt>
+<dd><p>已弃用，等效于 <code class="docutils literal notranslate"><span class="pre">preferred_side</span> <span class="pre">&quot;top&quot;</span></code>。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-invert_offsets">
+<span class="sig-name descname"><span class="pre">invert_offsets</span></span><a class="headerlink" href="#screen-property-invert_offsets" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，如果 preferred_side 没有足够空间时，会将xoffset和yoffset乘以-1。
+这样子组件改为贴近对边时的偏移量才可能合适。默认值为False。</p>
+</dd></dl>
+
+<p>该组件还可拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性 Common Properties</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+</ul>
+<p>Nearrect differs from the other layouts in that it positions its child near the
+given rectangle, rather than inside it. For a <cite>preferred_side</cite> of <code class="docutils literal notranslate"><span class="pre">&quot;top&quot;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&quot;bottom&quot;</span></code> (resp. <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;right&quot;</span></code>), the child is first rendered with
+the full width (resp. height) available, and the maximum of the height
+(resp. width) above and below the rectangle. The y position (resp. x position)
+is then computed as followed.
+nearrect与其他组件布局的位置计算方式不同，不把其子组件放在指定矩形区域内，而是放在指定矩形区域附近。
+若其 <cite>preferred_side</cite> 特性的值为 <code class="docutils literal notranslate"><span class="pre">&quot;top&quot;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">&quot;bottom&quot;</span></code>，子组件首先以完整的宽度渲染，
+然后计算矩形区域上方和下方分别可能的最大可用高度。最后根据下面的原则计算结果确定y轴方向的位置。</p>
+<ul class="simple">
+<li><p>如果子组件能够匹配矩形区域的 <cite>preferred_side</cite> 要求，直接将子组件放在与矩形区域相邻的对应位置。</p></li>
+<li><p>否则，将子组件放在与矩形 <cite>preferred_side</cite> 的对边。</p></li>
+<li><p>否则，将子组件放在与矩形 <cite>preferred_side</cite> 指定相邻的对应位置。</p></li>
+</ul>
+<p>x轴方向的位置使用通用准则计算，可以设置子组件的 <a class="reference internal" href="style_properties.html#style-property-xpos"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xpos</span></code></a> 、 <a class="reference internal" href="style_properties.html#style-property-xanchor"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xanchor</span></code></a> 和 <a class="reference internal" href="style_properties.html#style-property-xalign"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xalign</span></code></a> 特性。
+位置特性的值与矩形区域的x坐标相关。如果是浮点值，则与矩形区域的宽度相关。</p>
+<p><a class="reference internal" href="style_properties.html#style-property-xoffset"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xoffset</span></code></a> 和 <a class="reference internal" href="style_properties.html#style-property-yoffset"><code class="xref std std-propref docutils literal notranslate"><span class="pre">yoffset</span></code></a> 特性的应用方式与其他组件相同。</p>
+<p>如果nearrect组件的子组件是一个变换(transform)，变换指定了 <code class="docutils literal notranslate"><span class="pre">show</span></code> 和 <code class="docutils literal notranslate"><span class="pre">hide</span></code> 事件响应。
+但是，实际位置会发生改变。
+nearrect最好放置在界面顶层，变换和位置特性应用到其子组件上，而不是nearrect自身。</p>
+<p>这是一个下拉菜单的样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">default</span> <span class="n">difficulty</span> <span class="o">=</span> <span class="s2">&quot;简单&quot;</span>
+
+<span class="k">screen</span> <span class="n">select_difficulty</span><span class="p">():</span>
+
+    <span class="c1"># 根据实际需要，此处的frame可以拥有非常复杂的布局。</span>
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="na">align</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.3</span><span class="p">)</span>
+        <span class="na">padding</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="k">has</span> <span class="k">vbox</span>
+
+        <span class="c1"># 点击此按钮激活下拉菜单</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;选择难度: [difficulty]&quot;</span><span class="p">:</span>
+
+            <span class="c1"># 该行为捕获获取焦点的矩形区域，并显示下拉菜单</span>
+            <span class="na">action</span> <span class="n">CaptureFocus</span><span class="p">(</span><span class="s2">&quot;diff_drop&quot;</span><span class="p">)</span>
+
+        <span class="k">textbutton</span> <span class="s2">&quot;完成&quot;</span><span class="p">:</span>
+            <span class="na">action</span> <span class="n">Return</span><span class="p">()</span>
+
+    <span class="c1"># 其他界面元素可以写在这里，但nearrect相关的元素需要写在最上层。</span>
+    <span class="c1"># nearrect的子组件最后显示，只能要分开写。</span>
+
+    <span class="c1"># 仅当焦点区域捕获成功，才显示下拉菜单。</span>
+    <span class="c1"># 可以使用showif替代基本的if语句。</span>
+    <span class="k">if</span> <span class="n">GetFocusRect</span><span class="p">(</span><span class="s2">&quot;diff_drop&quot;</span><span class="p">):</span>
+
+        <span class="c1"># 如果玩家点击了frame之外的区域，使用dismiss关闭下拉菜单。</span>
+        <span class="c1"># 此处使用ClearFocus行为函数关闭。</span>
+        <span class="k">dismiss</span> <span class="na">action</span> <span class="n">ClearFocus</span><span class="p">(</span><span class="s2">&quot;diff_drop&quot;</span><span class="p">)</span>
+
+        <span class="c1"># nearrect组件的位置放在之前定义的按钮附近(通常是下方)。</span>
+        <span class="k">nearrect</span><span class="p">:</span>
+            <span class="na">focus</span> <span class="s2">&quot;diff_drop&quot;</span>
+
+            <span class="c1"># Finally, this frame contains the choices in the dropdown, with</span>
+            <span class="c1"># each using ClearFocus to dismiss the dropdown.</span>
+            <span class="c1"># 最后，下拉菜单里的各个选项放在一个frame中。</span>
+            <span class="c1"># 每个选项行为都使用ClearFocus，以隐藏下拉菜单。</span>
+            <span class="k">frame</span><span class="p">:</span>
+                <span class="na">modal</span> <span class="kc">True</span>
+
+                <span class="k">has</span> <span class="k">vbox</span>
+
+                <span class="k">textbutton</span> <span class="s2">&quot;简单&quot;</span> <span class="na">action</span> <span class="p">[</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;difficulty&quot;</span><span class="p">,</span> <span class="s2">&quot;简单&quot;</span><span class="p">),</span> <span class="n">ClearFocus</span><span class="p">(</span><span class="s2">&quot;diff_drop&quot;</span><span class="p">)</span> <span class="p">]</span>
+                <span class="k">textbutton</span> <span class="s2">&quot;正常&quot;</span> <span class="na">action</span> <span class="p">[</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;difficulty&quot;</span><span class="p">,</span> <span class="s2">&quot;正常&quot;</span><span class="p">),</span> <span class="n">ClearFocus</span><span class="p">(</span><span class="s2">&quot;diff_drop&quot;</span><span class="p">)</span> <span class="p">]</span>
+                <span class="k">textbutton</span> <span class="s2">&quot;困难&quot;</span> <span class="na">action</span> <span class="p">[</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;difficulty&quot;</span><span class="p">,</span> <span class="s2">&quot;困难&quot;</span><span class="p">),</span> <span class="n">ClearFocus</span><span class="p">(</span><span class="s2">&quot;diff_drop&quot;</span><span class="p">)</span> <span class="p">]</span>
+                <span class="k">textbutton</span> <span class="s2">&quot;噩梦&quot;</span> <span class="na">action</span> <span class="p">[</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;difficulty&quot;</span><span class="p">,</span> <span class="s2">&quot;噩梦&quot;</span><span class="p">),</span> <span class="n">ClearFocus</span><span class="p">(</span><span class="s2">&quot;diff_drop&quot;</span><span class="p">)</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>下拉菜单可以通过样式提升观感，此处不做具体演示了。</p>
+</section>
+<section id="null">
+<span id="sl-null"></span><h3>null<a class="headerlink" href="#null" title="Link to this heading"> link</a></h3>
+<p>null语句在界面中插入了一块空的区域。其可以用于物体分隔开。null语句不包含参数，可以拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#screen-property-width" title="Link to this definition"> link</a></dt>
+<dd><p>空区域的宽度，单位是像素。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#screen-property-height" title="Link to this definition"> link</a></dt>
+<dd><p>空区域的高度，单位是像素。</p>
+</dd></dl>
+
+<p>null语句可以使用以下样式：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+</ul>
+<p>null语句不包含子组件：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">text_box</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;这是标题。&quot;</span>
+         <span class="k">null</span> <span class="na">height</span> <span class="mi">20</span>
+         <span class="k">text</span> <span class="s2">&quot;这是正文。&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="side">
+<span id="sl-side"></span><h3>side<a class="headerlink" href="#side" title="Link to this heading"> link</a></h3>
+<p>side语句把可视组件放置在一个网格的角落或者中间。其使用一个字符串型参数，字符串内包含空格样式的位置信息列表，用于配置子组件。列表中的每个元素都应该是下列字符串之一：</p>
+<blockquote>
+<div><p>‘c’, ‘t’, ‘b’, ‘l’, ‘r’, ‘tl’, ‘tr’, ‘bl’, ‘br’</p>
+</div></blockquote>
+<p>‘c’表示中间，’t’表示上部，’tl’表示左上，’br’表示右下，以此类推。</p>
+<p>side语句使用下列的特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-spacing">
+<span class="sig-name descname"><span class="pre">spacing</span></span><a class="headerlink" href="#screen-property-spacing" title="Link to this definition"> link</a></dt>
+<dd><p>网格中各行和各列之间的间隔。</p>
+</dd></dl>
+
+<p>side语句还可以使用如下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+</ul>
+<p>当渲染时，先渲染四角，然后是四边，最后是中间。四角和四边在渲染阶段的初始可用区域是0，所以有必要提供一个最小尺寸(使用
+<a class="reference internal" href="style_properties.html#style-property-xminimum"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xminimum</span></code></a> 或 <a class="reference internal" href="style_properties.html#style-property-yminimum"><code class="xref std std-propref docutils literal notranslate"><span class="pre">yminimum</span></code></a>)，以确保渲染成功。</p>
+<p>添加子组件的顺序(或者使用入参的子字符串顺序)控制显示顺序，最后添加的显示在最上层。
+可以通过配置项 <a class="reference internal" href="config.html#var-config.keep_side_render_order"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.keep_side_render_order</span></code></a> 禁用。</p>
+<p>使用各子组件时分别占据网格单元列表中的一个位置，所以网格单元应与子组件数量相同。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">side_test</span><span class="p">():</span>
+     <span class="k">side</span> <span class="s2">&quot;c tl br&quot;</span><span class="p">:</span>
+          <span class="k">text</span> <span class="s2">&quot;Center&quot;</span>
+          <span class="k">text</span> <span class="s2">&quot;Top-Left&quot;</span>
+          <span class="k">text</span> <span class="s2">&quot;Bottom-Right&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="text">
+<span id="sl-text"></span><h3>text<a class="headerlink" href="#text" title="Link to this heading"> link</a></h3>
+<p>text语句会显示文本。其使用一个参数，就是用于显示的文本内容。其也拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性 Common Properties</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#text-style-properties"><span class="std std-ref">文本样式特性</span></a></p></li>
+</ul>
+<p>text语句没有子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">hello_world</span><span class="p">():</span>
+    <span class="k">text</span> <span class="s2">&quot;Hello, World.&quot;</span> <span class="na">size</span> <span class="mi">40</span>
+</pre></div>
+</div>
+</section>
+<section id="textbutton">
+<span id="sl-textbutton"></span><h3>textbutton<a class="headerlink" href="#textbutton" title="Link to this heading"> link</a></h3>
+<p>创建一个包含脚本标签(label)的按钮。按钮使用一个参数，即按钮内显示的文本内容。其可以拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt_alt_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt_alt_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮被激活时运行的行为。当 <cite>sensitive</cite> 和 <cite>selected</cite> 特性没有提供的情况下， <em>action</em> 特性也控制那两种特性表现。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate_alt_alt">
+<span class="sig-name descname"><span class="pre">alternate</span></span><a class="headerlink" href="#screen-property-alternate_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>使用转化过的办法在按钮激活后运行的行为。当用户在基于鼠标的平台上那个点击鼠标右键，或者用户在基于触控的平台上长按某个按钮，都会触发。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hovered_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">hovered</span></span><a class="headerlink" href="#screen-property-hovered_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮获取焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-unhovered_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">unhovered</span></span><a class="headerlink" href="#screen-property-unhovered_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮失去焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected_alt_alt">
+<span class="sig-name descname"><span class="pre">selected</span></span><a class="headerlink" href="#screen-property-selected_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>决定按钮是否被选择的表达式。每次交互行为时，该表达式都至少会被计算一次。如果该特性没有提供，用户行为会最终决定按钮是否被选择。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-sensitive_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">sensitive</span></span><a class="headerlink" href="#screen-property-sensitive_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>决定按钮是否被启用的表达式。每次交互行为时，该表达式都至少会被计算一次。如果该特性没有提供，用户行为会最终决定按钮是否被启用。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-keysym_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">keysym</span></span><a class="headerlink" href="#screen-property-keysym_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>给定了一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> 的字符串。字符串描述了键盘对应的按键，当那个按键被按下后，会调用按钮的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate_keysym_alt_alt">
+<span class="sig-name descname"><span class="pre">alternate_keysym</span></span><a class="headerlink" href="#screen-property-alternate_keysym_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>给定了一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> 的字符串。字符串描述了键盘对应的按键，当那个按键被按下后，会调用按钮的变换行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-text_style_alt">
+<span class="sig-name descname"><span class="pre">text_style</span></span><a class="headerlink" href="#screen-property-text_style_alt" title="Link to this definition"> link</a></dt>
+<dd><p>用于按钮文本的样式名。如果未提供并且样式特性是一个字符串的话， <code class="docutils literal notranslate"><span class="pre">&quot;_text&quot;</span></code> 会自动添加到字符串后面作为默认的文本样式。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-text_-_alt">
+<span class="sig-name descname"><span class="pre">text_-</span></span><a class="headerlink" href="#screen-property-text_-_alt" title="Link to this definition"> link</a></dt>
+<dd><p>其他有 <a class="reference internal" href="#text">text</a> 前缀的特性会把前缀去掉，然后传给文本组件(text displayable)。</p>
+</dd></dl>
+
+<p>textbutton还可以使用如下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#window-style-properties"><span class="std std-ref">窗口样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#button-style-properties"><span class="std std-ref">按钮样式特性</span></a></p></li>
+</ul>
+<p>其不包含子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">textbutton_screen</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Wine&quot;</span> <span class="na">action</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;wine&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Women&quot;</span> <span class="na">action</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;women&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Song&quot;</span> <span class="na">action</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;song&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="timer">
+<span id="sl-timer"></span><h3>timer<a class="headerlink" href="#timer" title="Link to this heading"> link</a></h3>
+<p>timer语句会创建一个计时器，当预订的时间结束后运行某个行为。其使用一个固定位置参数，给出计时的时间值，单位为秒。timer语句拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt_alt_alt_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt_alt_alt_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>计时结束后会运行的行为。这项特性是必须存在的。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-repeat">
+<span class="sig-name descname"><span class="pre">repeat</span></span><a class="headerlink" href="#screen-property-repeat" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，计时结束后重置时间并重新开始计时。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-modal_alt_alt">
+<span class="sig-name descname"><span class="pre">modal</span></span><a class="headerlink" href="#screen-property-modal_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，模态界面不会触发计时器。若为False或没有指定值，模态界面显示状态下依然进行计时。</p>
+</dd></dl>
+
+<p>timer不包含子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">timer_test</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+         <span class="k">textbutton</span> <span class="s2">&quot;Yes.&quot;</span> <span class="na">action</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">)</span>
+         <span class="k">textbutton</span> <span class="s2">&quot;No.&quot;</span> <span class="na">action</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;no&quot;</span><span class="p">)</span>
+
+    <span class="k">timer</span> <span class="mf">3.0</span> <span class="na">action</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;too_slow&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="transform">
+<span id="sl-transform"></span><h3>transform<a class="headerlink" href="#transform" title="Link to this heading"> link</a></h3>
+<p>将一个transform应用于其子组件。transform没有参数，可以拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="transform_properties.html#transform-properties"><span class="std std-ref">Transform特性列表</span></a></p></li>
+</ul>
+<p>transform下有一个子组件。</p>
+</section>
+<section id="vbar">
+<span id="sl-vbar"></span><h3>vbar<a class="headerlink" href="#vbar" title="Link to this heading"> link</a></h3>
+<p>等效于原生垂直的 <a class="reference internal" href="#bar">bar</a> 。 使用特性与条 <cite>bar</cite> 一样。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">volume_controls</span><span class="p">():</span>
+     <span class="k">frame</span><span class="p">:</span>
+         <span class="k">has</span> <span class="k">hbox</span>
+
+         <span class="k">vbar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;sound volume&quot;</span><span class="p">)</span>
+         <span class="k">vbar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;music volume&quot;</span><span class="p">)</span>
+         <span class="k">vbar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;voice volume&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="vbox">
+<span id="sl-vbox"></span><h3>vbox<a class="headerlink" href="#vbox" title="Link to this heading"> link</a></h3>
+<p>纵向排列子组件的不可是垂直方框(box)。vbox不接受参数，可以拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#box-style-properties"><span class="std std-ref">方框样式特性</span></a></p></li>
+</ul>
+<p>UI可视组件作为子组件添加到vbox：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">vbox_test</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;Top.&quot;</span>
+         <span class="k">text</span> <span class="s2">&quot;Bottom.&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="viewport">
+<span id="sl-viewport"></span><h3>viewport<a class="headerlink" href="#viewport" title="Link to this heading"> link</a></h3>
+<p>视口(viewport)是界面中的某块区域，可以使用鼠标滚轮或者滚动条进行滚动。视口可以用于显示某些比界面更大的东西。其使用以下特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-child_size">
+<span class="sig-name descname"><span class="pre">child_size</span></span><a class="headerlink" href="#screen-property-child_size" title="Link to this definition"> link</a></dt>
+<dd><p>待渲染子组件的尺寸，是一个 (<cite>xsize</cite>, <cite>ysize</cite>) 形式的元组。
+该值通常是省略的，子组件可以自己计算尺寸。如果所有组件的size特性都为空，则使用子组件的尺寸信息。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-mousewheel">
+<span class="sig-name descname"><span class="pre">mousewheel</span></span><a class="headerlink" href="#screen-property-mousewheel" title="Link to this definition"> link</a></dt>
+<dd><p>该值可以是下列之一：</p>
+<dl class="simple">
+<dt>False</dt><dd><p>忽略鼠标滚轮。(默认值。)</p>
+</dd>
+<dt>True</dt><dd><p>垂直滚动。</p>
+</dd>
+<dt>“horizontal”</dt><dd><p>水平滚动。</p>
+</dd>
+<dt>“change”</dt><dd><p>垂直滚动视口，只有使用change操作才能触发视口移动。如果change为空，鼠标滚轮时间会传给其他用户接口。(例如，如果给定change的值，并在viewport语句之前放了 <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">&quot;viewport_wheeldown&quot;</span> <span class="pre">action</span> <span class="pre">Return()</span></code> ，当视口滚动到底部时就会触发界面返回。)</p>
+</dd>
+<dt>“horizontal-change”</dt><dd><p>与change模式一同使用，决定水平滚动的情况。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-draggable">
+<span class="sig-name descname"><span class="pre">draggable</span></span><a class="headerlink" href="#screen-property-draggable" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，鼠标拖动就能滚动视口。
+该项可以设置为 <a class="reference internal" href="#screen-variants"><span class="std std-ref">variant</span></a>，这样视口也可以拖动。(例如，设置为 <code class="docutils literal notranslate"><span class="pre">draggable</span> <span class="pre">&quot;touch&quot;</span></code>。)</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-edgescroll">
+<span class="sig-name descname"><span class="pre">edgescroll</span></span><a class="headerlink" href="#screen-property-edgescroll" title="Link to this definition"> link</a></dt>
+<dd><p>当鼠标到达视口边缘时，控制滚动行为。若该值非空，应该是一个2元或者3元的元组。</p>
+<ul class="simple">
+<li><p>元组内第一个元素是从视口边缘到edgescroll开始生效处的距离，单位是像素。</p></li>
+<li><p>元组内第二个元素是滚动率最大值，单位是像素每秒。</p></li>
+<li><p>如果元组内存在第三个元素，它是一个调整滚动速度的函数，取决于鼠标指针与界面边缘的距离。函数入参为一个介于-1.0和1.0之间的数值，返回一个同样区间内的数值。函数默认值与输入相同，且按比例进行滚动。函数返回值是-1.0还是1.0，取决于输入值的符号，并实现匀速滚动。</p></li>
+</ul>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-xadjustment">
+<span class="sig-name descname"><span class="pre">xadjustment</span></span><a class="headerlink" href="#screen-property-xadjustment" title="Link to this definition"> link</a></dt>
+<dd><p><a class="reference internal" href="screen_python.html#ui.adjustment" title="ui.adjustment"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.adjustment()</span></code></a> 对象，用作视口x轴的调整。当该特性省略时，就会创建一个新的adjustment对象。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-yadjustment">
+<span class="sig-name descname"><span class="pre">yadjustment</span></span><a class="headerlink" href="#screen-property-yadjustment" title="Link to this definition"> link</a></dt>
+<dd><p><a class="reference internal" href="screen_python.html#ui.adjustment" title="ui.adjustment"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.adjustment()</span></code></a> 对象，用作视口y轴的调整。当该特性省略时，就会创建一个新的adjustment对象。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-xinitial">
+<span class="sig-name descname"><span class="pre">xinitial</span></span><a class="headerlink" href="#screen-property-xinitial" title="Link to this definition"> link</a></dt>
+<dd><p>视口初始水平偏移量。其可以是一个整数，表示像素数；也可以是一个浮点数，表示一个可能的偏移比例。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-yinitial">
+<span class="sig-name descname"><span class="pre">yinitial</span></span><a class="headerlink" href="#screen-property-yinitial" title="Link to this definition"> link</a></dt>
+<dd><p>视口初始垂直偏移量。其可以是一个整数，表示像素数；也可以是一个浮点数，表示一个可能的偏移比例。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-scrollbars">
+<span class="sig-name descname"><span class="pre">scrollbars</span></span><a class="headerlink" href="#screen-property-scrollbars" title="Link to this definition"> link</a></dt>
+<dd><p>若不为None，滚动条会添加到视口上。scrollbar会创建一个单边布局(layout)，并把视口放在单边的中间。如果 <cite>scrollbars</cite> 的值是 “horizontal”，就在视口上创建一个水平的滚动条。如果 <cite>scrollbars</cite>
+的值是 “vertical”，就在视口上创建一个垂直的滚动条。如果 <cite>scrollbars</cite> 的值是 “both”，水平和垂直滚动条都会被创建。</p>
+<p>若 <cite>scrollbars</cite> 不为None，<cite>viewport</cite> 将使用以下特性前缀：</p>
+<ul class="simple">
+<li><p>前缀为 <code class="docutils literal notranslate"><span class="pre">viewport_</span></code> 的特性穿给视口。</p></li>
+<li><p>前缀为 <code class="docutils literal notranslate"><span class="pre">side_</span></code> 的特性传给side。</p></li>
+<li><p>前缀为 <code class="docutils literal notranslate"><span class="pre">scrollbar_</span></code> 的特性传给水平滚动条。</p></li>
+<li><p>前缀为 <code class="docutils literal notranslate"><span class="pre">vscrollbar_</span></code> 的特性传给垂直滚动条。</p></li>
+</ul>
+<p>也能使用没有前缀的特性。
+<a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a> 会传给side，其他无前缀特性会应用到视口。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-arrowkeys_alt">
+<span class="sig-name descname"><span class="pre">arrowkeys</span></span><a class="headerlink" href="#screen-property-arrowkeys_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，视口可以使用上下左右方向键进行滚动。这种情况下方向键的作用优先于方向键的其他功能。当视口到达限制时，方向键会改变焦点。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-pagekeys">
+<span class="sig-name descname"><span class="pre">pagekeys</span></span><a class="headerlink" href="#screen-property-pagekeys" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，视口可以使用翻页键向上和向下滚动。这会让翻页键原本的功能失效。原本的功能是回滚和前进。</p>
+</dd></dl>
+
+<p>除此之外，视口还使用以下特性。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+</ul>
+<p>视口含有一个子组件。如果实际上提供的子组件并非一个，那就会创建一个固定位置布局容纳所有子组件。</p>
+<p>想让一个视口可滚动，最好的办法通常是声明一个视口id，然后使用 <a class="reference internal" href="screen_actions.html#XScrollValue" title="XScrollValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">XScrollValue()</span></code></a> 和 <a class="reference internal" href="screen_actions.html#YScrollValue" title="YScrollValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">YScrollValue()</span></code></a> 。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">viewport_example</span><span class="p">():</span>
+    <span class="k">side</span> <span class="s2">&quot;c b r&quot;</span><span class="p">:</span>
+         <span class="na">area</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+
+         <span class="k">viewport</span> <span class="na">id</span> <span class="s2">&quot;vp&quot;</span><span class="p">:</span>
+             <span class="na">draggable</span> <span class="kc">True</span>
+
+             <span class="k">add</span> <span class="s2">&quot;washington.jpg&quot;</span>
+
+         <span class="k">bar</span> <span class="na">value</span> <span class="n">XScrollValue</span><span class="p">(</span><span class="s2">&quot;vp&quot;</span><span class="p">)</span>
+         <span class="k">vbar</span> <span class="na">value</span> <span class="n">YScrollValue</span><span class="p">(</span><span class="s2">&quot;vp&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="vpgrid">
+<span id="sl-vpgrid"></span><h3>vpgrid<a class="headerlink" href="#vpgrid" title="Link to this heading"> link</a></h3>
+<p>vpgrid(viewport grid)将视口与网格(grid)结合为单个可视组件。vpgrid(如grid一般)包含多个子组件，并且经过优化可使视口只渲染指定的子组件。</p>
+<p>vpgrid假设所有子组件尺寸相同，并基于第一个子组件确定实际绘制大小。若某个vpgrid渲染结果不正确，请检查并确保所有子组件的尺寸是相同的。</p>
+<p>vpgrid必须至少给定  <cite>cols</cite> 和 <cite>rows</cite> 特性。如果有其中之一省略或者是None，另一个特性就会根据子组件的尺寸、空间和数量自动决定。</p>
+<p>vpgrid拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-cols">
+<span class="sig-name descname"><span class="pre">cols</span></span><a class="headerlink" href="#screen-property-cols" title="Link to this definition"> link</a></dt>
+<dd><p>网格(grid)的列数。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-rows">
+<span class="sig-name descname"><span class="pre">rows</span></span><a class="headerlink" href="#screen-property-rows" title="Link to this definition"> link</a></dt>
+<dd><p>网格(grid)的行数。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-transpose_alt">
+<span class="sig-name descname"><span class="pre">transpose</span></span><a class="headerlink" href="#screen-property-transpose_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，单位网格按列填充。该特性的默认值取决于 <cite>cols</cite> 和 <cite>rows</cite> 的特性。如果 <cite>cols</cite> 出现，单元网格会先按列填充，否则按行填充。</p>
+</dd></dl>
+
+<p>除此之外，vpgrid使用所有 <a class="reference internal" href="#sl-viewport"><span class="std std-ref">视口</span></a> 可使用的特性，以及下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#grid-style-properties"><span class="std std-ref">网格样式特性</span></a></p></li>
+</ul>
+<p>当指定 <cite>scrollbar</cite> 特性时，有前缀的特性会以类似视口(viewport)的方式传给vpgrid。
+(前缀为 <cite>viewport_</cite> 的特性也会传给vpgrid。)</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">vpgrid_test</span><span class="p">():</span>
+
+    <span class="k">vpgrid</span><span class="p">:</span>
+
+        <span class="na">cols</span> <span class="mi">2</span>
+        <span class="na">spacing</span> <span class="mi">5</span>
+        <span class="na">draggable</span> <span class="kc">True</span>
+        <span class="na">mousewheel</span> <span class="kc">True</span>
+
+        <span class="na">scrollbars</span> <span class="s2">&quot;vertical&quot;</span>
+
+        <span class="c1"># 由于我们有scrollbar，所以我们必须设置“边”的位置，而不需要设置vpgrid。</span>
+        <span class="na">xalign</span> <span class="mf">0.5</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">):</span>
+
+            <span class="k">textbutton</span> <span class="s2">&quot;Button [i]&quot;</span><span class="p">:</span>
+                <span class="na">xysize</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+                <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="window">
+<span id="sl-window"></span><h3>window<a class="headerlink" href="#window" title="Link to this heading"> link</a></h3>
+<p>window是个包含背景的窗口，用于显示游戏内对话。其拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#window-style-properties"><span class="std std-ref">窗口样式特性</span></a></p></li>
+</ul>
+<p>window含有一个子组件。如果实际上提供的子组件并非一个，那就会创建一个固定位置布局容纳所有子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">say</span><span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+    <span class="k">window</span> <span class="na">id</span> <span class="s2">&quot;window&quot;</span>
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="na">spacing</span> <span class="mi">10</span>
+
+            <span class="k">text</span> <span class="n">who</span> <span class="na">id</span> <span class="s2">&quot;who&quot;</span>
+            <span class="k">text</span> <span class="n">what</span> <span class="na">id</span> <span class="s2">&quot;what&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="imagemap">
+<h2>imagemap语句<a class="headerlink" href="#imagemap" title="Link to this heading"> link</a></h2>
+<p>创建界面的简易方法，特别是对于那些想要创建可视化imagemap的人。当创建一个imagemap时，imagemap语句用于指定至多6个图像(image)。hotspot和hotbar用于从整个图像中分割出矩形区域，并为那些区域添加行为和值。</p>
+<p>这是一个preferences界面使用imagemap的样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">preferences</span><span class="p">():</span>
+
+    <span class="k">tag</span> <span class="k">menu</span>
+    <span class="k">use</span> <span class="n">navigation</span>
+
+    <span class="k">imagemap</span><span class="p">:</span>
+        <span class="k">auto</span> <span class="s2">&quot;gui_set/gui_prefs_</span><span class="si">%s</span><span class="s2">.png&quot;</span>
+
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">740</span><span class="p">,</span> <span class="mi">232</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">73</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;fullscreen&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Display Fullscreen&quot;</span><span class="p">)</span>
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">832</span><span class="p">,</span> <span class="mi">232</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">73</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;window&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Display Window&quot;</span><span class="p">)</span>
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">1074</span><span class="p">,</span> <span class="mi">232</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">73</span><span class="p">)</span> <span class="na">action</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;transitions&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Transitions All&quot;</span><span class="p">)</span>
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">1166</span><span class="p">,</span> <span class="mi">232</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">73</span><span class="p">)</span> <span class="na">action</span>  <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;transitions&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Transitions None&quot;</span><span class="p">)</span>
+
+        <span class="k">hotbar</span> <span class="p">(</span><span class="mi">736</span><span class="p">,</span> <span class="mi">415</span><span class="p">,</span> <span class="mi">161</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;music volume&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Music Volume&quot;</span><span class="p">)</span>
+        <span class="k">hotbar</span> <span class="p">(</span><span class="mi">1070</span><span class="p">,</span> <span class="mi">415</span><span class="p">,</span> <span class="mi">161</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;sound volume&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Sound Volume&quot;</span><span class="p">)</span>
+        <span class="k">hotbar</span> <span class="p">(</span><span class="mi">667</span><span class="p">,</span> <span class="mi">535</span><span class="p">,</span> <span class="mi">161</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;voice volume&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Voice Volume&quot;</span><span class="p">)</span>
+        <span class="k">hotbar</span> <span class="p">(</span><span class="mi">1001</span><span class="p">,</span> <span class="mi">535</span><span class="p">,</span> <span class="mi">161</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;text speed&quot;</span><span class="p">)</span> <span class="na">alt</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Text Speed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="sl-imagemap">
+<span id="id6"></span><h3>imagemap<a class="headerlink" href="#sl-imagemap" title="Link to this heading"> link</a></h3>
+<p>imagemap语句用于指定一个imagemap。其不接受参数，后面跟下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-auto_alt">
+<span class="sig-name descname"><span class="pre">auto</span></span><a class="headerlink" href="#screen-property-auto_alt" title="Link to this definition"> link</a></dt>
+<dd><p>自动定义imagemap使用的图像。图像名是一个字符串，包含“%s”。如果文件存在，且某个图像特性是省略的，“%s”会使用对应特性名替换，其值作为特性的默认值。</p>
+<p>例如，如果 <cite>auto</cite> 后面的字符串是 “imagemap_%s.png”，且  <cite>idle</cite> 省略，idle的默认值就是 “imagemap_idle.png”。如果 <cite>auto</cite> 后面的字符串是 “imagemap %s”就使用
+<code class="docutils literal notranslate"><span class="pre">imagemap</span> <span class="pre">idle</span></code> 图像。</p>
+<p><cite>auto</cite> 的行为可以修改
+<a class="reference internal" href="config.html#var-config.imagemap_auto_function"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.imagemap_auto_function</span></code></a> 实现定制化。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-ground">
+<span class="sig-name descname"><span class="pre">ground</span></span><a class="headerlink" href="#screen-property-ground" title="Link to this definition"> link</a></dt>
+<dd><p>用于imagemap的背景图像，即不是hotspot也不是hotbar。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-insensitive_alt">
+<span class="sig-name descname"><span class="pre">insensitive</span></span><a class="headerlink" href="#screen-property-insensitive_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当hotspot或者hotbar不启用时使用的图像。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-idle_alt">
+<span class="sig-name descname"><span class="pre">idle</span></span><a class="headerlink" href="#screen-property-idle_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当hotspot没有被选中且没有获得焦点时使用的图像，也用于没有获得焦点hotbar空的部分。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hover_alt">
+<span class="sig-name descname"><span class="pre">hover</span></span><a class="headerlink" href="#screen-property-hover_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当hotspot没有被选中但获得焦点时使用的图像，也用于获得焦点hotbar空的部分。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected_idle_alt">
+<span class="sig-name descname"><span class="pre">selected_idle</span></span><a class="headerlink" href="#screen-property-selected_idle_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当hotspot被选中但没有获得焦点时使用的图像，也用于没有获得焦点hotbar满的部分。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected_hover_alt">
+<span class="sig-name descname"><span class="pre">selected_hover</span></span><a class="headerlink" href="#screen-property-selected_hover_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当hotspot被选中且获得焦点时使用的图像，也用于获得焦点hotbar满的部分。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#screen-property-alpha" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，也就是默认值，只有当鼠标悬停在不透明图像上方时，hotspot才会获得焦点。若为False，无论鼠标是否在imagemap矩形区域中，hotspot都会获得焦点。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><a class="headerlink" href="#screen-property-cache" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，也就是默认值，hotspot数据会缓存，用于提升应用性能，代价是会消耗额外的磁盘空间。</p>
+</dd></dl>
+
+<p>imagemap拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#fixed-style-properties"><span class="std std-ref">固定布局的样式特性</span></a></p></li>
+</ul>
+<p>imagemap会创建一个固定位置布局，允许任意子组件被添加到那个布局(不仅限于hotspot和hotbar)。</p>
+</section>
+<section id="hotspot">
+<span id="sl-hotspot"></span><h3>hotspot<a class="headerlink" href="#hotspot" title="Link to this heading"> link</a></h3>
+<p>hotspot是由imagemap内一部分图像组成的按钮。其使用一个参数，一个(x, y, width, height)形式的元组，给定了imagemap内组成按钮的区域。其也拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-action_alt_alt_alt_alt_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#screen-property-action_alt_alt_alt_alt_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当button激活时运行的行为。这也可用于控制按钮启用状态下，被选中时的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">alternate</span></span><a class="headerlink" href="#screen-property-alternate_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当hotspot使用变换方法激活时运行的行为。变换激活发生在两种情况下，基于鼠标平台时用户点击鼠标右键，基于触控平台时用户长按。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-hovered_alt_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">hovered</span></span><a class="headerlink" href="#screen-property-hovered_alt_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮获得焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-unhovered_alt_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">unhovered</span></span><a class="headerlink" href="#screen-property-unhovered_alt_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当按钮失去焦点时运行的行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-selected_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">selected</span></span><a class="headerlink" href="#screen-property-selected_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>一个决定按钮是否被选中的表达式。每次交互行为，这个表达式都会至少被计算一次。如果没有提供表达式，这个行为会用于决定按钮被选中。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-sensitive_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">sensitive</span></span><a class="headerlink" href="#screen-property-sensitive_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>一个决定按钮是否被启用的表达式。每次交互行为，这个表达式都会至少被计算一次。如果没有提供表达式，这个行为会用于决定按钮启用。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-keysym_alt_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">keysym</span></span><a class="headerlink" href="#screen-property-keysym_alt_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>给出一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> ，当对应键盘的按键被按下后，调用对应的按键行为。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-alternate_keysym_alt_alt_alt">
+<span class="sig-name descname"><span class="pre">alternate_keysym</span></span><a class="headerlink" href="#screen-property-alternate_keysym_alt_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>给出一个 <a class="reference internal" href="keymap.html"><span class="doc">keysym</span></a> ，当对应键盘的按键被按下后，调用对应的变换按键行为。</p>
+</dd></dl>
+
+<p>hotspot拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#button-style-properties"><span class="std std-ref">按钮样式特性</span></a></p></li>
+</ul>
+<p>hotspot会创建一个固定位置布局，允许子组件被添加到那个布局。固定位置布局有一个与hotspot尺寸大小相同的区域，这意味着所有子组件都会根据hotspot放置。</p>
+<p>hotspot可以被赋予 <code class="docutils literal notranslate"><span class="pre">alt</span></code> 样式特性，允许Ren’Py的自动语音特性能工作。</p>
+</section>
+<section id="hotbar">
+<span id="sl-hotbar"></span><h3>hotbar<a class="headerlink" href="#hotbar" title="Link to this heading"> link</a></h3>
+<p>hotbar是由imagemap内一部分图像组成的条(bar)。其使用一个参数，一个(x, y, width, height)形式的元组，给定了imagemap内组成条(bar)的区域。其也拥有下列特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-value_alt_alt">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#screen-property-value_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>条(bar)的当前值。可以是一个 <a class="reference internal" href="screen_actions.html#input-values"><span class="std std-ref">条(bar)值</span></a>
+对象，也可以是一个数值。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-range_alt">
+<span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#screen-property-range_alt" title="Link to this definition"> link</a></dt>
+<dd><p>条(bar)的最大值。当 <cite>value</cite> 是一个数值的情况下，<cite>range</cite> 是必须的。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-adjustment_alt">
+<span class="sig-name descname"><span class="pre">adjustment</span></span><a class="headerlink" href="#screen-property-adjustment_alt" title="Link to this definition"> link</a></dt>
+<dd><p>一个用于该条(bar)调整的 <a class="reference internal" href="screen_python.html#ui.adjustment" title="ui.adjustment"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.adjustment()</span></code></a> 对象。</p>
+</dd></dl>
+
+<p>hotbar必须给定一个 <cite>value</cite> 或者一个 <cite>adjustment</cite> 对象。除此之外，还可以拥有下列特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#bar-style-properties"><span class="std std-ref">条(bar)样式特性</span></a></p></li>
+</ul>
+<p>hotbar没有子组件。</p>
+<p>hotbar可以被赋予 <code class="docutils literal notranslate"><span class="pre">alt</span></code> 样式特性，允许Ren’Py的自动语音特性能工作。</p>
+</section>
+</section>
+<section id="add">
+<span id="add-statement"></span><h2>add语句<a class="headerlink" href="#add" title="Link to this heading"> link</a></h2>
+<p>The add statement is a bit special, as it adds an already-existing displayble to the screen.
+As a result, it doesn’t take the properties common to the user interface statements.
+add语句有一点特殊，其会将已经存在的可视组件添加到界面中，并直接应用可视组件自身的特性。</p>
+<section id="sl-add">
+<span id="id7"></span><h3>add<a class="headerlink" href="#sl-add" title="Link to this heading"> link</a></h3>
+<p>在界面上添加一个图像或其他的可视组件。添加时可以选择使用 <a class="reference internal" href="transform_properties.html#transform-properties"><span class="std std-ref">transform特性列表</span></a>。
+如果至少使用了一项 <a class="reference internal" href="transforms.html#Transform" title="Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a> 特性，用于wrap图像的transform就会被创建，特性值会赋予这个transform。</p>
+<p>如果可视组件为None，那不会有任何东西添加到界面上。</p>
+<p>add语句不使用任何子组件。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">add_test</span><span class="p">():</span>
+    <span class="k">add</span> <span class="s2">&quot;logo.png&quot;</span> <span class="na">xalign</span> <span class="mf">1.0</span> <span class="na">yalign</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sl-advanced-displayables">
+<span id="id8"></span><h2>高级可视组件<a class="headerlink" href="#sl-advanced-displayables" title="Link to this heading"> link</a></h2>
+<p>除了以上常用语句，界面语言还有一些语句针对高级可视组件。从可视组件到具体语句的映射是简单的。可视组件的固定位置参数可以直接用作语句的固定位置参数。可视组件的关键词参数和等效样式特性可转为界面语言特性。</p>
+<p>高级可视组件语句包括：</p>
+<section id="areapicker">
+<span id="sl-areapicker"></span><h3>areapicker<a class="headerlink" href="#areapicker" title="Link to this heading"> link</a></h3>
+<p>设计为一个开发工具，能让用户在界面中框选一个矩形区域。其能够使用以下特性：</p>
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-cols_alt">
+<span class="sig-name descname"><span class="pre">cols</span></span><a class="headerlink" href="#screen-property-cols_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若不是默认值None，会将界面均分为指定列数的网格(grid)。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-rows_alt">
+<span class="sig-name descname"><span class="pre">rows</span></span><a class="headerlink" href="#screen-property-rows_alt" title="Link to this definition"> link</a></dt>
+<dd><p>若不是默认值None，会将界面均分为指定行数的网格(grid)。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-position">
+<span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#screen-property-position" title="Link to this definition"> link</a></dt>
+<dd><p>若不是默认值None，该项是一个函数。当用户首次点击时，会将点击坐标的x和y值四舍五入后传入并调用此函数。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-changed_alt_alt">
+<span class="sig-name descname"><span class="pre">changed</span></span><a class="headerlink" href="#screen-property-changed_alt_alt" title="Link to this definition"> link</a></dt>
+<dd><p>当用户选择区域发生变化时调用此项，入参为一个(x, y, width, height)元组。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-finished">
+<span class="sig-name descname"><span class="pre">finished</span></span><a class="headerlink" href="#screen-property-finished" title="Link to this definition"> link</a></dt>
+<dd><p>当用户完成区域选择后调用此项，入参为一个(x, y, width, height)元组。</p>
+</dd></dl>
+
+<dl class="std screen-property">
+<dt class="sig sig-object std" id="screen-property-persist">
+<span class="sig-name descname"><span class="pre">persist</span></span><a class="headerlink" href="#screen-property-persist" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，最终选定的区域会显示为对应的子组件。若为False，即默认值，子组件在完成选定区域之后自动隐藏。</p>
+</dd></dl>
+
+<p>areapicker可以使用以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+</ul>
+<p>areapicker包含一个子组件。子组件用作显示界面中选定的区域。</p>
+</section>
+<section id="drag">
+<h3>Drag<a class="headerlink" href="#drag" title="Link to this heading"> link</a></h3>
+<p>创建一个可以在界面内拖拽的 <a class="reference internal" href="drag_drop.html#Drag" title="Drag"><code class="xref py py-class docutils literal notranslate"><span class="pre">Drag</span></code></a> 对象。使用界面语言传入的子组件 <cite>d</cite> 可以使用其所有特性。</p>
+<p>该类还可以使用以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+<li><p><a class="reference internal" href="style_properties.html#style-property-hover_sound"><code class="xref std std-propref docutils literal notranslate"><span class="pre">hover_sound</span></code></a> 和 <a class="reference internal" href="style_properties.html#style-property-activate_sound"><code class="xref std std-propref docutils literal notranslate"><span class="pre">activate_sound</span></code></a> 样式特性</p></li>
+<li><p><a class="reference internal" href="style_properties.html#style-property-focus_mask"><code class="xref std std-propref docutils literal notranslate"><span class="pre">focus_mask</span></code></a> 样式特性</p></li>
+</ul>
+<p>drag组件包含一个子组件，可以使用 <a class="reference internal" href="style_properties.html#style-property-child"><code class="xref std std-propref docutils literal notranslate"><span class="pre">child</span></code></a> 样式特性指定对应的子组件和其获得焦点时的变种。</p>
+</section>
+<section id="draggroup">
+<h3>Draggroup<a class="headerlink" href="#draggroup" title="Link to this heading"> link</a></h3>
+<p>创建一个 <a class="reference internal" href="drag_drop.html#DragGroup" title="DragGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">DragGroup</span></code></a> 对象。除了使用 <a class="reference internal" href="drag_drop.html#DragGroup" title="DragGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">DragGroup</span></code></a> 相同的特性外，还可以使用以下特性：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#common-properties"><span class="std std-ref">通用特性</span></a></p></li>
+</ul>
+<p>draggroup对象可以包含任意多个drag对象作为其子组件，甚至还可以将非drag对象作为子组件，比如将fixed作为子组件实现某些功能。</p>
+</section>
+</section>
+<section id="has">
+<span id="sl-has"></span><h2>has语句<a class="headerlink" href="#has" title="Link to this heading"> link</a></h2>
+<p>has语句允许你指定一个容器用于容纳单个子组件，而不使用固定网格(fixed)。has语句只能用在语句内部包含一个子组件的情况。关键词 <code class="docutils literal notranslate"><span class="pre">has</span></code> 后面(同一个逻辑行)会接另一个语句，那个语句会创建一个包含多个子组件的容器型可视组件。</p>
+<p>has语句改变了包含它的语句块(block)的处理方式。在语句块(block)中创建为子组件的可视组件会被添加到容器中，而不是父组件中。父组件的关键词参数不允许出现在has语句后面。在一个语句块(block)中可以使用多个has语句。</p>
+<p>has语句可以使用下列语句创建的子组件：</p>
+<ul class="simple">
+<li><p>button</p></li>
+<li><p>frame</p></li>
+<li><p>window</p></li>
+</ul>
+<p>has语句可以使用下列语句创建的容器：</p>
+<ul class="simple">
+<li><p>fixed</p></li>
+<li><p>grid</p></li>
+<li><p>hbox</p></li>
+<li><p>side</p></li>
+<li><p>vbox</p></li>
+</ul>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">volume_controls</span><span class="p">():</span>
+     <span class="k">frame</span><span class="p">:</span>
+         <span class="k">has</span> <span class="k">vbox</span>
+
+         <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;sound volume&quot;</span><span class="p">)</span>
+         <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;music volume&quot;</span><span class="p">)</span>
+         <span class="k">bar</span> <span class="na">value</span> <span class="n">Preference</span><span class="p">(</span><span class="s2">&quot;voice volume&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="sl-control-statements">
+<span id="id9"></span><h2>控制语句<a class="headerlink" href="#sl-control-statements" title="Link to this heading"> link</a></h2>
+<p>界面语言包括了各种控制语句，用于条件执行、循环、包含其他界面、事件消息触发行为和执行任意的Python语句。</p>
+<section id="default">
+<span id="sl-default"></span><h3>default<a class="headerlink" href="#default" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">default</span></code> 语句在第一个界面设置某个变量的默认值。<a class="reference internal" href="screen_actions.html#SetScreenVariable" title="SetScreenVariable"><code class="xref py py-func docutils literal notranslate"><span class="pre">SetScreenVariable()</span></code></a></p>
+<p>某个变量不会作为该界面的入参或者需要我们使用use语句继承自某个界面的情况下，default语句设置变量的默认值。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">scheduler</span><span class="p">():</span>
+    <span class="k">default</span> <span class="n">club</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">vbox</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;What would you like to do?&quot;</span>
+         <span class="k">textbutton</span> <span class="s2">&quot;Art Club&quot;</span> <span class="na">action</span> <span class="n">SetScreenVariable</span><span class="p">(</span><span class="s2">&quot;club&quot;</span><span class="p">,</span> <span class="s2">&quot;art&quot;</span><span class="p">)</span>
+         <span class="k">textbutton</span> <span class="s2">&quot;Writing Club&quot;</span> <span class="na">action</span> <span class="n">SetScreenVariable</span><span class="p">(</span><span class="s2">&quot;club&quot;</span><span class="p">,</span> <span class="s2">&quot;writing&quot;</span><span class="p">)</span>
+
+         <span class="k">if</span> <span class="n">club</span><span class="p">:</span>
+             <span class="k">textbutton</span> <span class="s2">&quot;Select&quot;</span> <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="n">club</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="for">
+<span id="sl-for"></span><h3>for<a class="headerlink" href="#for" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">for</span></code> 语句类似于Python中的 <code class="docutils literal notranslate"><span class="pre">for</span></code> 语句，差别在于这里的for语句不支持 <code class="docutils literal notranslate"><span class="pre">else</span></code>、<code class="docutils literal notranslate"><span class="pre">continue</span></code> 和 <code class="docutils literal notranslate"><span class="pre">break</span></code> 分句。for语句支持使用数组型表达式，效果与使用变量一样。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">numerals</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;II&#39;</span><span class="p">,</span> <span class="s1">&#39;III&#39;</span><span class="p">,</span> <span class="s1">&#39;IV&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span> <span class="p">]</span>
+
+<span class="k">screen</span> <span class="n">five_buttons</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">numeral</span> <span class="k">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numerals</span><span class="p">):</span>
+            <span class="k">textbutton</span> <span class="n">numeral</span> <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for语句支持index子句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">five_buttons</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">numeral</span> <span class="k">index</span> <span class="n">numeral</span> <span class="k">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numerals</span><span class="p">):</span>
+            <span class="k">textbutton</span> <span class="n">numeral</span> <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果有 <code class="docutils literal notranslate"><span class="pre">index</span></code> 分句，应该包含返回一个可排列且可比较的值的表达式，对列表中的每一行都是唯一的。
+Ren’Py 使用这个值来确保变换和其他状态与正确的迭代相关联。 如果在元素添加到正在迭代的列表中或从中删除元素时看到奇怪的表现，则可能需要使用index子句。</p>
+</section>
+<section id="if">
+<span id="sl-if"></span><h3>if<a class="headerlink" href="#if" title="Link to this heading"> link</a></h3>
+<p>界面语言 <code class="docutils literal notranslate"><span class="pre">if</span></code> 语句与Python/Ren’Py的 <code class="docutils literal notranslate"><span class="pre">if</span></code> 语句相同。其支持 <code class="docutils literal notranslate"><span class="pre">if</span></code>、<code class="docutils literal notranslate"><span class="pre">elif</span></code> 和 <code class="docutils literal notranslate"><span class="pre">else</span></code> 分句。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">skipping_indicator</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">skipping</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;Skipping.&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+         <span class="k">text</span> <span class="s2">&quot;Not Skipping.&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="on">
+<span id="sl-on"></span><h3>on<a class="headerlink" href="#on" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">on</span></code> 语句允许某个事件消息发生时，界面执行某个行为。其使用一个参数，即事件消息名的字符串。事件名包括：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;show&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;hide&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;replace&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;replaced&quot;</span></code></p></li>
+</ul>
+<p>on语句使用 一个action特性，给定了事件发生时运行的行为。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">preferences</span><span class="p">():</span>
+    <span class="k">frame</span><span class="p">:</span>
+        <span class="k">has</span> <span class="k">hbox</span>
+
+        <span class="k">text</span> <span class="s2">&quot;Display&quot;</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Fullscreen&quot;</span> <span class="na">action</span> <span class="n">Preferences</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;fullscreen&quot;</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;Window&quot;</span> <span class="na">action</span> <span class="n">Preferences</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="s2">&quot;window&quot;</span><span class="p">)</span>
+
+    <span class="k">on</span> <span class="s2">&quot;show&quot;</span> <span class="na">action</span> <span class="n">Show</span><span class="p">(</span><span class="s2">&quot;navigation&quot;</span><span class="p">)</span>
+    <span class="k">on</span> <span class="s2">&quot;hide&quot;</span> <span class="na">action</span> <span class="n">Hide</span><span class="p">(</span><span class="s2">&quot;navigation&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="use">
+<span id="sl-use"></span><h3>use<a class="headerlink" href="#use" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">use</span></code> 语句允许一个界面包含另一个界面。
+use语句后的参数即被包含的界面名。界面名后面的圆括号中可以使用界面定义中的参数列表。</p>
+<p>如果被use语句使用的界面没有需要插入的参数，其只会读写当前界面的变量作用域，并根据 <code class="docutils literal notranslate"><span class="pre">use</span></code> 语句中的关键词入参。
+否则，其作用域内的变量将会将使用对应入参的值进行初始化。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">file_slot</span><span class="p">(</span><span class="n">slot</span><span class="p">):</span>
+    <span class="k">button</span><span class="p">:</span>
+        <span class="na">action</span> <span class="n">FileAction</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+
+        <span class="k">has</span> <span class="k">hbox</span>
+
+        <span class="k">add</span> <span class="n">FileScreenshot</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="k">text</span> <span class="n">FileTime</span><span class="p">(</span><span class="n">slot</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="s2">&quot;Empty Slot.&quot;</span><span class="p">)</span>
+            <span class="k">text</span> <span class="n">FileSaveName</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+
+
+ <span class="k">screen</span> <span class="n">save</span><span class="p">():</span>
+     <span class="k">grid</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">:</span>
+         <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+              <span class="k">use</span> <span class="n">file_slot</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>use语句可以使用 <code class="docutils literal notranslate"><span class="pre">id</span></code> 和 <code class="docutils literal notranslate"><span class="pre">as</span></code> 从句。
+这些特性必须放在参数列表之后，并且在语句的第一行，而不能在后面的内部语句块中。</p>
+<p><code class="docutils literal notranslate"><span class="pre">id</span></code> 仅当两个带有相同标签(tag)的界面需要引用同一个界面的情况下才有用。那时，如果其中一个界面替换为另一个界面，使用界面的状态会从old变为new。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">t1</span><span class="p">():</span>
+    <span class="na">xpos</span> <span class="mi">150</span>
+    <span class="n">linear</span> <span class="mf">1.0</span> <span class="na">xpos</span> <span class="mi">0</span>
+
+<span class="k">screen</span> <span class="n">common</span><span class="p">():</span>
+    <span class="k">text</span> <span class="s2">&quot;Test&quot;</span> <span class="k">at</span> <span class="n">t1</span>
+
+<span class="k">screen</span> <span class="n">s1</span><span class="p">():</span>
+    <span class="k">tag</span> <span class="n">s</span>
+    <span class="k">use</span> <span class="n">common</span> <span class="na">id</span> <span class="s2">&quot;common&quot;</span>
+    <span class="k">text</span> <span class="s2">&quot;s1&quot;</span> <span class="na">ypos</span> <span class="mi">100</span>
+
+<span class="k">screen</span> <span class="n">s2</span><span class="p">():</span>
+    <span class="k">tag</span> <span class="n">s</span>
+    <span class="k">use</span> <span class="n">common</span> <span class="na">id</span> <span class="s2">&quot;common&quot;</span>
+    <span class="k">text</span> <span class="s2">&quot;s2&quot;</span> <span class="na">ypos</span> <span class="mi">100</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">show</span> <span class="k">screen</span> <span class="n">s1</span>
+    <span class="k">pause</span>
+    <span class="k">show</span> <span class="k">screen</span> <span class="n">s2</span>
+    <span class="k">pause</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">as</span></code> 从句后面应该接一个变量名。引用的界面结尾，绑定的 <cite>main</cite> 变量会声明为指定类型变量。
+例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="na">child</span><span class="p">():</span>
+    <span class="k">add</span> <span class="n">MyCreatorDefinedDisplayable</span><span class="p">()</span> <span class="k">as</span> <span class="n">main</span>
+
+<span class="k">screen</span> <span class="n">parent</span><span class="p">():</span>
+    <span class="k">use</span> <span class="na">child</span> <span class="k">as</span> <span class="n">mycdd</span>
+
+    <span class="c1"># 此处，MyCreatorDefinedDisplaybale实例会声明为cdd。</span>
+</pre></div>
+</div>
+<p>(这段文档写得过于混乱和简略，可能还存在错误。as从句的核心功能是将组件声明为变量，至于具体使用这样的变量则不清楚。
+目前只知道界面中声明为main的组件，使用use被其他组件引用后，被引用的组件对应的变量名以外层的界面为准。
+比如上面的样例中，MyCreatorDefinedDisplayable实例在parent界面中的变量名为mycdd。怀疑注释部分“声明为cdd”写错了。)</p>
+<p>除了直接使用界面的名称，还可以使用关键词 <code class="docutils literal notranslate"><span class="pre">expression</span></code> 然后接一个表达式描述使用的界面名称。
+如果需要传入参数，必须使用 <code class="docutils literal notranslate"><span class="pre">pass</span></code> 关键词分割在表达式内分割参数。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">ed</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="k">text</span> <span class="s2">&quot;Ed&quot;</span>
+    <span class="k">text</span> <span class="s2">&quot;Captain&quot;</span>
+
+<span class="k">screen</span> <span class="n">kelly</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="k">text</span> <span class="s2">&quot;Kelly&quot;</span>
+    <span class="k">text</span> <span class="s2">&quot;First Officer&quot;</span>
+
+<span class="k">screen</span> <span class="n">bortus</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="k">text</span> <span class="s2">&quot;Bortus&quot;</span>
+    <span class="k">text</span> <span class="s2">&quot;Second Officer&quot;</span>
+
+<span class="k">screen</span> <span class="n">crew</span><span class="p">():</span>
+    <span class="k">hbox</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">member</span> <span class="k">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">party</span><span class="p">):</span>
+            <span class="k">vbox</span><span class="p">:</span>
+                <span class="k">use</span> <span class="n">member</span><span class="o">.</span><span class="k">screen</span> <span class="k">pass</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="usetransclude">
+<span id="use-and-transclude"></span><h4>use和transclude语句<a class="headerlink" href="#usetransclude" title="Link to this heading"> link</a></h4>
+<p>use语句也可以包含一个界面语言的语句块(block)，语句块中可能存在 <code class="docutils literal notranslate"><span class="pre">transclude</span></code>
+语句。 <code class="docutils literal notranslate"><span class="pre">transclude</span></code> 语句会被替换为use语句块内容。</p>
+<p>这就可以定义可复用的界面布局(layout)。例如，界面：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">movable_frame</span><span class="p">(</span><span class="na">pos</span><span class="p">):</span>
+    <span class="k">drag</span><span class="p">:</span>
+        <span class="na">pos</span> <span class="na">pos</span>
+
+        <span class="k">frame</span><span class="p">:</span>
+            <span class="na">background</span> <span class="n">Frame</span><span class="p">(</span><span class="s2">&quot;movable_frame.png&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="na">top_padding</span> <span class="mi">20</span>
+
+            <span class="k">transclude</span>
+</pre></div>
+</div>
+<p>就意味着一个可复用的组件，可以warp其他组件。这是一个如何复用的样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">test</span><span class="p">:</span>
+    <span class="k">use</span> <span class="n">movable_frame</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+        <span class="k">text</span> <span class="s2">&quot;你可以拖拽我。&quot;</span>
+
+    <span class="k">use</span> <span class="n">movable_frame</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)):</span>
+        <span class="k">vbox</span><span class="p">:</span>
+            <span class="k">text</span> <span class="s2">&quot;你也可以拖拽我。&quot;</span>
+            <span class="k">textbutton</span> <span class="s2">&quot;搞定！&quot;</span> <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>use和transclude结构是
+<a class="reference internal" href="screen_python.html#creator-defined-sl"><span class="std std-ref">创作者定义的界面语言语句</span></a> 的基础。</p>
+</section>
+</section>
+<section id="python">
+<span id="sl-python"></span><h3>Python<a class="headerlink" href="#python" title="Link to this heading"> link</a></h3>
+<p>界面语言也可以包含单行和多行的Python语句。Python语句在对应界面的作用域范围内运行。</p>
+<p><strong>Python禁止在界面之外引发可视的副作用。</strong> Ren’Py在必要的情况下会多次运行某个界面。图像会在界面正式显示之前先预加载。因此，如果界面有副作用，在预加载阶段就会出现。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">python_screen</span><span class="p">:</span>
+    <span class="k">python</span><span class="p">:</span>
+        <span class="n">test_name</span> <span class="o">=</span> <span class="s2">&quot;Test </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">test_number</span>
+
+    <span class="k">text</span> <span class="n">test_name</span>
+
+    <span class="k">$</span> <span class="n">test_label</span> <span class="o">=</span> <span class="s2">&quot;test_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">test_label</span>
+
+    <span class="k">textbutton</span> <span class="s2">&quot;Run Test&quot;</span> <span class="na">action</span> <span class="n">Jump</span><span class="p">(</span><span class="n">test_label</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="showif">
+<span id="sl-showif"></span><h2>showif语句<a class="headerlink" href="#showif" title="Link to this heading"> link</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">showif</span></code> 语句含有一个条件判断。只有当条件为True时，其子组件会显示；条件为False时，子组件隐藏。当showif的子组件含有transform时，其会向子组件提供ATL事件，用于管理子组件的显示和隐藏。Ren’Py也可以据此实现显示和隐藏的序列化。</p>
+<p><code class="docutils literal notranslate"><span class="pre">showif</span></code> 语句将它的子组件装进一个可视组件并管理显示和隐藏过程。</p>
+<p>多个showif语句可以组成一个 <code class="docutils literal notranslate"><span class="pre">showif</span></code> / <code class="docutils literal notranslate"><span class="pre">elif</span></code> / <code class="docutils literal notranslate"><span class="pre">else</span></code> 结构体，类似于一个if语句。 <strong>与if语句不同之处在于，showif执行其下所有的语句块(block)，包括Python语句，尽管某些条件结果是False。</strong> 这是由于showif语句需要先创建子组件然后再隐藏子组件。</p>
+<p>showif语句会向其子组件传送三种事件消息：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">appear</span></code></dt><dd><p>若条件判断为True，首先显示界面时，会传送并立刻显示子组件。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">show</span></code></dt><dd><p>当条件判断由False变为True时，会传送给子组件。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hide</span></code></dt><dd><p>当条件判断由True变为False时，会传送给子组件。</p>
+</dd>
+</dl>
+<p>基于这些需求，当if的主条件判断为True时 <code class="docutils literal notranslate"><span class="pre">elif</span></code> 语句的条件判断分句总是为False，而else分句只有当所有主要条件判断都为False时才会为True。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">transform</span> <span class="n">cd_transform</span><span class="p">:</span>
+    <span class="c1"># 这句会在appear、show或hide之前运行</span>
+    <span class="na">xalign</span> <span class="mf">0.5</span> <span class="na">yalign</span> <span class="mf">0.5</span> <span class="na">alpha</span> <span class="mf">0.0</span>
+
+    <span class="k">on</span> <span class="n">appear</span><span class="p">:</span>
+        <span class="na">alpha</span> <span class="mf">1.0</span>
+    <span class="k">on</span> <span class="k">show</span><span class="p">:</span>
+        <span class="na">zoom</span> <span class="mf">.75</span>
+        <span class="n">linear</span> <span class="mf">.25</span> <span class="na">zoom</span> <span class="mf">1.0</span> <span class="na">alpha</span> <span class="mf">1.0</span>
+    <span class="k">on</span> <span class="k">hide</span><span class="p">:</span>
+        <span class="n">linear</span> <span class="mf">.25</span> <span class="na">zoom</span> <span class="mf">1.25</span> <span class="na">alpha</span> <span class="mf">0.0</span>
+
+<span class="k">screen</span> <span class="n">countdown</span><span class="p">():</span>
+    <span class="k">default</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;3&quot;</span> <span class="na">action</span> <span class="n">SetScreenVariable</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;2&quot;</span> <span class="na">action</span> <span class="n">SetScreenVariable</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;1&quot;</span> <span class="na">action</span> <span class="n">SetScreenVariable</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;0&quot;</span> <span class="na">action</span> <span class="n">SetScreenVariable</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">showif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">text</span> <span class="s2">&quot;Three&quot;</span> <span class="na">size</span> <span class="mi">100</span> <span class="k">at</span> <span class="n">cd_transform</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">text</span> <span class="s2">&quot;Two&quot;</span> <span class="na">size</span> <span class="mi">100</span> <span class="k">at</span> <span class="n">cd_transform</span>
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">text</span> <span class="s2">&quot;One&quot;</span> <span class="na">size</span> <span class="mi">100</span> <span class="k">at</span> <span class="n">cd_transform</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">text</span> <span class="s2">&quot;Liftoff!&quot;</span> <span class="na">size</span> <span class="mi">100</span> <span class="k">at</span> <span class="n">cd_transform</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">call</span> <span class="k">screen</span> <span class="n">countdown</span>
+</pre></div>
+</div>
+</section>
+<section id="screen-statements">
+<span id="id10"></span><h2>screen语句<a class="headerlink" href="#screen-statements" title="Link to this heading"> link</a></h2>
+<p>除了screen语句，还有三种Ren’Py脚本语言语句可以唤起界面。</p>
+<p>其中两种使用一个关键词入参列表。这个列表是Python入参列表，使用圆括号，只由关键词参数组成。固定位置参数，额外的固定位置参数 (*)，以及额外的关键词参数 (**) 都不允许存在。</p>
+<section id="show-screen-statement">
+<span id="show-screen"></span><span id="id11"></span><h3>show screen<a class="headerlink" href="#show-screen-statement" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">screen</span></code> 语句会触发某个界面的显示。
+其入参包括一个界面名，一系列可选的从句，以及一个可选的Python入参列表。
+还有几个特殊关键词会传入 <code class="xref py py-func docutils literal notranslate"><span class="pre">show_screen()</span></code> 和 <code class="xref py py-func docutils literal notranslate"><span class="pre">call_screen()</span></code> 函数。</p>
+<p><code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">screen</span></code> 语句可以使用以下从句，其中一些类似 <a class="reference internal" href="displaying_images.html#show-statement"><span class="std std-ref">show语句</span></a> 的从句：</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">as</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">as</span></code> 从句接受一个名称作为参数。若未指定则默认与界面相关联的tag相同(详见 <a class="reference internal" href="#screen-statement"><span class="std std-ref">screen语句</span></a>)。
+若没有指定tag，则默认与界面名相同。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">onlayer</span></code></dt><dd><p>界面显示使用的图层。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">zorder</span></code></dt><dd><p>界面显示使用的zorder。若没有指定，默认与界面的zorder相同。若界面zorder也未指定，默认值为0.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">expression</span></code></dt><dd><p>如果指定了关键词 <code class="docutils literal notranslate"><span class="pre">expression</span></code>，后面的表达式会计算实际显示的界面名称。
+若要将参数传入界面，界面名后面接 <code class="docutils literal notranslate"><span class="pre">pass</span></code> 关键词，然后加上参数:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">screen_name</span> <span class="o">=</span> <span class="s2">&quot;my_screen&quot;</span>
+<span class="k">show</span> <span class="k">screen</span> <span class="k">expression</span> <span class="n">screen_name</span>
+<span class="c1"># 如果需要入参。</span>
+<span class="k">show</span> <span class="k">screen</span> <span class="k">expression</span> <span class="n">screen_name</span> <span class="k">pass</span> <span class="p">(</span><span class="s2">&quot;Foo&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">with</span></code></dt><dd><p>与 <code class="docutils literal notranslate"><span class="pre">show</span></code> 语句一起使用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="k">screen</span> <span class="n">clock_screen</span> <span class="k">with</span> <span class="n">dissolve</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">nopredict</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">nopredict</span></code> 关键词不接受值作为参数。其作用是防止界面预加载。
+当界面预加载时，传入界面的入参会被计算。请确保作为界面入参的表达式不会引起不希望出现的副作用。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>如果计算入参表达式会引发界面的副作用，你的游戏可能会表现出不希望出现的情况。</p>
+</div>
+</dd>
+</dl>
+<p>使用这种方式的界面会一直显示，除非有明确的语句隐藏界面。这个设计可以用作界面的互相覆盖。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="k">screen</span> <span class="n">overlay_screen</span>
+<span class="k">show</span> <span class="k">screen</span> <span class="n">clock_screen</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">rare_case</span><span class="p">:</span>
+    <span class="k">show</span> <span class="n">rare_screen</span> <span class="n">nopredict</span>
+</pre></div>
+</div>
+</section>
+<section id="hide-screen">
+<span id="hide-screen-statement"></span><span id="id12"></span><h3>hide screen<a class="headerlink" href="#hide-screen" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hide</span> <span class="pre">screen</span></code> 语句用于隐藏当前正在显示的界面。
+该语句首先根据界面tag在指定图层(<code class="docutils literal notranslate"><span class="pre">onlayer</span></code> 从句指定)搜索界面。
+若搜索未果，忽略tag再根据界面名在指定图层搜索。
+若搜索依然未果，则无事发生:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="k">screen</span> <span class="n">A</span>
+<span class="k">show</span> <span class="k">screen</span> <span class="n">B</span> <span class="k">as</span> <span class="n">A</span> <span class="c1"># 使用B替换A (将隐藏A)，但tag为A</span>
+<span class="k">hide</span> <span class="k">screen</span> <span class="n">A</span> <span class="c1"># 隐藏B，因为其tag为A</span>
+</pre></div>
+</div>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="k">screen</span> <span class="n">A</span> <span class="k">as</span> <span class="n">B</span>
+<span class="k">show</span> <span class="k">screen</span> <span class="n">B</span> <span class="k">as</span> <span class="n">C</span>
+
+<span class="k">hide</span> <span class="k">screen</span> <span class="n">B</span>
+<span class="c1"># hides the A screen, shown as B</span>
+<span class="c1"># 隐藏A界面，显示B界面</span>
+<span class="c1"># B界面的tag是C，依然显示</span>
+
+<span class="k">hide</span> <span class="k">screen</span> <span class="n">B</span>
+<span class="c1"># 隐藏B界面</span>
+</pre></div>
+</div>
+<p>(译者注：如果看不懂上面的内容，没有关系，不要用，因为 <code class="docutils literal notranslate"><span class="pre">as</span></code> 这个功能点就是屎。
+如果要用，则需要注意，<code class="docutils literal notranslate"><span class="pre">as</span></code> 后面的tag跟screen定义中的tag不是同一个东西。)</p>
+<p><code class="docutils literal notranslate"><span class="pre">hide</span> <span class="pre">screen</span></code> 语句也可以使用 <code class="docutils literal notranslate"><span class="pre">onlayer</span></code> 从句。默认图层为 <code class="docutils literal notranslate"><span class="pre">screens</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">with</span></code> 从句的用法与 <a class="reference internal" href="displaying_images.html#show-statement"><span class="std std-ref">show语句</span></a> 语句相同。</p>
+<p>与 <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">screen</span></code> 语句类似，<code class="docutils literal notranslate"><span class="pre">hide</span> <span class="pre">screen</span></code> 语句也可以使用 <code class="docutils literal notranslate"><span class="pre">expression</span></code> 关键词，可以通过表达式计算界面名称。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">hide</span> <span class="k">screen</span> <span class="n">rare_screen</span>
+<span class="k">hide</span> <span class="k">screen</span> <span class="n">clock_screen</span> <span class="k">with</span> <span class="n">dissolve</span>
+<span class="k">hide</span> <span class="k">screen</span> <span class="n">overlay_screen</span>
+<span class="k">$</span> <span class="n">screen_name</span> <span class="o">=</span> <span class="s2">&quot;some_screen&quot;</span>
+<span class="k">hide</span> <span class="k">screen</span> <span class="k">expression</span> <span class="n">screen_name</span>
+</pre></div>
+</div>
+</section>
+<section id="call-screen">
+<span id="call-screen-statement"></span><span id="id13"></span><h3>call screen<a class="headerlink" href="#call-screen" title="Link to this heading"> link</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 语句会显示一个界面，在当前互动行为之后会隐藏这个界面。如果界面会返回一个值，返回值会放在 <code class="docutils literal notranslate"><span class="pre">_return</span></code> 中。</p>
+<p>这可以用来显示一个imagemap。imagemap可以使用 <a class="reference internal" href="screen_actions.html#Return" title="Return"><code class="xref py py-func docutils literal notranslate"><span class="pre">Return()</span></code></a> 行为将一个值放入 <code class="docutils literal notranslate"><span class="pre">_return</span></code> 变量，或者使用 <a class="reference internal" href="screen_actions.html#Jump" title="Jump"><code class="xref py py-func docutils literal notranslate"><span class="pre">Jump()</span></code></a> 行为跳转到某个脚本标签(label)。</p>
+<p>call screen语句有几个可选的从句，大部分类似于 <a class="reference internal" href="#show-screen-statement"><span class="std std-ref">show screen</span></a> ：</p>
+<p><code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">screen</span></code> 语句可以使用以下从句，其中一些类似 <a class="reference internal" href="displaying_images.html#show-statement"><span class="std std-ref">show语句</span></a> 的从句：</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">as</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">as</span></code> 从句接受一个名称作为参数。若未指定则默认与界面相关联的tag相同(详见 <a class="reference internal" href="#screen-statement"><span class="std std-ref">screen语句</span></a>)。
+若没有指定tag，则默认与界面名相同。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">onlayer</span></code></dt><dd><p>界面显示使用的图层。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">zorder</span></code></dt><dd><p>界面显示使用的zorder。若没有指定，默认与界面的zorder相同。若界面zorder也未指定，默认值为0.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">nopredict</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">nopredict</span></code> 关键词不接受值作为参数。其作用是防止界面预加载。
+当界面预加载时，传入界面的入参会被计算。请确保作为界面入参的表达式不会引起不希望出现的副作用。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>如果计算入参表达式会引发界面的副作用，你的游戏可能会表现出不希望出现的情况。</p>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">expression</span></code></dt><dd><p>类似于 <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">screen</span></code> 语句，<code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 语句也可以使用 <code class="docutils literal notranslate"><span class="pre">expression</span></code> 关键词，使用一个表达式作为界面名。
+表达式后面也可以带 <code class="docutils literal notranslate"><span class="pre">pass</span></code> 关键词，将参数传给界面。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">with</span></code></dt><dd><p>在 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen`</span> <span class="pre">语句中，``with</span></code> 从句表示显示界面使用的转场。</p>
+<p>显示界面之前，该从句 <strong>不会</strong> 产生 <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">None</span></code> 转场，这样所有show screen和hide screen语句的效果都会运行。
+如果需要一个 <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">None</span></code> 效果，则需要自己添加。</p>
+</dd>
+</dl>
+<p>由于调用一个界面属于一个交互行为，交互触发器需要显式带有 <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">None</span></code> ，因为在 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 后面使用 <code class="docutils literal notranslate"><span class="pre">with</span></code> 语句将不能使原界面正确使用转场消失，毕竟之前的界面已经没了。
+若要禁用 <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">None</span></code> 转场，则使用 <code class="docutils literal notranslate"><span class="pre">_with_none=False</span></code> 特殊关键词作为参数传入对应界面，详见后面的样例。</p>
+<p>其他交互转场方式也能生效，例如使用 <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">With(dissolve),</span> <span class="pre">Return()</span> <span class="pre">]</span></code> 行为列表。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">call</span> <span class="k">screen</span> <span class="n">my_imagemap</span>
+
+<span class="k">call</span> <span class="k">screen</span> <span class="n">my_screen</span><span class="p">(</span><span class="n">side_effect_function</span><span class="p">())</span> <span class="n">nopredict</span>
+
+<span class="c1"># 使用dissolve显示界面</span>
+<span class="k">call</span> <span class="k">screen</span> <span class="n">my_other_screen</span> <span class="k">with</span> <span class="n">dissolve</span>
+<span class="c1"># 使用None方式隐藏界面，使用pixellate转场执行。</span>
+<span class="k">with</span> <span class="n">pixellate</span>
+
+<span class="c1"># 使用dissolve显示界面，使用pixellate隐藏界面。</span>
+<span class="k">call</span> <span class="k">screen</span> <span class="n">my_other_screen</span><span class="p">(</span><span class="n">_with_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">with</span> <span class="n">dissolve</span>
+<span class="k">with</span> <span class="n">pixellate</span>
+
+<span class="k">$</span> <span class="n">screen_name</span> <span class="o">=</span> <span class="s2">&quot;my_screen&quot;</span>
+<span class="k">call</span> <span class="k">screen</span> <span class="k">expression</span> <span class="n">screen_name</span> <span class="k">pass</span> <span class="p">(</span><span class="n">foo</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="screen-variants">
+<span id="id14"></span><h2>界面变种<a class="headerlink" href="#screen-variants" title="Link to this heading"> link</a></h2>
+<p>Ren’Py可以同时运行在两种平台上：一种是传统的键鼠设备平台，比如Windows系统、Mac系统和Linux PC版；另一种是新的触控设备平台，比如基于安卓系统的智能手机和平板。界面变种允许一个游戏根据不同的硬件信息提供不同版本的界面。</p>
+<p>Ren’Py通过顺序搜索 <a class="reference internal" href="config.html#var-config.variants"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.variants</span></code></a> 中的variant项来选择使用何种界面，并使用找到第一个variant。</p>
+<p>如果环境变量 RENPY_VARIANT存在，config.variants就会使用RENPY_VARIANT中用空格分隔的各项值进行初始化。将RENPY_VARIANT设置为针对安卓设备的
+<code class="docutils literal notranslate"><span class="pre">&quot;medium</span> <span class="pre">tablet</span> <span class="pre">touch&quot;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">&quot;small</span> <span class="pre">phone</span> <span class="pre">touch&quot;</span></code> ，就可以在PC端调测了。</p>
+<p>如果环境变量不存在，变种列表会自动建立。建立时，会按顺序搜索下表，找到匹配项后选择对应平台的入口。</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;steam_deck&quot;</span></code></dt><dd><p>在Steam Deck或相同的硬件上运行时为True。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;steam_big_picture&quot;</span></code></dt><dd><p>True if running in Steam Big Picture mode.
+在Steam大屏幕模式运行时为True.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;large&quot;</span></code></dt><dd><p>屏幕足够大，字体小的文本也能轻松阅读，按钮可以被很容易点中。这主要用于电脑屏幕。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;medium&quot;</span></code></dt><dd><p>屏幕不大，比较小的字体可以阅读，但按钮可能需要增大尺寸才能被比较舒服地按下。这用于平板。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;small&quot;</span></code></dt><dd><p>屏幕比较小，文本必须放大才能阅读。这用于手机和电视机。(电视机屏幕虽然比较大，但使用时距离用户较远，不利于阅读文本。)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;tablet&quot;</span></code></dt><dd><p>不小于6英寸的触控屏设备。(大多数情况下， <code class="docutils literal notranslate"><span class="pre">&quot;medium&quot;</span></code> 应代替 <code class="docutils literal notranslate"><span class="pre">&quot;tablet&quot;</span></code> 。)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;phone&quot;</span></code></dt><dd><p>小于6英寸的触控屏设备。在这样小的设备上，将按钮做得足够大才能让用户轻松选中。(大多数情况下， <code class="docutils literal notranslate"><span class="pre">&quot;small&quot;</span></code> 应代替 <code class="docutils literal notranslate"><span class="pre">&quot;phone&quot;</span></code> 。)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;touch&quot;</span></code></dt><dd><p>触控屏设备。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;tv&quot;</span></code></dt><dd><p>电视机设备。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;firetv&quot;</span></code></dt><dd><p>亚马逊的Fire TV主机。(表示同时为 <code class="docutils literal notranslate"><span class="pre">&quot;tv&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;small&quot;</span></code>)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;chromeos&quot;</span></code></dt><dd><p>在Chromebook设备上运行安卓app。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;android&quot;</span></code></dt><dd><p>安卓设备。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;ios&quot;</span></code></dt><dd><p>iOS设备，像iPad(表示同时为 <code class="docutils literal notranslate"><span class="pre">&quot;tablet&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;medium&quot;</span></code>)和iPhone(表示同时为 <code class="docutils literal notranslate"><span class="pre">&quot;phone&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;small&quot;</span></code>)。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;mobile&quot;</span></code></dt><dd><p>手机平台，比如安卓、iOS手机和手机web浏览器。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;pc&quot;</span></code></dt><dd><p>Windows、Mac OS X和Linux平台。PC表示会有键鼠设备，允许鼠标悬停(hover)状态和精确点击。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;web&quot;</span></code></dt><dd><p>在web浏览器上运行。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><p>默认定义。</p>
+</dd>
+</dl>
+<p>定义一个界面变种的样例如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 一个变种的hello_world界面，使用小型触屏设备。</span>
+<span class="k">screen</span> <span class="n">hello_world</span><span class="p">():</span>
+     <span class="k">tag</span> <span class="n">example</span>
+     <span class="k">zorder</span> <span class="mi">1</span>
+     <span class="na">modal</span> <span class="kc">False</span>
+     <span class="na">variant</span> <span class="s2">&quot;small&quot;</span>
+
+     <span class="k">text</span> <span class="s2">&quot;Hello, World.&quot;</span> <span class="na">size</span> <span class="mi">30</span>
+</pre></div>
+</div>
+</section>
+<section id="screen-see-also">
+<span id="id15"></span><h2>其他参考<a class="headerlink" href="#screen-see-also" title="Link to this heading"> link</a></h2>
+<p><a class="reference internal" href="screen_actions.html"><span class="doc">界面行为(action)、值(value)和函数</span></a> ：一个综合行为和其他工具的综合列表，可以被界面调用。</p>
+<p><a class="reference internal" href="screen_optimization.html"><span class="doc">界面语言优化</span></a> ：让界面尽可能高效运行的某些方案。</p>
+<p><a class="reference internal" href="screen_python.html"><span class="doc">界面与Python</span></a> ：使用Ren’Py预定义的工具，扩展Ren’Py。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="style_properties.html" class="btn btn-neutral float-left" title="样式特性(property)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="screen_actions.html" class="btn btn-neutral float-right" title="界面行为(action)、值(value)和函数" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

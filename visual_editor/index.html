@@ -1549,6 +1549,49 @@
               </select>
             </label>
 
+            <div id="imageNodeLive2DFields" class="definition-fields matrixcolor-builder hidden">
+              <p class="section-label secondary-label">Live2D Attributes</p>
+              <p id="imageNodeLive2DHelp" class="image-definition-help"></p>
+
+              <label>
+                Motion
+                <select id="imageNodeLive2DMotionInput">
+                  <option value="">No explicit motion</option>
+                </select>
+              </label>
+
+              <label>
+                Expression
+                <select id="imageNodeLive2DExpressionInput">
+                  <option value="">Use default expression</option>
+                </select>
+              </label>
+
+              <div class="menu-choice-group">
+                <div class="menu-choice-group-header">
+                  <strong>Nonexclusive Attributes</strong>
+                </div>
+                <div id="imageNodeLive2DNonexclusiveList" class="menu-choice-list"></div>
+              </div>
+
+              <div class="menu-choice-group">
+                <div class="menu-choice-group-header">
+                  <strong>Remove Active Attributes</strong>
+                </div>
+                <div id="imageNodeLive2DRemovalList" class="menu-choice-list"></div>
+              </div>
+
+              <label class="character-checkbox">
+                <input id="imageNodeLive2DStillInput" type="checkbox" />
+                <span>Add <code>still</code> attribute</span>
+              </label>
+
+              <label>
+                Additional Attributes
+                <input id="imageNodeLive2DAdditionalInput" type="text" placeholder="e.g. smile_alias, costume_alt" />
+              </label>
+            </div>
+
             <div id="imageNodeLayeredFields" class="definition-fields matrixcolor-builder hidden">
               <p class="section-label secondary-label">Layered Attributes</p>
               <p id="imageNodeLayeredHelp" class="image-definition-help"></p>
