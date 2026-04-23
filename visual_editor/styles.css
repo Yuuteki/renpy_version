@@ -527,6 +527,7 @@ button.danger-button:hover {
 }
 
 .characters-view#imagesListView,
+.characters-view#live2dListView,
 .characters-view#audioListView,
 .characters-view#charactersListView,
 .characters-view#variablesListView,
@@ -910,6 +911,86 @@ button.danger-button:hover {
 .atl-step-fields {
   display: grid;
   gap: 8px;
+}
+
+.layered-inline-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.layered-collapsible {
+  padding: 0;
+  overflow: hidden;
+}
+
+.layered-collapsible-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.layered-collapsible-summary::-webkit-details-marker {
+  display: none;
+}
+
+.layered-collapsible-summary::marker {
+  content: "";
+}
+
+.layered-collapsible-summary::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.58);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.58);
+  transform: rotate(45deg);
+  transition: transform 180ms ease;
+  flex: 0 0 auto;
+  margin-right: 2px;
+}
+
+.layered-collapsible[open] > .layered-collapsible-summary::after {
+  transform: rotate(225deg);
+}
+
+.layered-collapsible-summary-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.layered-collapsible-title {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.layered-collapsible-meta {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.layered-collapsible-body {
+  display: grid;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.layered-collapsible-toolbar {
+  padding-top: 2px;
+}
+
+.layered-collapsible-subtle {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.layered-attribute-list {
+  gap: 12px;
 }
 
 .dialogue-voice-line-field {

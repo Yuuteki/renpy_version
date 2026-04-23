@@ -101,6 +101,7 @@
                   Definition Type
                   <select id="imageDefinitionTypeInput" data-image-field="definitionType">
                     <option value="static">Static Image</option>
+                    <option value="layered">Layered Image</option>
                     <option value="movie">Movie</option>
                     <option value="solid">Solid</option>
                     <option value="composite">Composite</option>
@@ -641,6 +642,57 @@
                   </label>
                 </div>
 
+                <div id="imageDefinitionLayeredFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Layered Image</p>
+
+                  <label>
+                    image_format
+                    <input id="imageDefinitionLayeredImageFormatInput" data-image-field="layeredImageFormat" type="text" placeholder='e.g. images/characters/eileen/{image}.png' />
+                  </label>
+
+                  <label>
+                    offer_screen
+                    <select id="imageDefinitionLayeredOfferScreenInput" data-image-field="layeredOfferScreen">
+                      <option value="default">Use Engine Default</option>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    at
+                    <input id="imageDefinitionLayeredAtInput" data-image-field="layeredAt" type="text" placeholder="e.g. character_stage_transform" />
+                  </label>
+
+                  <div class="menu-choice-group">
+                    <div class="menu-choice-group-header">
+                      <strong>Always Layers</strong>
+                      <button id="imageDefinitionAddLayeredAlwaysButton" class="secondary menu-choice-add-button" type="button">Add Always</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      Use always layers for base body, outline, or any sprite that should always be present in this layered image.
+                    </p>
+
+                    <div id="imageDefinitionLayeredAlwaysList" class="menu-choice-list"></div>
+                  </div>
+
+                  <div class="menu-choice-group">
+                    <div class="menu-choice-group-header">
+                      <strong>Groups</strong>
+                      <button id="imageDefinitionAddLayeredGroupButton" class="secondary menu-choice-add-button" type="button">Add Group</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      Groups are best for face, outfit, accessories, and similar attribute sets. Single groups are mutually exclusive. Multiple groups allow several active attributes at once.
+                    </p>
+
+                    <div id="imageDefinitionLayeredGroupList" class="menu-choice-list"></div>
+                  </div>
+
+                  <datalist id="imageDefinitionLayeredDisplayableOptions"></datalist>
+                </div>
+
                 <div id="imageDefinitionAnimationFields" class="definition-fields">
                   <p class="section-label secondary-label">Animation / ATL</p>
 
@@ -665,6 +717,142 @@
 
                 <p class="section-label secondary-label">Generated Code</p>
                 <pre id="imageDefinitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="live2dSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="live2dListView" class="characters-view">
+              <div id="live2dDefinitionEmpty" class="panel-empty-state hidden">
+                No Live2D models yet. Create one to define a reusable Live2D resource.
+              </div>
+
+              <div id="live2dDefinitionList" class="character-list"></div>
+
+              <button
+                id="newLive2DDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create Live2D definition"
+                title="Create Live2D definition"
+              >
+                New Live2D
+              </button>
+            </div>
+
+            <div id="live2dDefinitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="live2dDefinitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="live2dDefinitionDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
+                <label>
+                  Live2D Name
+                  <input id="live2dDefinitionNameInput" data-live2d-field="name" type="text" placeholder="e.g. hiyori" />
+                </label>
+
+                <label>
+                  Model Path
+                  <div class="field-with-action">
+                    <input id="live2dDefinitionModelPathInput" data-live2d-field="modelPath" type="text" placeholder="e.g. Resources/Hiyori or Resources/Hiyori/Hiyori.model3.json" />
+                    <button id="live2dDefinitionBrowseButton" class="secondary field-action-button" type="button">
+                      Browse
+                    </button>
+                  </div>
+                  <input id="live2dDefinitionFileInput" type="file" accept=".json,.model3.json,.exp3.json" hidden />
+                </label>
+
+                <p class="project-settings-note">
+                  Live2D requires <code>define config.gl2 = True</code> and the native Cubism SDK. Ren'Py Web builds do not support Live2D playback.
+                </p>
+
+                <p class="section-label secondary-label">Display</p>
+
+                <label>
+                  zoom
+                  <input id="live2dDefinitionZoomInput" data-live2d-field="zoom" type="text" placeholder="e.g. 0.35" />
+                </label>
+
+                <label>
+                  top
+                  <input id="live2dDefinitionTopInput" data-live2d-field="top" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  base
+                  <input id="live2dDefinitionBaseInput" data-live2d-field="base" type="text" placeholder="e.g. 0.6" />
+                </label>
+
+                <label>
+                  height
+                  <input id="live2dDefinitionHeightInput" data-live2d-field="height" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <p class="section-label secondary-label">Playback</p>
+
+                <label class="character-checkbox">
+                  <input id="live2dDefinitionLoopInput" data-live2d-field="loop" type="checkbox" />
+                  <span>loop last motion</span>
+                </label>
+
+                <label>
+                  fade
+                  <select id="live2dDefinitionFadeModeInput" data-live2d-field="fadeMode">
+                    <option value="default">Use _live2d_fade</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                  </select>
+                </label>
+
+                <label>
+                  seamless
+                  <input id="live2dDefinitionSeamlessInput" data-live2d-field="seamless" type="text" placeholder='e.g. True or ["idle"]' />
+                </label>
+
+                <label>
+                  default_fade
+                  <input id="live2dDefinitionDefaultFadeInput" data-live2d-field="defaultFade" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <p class="section-label secondary-label">Catalog</p>
+
+                <label>
+                  Motions
+                  <textarea id="live2dDefinitionMotionsInput" data-live2d-field="motions" rows="4" placeholder="e.g. idle&#10;wave&#10;m01"></textarea>
+                </label>
+
+                <label>
+                  Expressions
+                  <textarea id="live2dDefinitionExpressionsInput" data-live2d-field="expressions" rows="4" placeholder="e.g. smile&#10;angry&#10;null"></textarea>
+                </label>
+
+                <label>
+                  Nonexclusive Attributes
+                  <textarea id="live2dDefinitionNonexclusiveInput" data-live2d-field="nonexclusive" rows="3" placeholder="e.g. wave&#10;blink"></textarea>
+                </label>
+
+                <label>
+                  Aliases
+                  <textarea id="live2dDefinitionAliasesInput" data-live2d-field="aliases" rows="4" placeholder="e.g. idle = m01&#10;smile = exp_00"></textarea>
+                </label>
+
+                <p class="project-settings-note">
+                  Motions, expressions, and aliases are stored here so the editor can reason about this model later. Ren'Py still reads the real animation data from the Live2D files.
+                </p>
+
+                <div class="inspector-actions">
+                  <button id="live2dDefinitionDeleteButton" class="danger-button" type="button">Delete Live2D</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="live2dDefinitionCodePreview" class="code-preview"></pre>
               </form>
             </div>
           </section>
@@ -1170,6 +1358,21 @@
           <button
             class="collapsed-rail-button"
             type="button"
+            data-sidebar-section="live2dSection"
+            aria-label="Open Live2D definitions"
+            title="Live2D"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 6.5c0-1.4 1.1-2.5 2.5-2.5h5C15.9 4 17 5.1 17 6.5V10c0 1.6-1.1 3-2.7 3.3l-1.3.2-1.3-.2C10.1 13 9 11.6 9 10V8.5"></path>
+              <path d="M5.5 19c1-3.3 3.6-5 6.5-5s5.5 1.7 6.5 5"></path>
+              <path d="M9 9h.01"></path>
+              <path d="M15 9h.01"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
             data-sidebar-section="audioSection"
             aria-label="Open audio definitions"
             title="Audio"
@@ -1345,6 +1548,12 @@
                 <option value="">No imported images</option>
               </select>
             </label>
+
+            <div id="imageNodeLayeredFields" class="definition-fields matrixcolor-builder hidden">
+              <p class="section-label secondary-label">Layered Attributes</p>
+              <p id="imageNodeLayeredHelp" class="image-definition-help"></p>
+              <div id="imageNodeLayeredGroupList" class="menu-choice-list"></div>
+            </div>
 
             <label>
               Layer

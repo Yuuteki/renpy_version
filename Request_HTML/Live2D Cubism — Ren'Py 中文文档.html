@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live2D Cubism &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/live2d.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="样式(style)" href="style.html" />
+    <link rel="prev" title="3D舞台" href="3dstage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Live2D Cubism</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-live2d">安装Live2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gl2">启用GL2选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-animations">定义动画</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Live2D"><code class="docutils literal notranslate"><span class="pre">Live2D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blend_parameter"><code class="docutils literal notranslate"><span class="pre">blend_parameter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blend_opacity"><code class="docutils literal notranslate"><span class="pre">blend_opacity()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-animations">使用动画</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scaling">缩放</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#motion-fading">动作平滑过渡</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aliasing">设置别名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loop-and-image-prediction">循环与图片预加载</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#live2d-functions">相关函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.has_live2d"><code class="docutils literal notranslate"><span class="pre">renpy.has_live2d()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Live2D Cubism</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/live2d.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="live2d-cubism">
+<span id="live2d"></span><h1>Live2D Cubism<a class="headerlink" href="#live2d-cubism" title="Link to this heading"> link</a></h1>
+<p><a class="reference external" href="https://www.live2d.com/en/">Live2D Cubism</a> 是一种使用2D图片制作动画的系统，可以用在视觉小说的角色精灵中。
+这些2D图片会绘制在几个不同的图层中——例如，瞳孔和眼睛反光一个图层，眼白一个图层，眉毛一个图层等。</p>
+<p>Live2D软件允许创作者将这些图层与网格(mesh)模型关联，并根据参数对网格变形。
+Live2D软件允许创作者创建动作文件决定随时间变化的参数，以及表情文件控制角色表情变化。</p>
+<p>集成在Ren’Py中的Live2D系统可以使用对应的文件并显示文件内定义的动画。Ren’Py会根据具体参数值处理动作和表情。
+这些参数实际上会传给原生的Cubism SDK，Ren’Py得到的返回值是一个待显示的网格(mesh)列表。
+Ren’Py渲染这些网格之后，就实现了屏幕上的Live2D角色。</p>
+<p>Ren’Py同时支持Cubism 3、Cubism 4和Cubism 5格式的Live2D动画，即这三种格式的表情与动作播放。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>x86_64的安卓平台不支持Live2D，因为对应平台缺乏某个动态连接库(DLL)。这也表示在安卓模拟器和ChromeOS上运行可能会有问题。</p>
+<p>Web平台也不支持Live2D。</p>
+<p>在iOS平台安装Live2D时，需要手工将静态库复制到自己的iOS项目中。</p>
+</div>
+<section id="installing-live2d">
+<span id="id2"></span><h2>安装Live2D<a class="headerlink" href="#installing-live2d" title="Link to this heading"> link</a></h2>
+<p>使用Live2D之前，你需要下载和安装原生的Cubism SDK，下载链接为 <a class="reference external" href="https://www.live2d.com/zh-CHS/download/cubism-sdk/download-native/">Live2D 页面</a> 。
+请注意，如果你的商业项目年收入达到了某个下限，将需要购买一个Live2D使用许可证。</p>
+<p>下载完Live2D后，把 <code class="file docutils literal notranslate"><span class="pre">CubismSdkForNative-5-r.1.zip</span></code> 文件放入Ren’Py的SDK目录中，接着可以在Ren’Py启动器中安装。
+在启动器中进入“设置”项，选择“操作”标签下的“安装库”，点击“安装 Live2D Cubism SDK for Native”。等待一段时间后，Live2D就安装成功了。</p>
+</section>
+<section id="gl2">
+<span id="opt-in-to-gl2"></span><h2>启用GL2选项<a class="headerlink" href="#gl2" title="Link to this heading"> link</a></h2>
+<p>如果需要使用Live2D，需要启用基于模型的渲染器。在游戏项目的任意脚本中添加一行：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">gl2</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-animations">
+<span id="id4"></span><h2>定义动画<a class="headerlink" href="#defining-animations" title="Link to this heading"> link</a></h2>
+<p>使用Live2D可视组件与image语句可以定义Live2D动画：</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="Live2D">
+<span class="sig-name descname"><span class="pre">Live2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fade</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seamless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Live2D" title="Link to this definition"> link</a></dt>
+<dd><p>该可视组件会播放一段Live2D动画。</p>
+<dl>
+<dt><cite>filename</cite></dt><dd><p>该值应该是一个 model3.json 或 .exp3.json 文件，文件内定义了Live2D动画参数。例如，“Resources/Hiyori/Hiyori.model3.json”。</p>
+</dd>
+<dt><cite>zoom</cite></dt><dd><p>若该值非None，应用一个缩放系数。对 <cite>top</cite> 和 <cite>base</cite> 生效。</p>
+</dd>
+<dt><cite>top</cite></dt><dd><p>图像的顶部，用于指定图像大小。该值是一个表示比例的小数，0.0表示图像最上方，1.0表示图像最下方。</p>
+</dd>
+<dt><cite>base</cite></dt><dd><p>图像的底部，用于指定图像大小。该值是一个表示比例的小数，0.0表示图像最上方，1.0表示图像最下方。
+该值也会用来作为默认锚点在y轴方向的值(yanchor)。</p>
+</dd>
+<dt><cite>height</cite></dt><dd><p>图像最终缩放高度。该值是表示整个屏幕高度比例的小数。</p>
+</dd>
+<dt><cite>loop</cite></dt><dd><p>若为True则循环播放最后一个动作。否则不循环。</p>
+</dd>
+<dt><cite>alias</cite></dt><dd><p>一个字典型数据，用来存储对应动作或表情的别名。</p>
+</dd>
+<dt><cite>fade</cite></dt><dd><p>True if motion fading should be enabled, False if motion fading
+should not be enabled, and None to use the value of <a class="reference internal" href="#var-_live2d_fade"><code class="xref std std-var docutils literal notranslate"><span class="pre">_live2d_fade</span></code></a>.
+若为True则启用动作淡入淡出，若为False则不启用。若为None则使用配置项  <a class="reference internal" href="#var-_live2d_fade"><code class="xref std std-var docutils literal notranslate"><span class="pre">_live2d_fade</span></code></a> 的值。</p>
+</dd>
+<dt><cite>nonexclusive</cite></dt><dd><p>若该值非None，必须是一个非排他性表情名称的列表。
+表情默认是排他性的，即每次只能显示一个表情。若表情加入非排他性列表中，则可以同时显示多个非排他性表情，并附加在某个排他性表情上。</p>
+</dd>
+<dt><cite>seamless</cite></dt><dd><p>该值决定是否启用无缝循环。无缝循环可以避免单一动作循环时也出现淡入淡出。
+该值为True表示始终启用无缝循环，False表示禁用无缝循环，也可以是一个循环动作的集合。</p>
+</dd>
+<dt><cite>default_fade</cite></dt><dd><p>默认的动作或表情淡出时间，单位为秒。所有Live2D动作的默认值为1.0，也可能出现不希望出现淡出的情况。
+可以先把该值设置为0.0，根据实际需要显式赋值。</p>
+</dd>
+<dt><cite>attribute_function</cite></dt><dd><p>若该值非None，应该是一个函数，入参是一个属性(attribute)元组，返回值是另一个属性元组。
+该函数可用于更换显示内容的属性——前提是显示的图像中未使用该属性。
+需要确保该值至少对应给定表情的某一个属性。</p>
+</dd>
+<dt><cite>attribute_filter</cite></dt><dd><p>若该值非None，应该是一个函数，入参是一个属性(attribute)元组，返回值是另一个属性元组。
+该函数通常用于滤除可能冲突的非排他性属性。属性会按最近使用时间排序，从近到远。
+当属性发生冲突时，将采用最近使用过的属性。</p>
+</dd>
+<dt><cite>update_function</cite></dt><dd><p>若该值非None，应该是一个函数，当前动作和表情修改参数并渲染成动画后，将调用该函数。
+调用该函数时需要有两个入参：</p>
+<ul class="simple">
+<li><p>Live2D对象。</p></li>
+<li><p>显示时间，单位为秒。</p></li>
+</ul>
+<p>该函数用于动态修改参数，方法是使用Live2D对象中的 <cite>blend_parameter</cite> 方法。
+该函数应该返回一个数值，单位为秒，表示可以再次调用前的时间间隔；也可以返回None，表示下次交互行为发生时再次调用。
+当可视组件重新渲染时，也可能调用该函数。</p>
+</dd>
+</dl>
+<p><cite>attribute_function</cite> 与 <cite>attribute_filter</cite> 间的差别是：前者用于用新属性替换原来的某个属性；后者用来解决属性冲突，确保一组属性中存在唯一真正可用。</p>
+<p>只有 <cite>filename</cite> 是固定位置参数，其他参数都是关键词参数。</p>
+<p>相同 <cite>filename</cite> 的Live2D对象拥有相同的 <cite>alias</cite>、<cite>fade</cite>、<cite>nonexclusive</cite>、<cite>seamless</cite>、<cite>default_fade</cite>、<cite>attribute_function</cite>、 <cite>attribute_filter</cite>
+和 <cite>update_function</cite> 值。因此只要指定第一个指定使用 <cite>filename</cite> 的Live2D对象的这系列参数即可。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="blend_parameter">
+<span class="sig-name descname"><span class="pre">blend_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blend_parameter" title="Link to this definition"> link</a></dt>
+<dd><p>该方法会以参数 <cite>value</cite> 值使用遮罩模式(blend)。在 <cite>update_function</cite> 以外无效果。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>此模型需要修改的参数名称。</p>
+</dd>
+<dt><cite>blend</cite></dt><dd><p>遮罩模式，应该是“Add”、“Multiply”或“Overwrite”之一。</p>
+</dd>
+<dt><cite>value</cite></dt><dd><p>使用遮罩时的不透明度数值。</p>
+</dd>
+<dt><cite>weight</cite></dt><dd><p>介于0.0到1.0之间的浮点数，表示使用遮罩后的新值所占权重。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="blend_opacity">
+<span class="sig-name descname"><span class="pre">blend_opacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blend_opacity" title="Link to this definition"> link</a></dt>
+<dd><p>该方法会以参数 <cite>value</cite> 值使用遮罩模式(blend)。在 <cite>update_function</cite> 以外无效果。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>此模型需要修改的参数名称。</p>
+</dd>
+<dt><cite>blend</cite></dt><dd><p>遮罩模式，应该是“Add”、“Multiply”或“Overwrite”之一。</p>
+</dd>
+<dt><cite>value</cite></dt><dd><p>使用遮罩时的不透明度数值。</p>
+</dd>
+<dt><cite>weight</cite></dt><dd><p>介于0.0到1.0之间的浮点数，表示使用遮罩后的新值所占权重。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>通过一个配置项可用于帮助debug源自 .model3.json 文件的动画和表情问题：</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-config.log_live2d_loading">
+<span class="pre">define</span> <span class="sig-name descname"><span class="pre">config.log_live2d_loading</span></span> <span class="pre">=</span> <span class="pre">False</span><a class="headerlink" href="#var-config.log_live2d_loading" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，启动时将会动作和表情记录到加载目录中的log.txt文件中。</p>
+</dd></dl>
+
+<p>Live2D可视组件应使用image语句声明：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">hiyori</span> <span class="o">=</span> <span class="n">Live2D</span><span class="p">(</span><span class="s2">&quot;Resources/Hiyori&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">.6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>声明时也可以定义属性(attribute)。在使用相同角色定义不同的缩放时，这非常有用。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">hiyori</span> <span class="n">close</span> <span class="o">=</span> <span class="n">Live2D</span><span class="p">(</span><span class="s2">&quot;Resources/Hiyori&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">.6</span><span class="p">)</span>
+<span class="k">image</span> <span class="n">hiyori</span> <span class="n">far</span> <span class="o">=</span> <span class="n">Live2D</span><span class="p">(</span><span class="s2">&quot;Resources/Hiyori&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">.9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>请注意，调用 Live2D()时，用户的硬件设备可能会不支持初始化Live2D，整个项目可能卡在加载阶段。
+创建的游戏应该可以在不支持Live2D的情况下运行，比如使用跳转或替代方案：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">MyLive2D</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">Placeholder</span><span class="p">(</span><span class="k">text</span><span class="o">=</span><span class="s2">&quot;不支持Live2D&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">renpy</span><span class="o">.</span><span class="n">has_live2d</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">Live2D</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">fallback</span>
+
+<span class="k">image</span> <span class="n">kobayashi</span> <span class="o">=</span> <span class="n">MyLive2D</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="k">image</span> <span class="n">eileen</span> <span class="n">moving</span> <span class="o">=</span> <span class="n">MyLive2D</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="s2">&quot;eileen happy&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-animations">
+<span id="id5"></span><h2>使用动画<a class="headerlink" href="#using-animations" title="Link to this heading"> link</a></h2>
+<p>显示Live2D图像的通用方法是使用show语句。在show语句后面添加属性(attribute)即可播放对应的表情和动作。</p>
+<p>样例如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">natori</span> <span class="n">exp_00</span> <span class="n">mtn_01</span>
+<span class="k">show</span> <span class="n">hiyori</span> <span class="n">m10</span>
+<span class="k">show</span> <span class="n">hiyori</span> <span class="n">m10</span> <span class="n">m01</span>
+</pre></div>
+</div>
+<p>这里使用的是Cubism SDK中示例角色的动作名。Ren’Py会从Live2D文件中提取动作和表情的名称，强制转换为小写字母。
+model3.json文件名相同如果动作或表情名称的前缀与对应的model3.json文件名相同，这个前缀和紧跟着的下划线会删除，剩下的部分作为属性。
+(例如，“Hiyori_Motion01”处理后的属性是“motion01”。)</p>
+<p>排他性表情最多只有一种，非排他性表情和动作可以有任意种。
+同时指定多个动作时，所有动作按顺序播放，如果loop参数为True则循环最后一个动作。
+这样就可以播放完任意表情后，接着播放一个默认待机动画。
+同时指定多个动作时，同属性名的动作只能出现一次，除非使用的是同一个动作的多个不同别名。</p>
+<p>There are two special attributes <code class="docutils literal notranslate"><span class="pre">null</span></code> and <code class="docutils literal notranslate"><span class="pre">still</span></code>. The null attribute
+means that no exclusive expression file should be applied, giving the character’s
+default expression. The <code class="docutils literal notranslate"><span class="pre">still</span></code> motion stops all motion.
+还有两个特殊的属性： <code class="docutils literal notranslate"><span class="pre">null</span></code> 和 <code class="docutils literal notranslate"><span class="pre">still</span></code> 。
+<code class="docutils literal notranslate"><span class="pre">null</span></code> 属性表示不使用任何排他性表情文件，给定角色的默认表情。
+<code class="docutils literal notranslate"><span class="pre">still</span></code> 则会停止所有动作。</p>
+<p>非排他性表情将始终存在，除非显式移除：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">hiyori</span> <span class="o">-</span><span class="n">wave</span>
+</pre></div>
+</div>
+</section>
+<section id="scaling">
+<span id="id6"></span><h2>缩放<a class="headerlink" href="#scaling" title="Link to this heading"> link</a></h2>
+<p>许多Live2D模型制作时使用了超高的分辨率，直接使用会查出屏幕显示范围。为了适配这种情况，Ren’Py中有两种方法缩小Live2D模型。</p>
+<p>第一种方式是使用 <cite>zoom</cite> 参数。这可以直接设置一个模型的缩放值。使用 <cite>zoom</cite> 参数后，其他缩放相关的参数都会忽略。</p>
+<p>另一种方法是，使用 <cite>top</cite>、<cite>base</cite> 和 <cite>height</cite> 参数。前两个参数指定了图像显示范围的上下限(与Ren’Py中的其他地方相同，0.0表示顶部，1.0表示底部)。
+使用这些参数后，会发生两件事：</p>
+<ul class="simple">
+<li><p>图片缩放后，显示区域介于 <cite>top</cite> and <cite>base</cite> 之间，<cite>height</cite> 表示屏幕高度的一个比例。</p></li>
+<li><p>锚点会调整，使 <cite>base</cite> 正好位于屏幕底部。</p></li>
+</ul>
+<p>When figuring out how to scale a Live2D animation, what I do first is adjust the <cite>base</cite> parameter until the right part of the animation is lined
+up with the bottom of the screen. Then:
+关于如何缩放Live2D动画的问题，我做的第一件事是调整 <cite>base</cite> 参数，使动画的底部能够在屏幕上显示出来。然后再根据情况：</p>
+<ul class="simple">
+<li><p>如果图像太大，降低 <cite>height</cite> 的值，知道获取合适的尺寸。</p></li>
+<li><p>如果图像太小，增加 <cite>top</cite> 的值，以减少图像上端与屏幕之间的空白空间。</p></li>
+</ul>
+</section>
+<section id="motion-fading">
+<span id="id7"></span><h2>动作平滑过渡<a class="headerlink" href="#motion-fading" title="Link to this heading"> link</a></h2>
+<p>Ren’Py支持Live2D动作平滑过渡。一般来说，当Ren’Py中切换动画时使用硬切换——当前动作停止，新动作再开始。如果使用转场(transition)，画面上同时出现两个动画。</p>
+<p>Live2D支持另一种模式，通过在不同参数之间计算插值，可以实现新旧动画间的平滑过渡。
+设想某个角色将自己的胳膊移动到某个位置，计算新旧动画之间位置的插值后用于过渡，而不是使用dissolve方式切换。</p>
+<p>动作平滑过渡使用 <cite>fade</cite> 参数进行控制。若该值为True，启用动作平滑过渡；相反则使用硬切换。
+若该值为None，根据 <code class="docutils literal notranslate"><span class="pre">_live2d_fade</span></code> 配置项的值决定是否启用：</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_live2d_fade">
+<span class="sig-name descname"><span class="pre">_live2d_fade</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-_live2d_fade" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，Live2D动画启用动作平滑过渡。若为False，动画间硬切换。</p>
+</dd></dl>
+
+</section>
+<section id="aliasing">
+<span id="id8"></span><h2>设置别名<a class="headerlink" href="#aliasing" title="Link to this heading"> link</a></h2>
+<p><cite>alias</cite> 参数允许创作者为动作设置别名。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">hiyori</span> <span class="o">=</span> <span class="n">Live2D</span><span class="p">(</span><span class="s2">&quot;Resources/Hiyori&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">.6</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;idle&quot;</span> <span class="p">:</span> <span class="s2">&quot;m01&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>设置别名后可以这样使用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">hiyori</span> <span class="na">idle</span>
+</pre></div>
+</div>
+<p>想过与这句相同：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">show</span> <span class="n">hiyori</span> <span class="n">m01</span>
+</pre></div>
+</div>
+</section>
+<section id="loop-and-image-prediction">
+<span id="id9"></span><h2>循环与图片预加载<a class="headerlink" href="#loop-and-image-prediction" title="Link to this heading"> link</a></h2>
+<p>当 <cite>loop</cite> 参数设置为True时，Ren’Py将循环播放Live2D的最后一个动画。
+需要播放某个循环动画是，很重要的一点是，添加一个0.2秒的暂停时间。
+这能给Ren’Py一些时间执行消耗较大的图片预加载。(图片预加载和读取发生在不同时间情况，这也可以不是必要的。)</p>
+</section>
+<section id="live2d-functions">
+<span id="id10"></span><h2>相关函数<a class="headerlink" href="#live2d-functions" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.has_live2d">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">has_live2d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.has_live2d" title="Link to this definition"> link</a></dt>
+<dd><p>当前平台支持Live2D时返回True，否则返回False。</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="3dstage.html" class="btn btn-neutral float-left" title="3D舞台" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="style.html" class="btn btn-neutral float-right" title="样式(style)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

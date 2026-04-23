@@ -43,10 +43,12 @@ const imageDefinitionDetailFormEl = document.getElementById("imageDefinitionDeta
 const newImageDefinitionButton = document.getElementById("newImageDefinitionButton");
 const imageDefinitionBackButton = document.getElementById("imageDefinitionBackButton");
 const imageDefinitionStaticFieldsEl = document.getElementById("imageDefinitionStaticFields");
+const imageDefinitionLayeredFieldsEl = document.getElementById("imageDefinitionLayeredFields");
 const imageDefinitionMovieFieldsEl = document.getElementById("imageDefinitionMovieFields");
 const imageDefinitionSolidFieldsEl = document.getElementById("imageDefinitionSolidFields");
 const imageDefinitionCompositeFieldsEl = document.getElementById("imageDefinitionCompositeFields");
 const imageDefinitionPlaceholderFieldsEl = document.getElementById("imageDefinitionPlaceholderFields");
+const imageDefinitionAnimationFieldsEl = document.getElementById("imageDefinitionAnimationFields");
 const imageDefinitionNameInput = document.getElementById("imageDefinitionNameInput");
 const imageDefinitionCategoryInput = document.getElementById("imageDefinitionCategoryInput");
 const imageDefinitionTypeInput = document.getElementById("imageDefinitionTypeInput");
@@ -87,7 +89,23 @@ const imageDefinitionMatrixColorizeBlackFieldEl = document.getElementById("image
 const imageDefinitionMatrixColorizeBlackInput = document.getElementById("imageDefinitionMatrixColorizeBlackInput");
 const imageDefinitionMatrixColorizeWhiteFieldEl = document.getElementById("imageDefinitionMatrixColorizeWhiteField");
 const imageDefinitionMatrixColorizeWhiteInput = document.getElementById("imageDefinitionMatrixColorizeWhiteInput");
+const imageDefinitionAddLayeredAlwaysButton = document.getElementById("imageDefinitionAddLayeredAlwaysButton");
+const imageDefinitionLayeredAlwaysListEl = document.getElementById("imageDefinitionLayeredAlwaysList");
+const imageDefinitionAddLayeredGroupButton = document.getElementById("imageDefinitionAddLayeredGroupButton");
+const imageDefinitionLayeredGroupListEl = document.getElementById("imageDefinitionLayeredGroupList");
+const imageDefinitionLayeredDisplayableOptionsEl = document.getElementById("imageDefinitionLayeredDisplayableOptions");
 const imageDefinitionCodePreviewEl = document.getElementById("imageDefinitionCodePreview");
+const live2dDefinitionListEl = document.getElementById("live2dDefinitionList");
+const live2dDefinitionEmptyEl = document.getElementById("live2dDefinitionEmpty");
+const live2dListViewEl = document.getElementById("live2dListView");
+const live2dDefinitionDetailViewEl = document.getElementById("live2dDefinitionDetailView");
+const live2dDefinitionDetailFormEl = document.getElementById("live2dDefinitionDetailForm");
+const newLive2DDefinitionButton = document.getElementById("newLive2DDefinitionButton");
+const live2dDefinitionBackButton = document.getElementById("live2dDefinitionBackButton");
+const live2dDefinitionBrowseButton = document.getElementById("live2dDefinitionBrowseButton");
+const live2dDefinitionFileInput = document.getElementById("live2dDefinitionFileInput");
+const live2dDefinitionDeleteButton = document.getElementById("live2dDefinitionDeleteButton");
+const live2dDefinitionCodePreviewEl = document.getElementById("live2dDefinitionCodePreview");
 const audioDefinitionListEl = document.getElementById("audioDefinitionList");
 const audioDefinitionEmptyEl = document.getElementById("audioDefinitionEmpty");
 const audioListViewEl = document.getElementById("audioListView");
@@ -184,6 +202,9 @@ const imageNodeAtPresetChipsEl = document.getElementById("imageNodeAtPresetChips
 const imageNodeAliasInput = document.getElementById("imageNodeAliasInput");
 const imageNodeBehindInput = document.getElementById("imageNodeBehindInput");
 const imageNodeZorderInput = document.getElementById("imageNodeZorderInput");
+const imageNodeLayeredFieldsEl = document.getElementById("imageNodeLayeredFields");
+const imageNodeLayeredHelpEl = document.getElementById("imageNodeLayeredHelp");
+const imageNodeLayeredGroupListEl = document.getElementById("imageNodeLayeredGroupList");
 const imageDeleteNodeButton = document.getElementById("imageDeleteNodeButton");
 const animationInspectorFormEl = document.getElementById("animationInspectorForm");
 const animationNodeTypeInput = document.getElementById("animationNodeTypeInput");
@@ -289,6 +310,9 @@ const imageCategoryMeta = {
 const imageDefinitionTypeMeta = {
   static: {
     label: "Static Image",
+  },
+  layered: {
+    label: "Layered Image",
   },
   movie: {
     label: "Movie",
@@ -410,10 +434,31 @@ const audioDefinitionFieldDefaults = {
   voiceSpeaker: "Narrator",
 };
 
+const live2dDefinitionFieldDefaults = {
+  modelPath: "",
+  zoom: "",
+  top: "0.0",
+  base: "1.0",
+  height: "1.0",
+  loop: false,
+  fadeMode: "default",
+  seamless: "",
+  defaultFade: "",
+  motions: "",
+  expressions: "",
+  nonexclusive: "",
+  aliases: "",
+};
+
 const imageDefinitionFieldDefaults = {
   category: "others",
   definitionType: "static",
   sourcePath: "",
+  layeredImageFormat: "",
+  layeredOfferScreen: "default",
+  layeredAt: "",
+  layeredAlwaysLayers: [],
+  layeredGroups: [],
   moviePlay: "",
   movieSize: "",
   movieChannel: "movie",
@@ -592,6 +637,10 @@ const imageDefinitionFieldEls = Array.from(
   imageDefinitionDetailFormEl.querySelectorAll("[data-image-field]"),
 );
 
+const live2dDefinitionFieldEls = Array.from(
+  live2dDefinitionDetailFormEl.querySelectorAll("[data-live2d-field]"),
+);
+
 const audioDefinitionFieldEls = Array.from(
   audioDefinitionDetailFormEl.querySelectorAll("[data-audio-field]"),
 );
@@ -630,6 +679,7 @@ const defaultProjectState = {
     },
   ],
   images: [],
+  live2d: [],
   audio: [],
   characters: [],
   variables: [],
@@ -660,6 +710,10 @@ let imageCategorySectionState = {
   character: true,
   others: true,
 };
+let activeLive2DDefinitionId = null;
+let live2dDefinitionDetailOpen = false;
+let layeredGroupSectionState = {};
+let layeredAttributeSectionState = {};
 let contextMenuAudioDefinitionId = null;
 let activeAudioDefinitionId = null;
 let audioDefinitionDetailOpen = false;
@@ -795,6 +849,9 @@ function normalizeState(rawState) {
   const normalizedImageDefinitions = Array.isArray(rawState.images)
     ? rawState.images.map((image, index) => normalizeImageDefinition(image, index))
     : [];
+  const normalizedLive2DDefinitions = Array.isArray(rawState.live2d)
+    ? rawState.live2d.map((definition, index) => normalizeLive2DDefinition(definition, index))
+    : [];
   const normalizedAudioDefinitions = Array.isArray(rawState.audio)
     ? rawState.audio.map((audioDefinition, index) => normalizeAudioDefinition(audioDefinition, index))
     : [];
@@ -820,6 +877,7 @@ function normalizeState(rawState) {
     },
     graphs: normalizedGraphs,
     images: normalizedImageDefinitions,
+    live2d: normalizedLive2DDefinitions,
     audio: normalizedAudioDefinitions,
     characters: normalizedCharacters,
     variables: normalizedVariables,
@@ -933,6 +991,24 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
       flowMode: normalizedMode,
       flowTargetGraphId: node.flowTargetGraphId || "",
       flowTargetLabel: node.flowTargetLabel || node.content || "",
+    };
+  }
+
+  if (node.type === "image") {
+    return {
+      ...node,
+      title: node.title || "Show Image",
+      imageMode: ["show", "scene", "hide"].includes(node.imageMode)
+        ? node.imageMode
+        : "show",
+      imageDefinitionId: node.imageDefinitionId || "",
+      imageName: node.imageName || "",
+      imageLayer: node.imageLayer || "",
+      imageAt: node.imageAt || "",
+      imageAlias: node.imageAlias || "",
+      imageBehind: node.imageBehind || "",
+      imageZorder: node.imageZorder || "",
+      imageLayeredSelections: normalizeImageNodeLayeredSelectionState(node.imageLayeredSelections),
     };
   }
 
@@ -1247,6 +1323,12 @@ function normalizeCharacter(character, index) {
 
 function normalizeImageDefinition(image, index) {
   const normalizedFields = {};
+  const hasLayeredMetadata = Boolean(
+    `${image.layeredImageFormat || ""}`.trim()
+    || `${image.layeredAt || ""}`.trim()
+    || (Array.isArray(image.layeredAlwaysLayers) && image.layeredAlwaysLayers.length)
+    || (Array.isArray(image.layeredGroups) && image.layeredGroups.length),
+  );
   const hasMovieMetadata = Boolean(
     `${image.moviePlay || ""}`.trim()
     || `${image.movieMask || ""}`.trim()
@@ -1272,6 +1354,9 @@ function normalizeImageDefinition(image, index) {
   )
     ? image.definitionType
     : (
+      hasLayeredMetadata
+        ? "layered"
+        :
       hasMovieMetadata
         ? "movie"
         : hasCompositeMetadata
@@ -1296,6 +1381,23 @@ function normalizeImageDefinition(image, index) {
 
     if (field === "movieChannel") {
       normalizedFields.movieChannel = `${image.movieChannel || ""}`.trim() || "movie";
+      return;
+    }
+
+    if (field === "layeredOfferScreen") {
+      normalizedFields.layeredOfferScreen = ["default", "true", "false"].includes(image.layeredOfferScreen)
+        ? image.layeredOfferScreen
+        : defaultValue;
+      return;
+    }
+
+    if (field === "layeredAlwaysLayers") {
+      normalizedFields.layeredAlwaysLayers = normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers);
+      return;
+    }
+
+    if (field === "layeredGroups") {
+      normalizedFields.layeredGroups = normalizeLayeredGroups(image.layeredGroups);
       return;
     }
 
@@ -1335,6 +1437,29 @@ function normalizeImageDefinition(image, index) {
     id: image.id || `image_${index + 1}`,
     name: image.name || `image_${index + 1}`,
     ...normalizedFields,
+  };
+}
+
+function normalizeLive2DDefinition(definition, index) {
+  return {
+    id: definition.id || `live2d_${index + 1}`,
+    definitionKind: "live2d",
+    name: definition.name || `live2d_${index + 1}`,
+    modelPath: definition.modelPath || "",
+    zoom: definition.zoom || "",
+    top: `${definition.top ?? live2dDefinitionFieldDefaults.top}`.trim() || live2dDefinitionFieldDefaults.top,
+    base: `${definition.base ?? live2dDefinitionFieldDefaults.base}`.trim() || live2dDefinitionFieldDefaults.base,
+    height: `${definition.height ?? live2dDefinitionFieldDefaults.height}`.trim() || live2dDefinitionFieldDefaults.height,
+    loop: Boolean(definition.loop),
+    fadeMode: ["default", "true", "false"].includes(definition.fadeMode)
+      ? definition.fadeMode
+      : live2dDefinitionFieldDefaults.fadeMode,
+    seamless: definition.seamless || "",
+    defaultFade: definition.defaultFade || "",
+    motions: definition.motions || "",
+    expressions: definition.expressions || "",
+    nonexclusive: definition.nonexclusive || "",
+    aliases: definition.aliases || "",
   };
 }
 
@@ -1642,6 +1767,91 @@ function normalizeCompositeLayers(rawLayers) {
     .map((layer, index) => createCompositeLayer(index + 1, layer));
 }
 
+function createLayeredAlwaysLayer(index, overrides = {}) {
+  return {
+    id: overrides.id || `layered_always_${Date.now()}_${index}`,
+    displayable: `${overrides.displayable || overrides.image || ""}`.trim(),
+    when: `${overrides.when || ""}`.trim(),
+    at: `${overrides.at || ""}`.trim(),
+  };
+}
+
+function normalizeLayeredAlwaysLayers(rawLayers) {
+  if (!Array.isArray(rawLayers)) {
+    return [];
+  }
+
+  return rawLayers
+    .filter((layer) => layer && typeof layer === "object")
+    .map((layer, index) => createLayeredAlwaysLayer(index + 1, layer));
+}
+
+function createLayeredAttribute(index, overrides = {}) {
+  const normalizedDisplayMode = ["auto", "explicit", "null"].includes(overrides.displayMode)
+    ? overrides.displayMode
+    : (
+      overrides.nullDisplay
+        ? "null"
+        : `${overrides.displayable || overrides.image || ""}`.trim()
+          ? "explicit"
+          : "auto"
+    );
+
+  return {
+    id: overrides.id || `layered_attribute_${Date.now()}_${index}`,
+    name: `${overrides.name || ""}`.trim() || `attribute_${index}`,
+    displayMode: normalizedDisplayMode,
+    displayable: `${overrides.displayable || overrides.image || ""}`.trim(),
+    isDefault: Boolean(overrides.isDefault || overrides.default),
+    when: `${overrides.when || ""}`.trim(),
+    at: `${overrides.at || ""}`.trim(),
+  };
+}
+
+function normalizeLayeredAttributes(rawAttributes, { allowDefaults = true } = {}) {
+  if (!Array.isArray(rawAttributes) || !rawAttributes.length) {
+    return [createLayeredAttribute(1)];
+  }
+
+  return rawAttributes
+    .filter((attribute) => attribute && typeof attribute === "object")
+    .map((attribute, index) => {
+      const nextAttribute = createLayeredAttribute(index + 1, attribute);
+
+      if (!allowDefaults) {
+        nextAttribute.isDefault = false;
+      }
+
+      return nextAttribute;
+    });
+}
+
+function createLayeredGroup(index, overrides = {}) {
+  const mode = overrides.mode === "multiple" ? "multiple" : "single";
+
+  return {
+    id: overrides.id || `layered_group_${Date.now()}_${index}`,
+    name: `${overrides.name || ""}`.trim() || `group_${index}`,
+    mode,
+    auto: Boolean(overrides.auto),
+    prefix: `${overrides.prefix || ""}`.trim(),
+    variant: `${overrides.variant || ""}`.trim(),
+    attributes: normalizeLayeredAttributes(overrides.attributes, {
+      allowDefaults: mode !== "multiple",
+    }),
+  };
+}
+
+function normalizeLayeredGroups(rawGroups) {
+  if (!Array.isArray(rawGroups)) {
+    return [];
+  }
+
+  return rawGroups
+    .filter((group) => group && typeof group === "object")
+    .map((group, index) => createLayeredGroup(index + 1, group));
+}
+
 function createImageAtlStep(index, overrides = {}) {
   const normalizedType = Object.prototype.hasOwnProperty.call(imageAtlStepTypeMeta, overrides.type)
     ? overrides.type
@@ -1677,6 +1887,17 @@ function createBlankImageDefinition() {
     id: `image_${nextIndex}`,
     name: `image_${nextIndex}`,
     ...structuredClone(imageDefinitionFieldDefaults),
+  };
+}
+
+function createBlankLive2DDefinition() {
+  const nextIndex = state.live2d.length + 1;
+
+  return {
+    id: `live2d_${nextIndex}`,
+    definitionKind: "live2d",
+    name: `live2d_${nextIndex}`,
+    ...structuredClone(live2dDefinitionFieldDefaults),
   };
 }
 
@@ -1732,6 +1953,18 @@ function getActiveImageDefinition() {
 
 function getImageDefinitionById(imageId) {
   return state.images.find((image) => image.id === imageId) ?? null;
+}
+
+function getActiveLive2DDefinition() {
+  return state.live2d.find((definition) => definition.id === activeLive2DDefinitionId) ?? null;
+}
+
+function getLive2DDefinitionById(definitionId) {
+  return state.live2d.find((definition) => definition.id === definitionId) ?? null;
+}
+
+function getVisualResourceById(definitionId) {
+  return getImageDefinitionById(definitionId) || getLive2DDefinitionById(definitionId);
 }
 
 function getActiveAudioDefinition() {
@@ -2105,7 +2338,7 @@ function getImageNodeMode(node) {
 }
 
 function getImageNodeName(node) {
-  const selectedImage = getImageDefinitionById(node.imageDefinitionId);
+  const selectedImage = getVisualResourceById(node.imageDefinitionId);
 
   if (selectedImage) {
     return (selectedImage.name || "").trim();
@@ -2114,15 +2347,141 @@ function getImageNodeName(node) {
   return (node.imageName || "").trim();
 }
 
+function normalizeImageNodeLayeredSelectionState(rawSelections) {
+  if (!rawSelections || typeof rawSelections !== "object" || Array.isArray(rawSelections)) {
+    return {};
+  }
+
+  const normalizedSelections = {};
+
+  Object.entries(rawSelections).forEach(([groupId, selection]) => {
+    if (!groupId || !Array.isArray(selection)) {
+      return;
+    }
+
+    const nextSelection = selection
+      .map((attributeId) => `${attributeId || ""}`.trim())
+      .filter(Boolean)
+      .filter((attributeId, index, source) => source.indexOf(attributeId) === index);
+
+    if (nextSelection.length) {
+      normalizedSelections[groupId] = nextSelection;
+    }
+  });
+
+  return normalizedSelections;
+}
+
+function getImageNodeLayeredSelectionMap(node, imageDefinition = null) {
+  const selectedImage = imageDefinition || getImageDefinitionById(node?.imageDefinitionId || "");
+
+  if (!selectedImage || getImageDefinitionType(selectedImage) !== "layered") {
+    return {};
+  }
+
+  const storedSelections = normalizeImageNodeLayeredSelectionState(node?.imageLayeredSelections);
+  const normalizedSelections = {};
+
+  normalizeLayeredGroups(selectedImage.layeredGroups).forEach((group) => {
+    const validAttributeIds = new Set(group.attributes.map((attribute) => attribute.id));
+    const nextSelection = (storedSelections[group.id] || [])
+      .filter((attributeId) => validAttributeIds.has(attributeId))
+      .filter((attributeId, index, source) => source.indexOf(attributeId) === index);
+
+    if (!nextSelection.length) {
+      return;
+    }
+
+    normalizedSelections[group.id] = group.mode === "multiple"
+      ? nextSelection
+      : nextSelection.slice(0, 1);
+  });
+
+  return normalizedSelections;
+}
+
+function getLayeredGroupDefaultAttribute(group) {
+  if (!group || group.mode === "multiple") {
+    return null;
+  }
+
+  return group.attributes.find((attribute) => attribute.isDefault) ?? null;
+}
+
+function getLayeredAttributeInspectorLabel(attribute) {
+  const metaParts = [];
+
+  if (attribute.displayMode === "null") {
+    metaParts.push("null");
+  }
+
+  if (attribute.isDefault) {
+    metaParts.push("default");
+  }
+
+  return metaParts.length
+    ? `${attribute.name} · ${metaParts.join(" · ")}`
+    : attribute.name;
+}
+
+function getLayeredAttributeStateKey(groupId, attributeId) {
+  return `${groupId}:${attributeId}`;
+}
+
+function isLayeredGroupExpanded(groupId) {
+  return layeredGroupSectionState[groupId] !== false;
+}
+
+function isLayeredAttributeExpanded(groupId, attributeId) {
+  return layeredAttributeSectionState[getLayeredAttributeStateKey(groupId, attributeId)] !== false;
+}
+
+function getLayeredAttributeDisplayModeLabel(displayMode) {
+  if (displayMode === "explicit") {
+    return "Explicit";
+  }
+
+  if (displayMode === "null") {
+    return "Null";
+  }
+
+  return "Auto";
+}
+
+function getImageNodeLayeredAttributeNames(node, imageDefinition = null) {
+  const selectedImage = imageDefinition || getImageDefinitionById(node?.imageDefinitionId || "");
+
+  if (!selectedImage || getImageDefinitionType(selectedImage) !== "layered") {
+    return [];
+  }
+
+  const selectionMap = getImageNodeLayeredSelectionMap(node, selectedImage);
+  const attributeNames = [];
+
+  normalizeLayeredGroups(selectedImage.layeredGroups).forEach((group) => {
+    const selectedAttributeIds = selectionMap[group.id] || [];
+
+    group.attributes.forEach((attribute) => {
+      if (selectedAttributeIds.includes(attribute.id) && `${attribute.name || ""}`.trim()) {
+        attributeNames.push(attribute.name.trim());
+      }
+    });
+  });
+
+  return attributeNames;
+}
+
 function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   if (!selectEl) {
     return;
   }
 
-  const placeholderText = state.images.length
-    ? (mode === "scene" ? "Optional imported image" : "Select imported image")
-    : "No imported images";
-  const currentLegacyName = !node?.imageDefinitionId && (node?.imageName || "").trim();
+  const totalVisualResources = state.images.length + state.live2d.length;
+  const currentSelectedResource = getVisualResourceById(node?.imageDefinitionId || "");
+  const placeholderText = totalVisualResources
+    ? (mode === "scene" ? "Optional imported asset" : "Select imported asset")
+    : "No imported assets";
+  const currentLegacyName = !currentSelectedResource && (node?.imageName || "").trim();
   const legacyValue = currentLegacyName ? `__legacy__:${currentLegacyName}` : "";
 
   selectEl.innerHTML = "";
@@ -2146,7 +2505,14 @@ function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
     selectEl.appendChild(option);
   });
 
-  if (node?.imageDefinitionId && getImageDefinitionById(node.imageDefinitionId)) {
+  state.live2d.forEach((definition) => {
+    const option = document.createElement("option");
+    option.value = definition.id;
+    option.textContent = `${definition.name} · ${getLive2DDefinitionSummary(definition)}`;
+    selectEl.appendChild(option);
+  });
+
+  if (node?.imageDefinitionId && currentSelectedResource) {
     selectEl.value = node.imageDefinitionId;
     return;
   }
@@ -2167,6 +2533,93 @@ function renderImageNodeAtOptions() {
   imageNodeAtOptionsEl.innerHTML = builtInTransformPresets
     .map((preset) => `<option value="${escapeHtml(preset)}"></option>`)
     .join("");
+}
+
+function renderImageNodeLayeredInspector(node) {
+  if (!imageNodeLayeredFieldsEl || !imageNodeLayeredHelpEl || !imageNodeLayeredGroupListEl) {
+    return;
+  }
+
+  const selectedImage = getImageDefinitionById(node?.imageDefinitionId || "");
+  const shouldShow = Boolean(
+    node
+    && node.type === "image"
+    && getImageNodeMode(node) !== "hide"
+    && selectedImage
+    && getImageDefinitionType(selectedImage) === "layered",
+  );
+
+  imageNodeLayeredFieldsEl.classList.toggle("hidden", !shouldShow);
+
+  if (!shouldShow) {
+    imageNodeLayeredHelpEl.textContent = "";
+    imageNodeLayeredGroupListEl.innerHTML = "";
+    return;
+  }
+
+  const layeredGroups = normalizeLayeredGroups(selectedImage.layeredGroups);
+  const selectionMap = getImageNodeLayeredSelectionMap(node, selectedImage);
+
+  imageNodeLayeredHelpEl.textContent = layeredGroups.length
+    ? "Choose the explicit layered attributes this block should append after the image name. Leave a single-choice group empty to use the definition default."
+    : "This layered image does not have any groups yet, so there is nothing extra to configure here.";
+
+  if (!layeredGroups.length) {
+    imageNodeLayeredGroupListEl.innerHTML = '<p class="image-definition-empty">No layered groups yet.</p>';
+    return;
+  }
+
+  imageNodeLayeredGroupListEl.innerHTML = layeredGroups.map((group) => {
+    const selectedAttributeIds = selectionMap[group.id] || [];
+    const defaultAttribute = getLayeredGroupDefaultAttribute(group);
+    const modeLabel = group.mode === "multiple" ? "Multiple" : "Single";
+    const subtitle = defaultAttribute
+      ? `Default: ${escapeHtml(defaultAttribute.name)}`
+      : group.mode === "multiple"
+        ? "Select any matching attributes."
+        : "No default attribute.";
+
+    const controlMarkup = group.mode === "multiple"
+      ? `
+        <div class="layered-inline-grid">
+          ${group.attributes.map((attribute) => `
+            <label class="character-checkbox">
+              <input
+                data-image-layered-group-id="${escapeHtml(group.id)}"
+                data-image-layered-attribute-id="${escapeHtml(attribute.id)}"
+                type="checkbox"
+                ${selectedAttributeIds.includes(attribute.id) ? "checked" : ""}
+              />
+              <span>${escapeHtml(getLayeredAttributeInspectorLabel(attribute))}</span>
+            </label>
+          `).join("")}
+        </div>
+      `
+      : `
+        <label>
+          Selected Attribute
+          <select data-image-layered-group-id="${escapeHtml(group.id)}">
+            <option value="">${defaultAttribute ? `Use default (${escapeHtml(defaultAttribute.name)})` : "No explicit attribute"}</option>
+            ${group.attributes.map((attribute) => `
+              <option value="${escapeHtml(attribute.id)}" ${selectedAttributeIds[0] === attribute.id ? "selected" : ""}>
+                ${escapeHtml(getLayeredAttributeInspectorLabel(attribute))}
+              </option>
+            `).join("")}
+          </select>
+        </label>
+      `;
+
+    return `
+      <div class="menu-choice-item layered-group-item">
+        <div class="menu-choice-item-header">
+          <strong>${escapeHtml(group.name)}</strong>
+          <span>${escapeHtml(modeLabel)}</span>
+        </div>
+        <p class="image-definition-help">${subtitle}</p>
+        ${controlMarkup}
+      </div>
+    `;
+  }).join("");
 }
 
 function getAudioNodeAction(node) {
@@ -2972,6 +3425,18 @@ function buildMovieSourcePathFromSelection(fileName, currentValue = "") {
   return `movies/${fileName}`;
 }
 
+function buildLive2DModelPathFromSelection(fileName, currentValue = "") {
+  const normalizedCurrent = `${currentValue}`.trim().replaceAll("\\", "/");
+
+  if (normalizedCurrent.includes("/")) {
+    const segments = normalizedCurrent.split("/");
+    segments[segments.length - 1] = fileName;
+    return segments.join("/");
+  }
+
+  return `Resources/${fileName}`;
+}
+
 function getImageDefinitionType(image) {
   return Object.prototype.hasOwnProperty.call(imageDefinitionTypeMeta, image?.definitionType)
     ? image.definitionType
@@ -2980,6 +3445,134 @@ function getImageDefinitionType(image) {
 
 function getImageDefinitionTypeLabel(image) {
   return imageDefinitionTypeMeta[getImageDefinitionType(image)]?.label || imageDefinitionTypeMeta.static.label;
+}
+
+function getVisualResourceKind(resource) {
+  return resource?.definitionKind === "live2d" ? "live2d" : "image";
+}
+
+function getVisualResourceTypeLabel(resource) {
+  return getVisualResourceKind(resource) === "live2d"
+    ? "Live2D"
+    : getImageDefinitionTypeLabel(resource);
+}
+
+function splitLive2DList(value) {
+  return `${value || ""}`
+    .split(/\r?\n|,/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function parseLive2DAliases(value) {
+  return `${value || ""}`
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => line.match(/^(.+?)\s*(?:=|:)\s*(.+)$/))
+    .filter(Boolean)
+    .map((match) => [match[1].trim(), match[2].trim()])
+    .filter(([aliasKey, aliasValue]) => aliasKey && aliasValue);
+}
+
+function formatLive2DStringListCode(values) {
+  return `[${values.map((value) => formatRenpyQuotedString(value)).join(", ")}]`;
+}
+
+function formatLive2DAliasCode(aliases) {
+  return `{ ${aliases.map(([key, value]) => `${formatRenpyQuotedString(key)}: ${formatRenpyQuotedString(value)}`).join(", ")} }`;
+}
+
+function getLive2DDefinitionSummary(definition) {
+  const motionCount = splitLive2DList(definition?.motions).length;
+  const expressionCount = splitLive2DList(definition?.expressions).length;
+
+  if (!motionCount && !expressionCount) {
+    return `Live2D · ${definition?.modelPath || "No model path yet"}`;
+  }
+
+  return `Live2D · ${motionCount} ${motionCount === 1 ? "motion" : "motions"} · ${expressionCount} ${expressionCount === 1 ? "expression" : "expressions"}`;
+}
+
+function formatLive2DDefinitionCode(definition) {
+  if (!definition) {
+    return "";
+  }
+
+  const safeName = `${definition.name || ""}`.trim() || "live2d_model";
+  const modelPath = `${definition.modelPath || ""}`.trim() || "Resources/Hiyori";
+  const constructorArgs = [formatRenpyQuotedString(modelPath)];
+  const motionList = splitLive2DList(definition.motions);
+  const expressionList = splitLive2DList(definition.expressions);
+  const nonexclusiveList = splitLive2DList(definition.nonexclusive);
+  const aliases = parseLive2DAliases(definition.aliases);
+
+  if (`${definition.zoom || ""}`.trim()) {
+    constructorArgs.push(`zoom=${definition.zoom.trim()}`);
+  }
+
+  if (`${definition.top || ""}`.trim() && definition.top.trim() !== live2dDefinitionFieldDefaults.top) {
+    constructorArgs.push(`top=${definition.top.trim()}`);
+  }
+
+  if (`${definition.base || ""}`.trim() && definition.base.trim() !== live2dDefinitionFieldDefaults.base) {
+    constructorArgs.push(`base=${definition.base.trim()}`);
+  }
+
+  if (`${definition.height || ""}`.trim() && definition.height.trim() !== live2dDefinitionFieldDefaults.height) {
+    constructorArgs.push(`height=${definition.height.trim()}`);
+  }
+
+  if (definition.loop) {
+    constructorArgs.push("loop=True");
+  }
+
+  if (definition.fadeMode === "true") {
+    constructorArgs.push("fade=True");
+  } else if (definition.fadeMode === "false") {
+    constructorArgs.push("fade=False");
+  }
+
+  if (`${definition.seamless || ""}`.trim()) {
+    constructorArgs.push(`seamless=${definition.seamless.trim()}`);
+  }
+
+  if (`${definition.defaultFade || ""}`.trim()) {
+    constructorArgs.push(`default_fade=${definition.defaultFade.trim()}`);
+  }
+
+  if (nonexclusiveList.length) {
+    constructorArgs.push(`nonexclusive=${formatLive2DStringListCode(nonexclusiveList)}`);
+  }
+
+  if (aliases.length) {
+    constructorArgs.push(`alias=${formatLive2DAliasCode(aliases)}`);
+  }
+
+  const lines = [
+    "define config.gl2 = True",
+    "",
+    `image ${safeName} = Live2D(`,
+  ];
+
+  constructorArgs.forEach((arg, index) => {
+    lines.push(`    ${arg}${index < constructorArgs.length - 1 ? "," : ""}`);
+  });
+  lines.push(")");
+
+  if (motionList.length || expressionList.length) {
+    lines.push("");
+  }
+
+  if (motionList.length) {
+    lines.push(`# Motions: ${motionList.join(", ")}`);
+  }
+
+  if (expressionList.length) {
+    lines.push(`# Expressions: ${expressionList.join(", ")}`);
+  }
+
+  return lines.join("\n");
 }
 
 function formatRenpyQuotedString(value) {
@@ -3122,6 +3715,12 @@ function parseSimpleMatrixColorExpression(expression) {
 function getImageDefinitionSummary(image) {
   const definitionType = getImageDefinitionType(image);
 
+  if (definitionType === "layered") {
+    const alwaysCount = normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers).length;
+    const groupCount = normalizeLayeredGroups(image.layeredGroups).length;
+    return `Layered · ${groupCount} ${groupCount === 1 ? "group" : "groups"} · ${alwaysCount} always`;
+  }
+
   if (definitionType === "movie") {
     return `Movie · ${image.moviePlay || "No play path yet"}`;
   }
@@ -3210,6 +3809,8 @@ function getNodeDisplay(node) {
   if (node.type === "image") {
     const mode = getImageNodeMode(node);
     const name = getImageNodeName(node);
+    const selectedResource = getVisualResourceById(node.imageDefinitionId);
+    const layeredAttributes = mode === "hide" ? [] : getImageNodeLayeredAttributeNames(node);
     const layer = (node.imageLayer || "").trim();
     const at = (node.imageAt || "").trim();
     const title = `${capitalize(mode)} Image`;
@@ -3217,6 +3818,14 @@ function getNodeDisplay(node) {
 
     if (name) {
       detailParts.push(name);
+    }
+
+    if (selectedResource && getVisualResourceKind(selectedResource) === "live2d") {
+      detailParts.push("Live2D");
+    }
+
+    if (layeredAttributes.length) {
+      detailParts.push(`attrs:${layeredAttributes.join(", ")}`);
     }
 
     if (layer) {
@@ -4056,6 +4665,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
   } else if (node.type === "image") {
     const mode = getImageNodeMode(node);
     const imageName = getImageNodeName(node);
+    const layeredAttributes = mode === "hide" ? [] : getImageNodeLayeredAttributeNames(node);
     const layer = (node.imageLayer || "").trim();
     const at = (node.imageAt || "").trim();
     const alias = (node.imageAlias || "").trim();
@@ -4068,6 +4678,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
       if (imageName) {
         parts.push(imageName);
+        parts.push(...layeredAttributes);
       }
 
       if (at) {
@@ -4085,6 +4696,7 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
       }
     } else {
       parts.push("show", imageName || "image_name");
+      parts.push(...layeredAttributes);
 
       if (alias) {
         parts.push("as", alias);
@@ -4678,6 +5290,150 @@ function formatImageDefinitionTransformLines(image) {
   return lines;
 }
 
+function formatLayeredDisplayableValue(value) {
+  const normalizedValue = `${value || ""}`.trim();
+
+  if (!normalizedValue) {
+    return "Null()";
+  }
+
+  const isQuotedString = (
+    (normalizedValue.startsWith("\"") && normalizedValue.endsWith("\""))
+    || (normalizedValue.startsWith("'") && normalizedValue.endsWith("'"))
+  );
+
+  if (
+    isQuotedString
+    || normalizedValue.includes("(")
+    || normalizedValue.startsWith("[")
+    || normalizedValue.startsWith("{")
+  ) {
+    return normalizedValue;
+  }
+
+  return formatRenpyQuotedString(normalizedValue);
+}
+
+function formatLayeredDisplayableBlock(indent, displayable, whenExpression, atValue) {
+  const lines = [];
+
+  if (`${displayable || ""}`.trim()) {
+    lines.push(`${indent}${formatLayeredDisplayableValue(displayable)}`);
+  }
+
+  if (`${whenExpression || ""}`.trim()) {
+    lines.push(`${indent}when ${whenExpression.trim()}`);
+  }
+
+  if (`${atValue || ""}`.trim()) {
+    lines.push(`${indent}at ${atValue.trim()}`);
+  }
+
+  if (!lines.length) {
+    lines.push(`${indent}Null()`);
+  }
+
+  return lines;
+}
+
+function formatLayeredAttributeLines(attribute, indent = "        ") {
+  const headerParts = ["attribute", attribute.name.trim() || "attribute_name"];
+
+  if (attribute.displayMode === "null") {
+    headerParts.push("null");
+  }
+
+  if (attribute.isDefault) {
+    headerParts.push("default");
+  }
+
+  const hasBlock = (
+    attribute.displayMode === "explicit"
+    || `${attribute.when || ""}`.trim()
+    || `${attribute.at || ""}`.trim()
+  );
+
+  if (!hasBlock) {
+    return [`${indent}${headerParts.join(" ")}`];
+  }
+
+  return [
+    `${indent}${headerParts.join(" ")}:`,
+    ...formatLayeredDisplayableBlock(
+      `${indent}    `,
+      attribute.displayMode === "explicit" ? attribute.displayable : "",
+      attribute.when,
+      attribute.at,
+    ),
+  ];
+}
+
+function formatLayeredImageDefinitionCode(image) {
+  const safeName = image.name.trim() || "layered_image";
+  const lines = [`layeredimage ${safeName}:`];
+  const layeredAlwaysLayers = normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers);
+  const layeredGroups = normalizeLayeredGroups(image.layeredGroups);
+
+  if (`${image.layeredImageFormat || ""}`.trim()) {
+    lines.push(`    image_format ${formatRenpyQuotedString(image.layeredImageFormat)}`);
+  }
+
+  if (image.layeredOfferScreen === "true") {
+    lines.push("    offer_screen True");
+  } else if (image.layeredOfferScreen === "false") {
+    lines.push("    offer_screen False");
+  }
+
+  if (`${image.layeredAt || ""}`.trim()) {
+    lines.push(`    at ${image.layeredAt.trim()}`);
+  }
+
+  if (!layeredAlwaysLayers.length && !layeredGroups.length) {
+    lines.push("    always:");
+    lines.push("        Null()");
+    return lines.join("\n");
+  }
+
+  layeredAlwaysLayers.forEach((layer) => {
+    lines.push("");
+    lines.push("    always:");
+    lines.push(...formatLayeredDisplayableBlock("        ", layer.displayable, layer.when, layer.at));
+  });
+
+  layeredGroups.forEach((group) => {
+    lines.push("");
+
+    const groupHead = [
+      "group",
+      group.mode === "multiple" ? "multiple" : (group.name.trim() || "group_name"),
+    ];
+
+    if (group.mode !== "multiple") {
+      if (group.auto) {
+        groupHead.push("auto");
+      }
+
+      if (group.variant.trim()) {
+        groupHead.push("variant", group.variant.trim());
+      }
+
+      if (group.prefix.trim()) {
+        groupHead.push("prefix", group.prefix.trim());
+      }
+    }
+
+    lines.push(`    ${groupHead.join(" ")}:`);
+
+    normalizeLayeredAttributes(group.attributes, {
+      allowDefaults: group.mode !== "multiple",
+    }).forEach((attribute) => {
+      lines.push(...formatLayeredAttributeLines(attribute));
+    });
+  });
+
+  return lines.join("\n");
+}
+
 function formatImageAtlStepLines(image) {
   if (!image?.atlEnabled) {
     return [];
@@ -4730,6 +5486,10 @@ function formatImageDefinitionCode(image) {
   const safeName = image.name.trim() || "image_name";
   const definitionType = getImageDefinitionType(image);
 
+  if (definitionType === "layered") {
+    return formatLayeredImageDefinitionCode(image);
+  }
+
   if (!image.atlEnabled && definitionType !== "static") {
     return `image ${safeName} = ${formatImageDefinitionDisplayableExpression(image)}`;
   }
@@ -4753,10 +5513,12 @@ function formatImageDefinitionCode(image) {
 
 function setImageDefinitionTypeFieldVisibility(definitionType) {
   imageDefinitionStaticFieldsEl.classList.toggle("hidden", definitionType !== "static");
+  imageDefinitionLayeredFieldsEl.classList.toggle("hidden", definitionType !== "layered");
   imageDefinitionMovieFieldsEl.classList.toggle("hidden", definitionType !== "movie");
   imageDefinitionSolidFieldsEl.classList.toggle("hidden", definitionType !== "solid");
   imageDefinitionCompositeFieldsEl.classList.toggle("hidden", definitionType !== "composite");
   imageDefinitionPlaceholderFieldsEl.classList.toggle("hidden", definitionType !== "placeholder");
+  imageDefinitionAnimationFieldsEl.classList.toggle("hidden", definitionType === "layered");
 }
 
 function renderCompositeLayerList(image) {
@@ -4821,6 +5583,325 @@ function renderCompositeLayerList(image) {
         />
       </label>
     </div>
+  `).join("");
+}
+
+function renderLayeredDisplayableOptions(image) {
+  if (!imageDefinitionLayeredDisplayableOptionsEl) {
+    return;
+  }
+
+  imageDefinitionLayeredDisplayableOptionsEl.innerHTML = state.images
+    .filter((candidate) => candidate.id !== image?.id)
+    .map((candidate) => `<option value="${escapeHtml(candidate.name)}"></option>`)
+    .join("");
+}
+
+function renderLayeredAlwaysLayerList(image) {
+  if (!imageDefinitionLayeredAlwaysListEl || !imageDefinitionLayeredDisplayableOptionsEl) {
+    return;
+  }
+
+  if (!image || getImageDefinitionType(image) !== "layered") {
+    imageDefinitionLayeredAlwaysListEl.innerHTML = "";
+    imageDefinitionLayeredDisplayableOptionsEl.innerHTML = "";
+    return;
+  }
+
+  const layeredAlwaysLayers = normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers);
+  image.layeredAlwaysLayers = layeredAlwaysLayers;
+  renderLayeredDisplayableOptions(image);
+
+  if (!layeredAlwaysLayers.length) {
+    imageDefinitionLayeredAlwaysListEl.innerHTML = `
+      <p class="image-definition-empty">No always layers yet. Add a base layer here so the layered image has a body or other persistent parts.</p>
+    `;
+    return;
+  }
+
+  imageDefinitionLayeredAlwaysListEl.innerHTML = layeredAlwaysLayers.map((layer, index) => `
+    <div class="menu-choice-item">
+      <div class="menu-choice-item-header">
+        <span>Always ${index + 1}</span>
+        <button
+          class="danger-button menu-choice-remove-button"
+          type="button"
+          data-remove-layered-always-id="${escapeHtml(layer.id)}"
+        >
+          Remove
+        </button>
+      </div>
+
+      <label>
+        Displayable
+        <input
+          type="text"
+          value="${escapeHtml(layer.displayable || "")}"
+          placeholder='e.g. eileen_base or "eileen_base"'
+          list="imageDefinitionLayeredDisplayableOptions"
+          data-layered-always-id="${escapeHtml(layer.id)}"
+          data-layered-always-field="displayable"
+        />
+      </label>
+
+      <label>
+        when
+        <input
+          type="text"
+          value="${escapeHtml(layer.when || "")}"
+          placeholder="e.g. ribbon and not hat"
+          data-layered-always-id="${escapeHtml(layer.id)}"
+          data-layered-always-field="when"
+        />
+      </label>
+
+      <label>
+        at
+        <input
+          type="text"
+          value="${escapeHtml(layer.at || "")}"
+          placeholder="e.g. character_outline_transform"
+          data-layered-always-id="${escapeHtml(layer.id)}"
+          data-layered-always-field="at"
+        />
+      </label>
+    </div>
+  `).join("");
+}
+
+function renderLayeredGroupList(image) {
+  if (!imageDefinitionLayeredGroupListEl || !imageDefinitionLayeredDisplayableOptionsEl) {
+    return;
+  }
+
+  if (!image || getImageDefinitionType(image) !== "layered") {
+    imageDefinitionLayeredGroupListEl.innerHTML = "";
+    imageDefinitionLayeredDisplayableOptionsEl.innerHTML = "";
+    return;
+  }
+
+  const layeredGroups = normalizeLayeredGroups(image.layeredGroups);
+  image.layeredGroups = layeredGroups;
+  renderLayeredDisplayableOptions(image);
+
+  if (!layeredGroups.length) {
+    imageDefinitionLayeredGroupListEl.innerHTML = `
+      <p class="image-definition-empty">No groups yet. Add one for face, outfit, accessories, or any other attribute set.</p>
+    `;
+    return;
+  }
+
+  imageDefinitionLayeredGroupListEl.innerHTML = layeredGroups.map((group, groupIndex) => `
+    <details
+      class="menu-choice-item layered-group-item layered-collapsible"
+      data-layered-group-details-id="${escapeHtml(group.id)}"
+      ${isLayeredGroupExpanded(group.id) ? "open" : ""}
+    >
+      <summary class="layered-collapsible-summary">
+        <div class="layered-collapsible-summary-copy">
+          <strong class="layered-collapsible-title">${escapeHtml(group.name || `Group ${groupIndex + 1}`)}</strong>
+          <span class="layered-collapsible-meta">
+            ${escapeHtml(group.mode === "multiple" ? "Multiple" : "Single")}
+            ·
+            ${escapeHtml(`${normalizeLayeredAttributes(group.attributes, { allowDefaults: group.mode !== "multiple" }).length} attributes`)}
+          </span>
+        </div>
+      </summary>
+
+      <div class="layered-collapsible-body">
+        <div class="menu-choice-item-header layered-collapsible-toolbar">
+          <span>Group ${groupIndex + 1}</span>
+          <button
+            class="danger-button menu-choice-remove-button"
+            type="button"
+            data-remove-layered-group-id="${escapeHtml(group.id)}"
+          >
+            Remove
+          </button>
+        </div>
+
+        <div class="layered-inline-grid">
+          <label>
+            Group Mode
+            <select
+              data-layered-group-id="${escapeHtml(group.id)}"
+              data-layered-group-field="mode"
+            >
+              <option value="single" ${group.mode === "single" ? "selected" : ""}>Single / Exclusive</option>
+              <option value="multiple" ${group.mode === "multiple" ? "selected" : ""}>Multiple / Non-exclusive</option>
+            </select>
+          </label>
+
+          <label class="${group.mode === "multiple" ? "hidden" : ""}">
+            Group Name
+            <input
+              type="text"
+              value="${escapeHtml(group.name || "")}"
+              placeholder="e.g. face"
+              data-layered-group-id="${escapeHtml(group.id)}"
+              data-layered-group-field="name"
+            />
+          </label>
+
+          <label class="${group.mode === "multiple" ? "hidden" : ""}">
+            Variant
+            <input
+              type="text"
+              value="${escapeHtml(group.variant || "")}"
+              placeholder="e.g. blue"
+              data-layered-group-id="${escapeHtml(group.id)}"
+              data-layered-group-field="variant"
+            />
+          </label>
+
+          <label class="${group.mode === "multiple" ? "hidden" : ""}">
+            Prefix
+            <input
+              type="text"
+              value="${escapeHtml(group.prefix || "")}"
+              placeholder="e.g. ribbon"
+              data-layered-group-id="${escapeHtml(group.id)}"
+              data-layered-group-field="prefix"
+            />
+          </label>
+        </div>
+
+        <label class="character-checkbox ${group.mode === "multiple" ? "hidden" : ""}">
+          <input
+            type="checkbox"
+            ${group.auto ? "checked" : ""}
+            data-layered-group-id="${escapeHtml(group.id)}"
+            data-layered-group-field="auto"
+          />
+          <span>auto group</span>
+        </label>
+
+        <div class="menu-choice-group">
+          <div class="menu-choice-group-header">
+            <strong>Attributes</strong>
+            <button
+              class="secondary menu-choice-add-button"
+              type="button"
+              data-add-layered-attribute-group-id="${escapeHtml(group.id)}"
+            >
+              Add Attribute
+            </button>
+          </div>
+
+          <div class="menu-choice-list layered-attribute-list">
+            ${normalizeLayeredAttributes(group.attributes, { allowDefaults: group.mode !== "multiple" }).map((attribute, attributeIndex) => `
+              <details
+                class="menu-choice-item layered-attribute-item layered-collapsible layered-collapsible-subtle"
+                data-layered-attribute-group-id="${escapeHtml(group.id)}"
+                data-layered-attribute-details-id="${escapeHtml(attribute.id)}"
+                ${isLayeredAttributeExpanded(group.id, attribute.id) ? "open" : ""}
+              >
+                <summary class="layered-collapsible-summary">
+                  <div class="layered-collapsible-summary-copy">
+                    <strong class="layered-collapsible-title">${escapeHtml(attribute.name || `Attribute ${attributeIndex + 1}`)}</strong>
+                    <span class="layered-collapsible-meta">
+                      ${escapeHtml(getLayeredAttributeDisplayModeLabel(attribute.displayMode))}
+                      ${attribute.isDefault ? " · Default" : ""}
+                    </span>
+                  </div>
+                </summary>
+
+                <div class="layered-collapsible-body">
+                  <div class="menu-choice-item-header layered-collapsible-toolbar">
+                    <span>Attribute ${attributeIndex + 1}</span>
+                    <button
+                      class="danger-button menu-choice-remove-button"
+                      type="button"
+                      data-remove-layered-attribute-id="${escapeHtml(attribute.id)}"
+                      data-remove-layered-attribute-group-id="${escapeHtml(group.id)}"
+                    >
+                      Remove
+                    </button>
+                  </div>
+
+                  <div class="layered-inline-grid">
+                    <label>
+                      Name
+                      <input
+                        type="text"
+                        value="${escapeHtml(attribute.name || "")}"
+                        placeholder="e.g. happy"
+                        data-layered-group-id="${escapeHtml(group.id)}"
+                        data-layered-attribute-id="${escapeHtml(attribute.id)}"
+                        data-layered-attribute-field="name"
+                      />
+                    </label>
+
+                    <label>
+                      Display Mode
+                      <select
+                        data-layered-group-id="${escapeHtml(group.id)}"
+                        data-layered-attribute-id="${escapeHtml(attribute.id)}"
+                        data-layered-attribute-field="displayMode"
+                      >
+                        <option value="auto" ${attribute.displayMode === "auto" ? "selected" : ""}>Auto Pattern</option>
+                        <option value="explicit" ${attribute.displayMode === "explicit" ? "selected" : ""}>Explicit Displayable</option>
+                        <option value="null" ${attribute.displayMode === "null" ? "selected" : ""}>Null</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <label class="${attribute.displayMode === "explicit" ? "" : "hidden"}">
+                    Displayable
+                    <input
+                      type="text"
+                      value="${escapeHtml(attribute.displayable || "")}"
+                      placeholder='e.g. eileen_face_happy or "eileen_face_happy"'
+                      list="imageDefinitionLayeredDisplayableOptions"
+                      data-layered-group-id="${escapeHtml(group.id)}"
+                      data-layered-attribute-id="${escapeHtml(attribute.id)}"
+                      data-layered-attribute-field="displayable"
+                    />
+                  </label>
+
+                  <div class="layered-inline-grid">
+                    <label>
+                      when
+                      <input
+                        type="text"
+                        value="${escapeHtml(attribute.when || "")}"
+                        placeholder="e.g. dress and not hat"
+                        data-layered-group-id="${escapeHtml(group.id)}"
+                        data-layered-attribute-id="${escapeHtml(attribute.id)}"
+                        data-layered-attribute-field="when"
+                      />
+                    </label>
+
+                    <label>
+                      at
+                      <input
+                        type="text"
+                        value="${escapeHtml(attribute.at || "")}"
+                        placeholder="e.g. blink_transform"
+                        data-layered-group-id="${escapeHtml(group.id)}"
+                        data-layered-attribute-id="${escapeHtml(attribute.id)}"
+                        data-layered-attribute-field="at"
+                      />
+                    </label>
+                  </div>
+
+                  <label class="character-checkbox ${group.mode === "multiple" ? "hidden" : ""}">
+                    <input
+                      type="checkbox"
+                      ${attribute.isDefault ? "checked" : ""}
+                      data-layered-group-id="${escapeHtml(group.id)}"
+                      data-layered-attribute-id="${escapeHtml(attribute.id)}"
+                      data-layered-attribute-field="isDefault"
+                    />
+                    <span>default</span>
+                  </label>
+                </div>
+              </details>
+            `).join("")}
+          </div>
+        </div>
+      </div>
+    </details>
   `).join("");
 }
 
@@ -5081,6 +6162,8 @@ function syncImageDefinitionDetailFields() {
       fieldEl.value = `${defaultValue ?? ""}`;
     });
     setImageDefinitionTypeFieldVisibility("static");
+    renderLayeredAlwaysLayerList(null);
+    renderLayeredGroupList(null);
     renderCompositeLayerList(null);
     renderImageAtlStepList(null);
     syncMatrixColorBuilder("");
@@ -5100,6 +6183,8 @@ function syncImageDefinitionDetailFields() {
     fieldEl.value = `${image[field] ?? ""}`;
   });
   setImageDefinitionTypeFieldVisibility(getImageDefinitionType(image));
+  renderLayeredAlwaysLayerList(image);
+  renderLayeredGroupList(image);
   renderCompositeLayerList(image);
   renderImageAtlStepList(image);
   syncMatrixColorBuilder(image.matrixcolor);
@@ -5220,6 +6305,132 @@ function renderImagesPanel() {
   imagesListViewEl.classList.toggle("hidden", imageDefinitionDetailOpen);
   imageDefinitionDetailViewEl.classList.toggle("hidden", !imageDefinitionDetailOpen);
   syncImageDefinitionDetailFields();
+}
+
+function openLive2DDefinitionDetail(definitionId) {
+  activeLive2DDefinitionId = definitionId;
+  live2dDefinitionDetailOpen = true;
+  renderLive2DPanel();
+  const definition = getActiveLive2DDefinition();
+
+  if (definition) {
+    setStatus(`Opened Live2D "${definition.name}".`);
+  }
+}
+
+function closeLive2DDefinitionDetail() {
+  live2dDefinitionDetailOpen = false;
+  renderLive2DPanel();
+}
+
+function deleteLive2DDefinition(definitionId) {
+  const definition = state.live2d.find((currentDefinition) => currentDefinition.id === definitionId);
+
+  if (!definition) {
+    return;
+  }
+
+  state.live2d = state.live2d.filter((currentDefinition) => currentDefinition.id !== definitionId);
+
+  if (activeLive2DDefinitionId === definitionId) {
+    activeLive2DDefinitionId = state.live2d[0]?.id ?? null;
+  }
+
+  if (live2dDefinitionDetailOpen && !getActiveLive2DDefinition()) {
+    live2dDefinitionDetailOpen = false;
+  }
+
+  render();
+  saveState(`Deleted Live2D "${definition.name}".`);
+}
+
+function syncLive2DDefinitionDetailFields() {
+  const definition = getActiveLive2DDefinition();
+
+  if (!definition) {
+    live2dDefinitionFieldEls.forEach((fieldEl) => {
+      const field = fieldEl.dataset.live2dField;
+      const defaultValue = live2dDefinitionFieldDefaults[field];
+
+      if (field === "loop") {
+        fieldEl.checked = Boolean(defaultValue);
+        return;
+      }
+
+      fieldEl.value = `${defaultValue ?? ""}`;
+    });
+    live2dDefinitionCodePreviewEl.textContent = "";
+    return;
+  }
+
+  live2dDefinitionFieldEls.forEach((fieldEl) => {
+    const field = fieldEl.dataset.live2dField;
+
+    if (field === "loop") {
+      fieldEl.checked = Boolean(definition[field]);
+      return;
+    }
+
+    fieldEl.value = `${definition[field] ?? ""}`;
+  });
+
+  live2dDefinitionCodePreviewEl.textContent = formatLive2DDefinitionCode(definition);
+}
+
+function renderLive2DPanel() {
+  const hasDefinitions = state.live2d.length > 0;
+
+  if (!hasDefinitions) {
+    activeLive2DDefinitionId = null;
+    live2dDefinitionDetailOpen = false;
+  } else if (!getActiveLive2DDefinition()) {
+    activeLive2DDefinitionId = state.live2d[0].id;
+  }
+
+  if (live2dDefinitionDetailOpen && !getActiveLive2DDefinition()) {
+    live2dDefinitionDetailOpen = false;
+  }
+
+  live2dDefinitionEmptyEl.classList.toggle("hidden", hasDefinitions);
+  live2dDefinitionListEl.innerHTML = "";
+
+  state.live2d.forEach((definition) => {
+    const item = document.createElement("div");
+    item.className = "character-card";
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
+
+    if (definition.id === activeLive2DDefinitionId) {
+      item.classList.add("is-active");
+    }
+
+    item.innerHTML = `
+      <strong>${escapeHtml(definition.name)}</strong>
+      <span>${escapeHtml(getLive2DDefinitionSummary(definition))}</span>
+    `;
+
+    item.addEventListener("click", () => {
+      activeLive2DDefinitionId = definition.id;
+      renderLive2DPanel();
+    });
+    item.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openLive2DDefinitionDetail(definition.id);
+    });
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openLive2DDefinitionDetail(definition.id);
+      }
+    });
+
+    live2dDefinitionListEl.appendChild(item);
+  });
+
+  live2dListViewEl.classList.toggle("hidden", live2dDefinitionDetailOpen);
+  live2dDefinitionDetailViewEl.classList.toggle("hidden", !live2dDefinitionDetailOpen);
+  syncLive2DDefinitionDetailFields();
 }
 
 function openAudioDefinitionDetail(audioId) {
@@ -5985,6 +7196,10 @@ function renderVisualProjectStats() {
       value: String(state.audio.length),
     },
     {
+      title: "Live2D Definitions",
+      value: String(state.live2d.length),
+    },
+    {
       title: "Default Variables",
       value: String(state.variables.length),
     },
@@ -6234,14 +7449,15 @@ function renderInspector() {
     imageNodeNameLabelEl.textContent = imageMode === "hide"
       ? "Target Tag"
       : imageMode === "scene"
-        ? "Image Name (Optional)"
-        : "Image Name";
+        ? "Visual Asset (Optional)"
+        : "Visual Asset";
 
     imageNameFieldEl.classList.remove("hidden");
     imageAtFieldEl.classList.toggle("hidden", imageMode === "hide");
     imageAliasFieldEl.classList.toggle("hidden", imageMode !== "show");
     imageBehindFieldEl.classList.toggle("hidden", imageMode !== "show");
     imageZorderFieldEl.classList.toggle("hidden", imageMode !== "show");
+    renderImageNodeLayeredInspector(selectedNode);
     return;
   }
 
@@ -6343,6 +7559,7 @@ function render() {
   renderLabelGraphList();
   renderLabelPanel();
   renderImagesPanel();
+  renderLive2DPanel();
   renderAudioPanel();
   renderCharactersPanel();
   renderVariablesPanel();
@@ -6536,6 +7753,19 @@ function updateActiveImageDefinition(patch) {
   saveState();
 }
 
+function updateActiveLive2DDefinition(patch) {
+  const definition = getActiveLive2DDefinition();
+
+  if (!definition) {
+    return;
+  }
+
+  Object.assign(definition, patch);
+  syncLive2DDefinitionDetailFields();
+  render();
+  saveState();
+}
+
 function updateActiveAudioDefinition(patch) {
   const audioDefinition = getActiveAudioDefinition();
 
@@ -6603,6 +7833,16 @@ function handleImageDefinitionFieldChange(event) {
     const patch = {
       definitionType: nextValue,
     };
+
+    if (nextValue === "layered") {
+      if (!normalizeLayeredAlwaysLayers(activeImage.layeredAlwaysLayers).length) {
+        patch.layeredAlwaysLayers = [createLayeredAlwaysLayer(1)];
+      }
+
+      if (!normalizeLayeredGroups(activeImage.layeredGroups).length) {
+        patch.layeredGroups = [createLayeredGroup(1)];
+      }
+    }
 
     if (nextValue === "composite" && !normalizeCompositeLayers(activeImage.compositeLayers).length) {
       patch.compositeLayers = [createCompositeLayer(1)];
@@ -6678,6 +7918,104 @@ function updateActiveImageAtlStep(stepId, patch) {
   updateActiveImageDefinition({ atlSteps: nextSteps });
 }
 
+function updateActiveLayeredAlwaysLayer(layerId, patch) {
+  const image = getActiveImageDefinition();
+
+  if (!layerId || !image) {
+    return;
+  }
+
+  updateActiveImageDefinition({
+    layeredAlwaysLayers: normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers).map((layer) => (
+      layer.id === layerId
+        ? {
+          ...layer,
+          ...patch,
+        }
+        : layer
+    )),
+  });
+}
+
+function updateActiveLayeredGroup(groupId, patch) {
+  const image = getActiveImageDefinition();
+
+  if (!groupId || !image) {
+    return;
+  }
+
+  updateActiveImageDefinition({
+    layeredGroups: normalizeLayeredGroups(image.layeredGroups).map((group, index) => {
+      if (group.id !== groupId) {
+        return group;
+      }
+
+      const nextGroup = patch.mode
+        ? createLayeredGroup(index + 1, {
+          ...group,
+          ...patch,
+          id: group.id,
+        })
+        : {
+          ...group,
+          ...patch,
+        };
+
+      if (patch.mode === "multiple") {
+        nextGroup.attributes = normalizeLayeredAttributes(nextGroup.attributes, { allowDefaults: false });
+      }
+
+      return nextGroup;
+    }),
+  });
+}
+
+function updateActiveLayeredAttribute(groupId, attributeId, patch) {
+  const image = getActiveImageDefinition();
+
+  if (!groupId || !attributeId || !image) {
+    return;
+  }
+
+  updateActiveImageDefinition({
+    layeredGroups: normalizeLayeredGroups(image.layeredGroups).map((group) => {
+      if (group.id !== groupId) {
+        return group;
+      }
+
+      return {
+        ...group,
+        attributes: normalizeLayeredAttributes(group.attributes, {
+          allowDefaults: group.mode !== "multiple",
+        }).map((attribute, index) => {
+          if (group.mode !== "multiple" && patch.isDefault === true && attribute.id !== attributeId) {
+            return {
+              ...attribute,
+              isDefault: false,
+            };
+          }
+
+          if (attribute.id !== attributeId) {
+            return attribute;
+          }
+
+          return patch.displayMode
+            ? createLayeredAttribute(index + 1, {
+              ...attribute,
+              ...patch,
+              id: attribute.id,
+              isDefault: group.mode === "multiple" ? false : (patch.isDefault ?? attribute.isDefault),
+            })
+            : {
+              ...attribute,
+              ...patch,
+            };
+        }),
+      };
+    }),
+  });
+}
+
 function handleMatrixColorBuilderChange() {
   if (!getActiveImageDefinition()) {
     return;
@@ -6745,6 +8083,20 @@ function handleAudioDefinitionFieldChange(event) {
   }
 
   updateActiveAudioDefinition({ [field]: event.target.value });
+}
+
+function handleLive2DDefinitionFieldChange(event) {
+  const field = event.target.dataset.live2dField;
+
+  if (!field) {
+    return;
+  }
+
+  updateActiveLive2DDefinition({
+    [field]: event.target.type === "checkbox"
+      ? event.target.checked
+      : event.target.value,
+  });
 }
 
 function resetGraph() {
@@ -7014,7 +8366,7 @@ imageNodeNameInput.addEventListener("change", (event) => {
   const selectedValue = event.target.value;
 
   if (!selectedValue) {
-    updateSelectedNode({ imageDefinitionId: "", imageName: "" });
+    updateSelectedNode({ imageDefinitionId: "", imageName: "", imageLayeredSelections: {} });
     return;
   }
 
@@ -7022,20 +8374,22 @@ imageNodeNameInput.addEventListener("change", (event) => {
     updateSelectedNode({
       imageDefinitionId: "",
       imageName: selectedValue.slice("__legacy__:".length),
+      imageLayeredSelections: {},
     });
     return;
   }
 
-  const selectedImage = getImageDefinitionById(selectedValue);
+  const selectedImage = getVisualResourceById(selectedValue);
 
   if (!selectedImage) {
-    updateSelectedNode({ imageDefinitionId: "", imageName: "" });
+    updateSelectedNode({ imageDefinitionId: "", imageName: "", imageLayeredSelections: {} });
     return;
   }
 
   updateSelectedNode({
     imageDefinitionId: selectedImage.id,
     imageName: selectedImage.name,
+    imageLayeredSelections: {},
   });
 });
 imageNodeLayerInput.addEventListener("input", (event) => {
@@ -7070,6 +8424,70 @@ imageNodeBehindInput.addEventListener("input", (event) => {
 });
 imageNodeZorderInput.addEventListener("input", (event) => {
   updateSelectedNode({ imageZorder: event.target.value });
+});
+imageNodeLayeredGroupListEl.addEventListener("change", (event) => {
+  const groupId = event.target.dataset.imageLayeredGroupId;
+
+  if (!groupId) {
+    return;
+  }
+
+  const graph = getActiveGraph();
+  const selectedNode = graph?.nodes.find((node) => node.id === graph.selectedNodeId);
+
+  if (!selectedNode || selectedNode.type !== "image") {
+    return;
+  }
+
+  const selectedImage = getImageDefinitionById(selectedNode.imageDefinitionId);
+
+  if (!selectedImage || getImageDefinitionType(selectedImage) !== "layered") {
+    return;
+  }
+
+  const group = normalizeLayeredGroups(selectedImage.layeredGroups).find((currentGroup) => currentGroup.id === groupId);
+
+  if (!group) {
+    return;
+  }
+
+  const nextSelections = {
+    ...getImageNodeLayeredSelectionMap(selectedNode, selectedImage),
+  };
+
+  if (group.mode === "multiple") {
+    const attributeId = event.target.dataset.imageLayeredAttributeId;
+
+    if (!attributeId) {
+      return;
+    }
+
+    const currentSelection = nextSelections[group.id] || [];
+    const updatedSelection = event.target.checked
+      ? [...currentSelection, attributeId].filter((value, index, source) => source.indexOf(value) === index)
+      : currentSelection.filter((value) => value !== attributeId);
+
+    if (updatedSelection.length) {
+      nextSelections[group.id] = updatedSelection;
+    } else {
+      delete nextSelections[group.id];
+    }
+  } else {
+    const attributeId = `${event.target.value || ""}`.trim();
+
+    if (attributeId) {
+      nextSelections[group.id] = [attributeId];
+    } else {
+      delete nextSelections[group.id];
+    }
+  }
+
+  updateSelectedNode({
+    imageLayeredSelections: getImageNodeLayeredSelectionMap({
+      imageLayeredSelections: nextSelections,
+      imageDefinitionId: selectedImage.id,
+    }, selectedImage),
+  });
 });
 animationNodeTransitionInput.addEventListener("change", (event) => {
   updateSelectedNode({ animationTransition: event.target.value });
@@ -7813,6 +9231,62 @@ imageDefinitionMovieFileInput.addEventListener("change", (event) => {
   updateActiveImageDefinition({ moviePlay: nextMoviePath });
   setStatus(`Selected "${file.name}" for movie playback. Adjust the path if needed.`);
 });
+newLive2DDefinitionButton.addEventListener("click", () => {
+  const newDefinition = createBlankLive2DDefinition();
+
+  state.live2d.push(newDefinition);
+  activeLive2DDefinitionId = newDefinition.id;
+  live2dDefinitionDetailOpen = false;
+  render();
+  saveState(`Created Live2D "${newDefinition.name}".`);
+});
+live2dDefinitionBackButton.addEventListener("click", () => {
+  closeLive2DDefinitionDetail();
+  setStatus("Returned to Live2D list.");
+});
+live2dDefinitionDetailFormEl.addEventListener("input", handleLive2DDefinitionFieldChange);
+live2dDefinitionDetailFormEl.addEventListener("change", handleLive2DDefinitionFieldChange);
+live2dDefinitionBrowseButton.addEventListener("click", () => {
+  if (!getActiveLive2DDefinition()) {
+    setStatus("Create or select a Live2D definition before browsing for a model file.");
+    return;
+  }
+
+  live2dDefinitionFileInput.value = "";
+  live2dDefinitionFileInput.click();
+});
+live2dDefinitionFileInput.addEventListener("change", (event) => {
+  const definition = getActiveLive2DDefinition();
+  const file = event.target.files?.[0];
+
+  if (!definition || !file) {
+    return;
+  }
+
+  const nextModelPath = buildLive2DModelPathFromSelection(
+    file.name,
+    definition.modelPath,
+  );
+
+  updateActiveLive2DDefinition({ modelPath: nextModelPath });
+  setStatus(`Selected "${file.name}" for Live2D model path. Adjust the path if needed.`);
+});
+live2dDefinitionDeleteButton.addEventListener("click", () => {
+  const definition = getActiveLive2DDefinition();
+
+  if (!definition) {
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete Live2D "${definition.name}"? This cannot be undone.`);
+
+  if (!confirmed) {
+    setStatus(`Kept Live2D "${definition.name}".`);
+    return;
+  }
+
+  deleteLive2DDefinition(definition.id);
+});
 imageDefinitionAddCompositeLayerButton.addEventListener("click", () => {
   const image = getActiveImageDefinition();
 
@@ -7860,6 +9334,174 @@ imageDefinitionCompositeLayerListEl.addEventListener("click", (event) => {
     compositeLayers: normalizeCompositeLayers(image.compositeLayers)
       .filter((layer) => layer.id !== removeLayerId),
   });
+});
+imageDefinitionAddLayeredAlwaysButton.addEventListener("click", () => {
+  const image = getActiveImageDefinition();
+
+  if (!image) {
+    return;
+  }
+
+  const layeredAlwaysLayers = normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers);
+
+  updateActiveImageDefinition({
+    definitionType: "layered",
+    layeredAlwaysLayers: [...layeredAlwaysLayers, createLayeredAlwaysLayer(layeredAlwaysLayers.length + 1)],
+  });
+});
+imageDefinitionLayeredAlwaysListEl.addEventListener("input", (event) => {
+  const layerId = event.target.dataset.layeredAlwaysId;
+  const field = event.target.dataset.layeredAlwaysField;
+
+  if (!layerId || !field) {
+    return;
+  }
+
+  updateActiveLayeredAlwaysLayer(layerId, { [field]: event.target.value });
+});
+imageDefinitionLayeredAlwaysListEl.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-remove-layered-always-id]");
+  const image = getActiveImageDefinition();
+
+  if (!removeButton || !image) {
+    return;
+  }
+
+  const removeLayerId = removeButton.dataset.removeLayeredAlwaysId;
+
+  updateActiveImageDefinition({
+    layeredAlwaysLayers: normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers)
+      .filter((layer) => layer.id !== removeLayerId),
+  });
+});
+imageDefinitionAddLayeredGroupButton.addEventListener("click", () => {
+  const image = getActiveImageDefinition();
+
+  if (!image) {
+    return;
+  }
+
+  const layeredGroups = normalizeLayeredGroups(image.layeredGroups);
+  const nextGroup = createLayeredGroup(layeredGroups.length + 1);
+
+  layeredGroupSectionState[nextGroup.id] = true;
+
+  updateActiveImageDefinition({
+    definitionType: "layered",
+    layeredGroups: [...layeredGroups, nextGroup],
+  });
+});
+const handleLayeredGroupListInput = (event) => {
+  const groupId = event.target.dataset.layeredGroupId;
+  const groupField = event.target.dataset.layeredGroupField;
+  const attributeId = event.target.dataset.layeredAttributeId;
+  const attributeField = event.target.dataset.layeredAttributeField;
+
+  if (groupId && groupField) {
+    const nextValue = event.target.type === "checkbox" ? event.target.checked : event.target.value;
+    updateActiveLayeredGroup(groupId, { [groupField]: nextValue });
+    return;
+  }
+
+  if (groupId && attributeId && attributeField) {
+    const nextValue = event.target.type === "checkbox" ? event.target.checked : event.target.value;
+    updateActiveLayeredAttribute(groupId, attributeId, { [attributeField]: nextValue });
+  }
+};
+imageDefinitionLayeredGroupListEl.addEventListener("input", handleLayeredGroupListInput);
+imageDefinitionLayeredGroupListEl.addEventListener("change", handleLayeredGroupListInput);
+imageDefinitionLayeredGroupListEl.addEventListener("toggle", (event) => {
+  const detailsEl = event.target;
+
+  if (!(detailsEl instanceof HTMLDetailsElement)) {
+    return;
+  }
+
+  if (detailsEl.dataset.layeredGroupDetailsId) {
+    layeredGroupSectionState[detailsEl.dataset.layeredGroupDetailsId] = detailsEl.open;
+    return;
+  }
+
+  if (detailsEl.dataset.layeredAttributeDetailsId && detailsEl.dataset.layeredAttributeGroupId) {
+    layeredAttributeSectionState[
+      getLayeredAttributeStateKey(
+        detailsEl.dataset.layeredAttributeGroupId,
+        detailsEl.dataset.layeredAttributeDetailsId,
+      )
+    ] = detailsEl.open;
+  }
+}, true);
+imageDefinitionLayeredGroupListEl.addEventListener("click", (event) => {
+  const addAttributeButton = event.target.closest("[data-add-layered-attribute-group-id]");
+  const removeGroupButton = event.target.closest("[data-remove-layered-group-id]");
+  const removeAttributeButton = event.target.closest("[data-remove-layered-attribute-id]");
+  const image = getActiveImageDefinition();
+
+  if (!image) {
+    return;
+  }
+
+  if (addAttributeButton) {
+    const groupId = addAttributeButton.dataset.addLayeredAttributeGroupId;
+    const targetGroup = normalizeLayeredGroups(image.layeredGroups).find((group) => group.id === groupId);
+    const nextAttribute = createLayeredAttribute(
+      normalizeLayeredAttributes(targetGroup?.attributes, { allowDefaults: targetGroup?.mode !== "multiple" }).length + 1,
+    );
+
+    layeredGroupSectionState[groupId] = true;
+    layeredAttributeSectionState[getLayeredAttributeStateKey(groupId, nextAttribute.id)] = true;
+
+    updateActiveImageDefinition({
+      layeredGroups: normalizeLayeredGroups(image.layeredGroups).map((group) => (
+        group.id === groupId
+          ? {
+            ...group,
+            attributes: [
+              ...normalizeLayeredAttributes(group.attributes, { allowDefaults: group.mode !== "multiple" }),
+              nextAttribute,
+            ],
+          }
+          : group
+      )),
+    });
+    return;
+  }
+
+  if (removeGroupButton) {
+    const removeGroupId = removeGroupButton.dataset.removeLayeredGroupId;
+
+    delete layeredGroupSectionState[removeGroupId];
+    Object.keys(layeredAttributeSectionState).forEach((stateKey) => {
+      if (stateKey.startsWith(`${removeGroupId}:`)) {
+        delete layeredAttributeSectionState[stateKey];
+      }
+    });
+
+    updateActiveImageDefinition({
+      layeredGroups: normalizeLayeredGroups(image.layeredGroups)
+        .filter((group) => group.id !== removeGroupId),
+    });
+    return;
+  }
+
+  if (removeAttributeButton) {
+    const removeGroupId = removeAttributeButton.dataset.removeLayeredAttributeGroupId;
+    const removeAttributeId = removeAttributeButton.dataset.removeLayeredAttributeId;
+
+    delete layeredAttributeSectionState[getLayeredAttributeStateKey(removeGroupId, removeAttributeId)];
+
+    updateActiveImageDefinition({
+      layeredGroups: normalizeLayeredGroups(image.layeredGroups).map((group) => (
+        group.id === removeGroupId
+          ? {
+            ...group,
+            attributes: normalizeLayeredAttributes(group.attributes, { allowDefaults: group.mode !== "multiple" })
+              .filter((attribute) => attribute.id !== removeAttributeId),
+          }
+          : group
+      )),
+    });
+  }
 });
 imageDefinitionAddAtlStepButton.addEventListener("click", () => {
   const image = getActiveImageDefinition();
@@ -8321,6 +9963,7 @@ function createNodeForType(nodeType, graph, options = {}) {
       imageAlias: "",
       imageBehind: "",
       imageZorder: "",
+      imageLayeredSelections: {},
     };
   }
 
