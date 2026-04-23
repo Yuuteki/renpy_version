@@ -571,6 +571,28 @@
                   </label>
                 </div>
 
+                <div id="imageDefinitionAnimationFields" class="definition-fields">
+                  <p class="section-label secondary-label">Animation / ATL</p>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionAtlEnabledInput" data-image-field="atlEnabled" type="checkbox" />
+                    <span>Enable ATL block</span>
+                  </label>
+
+                  <div id="imageDefinitionAtlEditor" class="menu-choice-group hidden">
+                    <div class="menu-choice-group-header">
+                      <strong>Timeline</strong>
+                      <button id="imageDefinitionAddAtlStepButton" class="secondary menu-choice-add-button" type="button">New Step</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      First version supports immediate property lines, pause, interpolation, contains, and repeat.
+                    </p>
+
+                    <div id="imageDefinitionAtlStepList" class="menu-choice-list"></div>
+                  </div>
+                </div>
+
                 <p class="section-label secondary-label">Generated Code</p>
                 <pre id="imageDefinitionCodePreview" class="code-preview"></pre>
               </form>
@@ -1261,7 +1283,17 @@
 
             <label>
               At Transform
-              <input id="imageNodeAtInput" type="text" placeholder="e.g. left" />
+              <input id="imageNodeAtInput" type="text" list="imageNodeAtOptions" placeholder="e.g. left, center" />
+              <datalist id="imageNodeAtOptions"></datalist>
+              <div id="imageNodeAtPresetChips" class="preset-chip-row">
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="left">left</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="center">center</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="right">right</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="truecenter">truecenter</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="offscreenleft">offscreenleft</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="offscreenright">offscreenright</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="reset">reset</button>
+              </div>
             </label>
 
             <label>
