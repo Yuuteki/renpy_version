@@ -2,6 +2,21 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.9] - 2026-04-25
+
+### Added
+
+- 为主编辑器新增独立的 `Achievements` 资源栏，可定义成就名称、标题、说明、Steam 名映射以及进度型 `stat_max / stat_modulo`。
+- 为主剧情画布新增 `Achievement Block`，支持 `grant / progress / clear / sync` 四种运行时动作。
+- 为 `Condition` 和 `Choice` 的条件系统新增 `achievement.has(...)` 可视化模式，支持“已获得 / 未获得”两种判断。
+- 为成就详情新增注册代码预览与常用运行时/GUI 用法预览，方便直接对照 Ren'Py 成就 API。
+- 为 `GUI Editor > Screens` 的 action 选择新增 `achievement.Sync()`，可直接做成就同步按钮。
+
+### Changed
+
+- 主编辑器统计面板现在会显示项目内成就数量。
+- 条件表达式生成逻辑现在可以同时覆盖变量判断和成就判断，减少手写表达式的需要。
+
 ## [0.4.8] - 2026-04-24
 
 ### Added

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>成就 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/achievement.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="对话历史" href="history.html" />
+    <link rel="prev" title="定制按键映射" href="keymap.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">成就</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.Sync"><code class="docutils literal notranslate"><span class="pre">achievement.Sync()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.clear"><code class="docutils literal notranslate"><span class="pre">achievement.clear()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.clear_all"><code class="docutils literal notranslate"><span class="pre">achievement.clear_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.get_progress"><code class="docutils literal notranslate"><span class="pre">achievement.get_progress()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.grant"><code class="docutils literal notranslate"><span class="pre">achievement.grant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.has"><code class="docutils literal notranslate"><span class="pre">achievement.has()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.progress"><code class="docutils literal notranslate"><span class="pre">achievement.progress()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.register"><code class="docutils literal notranslate"><span class="pre">achievement.register()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#achievement.sync"><code class="docutils literal notranslate"><span class="pre">achievement.sync()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#steamworks-api">Steamworks API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#steam-apps">Steam Apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.dlc_installed"><code class="docutils literal notranslate"><span class="pre">achievement.steam.dlc_installed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.dlc_progress"><code class="docutils literal notranslate"><span class="pre">achievement.steam.dlc_progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_app_build_id"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_app_build_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_current_beta_name"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_current_beta_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_current_game_language"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_current_game_language()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_steam_ui_language"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_steam_ui_language()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.install_dlc"><code class="docutils literal notranslate"><span class="pre">achievement.steam.install_dlc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.is_subscribed_app"><code class="docutils literal notranslate"><span class="pre">achievement.steam.is_subscribed_app()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.uninstall_dlc"><code class="docutils literal notranslate"><span class="pre">achievement.steam.uninstall_dlc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#steam-overlay">Steam Overlay</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.activate_overlay"><code class="docutils literal notranslate"><span class="pre">achievement.steam.activate_overlay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.activate_overlay_to_store"><code class="docutils literal notranslate"><span class="pre">achievement.steam.activate_overlay_to_store()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.activate_overlay_to_web_page"><code class="docutils literal notranslate"><span class="pre">achievement.steam.activate_overlay_to_web_page()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.is_overlay_enabled"><code class="docutils literal notranslate"><span class="pre">achievement.steam.is_overlay_enabled()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.overlay_needs_present"><code class="docutils literal notranslate"><span class="pre">achievement.steam.overlay_needs_present()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.set_overlay_notification_position"><code class="docutils literal notranslate"><span class="pre">achievement.steam.set_overlay_notification_position()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#steam-stats">Steam Stats</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.clear_achievement"><code class="docutils literal notranslate"><span class="pre">achievement.steam.clear_achievement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_achievement"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_achievement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_float_stat"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_float_stat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_int_stat"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_int_stat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.grant_achievement"><code class="docutils literal notranslate"><span class="pre">achievement.steam.grant_achievement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.indicate_achievement_progress"><code class="docutils literal notranslate"><span class="pre">achievement.steam.indicate_achievement_progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.list_achievements"><code class="docutils literal notranslate"><span class="pre">achievement.steam.list_achievements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.retrieve_stats"><code class="docutils literal notranslate"><span class="pre">achievement.steam.retrieve_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.set_float_stat"><code class="docutils literal notranslate"><span class="pre">achievement.steam.set_float_stat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.set_int_stat"><code class="docutils literal notranslate"><span class="pre">achievement.steam.set_int_stat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.store_stats"><code class="docutils literal notranslate"><span class="pre">achievement.steam.store_stats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#steam-timeline">Steam Timeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.add_timeline_event"><code class="docutils literal notranslate"><span class="pre">achievement.steam.add_timeline_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.clear_timeline_state_description"><code class="docutils literal notranslate"><span class="pre">achievement.steam.clear_timeline_state_description()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.set_timeline_state_description"><code class="docutils literal notranslate"><span class="pre">achievement.steam.set_timeline_state_description()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#steam-user">Steam User</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.cancel_ticket"><code class="docutils literal notranslate"><span class="pre">achievement.steam.cancel_ticket()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_account_id"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_account_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_csteam_id"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_csteam_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_game_badge_level"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_game_badge_level()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_persona_name"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_persona_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_session_ticket"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_session_ticket()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#steam-workshop">Steam Workshop</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#achievement.steam.get_subscribed_item_path"><code class="docutils literal notranslate"><span class="pre">achievement.steam.get_subscribed_item_path()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">成就</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/achievement.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="achievements">
+<span id="id1"></span><h1>成就<a class="headerlink" href="#achievements" title="Link to this heading"> link</a></h1>
+<p>成就(Achievement)模块允许开发者让用户解锁成就，清除成就，以及判断某个成就是否已经解锁。也允许根据根据进度获得成就。</p>
+<p>默认情况下，成就在持久化文件中存储信息。如果Steam平台支持可用并且被启用，成就信息会自动与Steam同步。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.Sync">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">Sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.Sync" title="Link to this definition"> link</a></dt>
+<dd><p>调用achievement.sync()函数的行为。只有当成就未同步的情况下才可用。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.clear">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.clear" title="Link to this definition"> link</a></dt>
+<dd><p>清除名为 <cite>name</cite> 的成就。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.clear_all">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">clear_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.clear_all" title="Link to this definition"> link</a></dt>
+<dd><p>清除所有成就。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.get_progress">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">get_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.get_progress" title="Link to this definition"> link</a></dt>
+<dd><p>根据成就名返回成就完成进度。如果没有任何注册进度或成就未知时，将返回0。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.grant">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">grant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.grant" title="Link to this definition"> link</a></dt>
+<dd><p>解锁名为 <em>name</em> 的成就，前提是该成就尚未解锁。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.has">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.has" title="Link to this definition"> link</a></dt>
+<dd><p>如果用户已经解锁成就 <cite>name</cite> 就返回True。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.progress">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complete</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.progress" title="Link to this definition"> link</a></dt>
+<dd><p>报告成就 <em>name</em> 的完成进度，前提是该成就未解锁。成就 <em>name</em> 必须先定义各完成度。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>成就名，而不是成就的stat。</p>
+</dd>
+<dt><cite>complete</cite></dt><dd><p>一个整数，给定了达成成就的单位数量。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.register">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.register" title="Link to this definition"> link</a></dt>
+<dd><p>注册一个成就。成就并不强制需要注册，但这样做可以将成就信息传给后端。</p>
+<dl class="simple">
+<dt><cite>name</cite></dt><dd><p>注册的成就名。</p>
+</dd>
+</dl>
+<p>下列关键词参数是可选的。</p>
+<dl class="simple">
+<dt><cite>steam</cite></dt><dd><p>在Steam上使用的成就名。如果没有指定，默认与 <em>name</em> 相同。</p>
+</dd>
+<dt><cite>stat_max</cite></dt><dd><p>解锁成就的stat整数值。</p>
+</dd>
+<dt><cite>stat_modulo</cite></dt><dd><p>如果使用 <em>stat_max</em> 对进度取模结果为0，就向用户显示进度。例如，如果stat_modula是10，当进度为10、20、30时分别会想用户显示进度信息。如果未给出该值，默认为0。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.sync">
+<span class="sig-prename descclassname"><span class="pre">achievement.</span></span><span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.sync" title="Link to this definition"> link</a></dt>
+<dd><p>同步本地存储和其他后端(例如，Steam)的注册成就。</p>
+</dd></dl>
+
+<p>控制成就的配置项包括：</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-achievement.steam_position">
+<span class="sig-name descname"><span class="pre">achievement.steam_position</span></span> <span class="pre">=</span> <span class="pre">None</span><a class="headerlink" href="#var-achievement.steam_position" title="Link to this definition"> link</a></dt>
+<dd><p>若值不是None，该配置项设置steam弹出通知的位置。该值必须是一个字符串，可使用的内容包括“top left”，“top right”，“bottom left”和“bottom right”。</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-config.steam_appid">
+<span class="pre">define</span> <span class="sig-name descname"><span class="pre">config.steam_appid</span></span> <span class="pre">=</span> <span class="pre">None</span><a class="headerlink" href="#var-config.steam_appid" title="Link to this definition"> link</a></dt>
+<dd><p>若非None，该项应是Steam appid。Ren’Py会在启动时自动设置此appid。需要使用define语句设置该项。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">config</span><span class="o">.</span><span class="n">steam_appid</span> <span class="o">=</span> <span class="mi">12345</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-config.automatic_steam_timeline">
+<span class="pre">define</span> <span class="sig-name descname"><span class="pre">config.automatic_steam_timeline</span></span> <span class="pre">=</span> <span class="pre">True</span><a class="headerlink" href="#var-config.automatic_steam_timeline" title="Link to this definition"> link</a></dt>
+<dd><p>若为True，从Steam中运行游戏时，将自动更新Steam的运行信息。</p>
+<p>运行信息包括：</p>
+<ul class="simple">
+<li><p>如果设置类 <a class="reference internal" href="store_variables.html#var-save_name"><code class="xref std std-var docutils literal notranslate"><span class="pre">save_name</span></code></a>，将更新状态描述信息。</p></li>
+<li><p>用户进入菜单后，更改Steam中状态为“正在游玩”。</p></li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="steamworks-api">
+<h1>Steamworks API<a class="headerlink" href="#steamworks-api" title="Link to this heading"> link</a></h1>
+<p>当Steam可用时，基于ctypes库的Steamworks API绑定也将可用，并对外表现为为 <cite>achievement.steamapi</cite> 。
+这些绑定是steamapi模块的一个实例，将C++版本的Steamworks API通过机器转换为Python版本，具体内容可以看
+<a class="reference external" href="https://github.com/renpy/renpy-build/blob/master/steamapi/steamapi.py">这里</a>。</p>
+<p>此外，仅当Steamworks API可用时，我们才能访问achievement.steam对象中的一大堆函数。</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-achievement.steam">
+<span class="sig-name descname"><span class="pre">achievement.steam</span></span><a class="headerlink" href="#var-achievement.steam" title="Link to this definition"> link</a></dt>
+<dd><p>Steam初始化成功后，该项标识高级(high-level)Steam方法所在的命名空间。
+如果Steam未完成初始化，该项的值为None。
+在调用任意Steam方法前，最好先检查该项是否为None。</p>
+</dd></dl>
+
+<section id="steam-apps">
+<h2>Steam Apps<a class="headerlink" href="#steam-apps" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.dlc_installed">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">dlc_installed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">appid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.dlc_installed" title="Link to this definition"> link</a></dt>
+<dd><p>已安装 <cite>dlc</cite> 就返回True，否则返回False。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.dlc_progress">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">dlc_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">appid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.dlc_progress" title="Link to this definition"> link</a></dt>
+<dd><p>表示DLC下载进度。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_app_build_id">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_app_build_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_app_build_id" title="Link to this definition"> link</a></dt>
+<dd><p>返回已安装游戏版本号的Build ID。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_current_beta_name">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_current_beta_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_current_beta_name" title="Link to this definition"> link</a></dt>
+<dd><p>如果当前有可用的beta版则返回名称，否则返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_current_game_language">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_current_game_language</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_current_game_language" title="Link to this definition"> link</a></dt>
+<dd><p>返回用户选择语言名。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_steam_ui_language">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_steam_ui_language</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_steam_ui_language" title="Link to this definition"> link</a></dt>
+<dd><p>返回用户正在使用的Steam UI名。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.install_dlc">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">install_dlc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">appid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.install_dlc" title="Link to this definition"> link</a></dt>
+<dd><p>安装 <cite>appid</cite> 对应的DLC。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.is_subscribed_app">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">is_subscribed_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">appid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.is_subscribed_app" title="Link to this definition"> link</a></dt>
+<dd><p>若用户已拥有 <cite>appid</cite> 对应的应用就返回True，否咋返回False。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.uninstall_dlc">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">uninstall_dlc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">appid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.uninstall_dlc" title="Link to this definition"> link</a></dt>
+<dd><p>卸载 <cite>appid</cite> 对应的DLC。</p>
+</dd></dl>
+
+</section>
+<section id="steam-overlay">
+<h2>Steam Overlay<a class="headerlink" href="#steam-overlay" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.activate_overlay">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">activate_overlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dialog</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.activate_overlay" title="Link to this definition"> link</a></dt>
+<dd><p>激活Steam社区叠加界面。</p>
+<dl class="simple">
+<dt><cite>dialog</cite></dt><dd><p>需要打开的叠加界面名称。可以是以下界面之一：
+“Friends”、”Community”、”Players”、”Settings”、”OfficialGameGroup”、”Stats”、”Achievements”
+(分别对应好友、社区、玩家、设置、官方游戏组、状态、成就)。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.activate_overlay_to_store">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">activate_overlay_to_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">appid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.activate_overlay_to_store" title="Link to this definition"> link</a></dt>
+<dd><p>以叠加界面形式打开Steam商店。</p>
+<dl class="simple">
+<dt><cite>appid</cite></dt><dd><p>商店中该游戏的appid。</p>
+</dd>
+<dt><cite>flag</cite></dt><dd><p>achievement.steam.STORE_NONE、.STORE_ADD_TO_CART 或 .STORE_ADD_TO_CART_AND_SHOW 三项中的某一项的值。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.activate_overlay_to_web_page">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">activate_overlay_to_web_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.activate_overlay_to_web_page" title="Link to this definition"> link</a></dt>
+<dd><p>激活Steam社区叠加界面。并直接打开网页 <cite>url</cite> 。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.is_overlay_enabled">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">is_overlay_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.is_overlay_enabled" title="Link to this definition"> link</a></dt>
+<dd><p>若Steam已启用叠加界面，返回True。(游戏启动后可能需要等一小段时间后才会返回True。)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.overlay_needs_present">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">overlay_needs_present</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.overlay_needs_present" title="Link to this definition"> link</a></dt>
+<dd><p>若Steam已启用叠加界面，返回True。(游戏启动后可能需要等一小段时间后才会返回True。)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.set_overlay_notification_position">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">set_overlay_notification_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.set_overlay_notification_position" title="Link to this definition"> link</a></dt>
+<dd><p>设置Steam叠加界面的位置。<cite>position</cite> 应是4种枚举值achievement.steam.POSITION_TOP_LEFT、achievement.steam.POSITION_TOP_RIGHT、achievement.steam.POSITION_BOTTOM_LEFT、achievement.steam.POSITION_BOTTOM_RIGHT其中之一。</p>
+</dd></dl>
+
+</section>
+<section id="steam-stats">
+<h2>Steam Stats<a class="headerlink" href="#steam-stats" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.clear_achievement">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">clear_achievement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.clear_achievement" title="Link to this definition"> link</a></dt>
+<dd><p>清除名为 <cite>name</cite> 的成就。之后调用 <code class="xref py py-func docutils literal notranslate"><span class="pre">_renpysteam.store_stats()</span></code> 可以将更改同步到服务器端。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_achievement">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_achievement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_achievement" title="Link to this definition"> link</a></dt>
+<dd><p>获取名为 <cite>name</cite> 的成就状态。如果成就已达成就返回True，否则返回False。如果没有同名成就或发生错误会返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_float_stat">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_float_stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_float_stat" title="Link to this definition"> link</a></dt>
+<dd><p>返回名为 <cite>name</cite> 的成就相关数值。如果没有同名成就会返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_int_stat">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_int_stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_int_stat" title="Link to this definition"> link</a></dt>
+<dd><p>返回名为 <cite>name</cite> 的成就相关数值。如果没有同名成就会返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.grant_achievement">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">grant_achievement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.grant_achievement" title="Link to this definition"> link</a></dt>
+<dd><p>解锁名为 <cite>name</cite> 的成就。之后调用 <code class="xref py py-func docutils literal notranslate"><span class="pre">_renpysteam.store_stats()</span></code> 可以将更改同步到服务器端。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.indicate_achievement_progress">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">indicate_achievement_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur_progress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_progress</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.indicate_achievement_progress" title="Link to this definition"> link</a></dt>
+<dd><p>向用户展示成就进度，但 <em>不会</em> 解锁成就。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.list_achievements">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">list_achievements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.list_achievements" title="Link to this definition"> link</a></dt>
+<dd><p>返回所有成就名的列表。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.retrieve_stats">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">retrieve_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.retrieve_stats" title="Link to this definition"> link</a></dt>
+<dd><p>从Steam服务器端同步所有成就和统计数据。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.set_float_stat">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">set_float_stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.set_float_stat" title="Link to this definition"> link</a></dt>
+<dd><p>将名为 <cite>name</cite> 的成就相关数值设置为 <cite>value</cite>，注意 <cite>value</cite> 必须是浮点型数值。之后调用 <code class="xref py py-func docutils literal notranslate"><span class="pre">_renpysteam.store_stats()</span></code> 可以将更改同步到服务器端。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.set_int_stat">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">set_int_stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.set_int_stat" title="Link to this definition"> link</a></dt>
+<dd><p>将名为 <cite>name</cite> 的成就相关数值设置为 <cite>value</cite>，注意 <cite>value</cite> 必须是整型数值。之后调用 <code class="xref py py-func docutils literal notranslate"><span class="pre">_renpysteam.store_stats()</span></code> 可以将更改同步到服务器端。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.store_stats">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">store_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.store_stats" title="Link to this definition"> link</a></dt>
+<dd><p>将所有统计数据和成就同步到Steam服务器端/</p>
+</dd></dl>
+
+</section>
+<section id="steam-timeline">
+<h2>Steam Timeline<a class="headerlink" href="#steam-timeline" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.add_timeline_event">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">add_timeline_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">icon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">possible_clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.add_timeline_event" title="Link to this definition"> link</a></dt>
+<dd><p>Adds an event to the timeline.
+向游戏时间中添加一个事件(event)。</p>
+<dl class="simple">
+<dt><cite>icon</cite></dt><dd><p>该事件显示的图标。该项应该是一个字符串，表示基础的Steam图标名，或者玩家上传到Steam的图标名。</p>
+</dd>
+<dt><cite>title</cite></dt><dd><p>事件的标题。</p>
+</dd>
+<dt><cite>description</cite></dt><dd><p>事件的描述。</p>
+</dd>
+<dt><cite>priority</cite></dt><dd><p>事件的优先级，用于解决事件冲突。该项应该是一个0到1000之间的整数。</p>
+</dd>
+<dt><cite>start_offset</cite></dt><dd><p>从事件开始到现在的时间差，单位为秒。</p>
+</dd>
+<dt><cite>duration</cite></dt><dd><p>事件持续时长，单位为秒。</p>
+</dd>
+<dt><cite>possible_clip</cite></dt><dd><p>表示该事件是否可以被clip。该项应该是achievement.steam.CLIP_PRIORITY中的枚举值，包括CLIP_PRIORITY_NONE、CLIP_PRIORITY_STANDARD和CLIP_PRIORITY_FEATURED。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.clear_timeline_state_description">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">clear_timeline_state_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.clear_timeline_state_description" title="Link to this definition"> link</a></dt>
+<dd><p>清除游戏时间线上当前状态的所有描述。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.set_timeline_state_description">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">set_timeline_state_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.set_timeline_state_description" title="Link to this definition"> link</a></dt>
+<dd><p>设置游戏时间线上当前状态的描述。</p>
+<dl class="simple">
+<dt><cite>description</cite></dt><dd><p>一个描述当前状态的字符串。</p>
+</dd>
+<dt><cite>time_delta</cite></dt><dd><p>上次状态更改的时间，与当前时间的差值。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="steam-user">
+<h2>Steam User<a class="headerlink" href="#steam-user" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.cancel_ticket">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">cancel_ticket</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.cancel_ticket" title="Link to this definition"> link</a></dt>
+<dd><p>取消 <a class="reference internal" href="#achievement.steam.get_session_ticket" title="achievement.steam.get_session_ticket"><code class="xref py py-func docutils literal notranslate"><span class="pre">achievement.steam.get_session_ticket()</span></code></a> 返回的ticket结果。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_account_id">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_account_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_account_id" title="Link to this definition"> link</a></dt>
+<dd><p>返回用户的帐号ID。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_csteam_id">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_csteam_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_csteam_id" title="Link to this definition"> link</a></dt>
+<dd><p>返回用户的完整CSteamID。该值是一个64bit位的数字。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_game_badge_level">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_game_badge_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">foil</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_game_badge_level" title="Link to this definition"> link</a></dt>
+<dd><p>获取用户的Steam徽章(badge)等级，并用于该游戏中。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_persona_name">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_persona_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_persona_name" title="Link to this definition"> link</a></dt>
+<dd><p>返回用户公开可见的玩家名。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_session_ticket">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_session_ticket</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_session_ticket" title="Link to this definition"> link</a></dt>
+<dd><p>获取一个ticket，可以发送到服务器端实现用户验证。</p>
+</dd></dl>
+
+</section>
+<section id="steam-workshop">
+<h2>Steam Workshop<a class="headerlink" href="#steam-workshop" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="achievement.steam.get_subscribed_item_path">
+<span class="sig-prename descclassname"><span class="pre">achievement.steam.</span></span><span class="sig-name descname"><span class="pre">get_subscribed_item_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#achievement.steam.get_subscribed_item_path" title="Link to this definition"> link</a></dt>
+<dd><p>如果安装了用户制作游戏内容的某个道具(item)，则返回安装路径。
+如果没有安装该道具，则返回None。</p>
+<dl class="simple">
+<dt><cite>item_id</cite></dt><dd><p>道具(item)ID。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="keymap.html" class="btn btn-neutral float-left" title="定制按键映射" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="history.html" class="btn btn-neutral float-right" title="对话历史" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

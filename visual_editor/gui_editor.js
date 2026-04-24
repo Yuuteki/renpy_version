@@ -442,6 +442,7 @@ const screenNodeTypeOrder = [
 const screenActionMeta = [
   { id: "none", label: "No Action", placeholder: "" },
   { id: "raw", label: "Raw Expression", placeholder: '[SetVariable("page", 2), Return()]' },
+  { id: "AchievementSync", label: "achievement.Sync()", placeholder: "" },
   { id: "ShowMenu", label: "ShowMenu(screen)", placeholder: '"preferences"' },
   { id: "Return", label: "Return(value)", placeholder: "" },
   { id: "Jump", label: "Jump(label)", placeholder: '"start"' },
@@ -1578,6 +1579,10 @@ function formatActionExpression(kind, args, raw) {
 
   if (!kind || kind === "none") {
     return "";
+  }
+
+  if (kind === "AchievementSync") {
+    return "achievement.Sync()";
   }
 
   if (["Start"].includes(kind)) {

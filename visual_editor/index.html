@@ -1208,6 +1208,99 @@
             </div>
           </section>
 
+          <section id="achievementsSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="achievementsListView" class="characters-view">
+              <div id="achievementListEmpty" class="panel-empty-state hidden">
+                No achievements yet. Create one to register a Ren'Py achievement.
+              </div>
+
+              <div id="achievementList" class="character-list"></div>
+
+              <button
+                id="newAchievementButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create achievement"
+                title="Create achievement"
+              >
+                New Achievement
+              </button>
+            </div>
+
+            <div id="achievementDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="achievementBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="achievementDetailForm" class="character-detail-form">
+                <p class="section-label">Identity</p>
+
+                <label>
+                  Internal Name
+                  <input id="achievementNameInput" type="text" placeholder="e.g. true_end" />
+                </label>
+
+                <label>
+                  Display Title
+                  <input id="achievementTitleInput" type="text" placeholder="e.g. True End" />
+                </label>
+
+                <label>
+                  Description
+                  <textarea id="achievementDescriptionInput" rows="4" placeholder="e.g. Reach the true ending route."></textarea>
+                </label>
+
+                <label>
+                  Notes
+                  <textarea id="achievementNotesInput" rows="4" placeholder="Editor-side notes for when this achievement should unlock."></textarea>
+                </label>
+
+                <p class="section-label secondary-label">Registration</p>
+
+                <label>
+                  Steam Name Override
+                  <input id="achievementSteamNameInput" type="text" placeholder="Optional different Steam achievement id." />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="achievementProgressEnabledInput" type="checkbox" />
+                  <span>Progress-based Achievement</span>
+                </label>
+
+                <div id="achievementProgressFields" class="definition-fields hidden">
+                  <label>
+                    stat_max
+                    <input id="achievementStatMaxInput" type="text" placeholder="e.g. 10" />
+                  </label>
+
+                  <label>
+                    stat_modulo
+                    <input id="achievementStatModuloInput" type="text" placeholder="e.g. 1 or 5" />
+                  </label>
+                </div>
+
+                <p class="project-settings-note">
+                  Ren'Py stores achievements in persistent data by default. Use <code>stat_max</code> for progress achievements, and only fill Steam Name when the platform id should differ from the local name.
+                </p>
+
+                <div class="inspector-actions">
+                  <button id="achievementDeleteButton" class="danger-button" type="button">Delete Achievement</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="achievementCodePreview" class="code-preview"></pre>
+
+                <p class="section-label secondary-label">Runtime Helpers</p>
+                <pre id="achievementUsagePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
           <section id="definitionsSection" class="sidebar-section sidebar-panel characters-section">
             <div id="definitionsListView" class="characters-view">
               <div id="definitionListEmpty" class="panel-empty-state hidden">
@@ -1544,6 +1637,23 @@
           <button
             class="collapsed-rail-button"
             type="button"
+            data-sidebar-section="achievementsSection"
+            aria-label="Open achievements"
+            title="Achievements"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5h8v3a4 4 0 0 1-8 0Z"></path>
+              <path d="M7 5H4v2a3 3 0 0 0 3 3"></path>
+              <path d="M17 5h3v2a3 3 0 0 1-3 3"></path>
+              <path d="M10 14h4"></path>
+              <path d="M9 19h6"></path>
+              <path d="M12 11v8"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
             data-sidebar-section="definitionsSection"
             aria-label="Open definitions"
             title="Definitions"
@@ -1605,6 +1715,11 @@
           <button class="node-card node-card-compact" data-node-type="input">
             <strong>Input</strong>
             <span><code>renpy.input()</code></span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="achievement">
+            <strong>Achievement</strong>
+            <span>Grant / Progress / Clear / Sync</span>
           </button>
 
           <button class="node-card node-card-compact" data-node-type="screen">
@@ -2027,6 +2142,53 @@
 
             <div class="inspector-actions">
               <button id="inputDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="achievementInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="achievementNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="achievementNodeActionInput">
+                <option value="grant">Grant</option>
+                <option value="progress">Progress</option>
+                <option value="clear">Clear</option>
+                <option value="sync">Sync</option>
+              </select>
+            </label>
+
+            <label id="achievementNodeNameField">
+              Achievement
+              <select id="achievementNodeNameInput">
+                <option value="">No achievements</option>
+              </select>
+            </label>
+
+            <div id="achievementNodeProgressFields" class="definition-fields hidden">
+              <label>
+                Progress Mode
+                <select id="achievementNodeProgressModeInput">
+                  <option value="set">Set Current Progress</option>
+                  <option value="add">Add To Current Progress</option>
+                </select>
+              </label>
+
+              <label>
+                Value / Amount
+                <input id="achievementNodeProgressValueInput" type="text" placeholder="e.g. 1 or cg_count" />
+              </label>
+            </div>
+
+            <p id="achievementNodeSyncHelp" class="project-settings-note hidden">
+              Sync pushes local achievement state to available backends such as Steam.
+            </p>
+
+            <div class="inspector-actions">
+              <button id="achievementDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 

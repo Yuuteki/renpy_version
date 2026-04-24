@@ -168,6 +168,24 @@ const variableNameInput = document.getElementById("variableNameInput");
 const variableValueInput = document.getElementById("variableValueInput");
 const variableDeleteButton = document.getElementById("variableDeleteButton");
 const variableCodePreviewEl = document.getElementById("variableCodePreview");
+const achievementListEl = document.getElementById("achievementList");
+const achievementListEmptyEl = document.getElementById("achievementListEmpty");
+const achievementsListViewEl = document.getElementById("achievementsListView");
+const achievementDetailViewEl = document.getElementById("achievementDetailView");
+const newAchievementButton = document.getElementById("newAchievementButton");
+const achievementBackButton = document.getElementById("achievementBackButton");
+const achievementNameInput = document.getElementById("achievementNameInput");
+const achievementTitleInput = document.getElementById("achievementTitleInput");
+const achievementDescriptionInput = document.getElementById("achievementDescriptionInput");
+const achievementNotesInput = document.getElementById("achievementNotesInput");
+const achievementSteamNameInput = document.getElementById("achievementSteamNameInput");
+const achievementProgressEnabledInput = document.getElementById("achievementProgressEnabledInput");
+const achievementProgressFieldsEl = document.getElementById("achievementProgressFields");
+const achievementStatMaxInput = document.getElementById("achievementStatMaxInput");
+const achievementStatModuloInput = document.getElementById("achievementStatModuloInput");
+const achievementDeleteButton = document.getElementById("achievementDeleteButton");
+const achievementCodePreviewEl = document.getElementById("achievementCodePreview");
+const achievementUsagePreviewEl = document.getElementById("achievementUsagePreview");
 const definitionListEl = document.getElementById("definitionList");
 const definitionListEmptyEl = document.getElementById("definitionListEmpty");
 const definitionsListViewEl = document.getElementById("definitionsListView");
@@ -286,6 +304,16 @@ const inputNodeFallbackInput = document.getElementById("inputNodeFallbackInput")
 const inputNodeTrimInput = document.getElementById("inputNodeTrimInput");
 const inputNodeCopyPasteInput = document.getElementById("inputNodeCopyPasteInput");
 const inputDeleteNodeButton = document.getElementById("inputDeleteNodeButton");
+const achievementInspectorFormEl = document.getElementById("achievementInspectorForm");
+const achievementNodeTypeInput = document.getElementById("achievementNodeTypeInput");
+const achievementNodeActionInput = document.getElementById("achievementNodeActionInput");
+const achievementNodeNameFieldEl = document.getElementById("achievementNodeNameField");
+const achievementNodeNameInput = document.getElementById("achievementNodeNameInput");
+const achievementNodeProgressFieldsEl = document.getElementById("achievementNodeProgressFields");
+const achievementNodeProgressModeInput = document.getElementById("achievementNodeProgressModeInput");
+const achievementNodeProgressValueInput = document.getElementById("achievementNodeProgressValueInput");
+const achievementNodeSyncHelpEl = document.getElementById("achievementNodeSyncHelp");
+const achievementDeleteNodeButton = document.getElementById("achievementDeleteNodeButton");
 const menuInspectorFormEl = document.getElementById("menuInspectorForm");
 const menuNodeTypeInput = document.getElementById("menuNodeTypeInput");
 const menuNodePromptInput = document.getElementById("menuNodePromptInput");
@@ -800,6 +828,16 @@ const audioDefinitionFieldDefaults = {
   voiceSpeaker: "Narrator",
 };
 
+const achievementFieldDefaults = {
+  title: "",
+  description: "",
+  notes: "",
+  steamName: "",
+  progressEnabled: false,
+  statMax: "",
+  statModulo: "",
+};
+
 const live2dDefinitionFieldDefaults = {
   modelPath: "",
   zoom: "",
@@ -1051,6 +1089,7 @@ const defaultProjectState = {
   audio: [],
   characters: [],
   variables: [],
+  achievements: [],
   definitions: [],
   gui: normalizeGuiState(null),
   activeGraphId: "label_start",
@@ -1095,6 +1134,8 @@ let activeCharacterId = null;
 let characterDetailOpen = false;
 let activeVariableId = null;
 let variableDetailOpen = false;
+let activeAchievementId = null;
+let achievementDetailOpen = false;
 let activeDefinitionId = null;
 let definitionDetailOpen = false;
 let projectKeymapCategoryState = {
@@ -1295,6 +1336,9 @@ function normalizeState(rawState) {
   const normalizedVariables = Array.isArray(rawState.variables)
     ? rawState.variables.map((variable, index) => normalizeVariable(variable, index))
     : [];
+  const normalizedAchievements = Array.isArray(rawState.achievements)
+    ? rawState.achievements.map((achievement, index) => normalizeAchievement(achievement, index))
+    : [];
   const normalizedDefinitions = Array.isArray(rawState.definitions)
     ? rawState.definitions.map((definition, index) => normalizeDefinition(definition, index))
     : [];
@@ -1325,6 +1369,7 @@ function normalizeState(rawState) {
     audio: normalizedAudioDefinitions,
     characters: normalizedCharacters,
     variables: normalizedVariables,
+    achievements: normalizedAchievements,
     definitions: normalizedDefinitions,
     gui: normalizeGuiState(rawState.gui),
     activeGraphId,
@@ -1527,6 +1572,22 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
     };
   }
 
+  if (node.type === "achievement") {
+    const achievementAction = ["grant", "progress", "clear", "sync"].includes(node.achievementAction)
+      ? node.achievementAction
+      : "grant";
+
+    return {
+      ...node,
+      title: node.title || `Achievement ${capitalize(achievementAction)}`,
+      achievementAction,
+      achievementId: `${node.achievementId || ""}`.trim(),
+      achievementName: `${node.achievementName || ""}`.trim(),
+      achievementProgressMode: node.achievementProgressMode === "add" ? "add" : "set",
+      achievementProgressValue: `${node.achievementProgressValue || ""}`.trim() || "1",
+    };
+  }
+
   if (node.type === "input") {
     const target = `${node.inputVariable || ""}`.trim() || "player_name";
     const prompt = `${node.inputPrompt || ""}`.trim();
@@ -1627,6 +1688,9 @@ function createMenuChoice(index = 1) {
     conditionMode: "none",
     conditionVariableId: "",
     conditionVariableTarget: "",
+    conditionAchievementId: "",
+    conditionAchievementName: "",
+    conditionAchievementState: "has",
     conditionOperator: "is_true",
     conditionValue: "",
   };
@@ -1642,6 +1706,9 @@ function createConditionClause(kind = "if", index = 1) {
       : "expression",
     conditionVariableId: "",
     conditionVariableTarget: "",
+    conditionAchievementId: "",
+    conditionAchievementName: "",
+    conditionAchievementState: "has",
     conditionOperator: "is_true",
     conditionValue: "",
   };
@@ -1668,6 +1735,23 @@ function getConditionalExpression(choice) {
 
   if (mode === "expression") {
     return `${choice.condition || ""}`.trim();
+  }
+
+  if (mode === "achievement") {
+    const achievement = getAchievementById(choice.conditionAchievementId);
+    const achievementName = achievement
+      ? getAchievementRegisterName(achievement)
+      : `${choice.conditionAchievementName || ""}`.trim();
+
+    if (!achievementName) {
+      return "";
+    }
+
+    const hasExpression = `achievement.has(${formatRenpyQuotedString(achievementName)})`;
+
+    return choice.conditionAchievementState === "not_has"
+      ? `not ${hasExpression}`
+      : hasExpression;
   }
 
   if (mode !== "simple") {
@@ -1726,6 +1810,13 @@ function buildConditionalVariableOptions(choice) {
   };
 }
 
+function buildConditionalAchievementOptions(choice) {
+  return buildAchievementSelectionOptions({
+    achievementId: choice?.conditionAchievementId || "",
+    achievementName: choice?.conditionAchievementName || "",
+  });
+}
+
 function normalizeConditionClauses(rawClauses) {
   const sourceClauses = Array.isArray(rawClauses) ? rawClauses : [];
   const conditionalClauses = [];
@@ -1754,11 +1845,15 @@ function normalizeConditionClauses(rawClauses) {
       conditionMode: (
         clause.conditionMode === "simple"
         || clause.conditionMode === "expression"
+        || clause.conditionMode === "achievement"
       )
         ? clause.conditionMode
         : "expression",
       conditionVariableId: clause.conditionVariableId || "",
       conditionVariableTarget: clause.conditionVariableTarget || "",
+      conditionAchievementId: clause.conditionAchievementId || "",
+      conditionAchievementName: clause.conditionAchievementName || "",
+      conditionAchievementState: clause.conditionAchievementState === "not_has" ? "not_has" : "has",
       conditionOperator: clause.conditionOperator || "is_true",
       conditionValue: clause.conditionValue || "",
       condition: `${clause.condition || ""}`.trim(),
@@ -1793,12 +1888,16 @@ function normalizeMenuChoices(rawChoices) {
       conditionMode: (
         choice.conditionMode === "simple"
         || choice.conditionMode === "expression"
+        || choice.conditionMode === "achievement"
         || choice.conditionMode === "none"
       )
         ? choice.conditionMode
         : (`${choice.condition || ""}`.trim() ? "expression" : "none"),
       conditionVariableId: choice.conditionVariableId || "",
       conditionVariableTarget: choice.conditionVariableTarget || "",
+      conditionAchievementId: choice.conditionAchievementId || "",
+      conditionAchievementName: choice.conditionAchievementName || "",
+      conditionAchievementState: choice.conditionAchievementState === "not_has" ? "not_has" : "has",
       conditionOperator: choice.conditionOperator || "is_true",
       conditionValue: choice.conditionValue || "",
     };
@@ -1999,6 +2098,23 @@ function normalizeVariable(variable, index) {
     store: variable.store || "",
     name: variable.name || `flag_${index + 1}`,
     value: variable.value || "0",
+  };
+}
+
+function normalizeAchievement(achievement, index) {
+  const safeName = `${achievement?.name || ""}`.trim() || `achievement_${index + 1}`;
+  const statMax = `${achievement?.statMax ?? ""}`.trim();
+
+  return {
+    id: achievement?.id || `achievement_${index + 1}`,
+    name: safeName,
+    title: `${achievement?.title || ""}`.trim(),
+    description: `${achievement?.description || ""}`.trim(),
+    notes: `${achievement?.notes || ""}`.trim(),
+    steamName: `${achievement?.steamName || ""}`.trim(),
+    progressEnabled: achievement?.progressEnabled === true || Boolean(statMax),
+    statMax,
+    statModulo: `${achievement?.statModulo ?? ""}`.trim(),
   };
 }
 
@@ -2453,6 +2569,16 @@ function createBlankVariable() {
   };
 }
 
+function createBlankAchievement() {
+  const nextIndex = state.achievements.length + 1;
+
+  return {
+    id: `achievement_${nextIndex}`,
+    name: `achievement_${nextIndex}`,
+    ...structuredClone(achievementFieldDefaults),
+  };
+}
+
 function createBlankDefinition() {
   const nextIndex = state.definitions.length + 1;
 
@@ -2504,6 +2630,14 @@ function getActiveAudioDefinition() {
 
 function getAudioDefinitionById(audioId) {
   return state.audio.find((audioDefinition) => audioDefinition.id === audioId) ?? null;
+}
+
+function getActiveAchievement() {
+  return state.achievements.find((achievement) => achievement.id === activeAchievementId) ?? null;
+}
+
+function getAchievementById(achievementId) {
+  return state.achievements.find((achievement) => achievement.id === achievementId) ?? null;
 }
 
 function getAudioDefinitionVoiceOwner(audioDefinition) {
@@ -4138,6 +4272,36 @@ function getScreenNodeName(node) {
   return `${node?.screenName || node?.content || ""}`.trim();
 }
 
+function getAchievementNodeAction(node) {
+  return ["grant", "progress", "clear", "sync"].includes(node?.achievementAction)
+    ? node.achievementAction
+    : "grant";
+}
+
+function getAchievementNodeName(node) {
+  const achievement = getAchievementById(node?.achievementId || "");
+
+  return achievement
+    ? getAchievementRegisterName(achievement)
+    : `${node?.achievementName || ""}`.trim();
+}
+
+function buildAchievementNodeOptions(selectEl, node) {
+  if (!selectEl) {
+    return;
+  }
+
+  const achievementOptions = buildAchievementSelectionOptions({
+    achievementId: node?.achievementId || "",
+    achievementName: node?.achievementName || "",
+  }, {
+    emptyLabel: state.achievements.length ? "Select an achievement..." : "No achievements available",
+  });
+
+  selectEl.innerHTML = achievementOptions.options;
+  selectEl.value = achievementOptions.value;
+}
+
 function buildScreenNodeSuggestionOptions(datalistEl, currentName = "") {
   if (!datalistEl) {
     return;
@@ -4373,6 +4537,7 @@ function renderMenuChoiceList(node) {
       >
         <option value="none" ${choice.conditionMode === "none" ? "selected" : ""}>No Condition</option>
         <option value="simple" ${choice.conditionMode === "simple" ? "selected" : ""}>Default Variable</option>
+        <option value="achievement" ${choice.conditionMode === "achievement" ? "selected" : ""}>Achievement</option>
         <option value="expression" ${choice.conditionMode === "expression" ? "selected" : ""}>Expression</option>
       </select>
       ${choice.conditionMode === "simple"
@@ -4420,6 +4585,26 @@ function renderMenuChoiceList(node) {
               : ""}
           `;
         })()
+        : choice.conditionMode === "achievement"
+          ? (() => {
+            const achievementOptions = buildConditionalAchievementOptions(choice);
+
+            return `
+              <select
+                data-menu-choice-id="${escapeHtml(choice.id)}"
+                data-menu-choice-field="conditionAchievementId"
+              >
+                ${achievementOptions.options}
+              </select>
+              <select
+                data-menu-choice-id="${escapeHtml(choice.id)}"
+                data-menu-choice-field="conditionAchievementState"
+              >
+                <option value="has" ${choice.conditionAchievementState !== "not_has" ? "selected" : ""}>Has Achievement</option>
+                <option value="not_has" ${choice.conditionAchievementState === "not_has" ? "selected" : ""}>Does Not Have Achievement</option>
+              </select>
+            `;
+          })()
         : choice.conditionMode === "expression"
           ? `
             <input
@@ -4439,12 +4624,20 @@ function renderMenuChoiceList(node) {
       `select[data-menu-choice-id="${CSS.escape(choice.id)}"][data-menu-choice-field="conditionVariableId"]`,
     );
 
-    if (!selectEl) {
-      return;
+    if (selectEl) {
+      const variableOptions = buildConditionalVariableOptions(choice);
+      selectEl.value = variableOptions.value;
     }
 
-    const variableOptions = buildConditionalVariableOptions(choice);
-    selectEl.value = variableOptions.value;
+    const achievementSelectEl = menuChoiceListEl.querySelector(
+      `select[data-menu-choice-id="${CSS.escape(choice.id)}"][data-menu-choice-field="conditionAchievementId"]`,
+    );
+
+    if (achievementSelectEl) {
+      const achievementOptions = buildConditionalAchievementOptions(choice);
+      achievementSelectEl.innerHTML = achievementOptions.options;
+      achievementSelectEl.value = achievementOptions.value;
+    }
   });
 }
 
@@ -4481,6 +4674,7 @@ function renderConditionClauseList(node) {
             data-condition-clause-field="conditionMode"
           >
             <option value="simple" ${clause.conditionMode === "simple" ? "selected" : ""}>Default Variable</option>
+            <option value="achievement" ${clause.conditionMode === "achievement" ? "selected" : ""}>Achievement</option>
             <option value="expression" ${clause.conditionMode === "expression" ? "selected" : ""}>Expression</option>
           </select>
           ${clause.conditionMode === "simple"
@@ -4528,6 +4722,26 @@ function renderConditionClauseList(node) {
                   : ""}
               `;
             })()
+            : clause.conditionMode === "achievement"
+              ? (() => {
+                const achievementOptions = buildConditionalAchievementOptions(clause);
+
+                return `
+                  <select
+                    data-condition-clause-id="${escapeHtml(clause.id)}"
+                    data-condition-clause-field="conditionAchievementId"
+                  >
+                    ${achievementOptions.options}
+                  </select>
+                  <select
+                    data-condition-clause-id="${escapeHtml(clause.id)}"
+                    data-condition-clause-field="conditionAchievementState"
+                  >
+                    <option value="has" ${clause.conditionAchievementState !== "not_has" ? "selected" : ""}>Has Achievement</option>
+                    <option value="not_has" ${clause.conditionAchievementState === "not_has" ? "selected" : ""}>Does Not Have Achievement</option>
+                  </select>
+                `;
+              })()
             : `
               <input
                 type="text"
@@ -4547,12 +4761,20 @@ function renderConditionClauseList(node) {
       `select[data-condition-clause-id="${CSS.escape(clause.id)}"][data-condition-clause-field="conditionVariableId"]`,
     );
 
-    if (!selectEl) {
-      return;
+    if (selectEl) {
+      const variableOptions = buildConditionalVariableOptions(clause);
+      selectEl.value = variableOptions.value;
     }
 
-    const variableOptions = buildConditionalVariableOptions(clause);
-    selectEl.value = variableOptions.value;
+    const achievementSelectEl = conditionClauseListEl.querySelector(
+      `select[data-condition-clause-id="${CSS.escape(clause.id)}"][data-condition-clause-field="conditionAchievementId"]`,
+    );
+
+    if (achievementSelectEl) {
+      const achievementOptions = buildConditionalAchievementOptions(clause);
+      achievementSelectEl.innerHTML = achievementOptions.options;
+      achievementSelectEl.value = achievementOptions.value;
+    }
   });
 }
 
@@ -5069,6 +5291,28 @@ function getNodeDisplay(node) {
       typeLabel: "dialogue",
       title: speaker.kind === "narrator" ? "Narration" : `Dialogue · ${speaker.name}`,
       content: [summary || "Enter dialogue content.", voiceSummary].filter(Boolean).join(" · "),
+    };
+  }
+
+  if (node.type === "achievement") {
+    const action = getAchievementNodeAction(node);
+    const achievementName = getAchievementNodeName(node);
+    const detailParts = [];
+
+    if (achievementName) {
+      detailParts.push(achievementName);
+    }
+
+    if (action === "progress") {
+      detailParts.push(`${node.achievementProgressMode === "add" ? "add" : "set"}:${`${node.achievementProgressValue || ""}`.trim() || "1"}`);
+    } else if (action === "sync") {
+      detailParts.push("push local state");
+    }
+
+    return {
+      typeLabel: "achievement",
+      title: `Achievement ${capitalize(action)}`,
+      content: detailParts.join(" · ") || "Configure achievement action.",
     };
   }
 
@@ -5799,6 +6043,29 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
         lines,
         indentLevel + 1,
         `$ ${target} = ${formatRenpyStringLikeArgument(node.inputFallback)}`,
+      );
+    }
+  } else if (node.type === "achievement") {
+    const action = getAchievementNodeAction(node);
+    const achievementName = getAchievementNodeName(node);
+
+    if (action === "sync") {
+      appendIndentedLine(lines, indentLevel, "$ achievement.sync()");
+    } else if (!achievementName) {
+      appendIndentedLine(lines, indentLevel, `# Achievement ${action}: choose an achievement.`);
+    } else if (action === "grant") {
+      appendIndentedLine(lines, indentLevel, `$ achievement.grant(${formatRenpyQuotedString(achievementName)})`);
+    } else if (action === "clear") {
+      appendIndentedLine(lines, indentLevel, `$ achievement.clear(${formatRenpyQuotedString(achievementName)})`);
+    } else {
+      const progressValue = `${node.achievementProgressValue || ""}`.trim() || "1";
+      const progressExpression = node.achievementProgressMode === "add"
+        ? `achievement.get_progress(${formatRenpyQuotedString(achievementName)}) + (${progressValue})`
+        : progressValue;
+      appendIndentedLine(
+        lines,
+        indentLevel,
+        `$ achievement.progress(${formatRenpyQuotedString(achievementName)}, ${progressExpression})`,
       );
     }
   } else if (node.type === "audio") {
@@ -8343,6 +8610,220 @@ function getVariableTarget(variable) {
   return storePath ? `${storePath}.${variableName}` : variableName;
 }
 
+function getAchievementRegisterName(achievement) {
+  return `${achievement?.name || ""}`.trim() || "achievement_name";
+}
+
+function getAchievementDisplayLabel(achievement) {
+  return `${achievement?.title || ""}`.trim() || getAchievementRegisterName(achievement);
+}
+
+function buildAchievementSelectionOptions(selection = {}, { emptyLabel = "Select an achievement..." } = {}) {
+  const currentAchievement = getAchievementById(selection.achievementId || "");
+  const fallbackName = `${selection.achievementName || ""}`.trim();
+  const hasMissingAchievement = Boolean(selection.achievementId) && !currentAchievement && fallbackName;
+  const missingValue = hasMissingAchievement ? `__missing__:${fallbackName}` : "";
+  const options = [`<option value="">${escapeHtml(emptyLabel)}</option>`];
+
+  if (hasMissingAchievement) {
+    options.push(`<option value="${escapeHtml(missingValue)}">Legacy / Missing: ${escapeHtml(fallbackName)}</option>`);
+  }
+
+  state.achievements.forEach((achievement) => {
+    const registerName = getAchievementRegisterName(achievement);
+    const title = getAchievementDisplayLabel(achievement);
+    const progressMeta = achievement.progressEnabled && achievement.statMax
+      ? ` · progress ${achievement.statMax}`
+      : "";
+
+    options.push(
+      `<option value="${escapeHtml(achievement.id)}">${escapeHtml(`${title} · ${registerName}${progressMeta}`)}</option>`,
+    );
+  });
+
+  return {
+    options: options.join(""),
+    value: currentAchievement ? currentAchievement.id : missingValue,
+  };
+}
+
+function formatAchievementCode(achievement) {
+  if (!achievement) {
+    return "";
+  }
+
+  const registerName = getAchievementRegisterName(achievement);
+  const args = [formatRenpyQuotedString(registerName)];
+  const commentLines = [];
+
+  if (`${achievement.title || ""}`.trim()) {
+    commentLines.push(`# ${achievement.title.trim()}`);
+  }
+
+  `${achievement.description || ""}`
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .forEach((line) => {
+      commentLines.push(`# ${line}`);
+    });
+
+  `${achievement.notes || ""}`
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .forEach((line) => {
+      commentLines.push(`# Note: ${line}`);
+    });
+
+  const steamName = `${achievement.steamName || ""}`.trim();
+  const statMax = `${achievement.statMax || ""}`.trim();
+  const statModulo = `${achievement.statModulo || ""}`.trim();
+
+  if (steamName && steamName !== registerName) {
+    args.push(`steam=${formatRenpyQuotedString(steamName)}`);
+  }
+
+  if (achievement.progressEnabled && statMax) {
+    args.push(`stat_max=${statMax}`);
+  }
+
+  if (achievement.progressEnabled && statModulo) {
+    args.push(`stat_modulo=${statModulo}`);
+  }
+
+  const lines = [...commentLines];
+
+  if (achievement.progressEnabled && !statMax) {
+    lines.push("# Warning: progress achievements should define stat_max.");
+  }
+
+  lines.push("init python:");
+  lines.push(`    achievement.register(${args.join(", ")})`);
+  return lines.join("\n");
+}
+
+function formatAchievementUsagePreview(achievement) {
+  if (!achievement) {
+    return "";
+  }
+
+  const registerName = getAchievementRegisterName(achievement);
+  const quotedName = formatRenpyQuotedString(registerName);
+  const progressValue = `${achievement.statMax || ""}`.trim() || "1";
+
+  return [
+    `$ achievement.grant(${quotedName})`,
+    achievement.progressEnabled
+      ? `$ achievement.progress(${quotedName}, ${progressValue})`
+      : `$ achievement.clear(${quotedName})`,
+    `if achievement.has(${quotedName}):`,
+    "    pass",
+    "",
+    "# Screen action example",
+    "textbutton _(\"Sync Achievements\") action achievement.Sync()",
+  ].join("\n");
+}
+
+function syncAchievementDetailFields() {
+  const achievement = getActiveAchievement();
+
+  if (!achievement) {
+    achievementNameInput.value = "";
+    achievementTitleInput.value = "";
+    achievementDescriptionInput.value = "";
+    achievementNotesInput.value = "";
+    achievementSteamNameInput.value = "";
+    achievementProgressEnabledInput.checked = false;
+    achievementProgressFieldsEl.classList.add("hidden");
+    achievementStatMaxInput.value = "";
+    achievementStatModuloInput.value = "";
+    achievementCodePreviewEl.textContent = "";
+    achievementUsagePreviewEl.textContent = "";
+    return;
+  }
+
+  achievementNameInput.value = achievement.name;
+  achievementTitleInput.value = achievement.title;
+  achievementDescriptionInput.value = achievement.description;
+  achievementNotesInput.value = achievement.notes;
+  achievementSteamNameInput.value = achievement.steamName;
+  achievementProgressEnabledInput.checked = achievement.progressEnabled;
+  achievementProgressFieldsEl.classList.toggle("hidden", !achievement.progressEnabled);
+  achievementStatMaxInput.value = achievement.statMax;
+  achievementStatModuloInput.value = achievement.statModulo;
+  achievementCodePreviewEl.textContent = formatAchievementCode(achievement);
+  achievementUsagePreviewEl.textContent = formatAchievementUsagePreview(achievement);
+}
+
+function renderAchievementsPanel() {
+  const hasAchievements = state.achievements.length > 0;
+
+  if (!hasAchievements) {
+    activeAchievementId = null;
+    achievementDetailOpen = false;
+  } else if (!getActiveAchievement()) {
+    activeAchievementId = state.achievements[0].id;
+  }
+
+  if (achievementDetailOpen && !getActiveAchievement()) {
+    achievementDetailOpen = false;
+  }
+
+  achievementListEmptyEl.classList.toggle("hidden", hasAchievements);
+  achievementListEl.innerHTML = "";
+
+  state.achievements.forEach((achievement) => {
+    const item = document.createElement("div");
+    item.className = "character-card";
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
+
+    if (achievement.id === activeAchievementId) {
+      item.classList.add("is-active");
+    }
+
+    const summaryParts = [getAchievementRegisterName(achievement)];
+
+    if (achievement.progressEnabled && achievement.statMax) {
+      summaryParts.push(`progress ${achievement.statMax}`);
+    }
+
+    item.innerHTML = `
+      <strong>${escapeHtml(getAchievementDisplayLabel(achievement))}</strong>
+      <span>${escapeHtml(summaryParts.join(" · "))}</span>
+    `;
+
+    item.addEventListener("click", () => {
+      activeAchievementId = achievement.id;
+      renderAchievementsPanel();
+    });
+    item.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      activeAchievementId = achievement.id;
+      achievementDetailOpen = true;
+      renderAchievementsPanel();
+      setStatus(`Opened achievement "${getAchievementRegisterName(achievement)}".`);
+    });
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activeAchievementId = achievement.id;
+        achievementDetailOpen = true;
+        renderAchievementsPanel();
+        setStatus(`Opened achievement "${getAchievementRegisterName(achievement)}".`);
+      }
+    });
+
+    achievementListEl.appendChild(item);
+  });
+
+  achievementsListViewEl.classList.toggle("hidden", achievementDetailOpen);
+  achievementDetailViewEl.classList.toggle("hidden", !achievementDetailOpen);
+  syncAchievementDetailFields();
+}
+
 function formatIndentedCodeBlock(code, indentLevel = 1) {
   const normalizedCode = `${code || ""}`.replace(/\r\n?/g, "\n").trim();
 
@@ -8593,6 +9074,24 @@ function deleteActiveVariable() {
   saveState(`Deleted variable "${getVariableTarget(variable)}".`);
 }
 
+function deleteActiveAchievement() {
+  const achievement = getActiveAchievement();
+
+  if (!achievement) {
+    return;
+  }
+
+  state.achievements = state.achievements.filter((currentAchievement) => currentAchievement.id !== achievement.id);
+  activeAchievementId = state.achievements[0]?.id ?? null;
+
+  if (!state.achievements.length) {
+    achievementDetailOpen = false;
+  }
+
+  render();
+  saveState(`Deleted achievement "${getAchievementRegisterName(achievement)}".`);
+}
+
 function deleteActiveDefinition() {
   const definition = getActiveDefinition();
 
@@ -8788,6 +9287,10 @@ function renderVisualProjectStats() {
     {
       title: "Default Variables",
       value: String(state.variables.length),
+    },
+    {
+      title: "Achievements",
+      value: String(state.achievements.length),
     },
     {
       title: "Definitions",
@@ -9022,6 +9525,7 @@ function renderInspector() {
     audioInspectorFormEl.classList.add("hidden");
     dialogueInspectorFormEl.classList.add("hidden");
     inputInspectorFormEl.classList.add("hidden");
+    achievementInspectorFormEl.classList.add("hidden");
     menuInspectorFormEl.classList.add("hidden");
     conditionInspectorFormEl.classList.add("hidden");
     flowInspectorFormEl.classList.add("hidden");
@@ -9037,6 +9541,7 @@ function renderInspector() {
   const selectedIsAudio = selectedNode.type === "audio";
   const selectedIsDialogue = selectedNode.type === "dialogue";
   const selectedIsInput = selectedNode.type === "input";
+  const selectedIsAchievement = selectedNode.type === "achievement";
   const selectedIsMenu = selectedNode.type === "menu";
   const selectedIsCondition = selectedNode.type === "condition";
   const selectedIsFlow = isFlowNode(selectedNode);
@@ -9050,12 +9555,13 @@ function renderInspector() {
   audioInspectorFormEl.classList.toggle("hidden", !selectedIsAudio);
   dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
   inputInspectorFormEl.classList.toggle("hidden", !selectedIsInput);
+  achievementInspectorFormEl.classList.toggle("hidden", !selectedIsAchievement);
   menuInspectorFormEl.classList.toggle("hidden", !selectedIsMenu);
   conditionInspectorFormEl.classList.toggle("hidden", !selectedIsCondition);
   flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
   screenInspectorFormEl.classList.toggle("hidden", !selectedIsScreen);
   pythonInspectorFormEl.classList.toggle("hidden", !selectedIsPython);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsAudio || selectedIsDialogue || selectedIsInput || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsScreen || selectedIsPython);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsAudio || selectedIsDialogue || selectedIsInput || selectedIsAchievement || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsScreen || selectedIsPython);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -9158,6 +9664,20 @@ function renderInspector() {
     return;
   }
 
+  if (selectedIsAchievement) {
+    const achievementAction = getAchievementNodeAction(selectedNode);
+
+    achievementNodeTypeInput.value = "Achievement";
+    achievementNodeActionInput.value = achievementAction;
+    buildAchievementNodeOptions(achievementNodeNameInput, selectedNode);
+    achievementNodeProgressModeInput.value = selectedNode.achievementProgressMode === "add" ? "add" : "set";
+    achievementNodeProgressValueInput.value = `${selectedNode.achievementProgressValue || ""}`.trim() || "1";
+    achievementNodeNameFieldEl.classList.toggle("hidden", achievementAction === "sync");
+    achievementNodeProgressFieldsEl.classList.toggle("hidden", achievementAction !== "progress");
+    achievementNodeSyncHelpEl.classList.toggle("hidden", achievementAction !== "sync");
+    return;
+  }
+
   if (selectedIsMenu) {
     menuNodeTypeInput.value = "Choice";
     menuNodePromptInput.value = selectedNode.menuPrompt || "";
@@ -9245,6 +9765,7 @@ function render() {
   renderAudioPanel();
   renderCharactersPanel();
   renderVariablesPanel();
+  renderAchievementsPanel();
   renderDefinitionsPanel();
   renderProjectVoiceSettings();
   renderProjectSideImageSettings();
@@ -9473,6 +9994,21 @@ function updateActiveVariable(patch) {
   Object.assign(variable, patch);
   syncVariableDetailFields();
   syncLabelCodePreview();
+  renderInspector();
+  renderVisualProjectStats();
+  saveState();
+}
+
+function updateActiveAchievement(patch) {
+  const achievement = getActiveAchievement();
+
+  if (!achievement) {
+    return;
+  }
+
+  Object.assign(achievement, patch);
+  renderAchievementsPanel();
+  renderGraph();
   renderInspector();
   renderVisualProjectStats();
   saveState();
@@ -10552,6 +11088,44 @@ inputNodeTrimInput.addEventListener("change", (event) => {
 inputNodeCopyPasteInput.addEventListener("change", (event) => {
   updateSelectedNode({ inputCopyPaste: event.target.checked });
 });
+achievementNodeActionInput.addEventListener("change", (event) => {
+  updateSelectedNode({
+    achievementAction: event.target.value,
+    title: `Achievement ${capitalize(event.target.value)}`,
+  });
+});
+achievementNodeNameInput.addEventListener("change", (event) => {
+  const selectedValue = event.target.value;
+
+  if (!selectedValue) {
+    updateSelectedNode({
+      achievementId: "",
+      achievementName: "",
+    });
+    return;
+  }
+
+  if (selectedValue.startsWith("__missing__:")) {
+    updateSelectedNode({
+      achievementId: "",
+      achievementName: selectedValue.slice("__missing__:".length),
+    });
+    return;
+  }
+
+  const achievement = getAchievementById(selectedValue);
+
+  updateSelectedNode({
+    achievementId: achievement?.id || "",
+    achievementName: achievement ? getAchievementRegisterName(achievement) : "",
+  });
+});
+achievementNodeProgressModeInput.addEventListener("change", (event) => {
+  updateSelectedNode({ achievementProgressMode: event.target.value === "add" ? "add" : "set" });
+});
+achievementNodeProgressValueInput.addEventListener("input", (event) => {
+  updateSelectedNode({ achievementProgressValue: event.target.value });
+});
 menuNodePromptInput.addEventListener("input", (event) => {
   updateSelectedMenuNode({ menuPrompt: event.target.value });
 });
@@ -10655,6 +11229,41 @@ menuChoiceListEl.addEventListener("change", (event) => {
       return {
         ...choice,
         conditionOperator: event.target.value,
+      };
+    }
+
+    if (choiceField === "conditionAchievementId") {
+      const selectedValue = event.target.value;
+
+      if (!selectedValue) {
+        return {
+          ...choice,
+          conditionAchievementId: "",
+          conditionAchievementName: "",
+        };
+      }
+
+      if (selectedValue.startsWith("__missing__:")) {
+        return {
+          ...choice,
+          conditionAchievementId: "",
+          conditionAchievementName: selectedValue.slice("__missing__:".length),
+        };
+      }
+
+      const achievement = getAchievementById(selectedValue);
+
+      return {
+        ...choice,
+        conditionAchievementId: achievement?.id || "",
+        conditionAchievementName: achievement ? getAchievementRegisterName(achievement) : "",
+      };
+    }
+
+    if (choiceField === "conditionAchievementState") {
+      return {
+        ...choice,
+        conditionAchievementState: event.target.value === "not_has" ? "not_has" : "has",
       };
     }
 
@@ -10809,6 +11418,41 @@ conditionClauseListEl.addEventListener("change", (event) => {
       return {
         ...clause,
         conditionOperator: event.target.value,
+      };
+    }
+
+    if (clauseField === "conditionAchievementId") {
+      const selectedValue = event.target.value;
+
+      if (!selectedValue) {
+        return {
+          ...clause,
+          conditionAchievementId: "",
+          conditionAchievementName: "",
+        };
+      }
+
+      if (selectedValue.startsWith("__missing__:")) {
+        return {
+          ...clause,
+          conditionAchievementId: "",
+          conditionAchievementName: selectedValue.slice("__missing__:".length),
+        };
+      }
+
+      const achievement = getAchievementById(selectedValue);
+
+      return {
+        ...clause,
+        conditionAchievementId: achievement?.id || "",
+        conditionAchievementName: achievement ? getAchievementRegisterName(achievement) : "",
+      };
+    }
+
+    if (clauseField === "conditionAchievementState") {
+      return {
+        ...clause,
+        conditionAchievementState: event.target.value === "not_has" ? "not_has" : "has",
       };
     }
 
@@ -11490,6 +12134,47 @@ variableValueInput.addEventListener("input", (event) => {
 variableDeleteButton.addEventListener("click", () => {
   deleteActiveVariable();
 });
+newAchievementButton.addEventListener("click", () => {
+  const newAchievement = createBlankAchievement();
+
+  state.achievements.push(newAchievement);
+  activeAchievementId = newAchievement.id;
+  achievementDetailOpen = true;
+  render();
+  saveState(`Created achievement "${getAchievementRegisterName(newAchievement)}".`);
+});
+achievementBackButton.addEventListener("click", () => {
+  achievementDetailOpen = false;
+  renderAchievementsPanel();
+  setStatus("Returned to achievement list.");
+});
+achievementNameInput.addEventListener("input", (event) => {
+  updateActiveAchievement({ name: event.target.value });
+});
+achievementTitleInput.addEventListener("input", (event) => {
+  updateActiveAchievement({ title: event.target.value });
+});
+achievementDescriptionInput.addEventListener("input", (event) => {
+  updateActiveAchievement({ description: event.target.value });
+});
+achievementNotesInput.addEventListener("input", (event) => {
+  updateActiveAchievement({ notes: event.target.value });
+});
+achievementSteamNameInput.addEventListener("input", (event) => {
+  updateActiveAchievement({ steamName: event.target.value });
+});
+achievementProgressEnabledInput.addEventListener("change", (event) => {
+  updateActiveAchievement({ progressEnabled: event.target.checked });
+});
+achievementStatMaxInput.addEventListener("input", (event) => {
+  updateActiveAchievement({ statMax: event.target.value });
+});
+achievementStatModuloInput.addEventListener("input", (event) => {
+  updateActiveAchievement({ statModulo: event.target.value });
+});
+achievementDeleteButton.addEventListener("click", () => {
+  deleteActiveAchievement();
+});
 newDefinitionButton.addEventListener("click", () => {
   const newDefinition = createBlankDefinition();
 
@@ -11792,6 +12477,15 @@ inputDeleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+achievementDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 menuDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
@@ -12046,6 +12740,19 @@ function createNodeForType(nodeType, graph, options = {}) {
       inputFallback: "",
       inputTrim: true,
       inputCopyPaste: true,
+    };
+  }
+
+  if (nodeType === "achievement") {
+    return {
+      ...baseNode,
+      title: "Achievement Grant",
+      content: "",
+      achievementAction: "grant",
+      achievementId: "",
+      achievementName: "",
+      achievementProgressMode: "set",
+      achievementProgressValue: "1",
     };
   }
 

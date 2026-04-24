@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>存档、读档和回滚 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/save_load_rollback.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="持久化数据" href="persistent.html" />
+    <link rel="prev" title="等效语句" href="statement_equivalents.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">存档、读档和回滚</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-saved">什么内容会被存档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-isnt-save">什么内容不会被存档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ren-py">Ren’Py存档在哪里</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-ren-py-can-save">Ren’Py能存档什么内容</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cant-save">Ren’Py不能存档什么内容</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#save-file-structure">存档文件结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tranceback-saves">回溯存档</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#save-functions">存档函数和变量</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.can_load"><code class="docutils literal notranslate"><span class="pre">renpy.can_load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.copy_save"><code class="docutils literal notranslate"><span class="pre">renpy.copy_save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.get_save_data"><code class="docutils literal notranslate"><span class="pre">renpy.get_save_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.list_saved_games"><code class="docutils literal notranslate"><span class="pre">renpy.list_saved_games()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.list_slots"><code class="docutils literal notranslate"><span class="pre">renpy.list_slots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.load"><code class="docutils literal notranslate"><span class="pre">renpy.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.newest_slot"><code class="docutils literal notranslate"><span class="pre">renpy.newest_slot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.rename_save"><code class="docutils literal notranslate"><span class="pre">renpy.rename_save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.save"><code class="docutils literal notranslate"><span class="pre">renpy.save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.slot_json"><code class="docutils literal notranslate"><span class="pre">renpy.slot_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.slot_mtime"><code class="docutils literal notranslate"><span class="pre">renpy.slot_mtime()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.slot_screenshot"><code class="docutils literal notranslate"><span class="pre">renpy.slot_screenshot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.take_screenshot"><code class="docutils literal notranslate"><span class="pre">renpy.take_screenshot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.unlink_save"><code class="docutils literal notranslate"><span class="pre">renpy.unlink_save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#retaining-data-after-load">读取存档后保持数据</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.retain_after_load"><code class="docutils literal notranslate"><span class="pre">renpy.retain_after_load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rollback">回滚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-data-is-rolled-back">什么数据会回滚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supporting-rollback-and-roll-forward">支持回滚和前向滚动</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.can_rollback"><code class="docutils literal notranslate"><span class="pre">renpy.can_rollback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.checkpoint"><code class="docutils literal notranslate"><span class="pre">renpy.checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.get_identifier_checkpoints"><code class="docutils literal notranslate"><span class="pre">renpy.get_identifier_checkpoints()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.in_rollback"><code class="docutils literal notranslate"><span class="pre">renpy.in_rollback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.roll_forward_info"><code class="docutils literal notranslate"><span class="pre">renpy.roll_forward_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.rollback"><code class="docutils literal notranslate"><span class="pre">renpy.rollback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.suspend_rollback"><code class="docutils literal notranslate"><span class="pre">renpy.suspend_rollback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#blocking-rollback">阻塞回滚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fixing-rollback">固定回滚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#styling-fixed-rollback">样式化固定回滚</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fixed-rollback-and-custom-screens">固定回滚和自定义界面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rollback-blocking-and-fixing-functions">回滚阻塞和固定函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.block_rollback"><code class="docutils literal notranslate"><span class="pre">renpy.block_rollback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.fix_rollback"><code class="docutils literal notranslate"><span class="pre">renpy.fix_rollback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.in_fixed_rollback"><code class="docutils literal notranslate"><span class="pre">renpy.in_fixed_rollback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ui.ChoiceJump"><code class="docutils literal notranslate"><span class="pre">ui.ChoiceJump()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ui.ChoiceReturn"><code class="docutils literal notranslate"><span class="pre">ui.ChoiceReturn()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#norollback">不回滚</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#NoRollback"><code class="docutils literal notranslate"><span class="pre">NoRollback</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#SlottedNoRollback"><code class="docutils literal notranslate"><span class="pre">SlottedNoRollback</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id19">支持回滚的类</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#MultiRevertable"><code class="docutils literal notranslate"><span class="pre">MultiRevertable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defaultdict"><code class="docutils literal notranslate"><span class="pre">defaultdict</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">存档、读档和回滚</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/save_load_rollback.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="saving-loading-and-rollback">
+<span id="id1"></span><h1>存档、读档和回滚<a class="headerlink" href="#saving-loading-and-rollback" title="Link to this heading"> link</a></h1>
+<p>Ren’Py支持保存游戏状态、载入游戏状态和回滚到之前的某个游戏状态。
+尽管实现的方式明显不同，回滚(rollback)可以认为每一条能与用户互动的语句开始时都保存了游戏状态，当用户进行回滚时加载之前保存的状态。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>我们通常需要保证不同release版本存档的兼容性，但兼容性并不能得到绝对保证。如果能带来巨大的游戏表现提升，我们也可以打破存档兼容性的要求。</p>
+</div>
+<section id="what-is-saved">
+<span id="id2"></span><h2>什么内容会被存档<a class="headerlink" href="#what-is-saved" title="Link to this heading"> link</a></h2>
+<p>Ren’Py会保存游戏状态。保存的内容包括内部状态和Python的状态。</p>
+<p>内部状态由几个部分组成：Ren’Py在游戏启动后就改变的所有内容，以及下列内容：</p>
+<ul class="simple">
+<li><p>当前语句和所有主控流程可能返回到的语句。</p></li>
+<li><p>正在显示的图像和可视组件。</p></li>
+<li><p>正在显示的界面，以及界面内所有的变量值。</p></li>
+<li><p>Ren’Py正在播放的音乐。</p></li>
+<li><p>NVL模式文本块(block)列表。</p></li>
+</ul>
+<p>Python状态包括从游戏启动后存储区变化过的所有变量，以及跟那些变量有关的所有对象。注意，只有变量相关才行——改变对象内的字段(field)并不会触发对象存档。</p>
+<p>使用 <a class="reference internal" href="python.html#default-statement"><span class="std std-ref">default语句</span></a> 定义的变量总是会存档。</p>
+<p>在下例中：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">define</span> <span class="n">o</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+<span class="k">default</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">17</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">$</span> <span class="n">o</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="mi">42</span>
+</pre></div>
+</div>
+<p>只有 <cite>b</cite> 和 <cite>c</cite> 会被存档。 a 不会被存档，因为它从游戏启动后就没有变动。 <cite>o</cite> 不会被存档因为它也没有变动——这里的变动是指引用对象发生变化，而不是对象成员变量的值的变化。</p>
+</section>
+<section id="what-isnt-save">
+<span id="id3"></span><h2>什么内容不会被存档<a class="headerlink" href="#what-isnt-save" title="Link to this heading"> link</a></h2>
+<p>游戏开始后没有改变过的Python变量不会存档。
+这可能是个重大的问题，前提是某个存档的变量引用了相同的对象。(对象的别名(alias)。)在这个例子中：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="k">$</span> <span class="n">b</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="s2">&quot;a.f=[a.f] b.f=[b.f]&quot;</span>
+</pre></div>
+</div>
+<p><cite>b</cite> 是 <cite>a</cite> 的别名。存档和加载可能打断这个别名关系，导致
+<cite>a</cite> 和 <cite>b</cite> 引用不同的对象。因为这个问题让人十分头大，所以最好的办法就是避免在存档和不存档的变量间建立别名关系。(很少直接遇到这种情况，往往发生在不存档的变量和存档的字段(field)别名上。)</p>
+<p>还有几种其他类型的状态不存档。</p>
+<dl class="simple">
+<dt>主控流程路径</dt><dd><p>Ren’Py只存档当前语句，以及该语句需要返回的对应语句。Ren’Py不记得如何抵达当前语句。关键是，被添加到游戏的语句(包括变量声明)不会运行。</p>
+</dd>
+<dt>可视组件与图片名的映射关系</dt><dd><p>因为这个映射关系不会存档，游戏加载后图像可能变成了一个新的图像。随着游戏的进度，允许某个图像改用另一个文件。</p>
+</dd>
+<dt>配置项变量、样式和样式特性</dt><dd><p>配置项变量和样式不会作为游戏的一部分存档。所以它们应该只在初始化语句块(init block)中改变，游戏启动后就不再改变。</p>
+</dd>
+</dl>
+</section>
+<section id="ren-py">
+<span id="where-ren-py-saves"></span><h2>Ren’Py存档在哪里<a class="headerlink" href="#ren-py" title="Link to this heading"> link</a></h2>
+<p>存档发生在外沿(outermost)互动上下文(context)中，Ren’Py语句的开头。</p>
+<p>这里关注的重点是，存档发生在语句的 <strong>开头</strong> 。如果加载或回滚发生在某个语句中间，而且那个语句有多次互动，所有状态都会重置为语句开始的状态。</p>
+<p>在使用Python定义的语句中，这可能会导致问题。在下面的语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span><span class="p">:</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">narrator</span><span class="p">(</span><span class="s2">&quot;现在的计数是 [i] 。&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果用户在中间存档和加载，循环会从头开始。使用Ren’Py脚本——而不是直接用Python语句——的循环就能避免这个问题：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+
+    <span class="k">$</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="s2">&quot;The count is now [i].&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="what-ren-py-can-save">
+<span id="id4"></span><h2>Ren’Py能存档什么内容<a class="headerlink" href="#what-ren-py-can-save" title="Link to this heading"> link</a></h2>
+<p>Ren’Py使用Python的pickle系统保存游戏状态。这个模块可以存档：</p>
+<ul class="simple">
+<li><p>基本数据类型，比如True、False、None、整型(int)、字符型(str)、浮点型(float)、复杂字符(complex str)和unicode对象。</p></li>
+<li><p>复合类型，比如列表(list)、元组(tuple)、集合(set)和字典(dict)。</p></li>
+<li><p>创作者定义的对象(object)、类(class)、函数(function)、方法(methed)和绑定方法(bound method)。成功pickle后，它们可以使用原来的名称维持功能。</p></li>
+<li><p>角色(character)、可视组件(displayable)、变换(transform)和转场(transition)对象。</p></li>
+</ul>
+</section>
+<section id="cant-save">
+<span id="id5"></span><h2>Ren’Py不能存档什么内容<a class="headerlink" href="#cant-save" title="Link to this heading"> link</a></h2>
+<p>还有几种无法pickle的数据类型：</p>
+<ul class="simple">
+<li><p>渲染(render)对象</p></li>
+<li><p>迭代器(iterator)对象。</p></li>
+<li><p>生成器(generator)对象。</p></li>
+<li><p>协程任务和future线程，比如使用 <code class="docutils literal notranslate"><span class="pre">async</span></code> 和 <code class="docutils literal notranslate"><span class="pre">await</span></code> 创建的对象。</p></li>
+<li><p>类文件(file-like)对象。</p></li>
+<li><p>网络socket端口，及依附于端口的对象。</p></li>
+<li><p>内部函数和lambda。</p></li>
+</ul>
+<p>以下是一个不完整的清单。</p>
+<p>无法使用pickle处理的对象依然可以使用，只是无法在Ren’Py存储而已，
+但可以在存储命名空间的某些用法中存储(比如初始化变量值，存储空间内的函数，或 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">hide</span></code> 语句块)。</p>
+<p>例如，像这样使用一个文件对象：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">monika_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">gamedir</span> <span class="o">+</span> <span class="s2">&quot;/monika.chr&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">$</span> <span class="n">monika_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;不要删除。</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">$</span> <span class="n">monika_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>是不能正常生效的，因为 <code class="docutils literal notranslate"><span class="pre">f</span></code> 会在3条Python语句中存储。
+需要放在 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">hide</span></code> 语句块中才可以：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span> <span class="k">hide</span><span class="p">:</span>
+
+    <span class="n">monika_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">gamedir</span> <span class="o">+</span> <span class="s2">&quot;/monika.chr&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">monika_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;不要删除。</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">monika_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(当然，使用Python中的 <code class="docutils literal notranslate"><span class="pre">with</span></code> 语句更简洁)：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span> <span class="k">hide</span><span class="p">:</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">gamedir</span> <span class="o">+</span> <span class="s2">&quot;/monika.chr&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">monika_file</span><span class="p">:</span>
+        <span class="n">monika_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;不要删除。</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">async</span></code>、<code class="docutils literal notranslate"><span class="pre">await</span></code> 或 <code class="docutils literal notranslate"><span class="pre">asyncio</span></code> 开启的协程类似，这样处理：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">asyncio</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">sleep_func</span><span class="p">():</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>接着直接使用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">sleep_task</span> <span class="o">=</span> <span class="n">sleep_func</span><span class="p">()</span>
+<span class="k">$</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sleep_task</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>会产生问题，因为 <cite>sleep_task</cite> 无法存档。但如果不把定义的异步函数与变量做关联的话：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sleep_func</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>反而可以正常运行。</p>
+<section id="save-file-structure">
+<span id="id6"></span><h3>存档文件结构<a class="headerlink" href="#save-file-structure" title="Link to this heading"> link</a></h3>
+<p>Ren’Py存档文件(例如， <code class="docutils literal notranslate"><span class="pre">1-1.save</span></code> )会经过下列压缩和归档步骤：</p>
+<ul>
+<li><p><strong>游戏状态</strong>: 序列化游戏状态对应的Python对象。</p></li>
+<li><p><strong>metadata</strong>: 一个目录，包含存档描述信息字段。根据不同的调用方法，获取的字段可能不同：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#renpy.slot_json" title="renpy.slot_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.slot_json()</span></code></a>: 返回一个目录和 <code class="docutils literal notranslate"><span class="pre">_save_name</span></code>、<code class="docutils literal notranslate"><span class="pre">_renpy_version</span></code>、<code class="docutils literal notranslate"><span class="pre">_version</span></code>、<code class="docutils literal notranslate"><span class="pre">_game_runtime</span></code>、<code class="docutils literal notranslate"><span class="pre">_ctime</span></code> 以及通过 <a class="reference internal" href="config.html#var-config.save_json_callbacks"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.save_json_callbacks</span></code></a> 添加的自定义字段。</p></li>
+<li><p><a class="reference internal" href="screen_actions.html#FileJson" title="FileJson"><code class="xref py py-func docutils literal notranslate"><span class="pre">FileJson()</span></code></a>: 若 <a class="reference internal" href="#renpy.slot_json" title="renpy.slot_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.slot_json()</span></code></a> 中的 <code class="docutils literal notranslate"><span class="pre">key</span></code> 参数为 <code class="docutils literal notranslate"><span class="pre">None</span></code> (默认值)，返回meta数据目录及自定义字段。若指定的 <code class="docutils literal notranslate"><span class="pre">key</span></code> (例如，<code class="docutils literal notranslate"><span class="pre">&quot;_save_name&quot;</span></code>)，则返回指定的字段。</p></li>
+<li><p><a class="reference internal" href="#renpy.list_saved_games" title="renpy.list_saved_games"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.list_saved_games()</span></code></a>: 返回一个元组，包含 <code class="docutils literal notranslate"><span class="pre">_save_name</span></code> (字段名 <code class="docutils literal notranslate"><span class="pre">extra_info</span></code>)，<code class="docutils literal notranslate"><span class="pre">mtime</span></code> (字段名 <code class="docutils literal notranslate"><span class="pre">time</span></code>) 和 <code class="docutils literal notranslate"><span class="pre">_screenshot</span></code> (字段名 <code class="docutils literal notranslate"><span class="pre">screenshot</span></code>)，但没有其他metadata字段。</p></li>
+</ul>
+<p>标准metadata字段包含：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">_save_name</span></code>: 通过函数 <a class="reference internal" href="#renpy.save" title="renpy.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.save()</span></code></a> 中的 <code class="docutils literal notranslate"><span class="pre">extra_info</span></code> 参数设置的字符串，即全局变量 <a class="reference internal" href="store_variables.html#var-save_name"><code class="xref std std-var docutils literal notranslate"><span class="pre">save_name</span></code></a> (例如，“Chapter 1”)。若为空，则对应一个空字符串。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_renpy_version</span></code>: 创建存档的Ren’Py版本号(例如， <code class="docutils literal notranslate"><span class="pre">[8,</span> <span class="pre">3,</span> <span class="pre">7,</span> <span class="pre">25031702]</span></code> 对应Ren’Py 8.3.7.25031702)。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_version</span></code>: 存档时，<a class="reference internal" href="config.html#var-config.version"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.version</span></code></a> 对应的游戏版本号(例如，“1.0”)。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_game_runtime</span></code>: 游戏运行时长，单位为秒。与存档时 <a class="reference internal" href="other.html#renpy.get_game_runtime" title="renpy.get_game_runtime"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.get_game_runtime()</span></code></a> 返回结果相同。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_ctime</span></code>: 存档时的UNIX时间戳，单位为秒。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_screenshot</span></code>: 用作存档截屏的可视组件。图片由 <a class="reference internal" href="#renpy.list_saved_games" title="renpy.list_saved_games"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.list_saved_games()</span></code></a> 或 <a class="reference internal" href="screen_actions.html#FileScreenshot" title="FileScreenshot"><code class="xref py py-func docutils literal notranslate"><span class="pre">FileScreenshot()</span></code></a> 返回。</p></li>
+</ul>
+</li>
+</ul>
+<p>metadata存储在Json格式中，因此也受到Json格式的值类型限制，只能使用字符串、数值、列表和字典。
+在使用 <code class="docutils literal notranslate"><span class="pre">_save_name</span></code> 时，如果在存档/读档UI界面中遇到 <code class="docutils literal notranslate"><span class="pre">[]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">{}</span></code> 之类的特殊字符，
+可能会被Ren’Py的文本处理器解释为文本内插(interprete)，并产生报错或渲染错误。
+<a class="reference internal" href="config.html#var-config.save_json_callbacks"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.save_json_callbacks</span></code></a> 可以安全存储复杂的metadata，或者使用 <code class="docutils literal notranslate"><span class="pre">substitute</span> <span class="pre">False</span></code> 强制让 <a class="reference internal" href="text.html#Text" title="Text"><code class="xref py py-class docutils literal notranslate"><span class="pre">Text</span></code></a> 显示原始内容。</p>
+</section>
+<section id="tranceback-saves">
+<span id="id7"></span><h3>回溯存档<a class="headerlink" href="#tranceback-saves" title="Link to this heading"> link</a></h3>
+<p>如果Ren’Py遇到未捕获的异常，会创建存档。存档包含游戏状态和回溯信息(traceback)。
+这些存档会保存在 <code class="file docutils literal notranslate"><span class="pre">_tracesave-1</span></code> 到 <code class="file docutils literal notranslate"><span class="pre">_tracesave-10</span></code> 存档槽。
+存档文件中的回溯信息保存在metadata中，可以使用如下代码检索：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">traceback</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">slot_json</span><span class="p">(</span><span class="s2">&quot;_tracesave-1&quot;</span><span class="p">)[</span><span class="s2">&quot;_traceback&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>还可以使用 <a class="reference internal" href="#renpy.get_save_data" title="renpy.get_save_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.get_save_data()</span></code></a> 函数，根据回溯存档中的信息检索游戏中的变量。</p>
+<p>新增的 <a class="reference internal" href="#renpy.get_save_data" title="renpy.get_save_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.get_save_data()</span></code></a> 函数可以直接从指定存档槽检索数据，而不需要真的加载对应的存档。
+这样可以在游戏存档本身有错误的情况，检索数据。</p>
+</section>
+</section>
+<section id="save-functions">
+<span id="id8"></span><h2>存档函数和变量<a class="headerlink" href="#save-functions" title="Link to this heading"> link</a></h2>
+<p>有一个变量用于高级存档系统：<a class="reference internal" href="store_variables.html#var-save_name"><code class="xref std std-var docutils literal notranslate"><span class="pre">save_name</span></code></a>。</p>
+<p>这是一个字符串，每次存档时都会存储。它可以用作存档名称，帮助用户区分不同存档。</p>
+<p>更多存档文件的定制化可以使用Json数据系统，详见 <a class="reference internal" href="config.html#var-config.save_json_callbacks"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.save_json_callbacks</span></code></a>。</p>
+<p>在 <a class="reference internal" href="screen_actions.html#screen-actions"><span class="std std-ref">界面行为</span></a> 中定义了一些高级别的存档行为和函数。除此之外，还有一些低级别的存档和加载行为。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.can_load">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">can_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.can_load" title="Link to this definition"> link</a></dt>
+<dd><p>如果 <cite>filename</cite> 对应的存档槽(例如，’3-2’ 表示第3页第2槽位)已存在则返回True，否则返回False。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.copy_save">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">copy_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.copy_save" title="Link to this definition"> link</a></dt>
+<dd><p>将存档 <cite>old</cite> 复制到存档 <cite>new</cite> 。(如果 <cite>old</cite> 不存在则不做任何事。)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.get_save_data">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">get_save_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.get_save_data" title="Link to this definition"> link</a></dt>
+<dd><p>该函数从指定存档文件 <cite>filename</cite> (例如，’3-2’ 表示第3页第2槽位)加载游戏数据而不改变游戏状态。
+该函数会返回一个字典，字典的键为默认存储区的变量名，字典的值为存档中对应变量的值。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.list_saved_games">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">list_saved_games</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regexp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.list_saved_games" title="Link to this definition"> link</a></dt>
+<dd><p>列出存档的游戏。每一个存档的游戏返回的一个元组中包含：</p>
+<ul class="simple">
+<li><p>存档的文件名。</p></li>
+<li><p>传入的extra_info。</p></li>
+<li><p>一个可视组件，存档的截屏。</p></li>
+<li><p>游戏时间戳，UNIX时代开始计算的秒数。</p></li>
+</ul>
+<dl class="simple">
+<dt><cite>regexp</cite></dt><dd><p>在列表中过滤文件名的正则表达式。若为 <code class="docutils literal notranslate"><span class="pre">None</span></code>，表示包括所有存档。</p>
+</dd>
+<dt><cite>fast</cite></dt><dd><p>若为True，返回匹配的文件名列表，而不是元组，等效于 <a class="reference internal" href="#renpy.list_slots" title="renpy.list_slots"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_slots()</span></code></a>。</p>
+</dd>
+</dl>
+<p>除非 <code class="docutils literal notranslate"><span class="pre">fast=True</span></code>，否则该函数将返回一个由元组构成的列表。列表中的每个元组包含下列信息：
+- 存档操作名称 (例如， <code class="docutils literal notranslate"><span class="pre">&quot;1-1&quot;</span></code>)。
+- 存档文件metadata中的 <code class="docutils literal notranslate"><span class="pre">extra_info</span></code> 、<code class="docutils literal notranslate"><span class="pre">_save_name</span></code>。这两个字段由 <a class="reference internal" href="#renpy.save" title="renpy.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.save()</span></code></a> 函数的 <code class="docutils literal notranslate"><span class="pre">extra_info</span></code> 参数决定。
+- <code class="docutils literal notranslate"><span class="pre">time</span></code>，即存档文件修改时间，表示Unix时代开始后的秒数(等于 <a class="reference internal" href="#renpy.slot_json" title="renpy.slot_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.slot_json()</span></code></a> 或 <a class="reference internal" href="screen_actions.html#FileJson" title="FileJson"><code class="xref py py-func docutils literal notranslate"><span class="pre">FileJson()</span></code></a> 中的 <code class="docutils literal notranslate"><span class="pre">_ctime</span></code>)。
+- <code class="docutils literal notranslate"><span class="pre">screenshot</span></code>，用作存档截屏缩略图的可视组件(可以是 <code class="docutils literal notranslate"><span class="pre">None</span></code>)。该字段由 <a class="reference internal" href="screen_actions.html#FileScreenshot" title="FileScreenshot"><code class="xref py py-func docutils literal notranslate"><span class="pre">FileScreenshot()</span></code></a> 获取。</p>
+<p>若要获取metadata中的其他字段(例如 <code class="docutils literal notranslate"><span class="pre">_renpy_version</span></code>、<code class="docutils literal notranslate"><span class="pre">_version</span></code>、<code class="docutils literal notranslate"><span class="pre">_game_runtime</span></code> 和自定义字段)，可以使用 <a class="reference internal" href="#renpy.slot_json" title="renpy.slot_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.slot_json()</span></code></a> 函数或 <a class="reference internal" href="screen_actions.html#FileJson" title="FileJson"><code class="xref py py-func docutils literal notranslate"><span class="pre">FileJson()</span></code></a>。</p>
+<p>使用样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">save_list</span><span class="p">():</span>
+    <span class="k">vbox</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">extra_info</span><span class="p">,</span> <span class="k">time</span><span class="p">,</span> <span class="n">screenshot</span> <span class="k">in</span> <span class="n">renpy</span><span class="o">.</span><span class="n">list_saved_games</span><span class="p">(</span><span class="n">fast</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="k">textbutton</span> <span class="s2">&quot;[name]: [extra_info]&quot;</span> <span class="na">action</span> <span class="n">FileLoad</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Ren’Py存档槽遵循以下命名规则：
+手动存档使用格式 <code class="docutils literal notranslate"><span class="pre">page-slot</span></code> (例如 <code class="docutils literal notranslate"><span class="pre">1-1</span></code>、<code class="docutils literal notranslate"><span class="pre">2-3</span></code>)。
+自动存档使用 <code class="docutils literal notranslate"><span class="pre">auto-slot</span></code> (例如 <code class="docutils literal notranslate"><span class="pre">auto-1</span></code>)。
+快速存档使用 <code class="docutils literal notranslate"><span class="pre">quick-slot</span></code> (例如 <code class="docutils literal notranslate"><span class="pre">quick-1</span></code>)。
+<code class="docutils literal notranslate"><span class="pre">regexp</span></code> 参数可以使用Python正则表达式筛选存档槽名称。</p>
+<p>一些有用的正则表达式如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">r&quot;^(\\d+|auto|quick)-\\d+$&quot;</span></code>: 匹配所有手动存档、自动存档和快速存档，旨在避免某些Ren’Py内建存档类型，比如 <code class="docutils literal notranslate"><span class="pre">_reload-1</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r&quot;^\\d+-\\d+$&quot;</span></code>: 匹配所有手动存档。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r&quot;^auto-\\d+$&quot;</span></code>: 匹配所有自动存档。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r&quot;^quick-\\d+$&quot;</span></code>: 匹配所有快速存档。</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.list_slots">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">list_slots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regexp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.list_slots" title="Link to this definition"> link</a></dt>
+<dd><p>返回一个非空存档槽的列表。如果 <cite>regexp</cite> 存在，只返回开头为 <cite>regexp</cite> 的槽位。列表内的槽位按照字符串排序(string-order)。</p>
+<p>若要一个正则表达式列表，请参考 <a class="reference internal" href="#renpy.list_saved_games" title="renpy.list_saved_games"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_saved_games()</span></code></a> 。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.load">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.load" title="Link to this definition"> link</a></dt>
+<dd><p>从存档槽 <cite>filename</cite> 加载游戏状态。如果文件加载成功，该函数没有返回结果。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.newest_slot">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">newest_slot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regexp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.newest_slot" title="Link to this definition"> link</a></dt>
+<dd><p>返回最新(具有最近修改时间)存档槽的名称，如果没有(匹配的)存档则返回None。</p>
+<p>如果 <cite>regexp</cite> 存在，只返回开头为 <cite>regexp</cite> 的槽位。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.rename_save">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">rename_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.rename_save" title="Link to this definition"> link</a></dt>
+<dd><p>将某个名为 <cite>old</cite> 的存档重命名为 <cite>new</cite> 。(如果 <cite>old</cite> 不存在则不做任何事。)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.save">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.save" title="Link to this definition"> link</a></dt>
+<dd><p>将游戏状态存档为 <cite>filename</cite>。</p>
+<dl class="simple">
+<dt><cite>filename</cite></dt><dd><p>一个表示存档槽名称的字符串。
+这是个变量名，不要求与存档文件名严格对应。</p>
+</dd>
+<dt><cite>extra_info</cite></dt><dd><p>存储在存档文件metadata中字符串，即 <code class="docutils literal notranslate"><span class="pre">_save_name</span></code> 字段。
+<a class="reference internal" href="#renpy.slot_json" title="renpy.slot_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.slot_json()</span></code></a> (key为“_savename”)、<a class="reference internal" href="screen_actions.html#FileJson" title="FileJson"><code class="xref py py-func docutils literal notranslate"><span class="pre">FileJson()</span></code></a> (<code class="docutils literal notranslate"><span class="pre">key=None</span></code> 或 <code class="docutils literal notranslate"><span class="pre">key=&quot;_save_name&quot;</span></code>)或 <a class="reference internal" href="#renpy.list_saved_games" title="renpy.list_saved_games"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.list_saved_games()</span></code></a> 函数返回结果中的 <code class="docutils literal notranslate"><span class="pre">extra_info</span></code> 字段，
+可以在出问题时用于修复 <code class="docutils literal notranslate"><span class="pre">_save_name</span></code> 字段。
+该参数大多数时候都可以使用全局变量 <a class="reference internal" href="store_variables.html#var-save_name"><code class="xref std std-var docutils literal notranslate"><span class="pre">save_name</span></code></a> (例如，<code class="docutils literal notranslate"><span class="pre">&quot;Chapter</span> <span class="pre">1&quot;</span></code>)。若为空，<code class="docutils literal notranslate"><span class="pre">_save_name</span></code> 就是一个空字符串。</p>
+</dd>
+<dt><cite>extra_json</cite></dt><dd><p>一个字典，用于存储存档文件的额外metadata。该参数会与默认的metadata以及 <a class="reference internal" href="config.html#var-config.save_json_callbacks"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.save_json_callbacks</span></code></a> 返回结果中的metadata合并。</p>
+</dd>
+</dl>
+<p>样例：</p>
+<dl class="simple">
+<dt>::</dt><dd><p>$ save_name = “Chapter 1”
+$ renpy.save(“1-1”, extra_info=save_name)</p>
+</dd>
+</dl>
+<p>若需要存储额外的复杂metadata，可以使用 <a class="reference internal" href="config.html#var-config.save_json_callbacks"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.save_json_callbacks</span></code></a> 将自定义字段添加到metadata字典中。</p>
+<p><a class="reference internal" href="#renpy.take_screenshot" title="renpy.take_screenshot"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.take_screenshot()</span></code></a> 应该在这个函数之前被调用。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.slot_json">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">slot_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slotname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.slot_json" title="Link to this definition"> link</a></dt>
+<dd><p>返回一个字典，包含存档文件 <cite>slotname</cite> 中的metadata，具体包括 <cite>_save_name`</cite>、<code class="docutils literal notranslate"><span class="pre">_renpy_version</span></code>、<code class="docutils literal notranslate"><span class="pre">_version</span></code>、<code class="docutils literal notranslate"><span class="pre">_game_runtime</span></code>、<code class="docutils literal notranslate"><span class="pre">_ctime</span></code>
+和使用 <a class="reference internal" href="config.html#var-config.save_json_callbacks"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.save_json_callbacks</span></code></a> 添加的额外字段。
+如果对应存档槽是空的，则返回 <cite>None</cite> 。对于 save/load 界面行为，<a class="reference internal" href="screen_actions.html#FileJson" title="FileJson"><code class="xref py py-func docutils literal notranslate"><span class="pre">FileJson()</span></code></a> 提供了以上所有字段的一个子集(包括自定义字段)。</p>
+<p>样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_game_runtime</span><span class="p">(</span><span class="n">slot</span><span class="p">):</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">slot_json</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_save_name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">runtime</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_game_runtime&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">hours</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">runtime</span> <span class="o">//</span> <span class="mi">3600</span><span class="p">)</span>
+    <span class="n">minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">runtime</span> <span class="o">%</span> <span class="mi">3600</span><span class="p">)</span> <span class="o">//</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">runtime</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">runtime_formatted</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">renpy</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="s2">&quot;存档名： [name]，游戏运行时长： [runtime_formatted]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.slot_mtime">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">slot_mtime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slotname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.slot_mtime" title="Link to this definition"> link</a></dt>
+<dd><p>返回 <cite>slotname</cite> 的修改时间，如果对应的槽位为空则返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.slot_screenshot">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">slot_screenshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slotname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.slot_screenshot" title="Link to this definition"> link</a></dt>
+<dd><p>返回 <cite>slotname</cite> 使用的截屏，如果对应的槽位为空则返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.take_screenshot">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">take_screenshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.take_screenshot" title="Link to this definition"> link</a></dt>
+<dd><p>执行截屏。截屏图像会被作为存档的一部分保存。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.unlink_save">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">unlink_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.unlink_save" title="Link to this definition"> link</a></dt>
+<dd><p>删除指定名称的存档。</p>
+</dd></dl>
+
+</section>
+<section id="retaining-data-after-load">
+<span id="id9"></span><h2>读取存档后保持数据<a class="headerlink" href="#retaining-data-after-load" title="Link to this heading"> link</a></h2>
+<p>当游戏加载后，游戏状态会被重置(使用下面会提到的回滚系统)为当前语句开始执行的状态。</p>
+<p>在某些情况下，这是不希望发生的。例如，当某个界面允许编辑某个值时，我们可能想要游戏加载后维持那个值。调用 <a class="reference internal" href="#renpy.retain_after_load" title="renpy.retain_after_load"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.retain_after_load()</span></code></a> 后，当游戏在下一个带检查点(checkpoint)的交互结束前，进行存档和加载行为都会保持不变。</p>
+<p>注意，当数据没有被改变，主控流程会被重置为当前语句的开头。这条语句将再次执行，语句开头则使用新的数据。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">edit_value</span><span class="p">:</span>
+    <span class="k">hbox</span><span class="p">:</span>
+        <span class="k">text</span> <span class="s2">&quot;[value]&quot;</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;+&quot;</span> <span class="na">action</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="na">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;-&quot;</span> <span class="na">action</span> <span class="n">SetVariable</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="na">value</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">textbutton</span> <span class="s2">&quot;+&quot;</span> <span class="na">action</span> <span class="n">Return</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">$</span> <span class="na">value</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="n">retain_after_load</span><span class="p">()</span>
+    <span class="k">call</span> <span class="k">screen</span> <span class="n">edit_value</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.retain_after_load">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">retain_after_load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.retain_after_load" title="Link to this definition"> link</a></dt>
+<dd><p>在当前语句和包含下一个检查点(checkpoint)的语句之间发生加载(load)时，保持数据。</p>
+</dd></dl>
+
+</section>
+<section id="rollback">
+<span id="id10"></span><h2>回滚<a class="headerlink" href="#rollback" title="Link to this heading"> link</a></h2>
+<p>回滚(rollback)允许用户将游戏恢复到之前的状态，类似流行应用程序中的“撤销/重做”系统。在回滚事件中，系统需要重点维护可视化和游戏变量，所以在创作游戏时有几点需要考虑。</p>
+</section>
+<section id="what-data-is-rolled-back">
+<span id="id11"></span><h2>什么数据会回滚<a class="headerlink" href="#what-data-is-rolled-back" title="Link to this heading"> link</a></h2>
+<p>回滚操作的作用范围包括，初始化阶段之后还可以改变的变量，以及通过那些变量访问的可恢复的对象。
+粗略来说，就是在Ren’Py脚本中定义并创建的类的实例，比如列表、字典和集合。
+在Python和Ren’Py中内部创建的数据通常都是不可恢复的。</p>
+<p>进一步来看，在Ren’Py脚本运行时，脚本内部的Python存储区中对象，包括列表、字典和集合类型都会替换为可恢复的类型。
+从以上类派生的类型也是可恢复的。<a class="reference internal" href="cdd.html#renpy.Displayable" title="renpy.Displayable"><code class="xref py py-class docutils literal notranslate"><span class="pre">renpy.Displayable</span></code></a> 派生的类也是可恢复的类。</p>
+<p>为了使可恢复的对象使用起来更便利，Ren’Py会对脚本中找到的Python语句做如下修改：</p>
+<ul class="simple">
+<li><p>原生的列表、字典和集合会自动转为可恢复的等效对象。</p></li>
+<li><p>包含在其他语句中的列表、字典和集合也会自动转为可恢复的等效对象。</p></li>
+<li><p>其他Python语法中，类似解包之类的操作，会创建列表、字典和集合的部分也会转为可恢复的等效对象。
+但是，函数和方法中带两个星号的入参(即根据额外关键词入参创建字典)并不会转为可恢复的对象。</p></li>
+<li><p>不显示从其他任意类型派生的类，会自动从可恢复对象的类型派生。</p></li>
+</ul>
+<p>除此之外：</p>
+<ul class="simple">
+<li><p>可恢复类型的方法和操作中产生的列表、字典和集合类型会修改可恢复对象。</p></li>
+<li><p>内建函数如果返回列表、字典和集合的，都会返回可恢复的等效对象。</p></li>
+</ul>
+<p>直接调用Python代码一般都不会生成可恢复对象。
+某些情况下，获得的对象可能不会参与回滚：</p>
+<ul class="simple">
+<li><p>调用内建类型的方法，比如 str.split 方法。</p></li>
+<li><p>使用导入的Python模块创建的对象，返回给Ren’Py。
+(例如，collections.defaultdict的实例不参与回滚。)</p></li>
+<li><p>Ren’Py的API返回的对象，除非文档另有说明。</p></li>
+</ul>
+<p>如果以上数据需要参与回滚，需要对其进行转换。例如：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ren&#39;Py中的Python代码中调用list函数</span>
+<span class="c1"># 可以将不可恢复列表转为可恢复列表</span>
+<span class="k">$</span> <span class="n">attrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">renpy</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">(</span><span class="s2">&quot;eileen&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="supporting-rollback-and-roll-forward">
+<span id="id12"></span><h2>支持回滚和前向滚动<a class="headerlink" href="#supporting-rollback-and-roll-forward" title="Link to this heading"> link</a></h2>
+<p>大多数Ren’Py语句自动支持回滚和前向滚动。如果直接调用 <a class="reference internal" href="screen_python.html#ui.interact" title="ui.interact"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.interact()</span></code></a> ，就需要自行添加对回滚和前向滚动的支持。可以使用下列结构实现：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># 非回滚状态这项是None；或前向滚动时最后传入检查点的值。</span>
+<span class="na">roll_forward</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">roll_forward_info</span><span class="p">()</span>
+
+<span class="c1"># 这里配置界面……</span>
+
+<span class="c1"># 与用户交互</span>
+<span class="n">rv</span> <span class="o">=</span> <span class="n">ui</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="na">roll_forward</span><span class="o">=</span><span class="na">roll_forward</span><span class="p">)</span>
+
+<span class="c1"># 存储互动结果。</span>
+<span class="n">renpy</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>重点是，你的游戏在调用renpy.checkpoint后不与用户发生交互。(不然，用户可能无法回滚。)</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.can_rollback">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">can_rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.can_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>如果可以回滚则返回True。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.checkpoint">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hard</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.checkpoint" title="Link to this definition"> link</a></dt>
+<dd><p>在当前语句设置一个能让用户回滚的检查点(checkpoint)。一旦调用这个函数，当前语句就不该再出现互动行为。</p>
+<p>该函数也会清除存档使用的截屏。</p>
+<dl class="simple">
+<dt><cite>data</cite></dt><dd><p>当游戏回滚时，该数据通过 <a class="reference internal" href="#renpy.roll_forward_info" title="renpy.roll_forward_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.roll_forward_info()</span></code></a> 返回。</p>
+</dd>
+<dt><cite>hard</cite></dt><dd><p>若为True，创建的检查点会拦截回滚。
+若为False，检查点不会拦截回滚。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.get_identifier_checkpoints">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">get_identifier_checkpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.get_identifier_checkpoints" title="Link to this definition"> link</a></dt>
+<dd><p>从HistoryEntry对象中寻找rollback_identifier，返回需要的检查点(checkpoint)数量，并传入 <a class="reference internal" href="#renpy.rollback" title="renpy.rollback"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.rollback()</span></code></a> 以到达目标标识符(identifier)。如果标识符不在回滚历史中，返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.in_rollback">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">in_rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.in_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>游戏回滚过则返回True。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.roll_forward_info">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">roll_forward_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.roll_forward_info" title="Link to this definition"> link</a></dt>
+<dd><p>在回滚中，返回这条语句最后一次执行时返回并应用于 <a class="reference internal" href="#renpy.checkpoint" title="renpy.checkpoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.checkpoint()</span></code></a> 的数据。如果超出滚回范围，则返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.rollback">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">rollback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">greedy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abnormal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.rollback" title="Link to this definition"> link</a></dt>
+<dd><p>将游戏状态回滚至最后一个检查点(checkpoint)。</p>
+<dl class="simple">
+<dt><cite>force</cite></dt><dd><p>若为True，所有情况下都可以回滚。否则，在存储区、上下文(context)和配置(config)中启用时才能进行回滚。</p>
+</dd>
+<dt><cite>checkpoints</cite></dt><dd><p>通过renpy.checkpoint回滚的目标检查点(checkpoint)。这种情况下，会尽可能快地回滚。</p>
+</dd>
+<dt><cite>defer</cite></dt><dd><p>若为True，调用会推迟到主控流程回到主语境(context)。</p>
+</dd>
+<dt><cite>greedy</cite></dt><dd><p>若为True，回滚会在前一个检查点(checkpoint)后面结束。若为False，回滚会在当前检查点前结束。</p>
+</dd>
+<dt><cite>label</cite></dt><dd><p>若不是None，当回滚完成后，调用的脚本标签(label)。</p>
+</dd>
+<dt><cite>abnormal</cite></dt><dd><p>若为True，也是默认值，异常(abnormal)模式下的转场(transition)会被跳过，否则显示转场。当某个互动行为开始时，异常(abnormal)模式结束。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.suspend_rollback">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">suspend_rollback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.suspend_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>回滚会跳过游戏中已经挂起回滚的章节。</p>
+<dl class="simple">
+<dt><cite>flag</cite></dt><dd><p>当 <cite>flag</cite> 为True时，回滚挂起。当 <cite>flag</cite> 为False时，回滚恢复。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="blocking-rollback">
+<span id="id13"></span><h2>阻塞回滚<a class="headerlink" href="#blocking-rollback" title="Link to this heading"> link</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>阻塞回滚是一个对用户不友好的事情。如果一个用户错误点击了不希望进入的分支选项，ta就不能修正自己的错误。由于回滚等效于存档和读档，用户就会被强迫频繁地存档，破坏游戏体验。</p>
+</div>
+<p>部分或者完全禁用回滚是可能的。如果根本不想要回滚，可以使用 <a class="reference internal" href="config.html#var-config.rollback_enabled"><code class="xref std std-var docutils literal notranslate"><span class="pre">config.rollback_enabled</span></code></a> 函数关闭选项。</p>
+<p>更通用的做法是分段阻塞回滚。这可以通过 <a class="reference internal" href="#renpy.block_rollback" title="renpy.block_rollback"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.block_rollback()</span></code></a> 函数实现。当调用该函数时，Ren’Py的回滚会在某个点上停止。举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">final_answer</span><span class="p">:</span>
+    <span class="s2">&quot;这就是你的最终答案吗？&quot;</span>
+
+<span class="k">menu</span><span class="p">:</span>
+    <span class="s2">&quot;是&quot;</span><span class="p">:</span>
+        <span class="k">jump</span> <span class="n">no_return</span>
+    <span class="s2">&quot;不&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;我们有办法让你开口。&quot;</span>
+        <span class="s2">&quot;你还是好好想考虑下吧。&quot;</span>
+        <span class="s2">&quot;我再问你一次……&quot;</span>
+        <span class="k">jump</span> <span class="n">final_answer</span>
+
+<span class="k">label</span> <span class="n">no_return</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="n">block_rollback</span><span class="p">()</span>
+
+    <span class="s2">&quot;然后到了这里。现在不能回头了。&quot;</span>
+</pre></div>
+</div>
+<p>当到达脚本标签(label)no_return时，Ren’Py就停止回滚，不会进一步回滚到标签menu。</p>
+</section>
+<section id="fixing-rollback">
+<span id="id14"></span><h2>固定回滚<a class="headerlink" href="#fixing-rollback" title="Link to this heading"> link</a></h2>
+<p>固定回滚提供了一种介于完全无限制回滚和完全阻塞回滚之间的中间选项。回滚是允许的，但用户无法修改之前做出的选择。固定回滚使用 <a class="reference internal" href="#renpy.fix_rollback" title="renpy.fix_rollback"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.fix_rollback()</span></code></a> 函数实现，下面是样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">final_answer</span><span class="p">:</span>
+    <span class="s2">&quot;这就是你的最终答案吗？&quot;</span>
+<span class="k">menu</span><span class="p">:</span>
+    <span class="s2">&quot;是&quot;</span><span class="p">:</span>
+        <span class="k">jump</span> <span class="n">no_return</span>
+    <span class="s2">&quot;不&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;我们有办法让你开口。&quot;</span>
+        <span class="s2">&quot;你还是好好想考虑下吧。&quot;</span>
+        <span class="s2">&quot;我再问你一次……&quot;</span>
+        <span class="k">jump</span> <span class="n">final_answer</span>
+
+<span class="k">label</span> <span class="n">no_return</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="n">fix_rollback</span><span class="p">()</span>
+
+    <span class="s2">&quot;然后到了这里。现在不能回头了。&quot;</span>
+</pre></div>
+</div>
+<p>现在，调用fix_rollback函数后，用户依然可以回滚到标签menu，但不能选择一个不同的分支选项。</p>
+<p>使用fix_rollback设计游戏时，还有几处要点。Ren’Py会自动关注并锁定传入 <code class="xref py py-func docutils literal notranslate"><span class="pre">checkpoint()</span></code> 的任何数据。
+但由于Ren’Py的天然特性，可以用Python语句穿透这个显示并修改数据，这样会导致不需要的结果。
+特别注意，<code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 不能与固定回滚共用。
+这最终取决于游戏设计者是否在某些有问题的地方阻塞回滚来处理问题。</p>
+<p>内部用户的菜单互动选项， <a class="reference internal" href="input.html#renpy.input" title="renpy.input"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.input()</span></code></a> 和 <code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.imagemap()</span></code> 被设计为完全支持fix_rollback。</p>
+</section>
+<section id="styling-fixed-rollback">
+<span id="id15"></span><h2>样式化固定回滚<a class="headerlink" href="#styling-fixed-rollback" title="Link to this heading"> link</a></h2>
+<p>因为fix_rollback改变了菜单和imagemap的功能，建议考虑应对这种情况。理解菜单按钮的组件状态如何改变很重要。通过 <code class="xref py py-func docutils literal notranslate"><span class="pre">config.fix_rollback_without_choice()</span></code> 选项，可以更改两种模式。</p>
+<p>默认配置会将选过的选项设置为“selected”，进而激活样式所有带“selected_”前缀的样式特性。所有其他按钮会被设置为不可用，并使用前缀为“insensitive_”前缀的特性显示。这样的最终效果就是菜单仅有一个可选的选项。</p>
+<p>当 <code class="xref py py-func docutils literal notranslate"><span class="pre">config.fix_rollback_without_choice()</span></code> 项被设为False时，所有按钮都会设置为不可用。之前选过的那项会使用“selected_insensitive_”前缀的风格特性，而其他按钮会使用前缀为“insensitive_”前缀的特性。</p>
+</section>
+<section id="fixed-rollback-and-custom-screens">
+<span id="id16"></span><h2>固定回滚和自定义界面<a class="headerlink" href="#fixed-rollback-and-custom-screens" title="Link to this heading"> link</a></h2>
+<p>当使用fix_rollback系统编写定制Python路由，使游戏流程更舒服时，有几个简单的要点。首先是 <a class="reference internal" href="#renpy.in_fixed_rollback" title="renpy.in_fixed_rollback"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.in_fixed_rollback()</span></code></a> 函数可以用作决定游戏当前是否处于固定回滚状态。其次，当处于固定回滚状态时， <a class="reference internal" href="screen_python.html#ui.interact" title="ui.interact"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.interact()</span></code></a> 函数总会返回使用的roll_forward数据，而不考虑行为是否执行。这表示，当 <a class="reference internal" href="screen_python.html#ui.interact" title="ui.interact"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.interact()</span></code></a>/<a class="reference internal" href="#renpy.checkpoint" title="renpy.checkpoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.checkpoint()</span></code></a> 函数被使用时，大多数工作都已经完成了。</p>
+<p>为了简化定制界面的创建，Ren’Py提供了两个最常用的行为(action)。当按钮检测到被按下时， <a class="reference internal" href="#ui.ChoiceReturn" title="ui.ChoiceReturn"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.ChoiceReturn()</span></code></a> 行为会返回。 <a class="reference internal" href="#ui.ChoiceJump" title="ui.ChoiceJump"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.ChoiceJump()</span></code></a> 行为可以用于跳转到某个脚本标签(label)。当界面通过一个  <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 语句被调用时，这个行为才能正常工作。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">screen</span> <span class="n">demo_imagemap</span><span class="p">:</span>
+    <span class="k">imagemap</span><span class="p">:</span>
+        <span class="na">ground</span> <span class="s2">&quot;imagemap_ground.jpg&quot;</span>
+        <span class="na">hover</span> <span class="s2">&quot;imagemap_hover.jpg&quot;</span>
+        <span class="na">selected_idle</span> <span class="s2">&quot;imagemap_selected_idle.jpg&quot;</span>
+        <span class="na">selected_hover</span> <span class="s2">&quot;imagemap_hover.jpg&quot;</span>
+
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span> <span class="na">action</span> <span class="n">ui</span><span class="o">.</span><span class="n">ChoiceJump</span><span class="p">(</span><span class="s2">&quot;swimming&quot;</span><span class="p">,</span> <span class="s2">&quot;go_swimming&quot;</span><span class="p">,</span> <span class="n">block_all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">204</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span> <span class="na">action</span> <span class="n">ui</span><span class="o">.</span><span class="n">ChoiceJump</span><span class="p">(</span><span class="s2">&quot;science&quot;</span><span class="p">,</span> <span class="s2">&quot;go_science_club&quot;</span><span class="p">,</span> <span class="n">block_all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">452</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span> <span class="na">action</span> <span class="n">ui</span><span class="o">.</span><span class="n">ChoiceJump</span><span class="p">(</span><span class="s2">&quot;art&quot;</span><span class="p">,</span> <span class="s2">&quot;go_art_lessons&quot;</span><span class="p">,</span> <span class="n">block_all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">hotspot</span> <span class="p">(</span><span class="mi">602</span><span class="p">,</span> <span class="mi">316</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span> <span class="na">action</span> <span class="n">ui</span><span class="o">.</span><span class="n">ChoiceJump</span><span class="p">(</span><span class="s2">&quot;home&quot;</span><span class="p">,</span> <span class="s2">&quot;go_home&quot;</span><span class="p">,</span> <span class="n">block_all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span><span class="p">:</span>
+    <span class="na">roll_forward</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">roll_forward_info</span><span class="p">()</span>
+    <span class="k">if</span> <span class="na">roll_forward</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="s2">&quot;Rock&quot;</span><span class="p">,</span> <span class="s2">&quot;Paper&quot;</span><span class="p">,</span> <span class="s2">&quot;Scissors&quot;</span><span class="p">):</span>
+        <span class="na">roll_forward</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">ui</span><span class="o">.</span><span class="k">hbox</span><span class="p">()</span>
+    <span class="n">ui</span><span class="o">.</span><span class="k">imagebutton</span><span class="p">(</span><span class="s2">&quot;rock.png&quot;</span><span class="p">,</span> <span class="s2">&quot;rock_hover.png&quot;</span><span class="p">,</span> <span class="na">selected_insensitive</span><span class="o">=</span><span class="s2">&quot;rock_hover.png&quot;</span><span class="p">,</span> <span class="na">clicked</span><span class="o">=</span><span class="n">ui</span><span class="o">.</span><span class="n">ChoiceReturn</span><span class="p">(</span><span class="s2">&quot;rock&quot;</span><span class="p">,</span> <span class="s2">&quot;Rock&quot;</span><span class="p">,</span> <span class="n">block_all</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">ui</span><span class="o">.</span><span class="k">imagebutton</span><span class="p">(</span><span class="s2">&quot;paper.png&quot;</span><span class="p">,</span> <span class="s2">&quot;paper_hover.png&quot;</span><span class="p">,</span> <span class="na">selected_insensitive</span><span class="o">=</span><span class="s2">&quot;paper_hover.png&quot;</span><span class="p">,</span> <span class="na">clicked</span><span class="o">=</span><span class="n">ui</span><span class="o">.</span><span class="n">ChoiceReturn</span><span class="p">(</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;Paper&quot;</span><span class="p">,</span> <span class="n">block_all</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">ui</span><span class="o">.</span><span class="k">imagebutton</span><span class="p">(</span><span class="s2">&quot;scissors.png&quot;</span><span class="p">,</span> <span class="s2">&quot;scissors_hover.png&quot;</span><span class="p">,</span> <span class="na">selected_insensitive</span><span class="o">=</span><span class="s2">&quot;scissors_hover.png&quot;</span><span class="p">,</span> <span class="na">clicked</span><span class="o">=</span><span class="n">ui</span><span class="o">.</span><span class="n">ChoiceReturn</span><span class="p">(</span><span class="s2">&quot;scissors&quot;</span><span class="p">,</span> <span class="s2">&quot;Scissors&quot;</span><span class="p">,</span> <span class="n">block_all</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">ui</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">renpy</span><span class="o">.</span><span class="n">in_fixed_rollback</span><span class="p">():</span>
+        <span class="n">ui</span><span class="o">.</span><span class="n">saybehavior</span><span class="p">()</span>
+
+    <span class="k">choice</span> <span class="o">=</span> <span class="n">ui</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="na">roll_forward</span><span class="o">=</span><span class="na">roll_forward</span><span class="p">)</span>
+    <span class="n">renpy</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">(</span><span class="k">choice</span><span class="p">)</span>
+
+<span class="k">$</span> <span class="n">renpy</span><span class="o">.</span><span class="n">fix_rollback</span><span class="p">()</span>
+<span class="n">m</span> <span class="s2">&quot;[choice]!&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="rollback-blocking-and-fixing-functions">
+<span id="id17"></span><h2>回滚阻塞和固定函数<a class="headerlink" href="#rollback-blocking-and-fixing-functions" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.block_rollback">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">block_rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.block_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>防止回滚到当前语句之前的脚本。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.fix_rollback">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">fix_rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.fix_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>防止用于更改在当前语句之前做出的选项决定。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.in_fixed_rollback">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">in_fixed_rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renpy.in_fixed_rollback" title="Link to this definition"> link</a></dt>
+<dd><p>如果正在发生回滚的当前上下文(context)后面有一个执行过的renpy.fix_rollback()语句，就返回True。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui.ChoiceJump">
+<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">ChoiceJump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui.ChoiceJump" title="Link to this definition"> link</a></dt>
+<dd><p>一个菜单选项行为(action)，返回值为 <cite>value</cite> 。同时管理按钮在固定回滚模式下的状态。(详见对应的 <cite>block_all</cite> 参数。)</p>
+<dl>
+<dt><cite>label</cite></dt><dd><p>按钮的文本标签(label)。对imagebutton和hotspot来说可以是任何类型。这个标签用作当前界面内选项的唯一标识符。这个标识符与 <cite>location</cite> 一起存储，用于记录该选项是否可以被选择。</p>
+</dd>
+<dt><cite>value</cite></dt><dd><p>跳转的位置。</p>
+</dd>
+<dt><cite>location</cite></dt><dd><p>当前选项界面的唯一位置标识符。</p>
+</dd>
+<dt><cite>block_all</cite></dt><dd><p>若为False，被选中选项的按钮会赋予“selected”角色，未选中的选项按钮会置为不可用。</p>
+<p>若为True，固定回滚时按钮总是不可用。</p>
+<p>若为None，该值使用 <code class="xref py py-func docutils literal notranslate"><span class="pre">config.fix_rollback_without_choice()</span></code> 配置项。</p>
+<p>当某个界面内所有选项都被赋值为True时，选项菜单变成点击无效状态(回滚依然有效)。这可以通过在 <a class="reference internal" href="screen_python.html#ui.interact" title="ui.interact"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.interact()</span></code></a> 之前调用 <code class="xref py py-func docutils literal notranslate"><span class="pre">ui.saybehavior()</span></code> 修改。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui.ChoiceReturn">
+<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">ChoiceReturn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui.ChoiceReturn" title="Link to this definition"> link</a></dt>
+<dd><p>一个菜单选项行为(action)，返回值为 <em>value</em> 。同时管理按钮在固定回滚模式下的状态。(详见对应的 <cite>block_all</cite> 参数。)</p>
+<dl>
+<dt><cite>label</cite></dt><dd><p>按钮的文本标签(label)。对imagebutton和hotspot来说可以是任何类型。这个标签用作当前界面内选项的唯一标识符。这个标识符与 <em>location</em> 一起存储，用于记录该选项是否可以被选择。</p>
+</dd>
+<dt><cite>value</cite></dt><dd><p>选择某个选项后返回的位置。</p>
+</dd>
+<dt><cite>location</cite></dt><dd><p>当前选项界面的唯一位置标识符。</p>
+</dd>
+<dt><cite>block_all</cite></dt><dd><p>若为False，被选中选项的按钮会赋予“selected”角色，未选中的选项按钮会置为不可用。</p>
+<p>若为True，固定回滚时按钮总是不可用。</p>
+<p>若为None，该值使用 <code class="xref py py-func docutils literal notranslate"><span class="pre">config.fix_rollback_without_choice()</span></code> 配置项。</p>
+<p>当某个界面内所有选项都被赋值为True时，选项菜单变成点击无效状态(回滚依然有效)。这可以通过在 <a class="reference internal" href="screen_python.html#ui.interact" title="ui.interact"><code class="xref py py-func docutils literal notranslate"><span class="pre">ui.interact()</span></code></a> 之前调用 <code class="xref py py-func docutils literal notranslate"><span class="pre">ui.saybehavior()</span></code> 修改。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="norollback">
+<span id="id18"></span><h2>不回滚<a class="headerlink" href="#norollback" title="Link to this heading"> link</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="NoRollback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoRollback</span></span><a class="headerlink" href="#NoRollback" title="Link to this definition"> link</a></dt>
+<dd><p>从这个类继承的类的实例，在回滚操作中不执行回滚。一个NoRollback类实例的所有相关对象，仅在它们有其他可抵达路径的情况下才不回滚。</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SlottedNoRollback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SlottedNoRollback</span></span><a class="headerlink" href="#SlottedNoRollback" title="Link to this definition"> link</a></dt>
+<dd><p>从这个类继承的类的实例，在回滚操作中不执行回滚。此类与 <a class="reference internal" href="#NoRollback" title="NoRollback"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoRollback</span></code></a> 的区别是，没有一个关联字典，可以使用 <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> 降低内存消耗。</p>
+<p>NoRollback类对象实例在回滚后的变化，就像其是通过非回滚的其他方式抵达回滚目标点。</p>
+</dd></dl>
+
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+
+    <span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">NoRollback</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">label</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">$</span> <span class="n">o</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+    <span class="s2">&quot;欢迎！&quot;</span>
+
+    <span class="k">$</span> <span class="n">o</span><span class="o">.</span><span class="na">value</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="s2">&quot;o.value的值是 [o.value] 。你每次回滚并点到这里都会增加它的值。&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="id19">
+<h2>支持回滚的类<a class="headerlink" href="#id19" title="Link to this heading"> link</a></h2>
+<p>下列的几个类用于支持游戏中回滚。在某些场景下可能会用到。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="MultiRevertable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultiRevertable</span></span><a class="headerlink" href="#MultiRevertable" title="Link to this definition"> link</a></dt>
+<dd><p>MultiRevertable是一种可恢复对象的最小可继承抽象类。可以继承MultiRevertable并实现自己需要的可恢复对象。</p>
+<p>举例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyDict</span><span class="p">(</span><span class="n">MultiRevertable</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>这个样例会创建一个类，在回滚时恢复dict的内容和object的对象字段。</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="defaultdict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">defaultdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_factory</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#defaultdict" title="Link to this definition"> link</a></dt>
+<dd><p>这是一个可恢复版的collections.defaultdict。该类会接受一个工厂(factory)函数。
+如果接入的“键”不存在，则会将“键”作为入参并调用 <cite>default_factory</cite> 函数，将结果返回。</p>
+<p>如果该类的对象中存在 default_factory 属性，则不会参与回滚，即回滚不会改变该对象。</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="statement_equivalents.html" class="btn btn-neutral float-left" title="等效语句" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="persistent.html" class="btn btn-neutral float-right" title="持久化数据" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
