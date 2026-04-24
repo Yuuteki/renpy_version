@@ -223,6 +223,15 @@ const projectSideImageNullInput = document.getElementById("projectSideImageNullI
 const projectSideImageSameTransformInput = document.getElementById("projectSideImageSameTransformInput");
 const projectSideImageChangeTransformInput = document.getElementById("projectSideImageChangeTransformInput");
 const projectSideImageCodePreviewEl = document.getElementById("projectSideImageCodePreview");
+const projectSaveLoadSettingsFormEl = document.getElementById("projectSaveLoadSettingsForm");
+const projectHasAutosaveInput = document.getElementById("projectHasAutosaveInput");
+const projectAutosaveFrequencyInput = document.getElementById("projectAutosaveFrequencyInput");
+const projectHasQuicksaveInput = document.getElementById("projectHasQuicksaveInput");
+const projectRollbackEnabledInput = document.getElementById("projectRollbackEnabledInput");
+const projectRollbackLengthInput = document.getElementById("projectRollbackLengthInput");
+const projectHardRollbackLimitInput = document.getElementById("projectHardRollbackLimitInput");
+const projectFixRollbackWithoutChoiceInput = document.getElementById("projectFixRollbackWithoutChoiceInput");
+const projectSaveLoadCodePreviewEl = document.getElementById("projectSaveLoadCodePreview");
 const projectKeymapSettingsFormEl = document.getElementById("projectKeymapSettingsForm");
 const projectKeymapCustomEventNameInput = document.getElementById("projectKeymapCustomEventNameInput");
 const projectKeymapAddCustomEventButton = document.getElementById("projectKeymapAddCustomEventButton");
@@ -384,6 +393,13 @@ const defaultProjectMeta = {
   sideImageNull: "",
   sideImageSameTransform: "",
   sideImageChangeTransform: "",
+  hasAutosave: true,
+  autosaveFrequency: "200",
+  hasQuicksave: true,
+  rollbackEnabled: true,
+  rollbackLength: "128",
+  hardRollbackLimit: "100",
+  fixRollbackWithoutChoice: false,
   keymapOverrides: {},
 };
 
@@ -1361,6 +1377,13 @@ function normalizeState(rawState) {
       sideImageNull: `${rawMeta.sideImageNull || ""}`.trim(),
       sideImageSameTransform: `${rawMeta.sideImageSameTransform || ""}`.trim(),
       sideImageChangeTransform: `${rawMeta.sideImageChangeTransform || ""}`.trim(),
+      hasAutosave: rawMeta.hasAutosave !== false && rawMeta.hasAutosave !== "false",
+      autosaveFrequency: `${rawMeta.autosaveFrequency ?? ""}`.trim() || defaultProjectMeta.autosaveFrequency,
+      hasQuicksave: rawMeta.hasQuicksave !== false && rawMeta.hasQuicksave !== "false",
+      rollbackEnabled: rawMeta.rollbackEnabled !== false && rawMeta.rollbackEnabled !== "false",
+      rollbackLength: `${rawMeta.rollbackLength ?? ""}`.trim() || defaultProjectMeta.rollbackLength,
+      hardRollbackLimit: `${rawMeta.hardRollbackLimit ?? ""}`.trim() || defaultProjectMeta.hardRollbackLimit,
+      fixRollbackWithoutChoice: rawMeta.fixRollbackWithoutChoice === true || rawMeta.fixRollbackWithoutChoice === "true",
       keymapOverrides: normalizeProjectKeymapOverrides(rawMeta.keymapOverrides),
     },
     graphs: normalizedGraphs,
@@ -2788,6 +2811,34 @@ function getProjectSideImageChangeTransform() {
   return `${state.meta.sideImageChangeTransform || ""}`.trim();
 }
 
+function getProjectHasAutosave() {
+  return state.meta.hasAutosave !== false;
+}
+
+function getProjectAutosaveFrequency() {
+  return `${state.meta.autosaveFrequency ?? ""}`.trim() || defaultProjectMeta.autosaveFrequency;
+}
+
+function getProjectHasQuicksave() {
+  return state.meta.hasQuicksave !== false;
+}
+
+function getProjectRollbackEnabled() {
+  return state.meta.rollbackEnabled !== false;
+}
+
+function getProjectRollbackLength() {
+  return `${state.meta.rollbackLength ?? ""}`.trim() || defaultProjectMeta.rollbackLength;
+}
+
+function getProjectHardRollbackLimit() {
+  return `${state.meta.hardRollbackLimit ?? ""}`.trim() || defaultProjectMeta.hardRollbackLimit;
+}
+
+function getProjectFixRollbackWithoutChoice() {
+  return state.meta.fixRollbackWithoutChoice === true;
+}
+
 function getProjectKeymapOverrides() {
   return normalizeProjectKeymapOverrides(state.meta.keymapOverrides);
 }
@@ -3029,6 +3080,45 @@ function formatProjectSideImageCode() {
   }
 
   lines.push("# Remember to add SideImage() inside the say screen to display avatar portraits.");
+  return lines.join("\n");
+}
+
+function formatProjectSaveLoadCode() {
+  const lines = [];
+
+  if (!getProjectHasAutosave()) {
+    lines.push("define config.has_autosave = False");
+  }
+
+  if (getProjectAutosaveFrequency() !== defaultProjectMeta.autosaveFrequency) {
+    lines.push(`define config.autosave_frequency = ${getProjectAutosaveFrequency()}`);
+  }
+
+  if (!getProjectHasQuicksave()) {
+    lines.push("define config.has_quicksave = False");
+  }
+
+  if (!getProjectRollbackEnabled()) {
+    lines.push("define config.rollback_enabled = False");
+  }
+
+  if (getProjectRollbackLength() !== defaultProjectMeta.rollbackLength) {
+    lines.push(`define config.rollback_length = ${getProjectRollbackLength()}`);
+  }
+
+  if (getProjectHardRollbackLimit() !== defaultProjectMeta.hardRollbackLimit) {
+    lines.push(`define config.hard_rollback_limit = ${getProjectHardRollbackLimit()}`);
+  }
+
+  if (getProjectFixRollbackWithoutChoice()) {
+    lines.push("define config.fix_rollback_without_choice = True");
+  }
+
+  if (!lines.length) {
+    lines.push("# Save, load, autosave, quicksave, and rollback are currently using Ren'Py defaults.");
+  }
+
+  lines.push("# Save/load screens can expose auto and quick pages only when the corresponding flags are enabled.");
   return lines.join("\n");
 }
 
@@ -9133,6 +9223,21 @@ function renderProjectSideImageSettings() {
   projectSideImageCodePreviewEl.textContent = formatProjectSideImageCode();
 }
 
+function renderProjectSaveLoadSettings() {
+  if (!projectSaveLoadSettingsFormEl) {
+    return;
+  }
+
+  projectHasAutosaveInput.checked = getProjectHasAutosave();
+  projectAutosaveFrequencyInput.value = getProjectAutosaveFrequency();
+  projectHasQuicksaveInput.checked = getProjectHasQuicksave();
+  projectRollbackEnabledInput.checked = getProjectRollbackEnabled();
+  projectRollbackLengthInput.value = getProjectRollbackLength();
+  projectHardRollbackLimitInput.value = getProjectHardRollbackLimit();
+  projectFixRollbackWithoutChoiceInput.checked = getProjectFixRollbackWithoutChoice();
+  projectSaveLoadCodePreviewEl.textContent = formatProjectSaveLoadCode();
+}
+
 function renderProjectKeymapSettings() {
   if (!projectKeymapSettingsFormEl || !projectKeymapCategoryListEl || !projectKeymapCodePreviewEl) {
     return;
@@ -9299,6 +9404,14 @@ function renderVisualProjectStats() {
     {
       title: "Voice Strategy",
       value: getProjectVoiceMode() === "auto" ? "Auto Voice" : "Manual Voice",
+    },
+    {
+      title: "Save Features",
+      value: `${getProjectHasAutosave() ? "Auto" : "No Auto"} · ${getProjectHasQuicksave() ? "Quick" : "No Quick"}`,
+    },
+    {
+      title: "Rollback",
+      value: getProjectRollbackEnabled() ? `On · ${getProjectRollbackLength()} steps` : "Disabled",
     },
     {
       title: "Linked Image Tags",
@@ -9769,6 +9882,7 @@ function render() {
   renderDefinitionsPanel();
   renderProjectVoiceSettings();
   renderProjectSideImageSettings();
+  renderProjectSaveLoadSettings();
   renderProjectKeymapSettings();
   renderVisualProjectStats();
   renderGraph();
@@ -12248,6 +12362,27 @@ projectSideImageSameTransformInput?.addEventListener("input", (event) => {
 });
 projectSideImageChangeTransformInput?.addEventListener("input", (event) => {
   updateProjectMeta({ sideImageChangeTransform: event.target.value });
+});
+projectHasAutosaveInput?.addEventListener("change", (event) => {
+  updateProjectMeta({ hasAutosave: event.target.checked });
+});
+projectAutosaveFrequencyInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ autosaveFrequency: event.target.value });
+});
+projectHasQuicksaveInput?.addEventListener("change", (event) => {
+  updateProjectMeta({ hasQuicksave: event.target.checked });
+});
+projectRollbackEnabledInput?.addEventListener("change", (event) => {
+  updateProjectMeta({ rollbackEnabled: event.target.checked });
+});
+projectRollbackLengthInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ rollbackLength: event.target.value });
+});
+projectHardRollbackLimitInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ hardRollbackLimit: event.target.value });
+});
+projectFixRollbackWithoutChoiceInput?.addEventListener("change", (event) => {
+  updateProjectMeta({ fixRollbackWithoutChoice: event.target.checked });
 });
 projectKeymapAddCustomEventButton?.addEventListener("click", () => {
   const nextEventId = `${projectKeymapCustomEventNameInput?.value || ""}`.trim();

@@ -2,6 +2,19 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.10] - 2026-04-25
+
+### Added
+
+- 为主编辑器 `Settings` 面板新增 `Save / Rollback Settings`，可配置 `config.has_autosave`、`config.autosave_frequency`、`config.has_quicksave`、`config.rollback_enabled`、`config.rollback_length`、`config.hard_rollback_limit` 和 `config.fix_rollback_without_choice`。
+- 为上述存档与回滚配置新增实时代码预览，方便直接对照生成的 `define config.*` 语句。
+- 为 `GUI Editor > Screens` 的节点 action 列表补充 `FileSave`、`FileLoad`、`FileDelete`、`FilePage`、`FilePageNext`、`FilePagePrevious`、`QuickSave` 和 `QuickLoad`。
+
+### Changed
+
+- `save` / `load` 特殊 screen 模板现在升级为更接近 Ren'Py 默认文件页的可用骨架，包含页签切换、自动存档/快速存档入口、页名输入、槽位循环、缩略图和存档名展示。
+- 主编辑器统计面板现在会显示当前项目的存档特性与回滚状态，方便快速确认项目级设置。
+
 ## [0.4.9] - 2026-04-25
 
 ### Added

@@ -1483,15 +1483,72 @@
                 These map to <code>config.side_image_*</code>. Your <code>say</code> screen still needs <code>SideImage()</code> to actually render the portrait.
               </p>
 
-              <p class="section-label secondary-label">Generated Side Image Config</p>
-              <pre id="projectSideImageCodePreview" class="code-preview"></pre>
-            </form>
+            <p class="section-label secondary-label">Generated Side Image Config</p>
+            <pre id="projectSideImageCodePreview" class="code-preview"></pre>
+          </form>
 
-            <p class="section-label secondary-label">Keymap Settings</p>
-            <form id="projectKeymapSettingsForm" class="character-detail-form">
-              <p class="project-settings-note">
-                Customize common <code>config.keymap</code> events here. Ren'Py players usually expect the default bindings to stay familiar, so this editor only emits overrides for the events you actually change.
-              </p>
+          <p class="section-label secondary-label">Save / Rollback Settings</p>
+          <form id="projectSaveLoadSettingsForm" class="character-detail-form">
+            <label class="character-checkbox">
+              <input id="projectHasAutosaveInput" type="checkbox" />
+              <span>Enable autosave pages and background autosaves</span>
+            </label>
+
+            <div class="gui-inline-fields">
+              <label>
+                Autosave Frequency
+                <input id="projectAutosaveFrequencyInput" type="text" placeholder="e.g. 200" />
+              </label>
+
+              <label class="character-checkbox">
+                <input id="projectHasQuicksaveInput" type="checkbox" />
+                <span>Enable quick save / quick load</span>
+              </label>
+            </div>
+
+            <label class="character-checkbox">
+              <input id="projectRollbackEnabledInput" type="checkbox" />
+              <span>Enable rollback</span>
+            </label>
+
+            <div class="gui-inline-fields">
+              <label>
+                Rollback Length
+                <input id="projectRollbackLengthInput" type="text" placeholder="e.g. 128" />
+              </label>
+
+              <label>
+                Hard Rollback Limit
+                <input id="projectHardRollbackLimitInput" type="text" placeholder="e.g. 100" />
+              </label>
+            </div>
+
+            <label class="character-checkbox">
+              <input id="projectFixRollbackWithoutChoiceInput" type="checkbox" />
+              <span>Fixed rollback disables every choice button instead of leaving the already chosen one highlighted</span>
+            </label>
+
+            <p class="project-settings-note">
+              These map to <code>config.has_autosave</code>, <code>config.autosave_frequency</code>,
+              <code>config.has_quicksave</code>, <code>config.rollback_enabled</code>,
+              <code>config.rollback_length</code>, <code>config.hard_rollback_limit</code>, and
+              <code>config.fix_rollback_without_choice</code>.
+            </p>
+
+            <p class="project-settings-note">
+              The GUI save/load screens can expose auto and quick pages only when the matching toggles are enabled.
+              <code>fix_rollback_without_choice</code> only matters when you later use <code>renpy.fix_rollback()</code>.
+            </p>
+
+            <p class="section-label secondary-label">Generated Save / Rollback Config</p>
+            <pre id="projectSaveLoadCodePreview" class="code-preview"></pre>
+          </form>
+
+          <p class="section-label secondary-label">Keymap Settings</p>
+          <form id="projectKeymapSettingsForm" class="character-detail-form">
+            <p class="project-settings-note">
+              Customize common <code>config.keymap</code> events here. Ren'Py players usually expect the default bindings to stay familiar, so this editor only emits overrides for the events you actually change.
+            </p>
 
               <div class="project-keymap-custom-row">
                 <label>

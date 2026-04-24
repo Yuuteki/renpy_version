@@ -453,6 +453,14 @@ const screenActionMeta = [
   { id: "ToggleVariable", label: "ToggleVariable(name)", placeholder: '"show_advanced"' },
   { id: "Preference", label: "Preference(name, value)", placeholder: '"display", "fullscreen"' },
   { id: "FileAction", label: "FileAction(slot)", placeholder: "1" },
+  { id: "FileSave", label: "FileSave(slot)", placeholder: "slot" },
+  { id: "FileLoad", label: "FileLoad(slot)", placeholder: "slot" },
+  { id: "FileDelete", label: "FileDelete(slot)", placeholder: "slot, confirm=True" },
+  { id: "FilePage", label: "FilePage(page)", placeholder: '"auto" or 3' },
+  { id: "FilePageNext", label: "FilePageNext(...)", placeholder: "" },
+  { id: "FilePagePrevious", label: "FilePagePrevious(...)", placeholder: "" },
+  { id: "QuickSave", label: "QuickSave(...)", placeholder: "" },
+  { id: "QuickLoad", label: "QuickLoad(...)", placeholder: "" },
   { id: "Play", label: "Play(channel, file)", placeholder: '"music", "audio/bgm.ogg"' },
   { id: "Stop", label: "Stop(channel)", placeholder: '"music"' },
   { id: "Function", label: "Function(callable, ...)", placeholder: 'renpy.notify, "Saved"' },
@@ -522,6 +530,128 @@ function buildTemplateNode(type, patch = {}, children = []) {
 
 function buildTemplateScreen(definition) {
   return normalizeGuiScreen(definition, 0);
+}
+
+function createFileSlotButtonTemplate(actionKind) {
+  return buildTemplateNode("button", { title: "Slot Button", actionKind, actionArgs: "slot", style: "file_slot_button" }, [
+    buildTemplateNode("add", {
+      title: "Slot Screenshot",
+      displayable: 'FileScreenshot(slot, empty=Null(width=320, height=180))',
+      style: "file_slot_screenshot",
+    }),
+    buildTemplateNode("vbox", { title: "Slot Copy", style: "file_slot_copy" }, [
+      buildTemplateNode("text", {
+        title: "Slot Name",
+        text: 'FileSaveName(slot, empty=_("Empty Slot"))',
+        style: "file_slot_name",
+      }),
+      buildTemplateNode("text", {
+        title: "Slot Meta",
+        text: '_("Saved") if FileLoadable(slot) else _("Empty")',
+        style: "file_slot_meta",
+      }),
+    ]),
+  ]);
+}
+
+function createFilePageControlsTemplate() {
+  return buildTemplateNode("hbox", { title: "Page Controls", style: "file_page_controls" }, [
+    buildTemplateNode("textbutton", {
+      title: "Previous Page",
+      text: '_("<")',
+      actionKind: "FilePagePrevious",
+      style: "file_page_button",
+    }),
+    buildTemplateNode("if", { title: "Auto Page Toggle", condition: "config.has_autosave" }, [
+      buildTemplateNode("textbutton", {
+        title: "Auto Page",
+        text: '_("A")',
+        actionKind: "FilePage",
+        actionArgs: '"auto"',
+        style: "file_page_button",
+      }),
+    ]),
+    buildTemplateNode("if", { title: "Quick Page Toggle", condition: "config.has_quicksave" }, [
+      buildTemplateNode("textbutton", {
+        title: "Quick Page",
+        text: '_("Q")',
+        actionKind: "FilePage",
+        actionArgs: '"quick"',
+        style: "file_page_button",
+      }),
+    ]),
+    buildTemplateNode("for", { title: "Numbered Pages", variableName: "page", iterableExpression: "range(1, 6)" }, [
+      buildTemplateNode("textbutton", {
+        title: "Page Button",
+        text: "str(page)",
+        actionKind: "FilePage",
+        actionArgs: "page",
+        style: "file_page_button",
+      }),
+    ]),
+    buildTemplateNode("textbutton", {
+      title: "Next Page",
+      text: '_(">")',
+      actionKind: "FilePageNext",
+      style: "file_page_button",
+    }),
+  ]);
+}
+
+function createFileScreenTemplate({
+  name,
+  titleText,
+  notes,
+  slotActionKind,
+  footerActionKind,
+  footerLabel,
+}) {
+  return buildTemplateScreen({
+    id: createId("screen"),
+    name,
+    tag: "menu",
+    modal: true,
+    zorder: "100",
+    notes,
+    nodes: [
+      buildTemplateNode("default", {
+        title: "Page Name InputValue",
+        defaultName: "page_name_value",
+        defaultValue: 'FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))',
+      }),
+      buildTemplateNode("vbox", { title: `${name === "save" ? "Save" : "Load"} Layout`, style: "file_screen_vbox" }, [
+        buildTemplateNode("text", { title: "Screen Title", text: titleText, style: "file_screen_title" }),
+        buildTemplateNode("text", {
+          title: "Screen Subtitle",
+          text: name === "save"
+            ? '_("Choose a slot to save your progress.")'
+            : '_("Choose a slot to load your progress.")',
+          style: "file_screen_subtitle",
+        }),
+        createFilePageControlsTemplate(),
+        buildTemplateNode("input", {
+          title: "Page Name Input",
+          style: "file_page_name_input",
+          valueKind: "raw",
+          valueRaw: "page_name_value",
+          inputLength: "24",
+        }),
+        buildTemplateNode("grid", { title: "File Slots", gridColumns: "2", gridRows: "3", style: "file_slot_grid" }, [
+          buildTemplateNode("for", { title: "Slot Loop", variableName: "slot", iterableExpression: "range(1, 7)" }, [
+            createFileSlotButtonTemplate(slotActionKind),
+          ]),
+        ]),
+        buildTemplateNode("if", { title: "Quick Action Toggle", condition: "config.has_quicksave" }, [
+          buildTemplateNode("textbutton", {
+            title: "Quick Action",
+            text: footerLabel,
+            actionKind: footerActionKind,
+            style: "file_quick_action_button",
+          }),
+        ]),
+      ]),
+    ],
+  });
 }
 
 function createScreenTemplate(templateId) {
@@ -658,38 +788,22 @@ function createScreenTemplate(templateId) {
         ],
       });
     case "save":
-      return buildTemplateScreen({
-        id: createId("screen"),
+      return createFileScreenTemplate({
         name: "save",
-        tag: "menu",
-        modal: true,
-        zorder: "100",
-        notes: "Save screen scaffold.",
-        nodes: [
-          buildTemplateNode("vbox", { title: "Save Layout", style: "file_screen_vbox" }, [
-            buildTemplateNode("text", { title: "Save Title", text: "_(\"Save Game\")", style: "file_screen_title" }),
-            buildTemplateNode("grid", { title: "Save Slots", gridColumns: "2", gridRows: "3", style: "file_slot_grid" }, [
-              buildTemplateNode("button", { title: "Slot Button", text: "_(\"Slot 1\")", actionKind: "FileAction", actionArgs: "1", style: "file_slot_button" }),
-            ]),
-          ]),
-        ],
+        titleText: '_("Save Game")',
+        notes: "Save screen scaffold with page controls, slot previews, and quick-save support.",
+        slotActionKind: "FileSave",
+        footerActionKind: "QuickSave",
+        footerLabel: '_("Quick Save")',
       });
     case "load":
-      return buildTemplateScreen({
-        id: createId("screen"),
+      return createFileScreenTemplate({
         name: "load",
-        tag: "menu",
-        modal: true,
-        zorder: "100",
-        notes: "Load screen scaffold.",
-        nodes: [
-          buildTemplateNode("vbox", { title: "Load Layout", style: "file_screen_vbox" }, [
-            buildTemplateNode("text", { title: "Load Title", text: "_(\"Load Game\")", style: "file_screen_title" }),
-            buildTemplateNode("grid", { title: "Load Slots", gridColumns: "2", gridRows: "3", style: "file_slot_grid" }, [
-              buildTemplateNode("button", { title: "Slot Button", text: "_(\"Slot 1\")", actionKind: "FileAction", actionArgs: "1", style: "file_slot_button" }),
-            ]),
-          ]),
-        ],
+        titleText: '_("Load Game")',
+        notes: "Load screen scaffold with page controls, slot previews, and quick-load support.",
+        slotActionKind: "FileLoad",
+        footerActionKind: "QuickLoad",
+        footerLabel: '_("Quick Load")',
       });
     case "preferences":
       return buildTemplateScreen({
