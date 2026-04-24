@@ -179,6 +179,8 @@ const definitionCodeInput = document.getElementById("definitionCodeInput");
 const definitionDeleteButton = document.getElementById("definitionDeleteButton");
 const definitionCodePreviewEl = document.getElementById("definitionCodePreview");
 const visualProjectStatsEl = document.getElementById("visualProjectStats");
+const guiEditorProjectSummaryEl = document.getElementById("guiEditorProjectSummary");
+const openGuiEditorButton = document.getElementById("openGuiEditorButton");
 const projectVoiceSettingsFormEl = document.getElementById("projectVoiceSettingsForm");
 const projectVoiceModeInput = document.getElementById("projectVoiceModeInput");
 const projectAutoVoiceTemplateFieldEl = document.getElementById("projectAutoVoiceTemplateField");
@@ -692,6 +694,7 @@ const defaultProjectState = {
   characters: [],
   variables: [],
   definitions: [],
+  gui: normalizeGuiState(null),
   activeGraphId: "label_start",
 };
 
@@ -846,6 +849,30 @@ function loadState() {
   }
 }
 
+function normalizeGuiState(rawGui) {
+  if (!rawGui || typeof rawGui !== "object" || Array.isArray(rawGui)) {
+    return {
+      styles: [],
+      screens: [],
+      config: [],
+      preferences: [],
+      store: [],
+      cursors: [],
+      textShaders: [],
+    };
+  }
+
+  return {
+    styles: Array.isArray(rawGui.styles) ? rawGui.styles : [],
+    screens: Array.isArray(rawGui.screens) ? rawGui.screens : [],
+    config: Array.isArray(rawGui.config) ? rawGui.config : [],
+    preferences: Array.isArray(rawGui.preferences) ? rawGui.preferences : [],
+    store: Array.isArray(rawGui.store) ? rawGui.store : [],
+    cursors: Array.isArray(rawGui.cursors) ? rawGui.cursors : [],
+    textShaders: Array.isArray(rawGui.textShaders) ? rawGui.textShaders : [],
+  };
+}
+
 function normalizeState(rawState) {
   const rawMeta = rawState.meta || {};
   const normalizedGraphs = Array.isArray(rawState.graphs) && rawState.graphs.length
@@ -890,6 +917,7 @@ function normalizeState(rawState) {
     characters: normalizedCharacters,
     variables: normalizedVariables,
     definitions: normalizedDefinitions,
+    gui: normalizeGuiState(rawState.gui),
     activeGraphId,
   };
 }
@@ -7487,6 +7515,39 @@ function renderVisualProjectStats() {
   `).join("");
 }
 
+function renderGuiEditorPanel() {
+  if (!guiEditorProjectSummaryEl) {
+    return;
+  }
+
+  const guiState = normalizeGuiState(state.gui);
+  const stats = [
+    {
+      title: "Styles",
+      value: String(guiState.styles.length),
+    },
+    {
+      title: "Screens",
+      value: String(guiState.screens.length),
+    },
+    {
+      title: "Config / Prefs / Store",
+      value: `${guiState.config.length} / ${guiState.preferences.length} / ${guiState.store.length}`,
+    },
+    {
+      title: "Cursors / Shaders",
+      value: `${guiState.cursors.length} / ${guiState.textShaders.length}`,
+    },
+  ];
+
+  guiEditorProjectSummaryEl.innerHTML = stats.map((stat) => `
+    <div class="visual-stat-card">
+      <strong>${escapeHtml(stat.title)}</strong>
+      <span>${escapeHtml(stat.value)}</span>
+    </div>
+  `).join("");
+}
+
 function renderGraph() {
   graphNodesEl.innerHTML = "";
   const graph = getActiveGraph();
@@ -7815,6 +7876,7 @@ function renderInspector() {
 
 function render() {
   renderProjectInfo();
+  renderGuiEditorPanel();
   renderLabelGraphList();
   renderLabelPanel();
   renderImagesPanel();
@@ -10200,6 +10262,10 @@ sidebarCollapsedRailEl.querySelectorAll(".collapsed-rail-button").forEach((butto
   button.addEventListener("click", () => {
     openSidebarSection(button.dataset.sidebarSection);
   });
+});
+openGuiEditorButton?.addEventListener("click", () => {
+  const query = projectPath ? `?project=${encodeURIComponent(projectPath)}` : "";
+  window.location.href = `./gui_editor.html${query}`;
 });
 canvasEl.addEventListener("pointerdown", beginPan);
 canvasEl.addEventListener("pointermove", updatePan);

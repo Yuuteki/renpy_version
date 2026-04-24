@@ -30,6 +30,19 @@
             <div id="visualProjectStats" class="visual-project-stats"></div>
           </section>
 
+          <section id="guiEditorSection" class="sidebar-section sidebar-panel status-section">
+            <div class="section-header">
+              <h2>GUI Editor</h2>
+              <p>Open the dedicated editor for styles, screens, config, cursors, and text shaders.</p>
+            </div>
+
+            <div id="guiEditorProjectSummary" class="visual-project-stats"></div>
+
+            <div class="sidebar-actions">
+              <button id="openGuiEditorButton" class="primary" type="button">Open GUI Editor</button>
+            </div>
+          </section>
+
           <section id="labelGraphsSection" class="sidebar-section sidebar-panel">
             <div id="labelListView" class="label-view">
               <button id="newLabelButton" class="secondary" type="button">New Label Graph</button>
@@ -1324,6 +1337,21 @@
               <path d="M4 8.5 12 4l8 4.5"></path>
               <path d="M6.5 9.5V19h11V9.5"></path>
               <path d="M10 19v-5h4v5"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="guiEditorSection"
+            aria-label="Open GUI editor"
+            title="GUI"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+              <path d="M8 9h8"></path>
+              <path d="M8 12h5"></path>
+              <path d="M8 15h6"></path>
             </svg>
           </button>
 

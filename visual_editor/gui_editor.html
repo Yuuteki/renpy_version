@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ren'Py GUI Editor</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./gui_editor.css" />
+  </head>
+  <body>
+    <div class="gui-shell">
+      <header class="gui-topbar">
+        <div class="gui-topbar-copy">
+          <p class="gui-eyebrow">Ren'Py Visual Editor</p>
+          <h1>GUI Editor</h1>
+          <p id="guiProjectPath" class="project-path">No project path provided.</p>
+          <p id="guiStatusText" class="gui-status-text">GUI editor ready.</p>
+        </div>
+
+        <div class="gui-topbar-actions">
+          <button id="guiBackButton" class="secondary" type="button">Back to Visual Editor</button>
+          <button id="guiSaveButton" class="primary" type="button">Save GUI Draft</button>
+        </div>
+      </header>
+
+      <div class="gui-layout">
+        <aside class="gui-nav-panel">
+          <div class="gui-nav-stack">
+            <button class="gui-nav-button is-active" type="button" data-gui-section="stylesSection">
+              <span>Styles</span>
+              <strong id="stylesNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="screensSection">
+              <span>Screens</span>
+              <strong id="screensNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="configSection">
+              <span>Config</span>
+              <strong id="configNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="cursorsSection">
+              <span>Cursors</span>
+              <strong id="cursorsNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="shadersSection">
+              <span>Shaders</span>
+              <strong id="shadersNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="diagnosticsSection">
+              <span>Diagnostics</span>
+              <strong id="diagnosticsNavCount">0</strong>
+            </button>
+          </div>
+
+          <div class="gui-nav-note">
+            This editor now covers styles, screen structure, screen actions and values, GUI config, cursor systems,
+            text shaders, special screen templates, preview, and diagnostics.
+          </div>
+        </aside>
+
+        <main class="gui-content">
+          <section id="stylesSection" class="gui-section is-active">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Styles</h2>
+                    <p>Reusable <code>style</code> definitions for GUI components.</p>
+                  </div>
+                </div>
+
+                <div id="guiStyleEmpty" class="panel-empty-state hidden">
+                  No styles yet. Create one to start building GUI appearance rules.
+                </div>
+
+                <div id="guiStyleList" class="character-list gui-style-list"></div>
+
+                <button id="newGuiStyleButton" class="primary gui-bottom-button" type="button">New Style</button>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiStyleEmptyState" class="gui-empty-detail">
+                  Select a style from the list or create a new one to start editing.
+                </div>
+
+                <form id="guiStyleForm" class="character-detail-form hidden">
+                  <div class="gui-panel-header gui-panel-header-tight">
+                    <div>
+                      <h2>Style Detail</h2>
+                      <p>Define the style statement and its property overrides.</p>
+                    </div>
+                  </div>
+
+                  <div class="gui-style-basics">
+                    <label>
+                      Style Name
+                      <input id="guiStyleNameInput" type="text" placeholder="e.g. say_dialogue" />
+                    </label>
+
+                    <label>
+                      Parent Style
+                      <input id="guiStyleParentInput" type="text" placeholder="e.g. default or button" />
+                    </label>
+
+                    <label>
+                      Variant Expression
+                      <input id="guiStyleVariantInput" type="text" placeholder='e.g. "touch" or ["small", "touch"]' />
+                    </label>
+
+                    <label>
+                      Primary Category
+                      <select id="guiStyleCategoryInput">
+                        <option value="text">Text</option>
+                        <option value="window">Window</option>
+                        <option value="button">Button</option>
+                        <option value="bar">Bar</option>
+                        <option value="box">Box</option>
+                        <option value="grid">Grid</option>
+                        <option value="margin">Margin</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <label>
+                    properties Expression
+                    <textarea id="guiStylePropertiesExpressionInput" rows="3" placeholder='e.g. {"font": gui.default_font, "size": 36}'></textarea>
+                  </label>
+
+                  <div class="gui-prefix-toolbar">
+                    <div>
+                      <p class="section-label secondary-label">State Prefix</p>
+                      <p id="guiStylePrefixSummary" class="image-definition-help"></p>
+                    </div>
+                    <div id="guiStylePrefixTabs" class="gui-prefix-tabs"></div>
+                  </div>
+
+                  <div class="gui-style-panels">
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Position & Layout</h3>
+                          <p>Typed editors for common position-related properties.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelPosition" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Text</h3>
+                          <p>Font, color, outlines, text speed, and line handling.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelText" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Window</h3>
+                          <p>Backgrounds, padding, fill behavior, and grouping.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelWindow" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Button</h3>
+                          <p>State-aware button visuals, sounds, focus, and cursors.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelButton" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Bar</h3>
+                          <p>Thumbs, gutters, orientation, and bar displayables.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelBar" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Box</h3>
+                          <p>Spacing, wrapping, reversing, and justification behavior.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelBox" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Grid</h3>
+                          <p>Horizontal and vertical spacing controls for grid layouts.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelGrid" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Margin</h3>
+                          <p>Outer spacing around windows, frames, buttons, and layout containers.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelMargin" class="gui-property-grid"></div>
+                    </section>
+                  </div>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteStyleButton" class="danger-button" type="button">Delete Style</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Style Output</h2>
+                    <p>Current code preview and active property summary.</p>
+                  </div>
+                </div>
+
+                <div id="guiStylePropertySummary" class="gui-property-summary"></div>
+
+                <pre id="guiStyleCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="screensSection" class="gui-section hidden">
+            <div class="gui-section-grid gui-section-grid-wide">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Screens</h2>
+                    <p>Build screen trees, apply templates, and wire actions and values.</p>
+                  </div>
+                </div>
+
+                <div id="guiScreenEmpty" class="panel-empty-state hidden">
+                  No screens yet. Create one or start from a special-screen template.
+                </div>
+
+                <div id="guiScreenList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newGuiScreenButton" class="primary gui-bottom-button" type="button">New Screen</button>
+                  <label class="gui-compact-label">
+                    Template
+                    <select id="guiScreenTemplateInput"></select>
+                  </label>
+                  <button id="createGuiScreenFromTemplateButton" class="secondary gui-bottom-button" type="button">
+                    Create From Template
+                  </button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiScreenEmptyState" class="gui-empty-detail">
+                  Select a screen to edit its structure, then choose nodes in the tree to configure them.
+                </div>
+
+                <div id="guiScreenEditor" class="hidden">
+                  <div class="gui-panel-header gui-panel-header-tight">
+                    <div>
+                      <h2>Screen Detail</h2>
+                      <p>Configure the screen header, then build its node tree below.</p>
+                    </div>
+                  </div>
+
+                  <div class="gui-style-basics">
+                    <label>
+                      Screen Name
+                      <input id="guiScreenNameInput" type="text" placeholder="e.g. preferences" />
+                    </label>
+
+                    <label>
+                      Parameters
+                      <input id="guiScreenParametersInput" type="text" placeholder="e.g. title, items=None" />
+                    </label>
+
+                    <label>
+                      Tag
+                      <input id="guiScreenTagInput" type="text" placeholder="e.g. menu" />
+                    </label>
+
+                    <label>
+                      Modal
+                      <select id="guiScreenModalInput">
+                        <option value="false">False</option>
+                        <option value="true">True</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      zorder
+                      <input id="guiScreenZorderInput" type="number" placeholder="e.g. 100" />
+                    </label>
+
+                    <label>
+                      Variant
+                      <input id="guiScreenVariantInput" type="text" placeholder='e.g. "touch"' />
+                    </label>
+                  </div>
+
+                  <label>
+                    Notes
+                    <textarea id="guiScreenNotesInput" rows="2" placeholder="Optional notes about this screen."></textarea>
+                  </label>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteScreenButton" class="danger-button" type="button">Delete Screen</button>
+                  </div>
+
+                  <div class="gui-section-subheader">
+                    <div>
+                      <h3>Node Tree</h3>
+                      <p>Use root and child nodes to model the screen language structure.</p>
+                    </div>
+                    <div class="gui-inline-actions">
+                      <label class="gui-compact-label">
+                        New Node Type
+                        <select id="guiNewScreenNodeTypeInput"></select>
+                      </label>
+                      <button id="guiAddRootNodeButton" class="secondary" type="button">Add Root Node</button>
+                      <button id="guiAddNodeAsChildButton" class="secondary" type="button">Add Child Node</button>
+                    </div>
+                  </div>
+
+                  <div id="guiScreenNodeTree" class="gui-tree"></div>
+
+                  <div id="guiScreenNodeEmptyState" class="gui-inline-empty">
+                    Select a node from the tree to edit its fields.
+                  </div>
+
+                  <form id="guiScreenNodeForm" class="character-detail-form hidden">
+                    <div class="gui-style-basics">
+                      <label>
+                        Node Type
+                        <select id="guiScreenNodeTypeInput"></select>
+                      </label>
+
+                      <label>
+                        Title
+                        <input id="guiScreenNodeTitleInput" type="text" placeholder="Shown in the tree only." />
+                      </label>
+
+                      <label>
+                        style
+                        <input id="guiScreenNodeStyleInput" type="text" placeholder="e.g. menu_button" />
+                      </label>
+
+                      <label>
+                        id
+                        <input id="guiScreenNodeIdInput" type="text" placeholder="Optional screen id." />
+                      </label>
+                    </div>
+
+                    <label>
+                      Extra Properties
+                      <textarea id="guiScreenNodePropertiesInput" rows="3" placeholder="Additional screen-language properties, one per line."></textarea>
+                    </label>
+
+                    <div id="guiNodeTextField">
+                      <label>
+                        Text / Label
+                        <textarea id="guiNodeTextInput" rows="2" placeholder="Text, input prompt, or button caption."></textarea>
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeDisplayableField">
+                        <label>
+                          Displayable / Image
+                          <input id="guiNodeDisplayableInput" type="text" placeholder='e.g. "gui/logo.png"' />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeHoverDisplayableField">
+                        <label>
+                          Hover / Alternate Displayable
+                          <input id="guiNodeHoverDisplayableInput" type="text" placeholder='e.g. "gui/button_hover.png"' />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div id="guiNodeConditionField">
+                      <label>
+                        Condition
+                        <input id="guiNodeConditionInput" type="text" placeholder="e.g. persistent.unlocked" />
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeVariableField">
+                        <label>
+                          Variable Name
+                          <input id="guiNodeVariableInput" type="text" placeholder="e.g. item or player_name" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeIterableField">
+                        <label>
+                          Iterable / Source
+                          <input id="guiNodeIterableInput" type="text" placeholder="e.g. inventory_items" />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeTargetScreenField">
+                        <label>
+                          Target Screen / Use Target
+                          <input id="guiNodeTargetScreenInput" type="text" placeholder="e.g. save or inventory_panel" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeTargetArgsField">
+                        <label>
+                          Target Arguments
+                          <input id="guiNodeTargetArgsInput" type="text" placeholder="Comma-separated args or keyword args." />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeEventField">
+                        <label>
+                          Event Name
+                          <input id="guiNodeEventInput" type="text" placeholder='e.g. "show" or "replace"' />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeKeyField">
+                        <label>
+                          Key
+                          <input id="guiNodeKeyInput" type="text" placeholder='e.g. "game_menu"' />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeDelayField">
+                        <label>
+                          Delay
+                          <input id="guiNodeDelayInput" type="number" step="any" placeholder="e.g. 0.25" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeRepeatsField">
+                        <label>
+                          Repeat
+                          <select id="guiNodeRepeatsInput">
+                            <option value="false">False</option>
+                            <option value="true">True</option>
+                          </select>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeDefaultNameField">
+                        <label>
+                          Default Name
+                          <input id="guiNodeDefaultNameInput" type="text" placeholder="e.g. current_page" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeDefaultValueField">
+                        <label>
+                          Default Value
+                          <input id="guiNodeDefaultValueInput" type="text" placeholder="e.g. 1 or []" />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeTransformField">
+                        <label>
+                          Transform / ATL Name
+                          <input id="guiNodeTransformInput" type="text" placeholder="e.g. menu_fade" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeSidePositionsField">
+                        <label>
+                          side positions
+                          <input id="guiNodeSidePositionsInput" type="text" placeholder='e.g. "c tl tr"' />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div id="guiNodeGridFields" class="gui-inline-fields">
+                      <label>
+                        Grid Columns
+                        <input id="guiNodeGridColumnsInput" type="number" step="1" placeholder="e.g. 2" />
+                      </label>
+
+                      <label>
+                        Grid Rows
+                        <input id="guiNodeGridRowsInput" type="number" step="1" placeholder="e.g. 3" />
+                      </label>
+                    </div>
+
+                    <div id="guiNodeActionFields" class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Action</h3>
+                          <p>Choose a common action or fall back to a raw action expression.</p>
+                        </div>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Action Kind
+                          <select id="guiNodeActionKindInput"></select>
+                        </label>
+
+                        <label>
+                          Action Args
+                          <input id="guiNodeActionArgsInput" type="text" placeholder='e.g. "load" or flag_name, True' />
+                        </label>
+                      </div>
+
+                      <label>
+                        Raw Action Expression
+                        <input id="guiNodeActionRawInput" type="text" placeholder='e.g. [SetVariable("page", 2), Return()]' />
+                      </label>
+                    </div>
+
+                    <div id="guiNodeValueFields" class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Value</h3>
+                          <p>Used by bars, inputs, and other value-driven displayables.</p>
+                        </div>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Value Kind
+                          <select id="guiNodeValueKindInput"></select>
+                        </label>
+
+                        <label>
+                          Value Args
+                          <input id="guiNodeValueArgsInput" type="text" placeholder='e.g. "text speed" or player_name' />
+                        </label>
+                      </div>
+
+                      <label>
+                        Raw Value Expression
+                        <input id="guiNodeValueRawInput" type="text" placeholder='e.g. Preference("music volume")' />
+                      </label>
+                    </div>
+
+                    <p id="guiNodeChildrenHint" class="gui-info-banner"></p>
+
+                    <div class="inspector-actions">
+                      <button id="guiAddChildNodeButton" class="secondary" type="button">Add Child</button>
+                      <button id="guiMoveNodeUpButton" class="secondary" type="button">Move Up</button>
+                      <button id="guiMoveNodeDownButton" class="secondary" type="button">Move Down</button>
+                      <button id="guiDeleteNodeButton" class="danger-button" type="button">Delete Node</button>
+                    </div>
+                  </form>
+                </div>
+              </section>
+
+              <aside class="gui-column gui-preview-column gui-screen-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Preview & Code</h2>
+                    <p>Approximate HTML preview, generated <code>screen</code> code, and screen-level diagnostics.</p>
+                  </div>
+                </div>
+
+                <div id="guiScreenPreview" class="gui-preview-surface"></div>
+                <pre id="guiScreenCodePreview" class="code-preview"></pre>
+                <div id="guiScreenDiagnostics" class="gui-diagnostics-list"></div>
+              </aside>
+            </div>
+          </section>
+
+          <section id="configSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Config & Defaults</h2>
+                    <p>Manage <code>config</code>, <code>preferences</code>, and default store values.</p>
+                  </div>
+                </div>
+
+                <div id="guiConfigEmpty" class="panel-empty-state hidden">
+                  No config entries yet. Add one of the common scopes below.
+                </div>
+
+                <div id="guiConfigEntryList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button">New Config Entry</button>
+                  <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New Preference Default</button>
+                  <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button">New Store Default</button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiConfigEmptyState" class="gui-empty-detail">
+                  Select an entry to edit its scope and emitted Ren'Py statement.
+                </div>
+
+                <form id="guiConfigForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Scope
+                      <select id="guiConfigScopeInput">
+                        <option value="config">config</option>
+                        <option value="preferences">preferences</option>
+                        <option value="store">store</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Name
+                      <input id="guiConfigNameInput" type="text" placeholder="e.g. default_textshader" />
+                    </label>
+
+                    <label>
+                      Store Path
+                      <input id="guiConfigStorePathInput" type="text" placeholder="Optional, e.g. persistent or my_store" />
+                    </label>
+                  </div>
+
+                  <label>
+                    Value
+                    <textarea id="guiConfigValueInput" rows="4" placeholder='e.g. "wave:10", True, 0.25, {"idle": [("gui/cursor.png", 4, 4)]}'></textarea>
+                  </label>
+
+                  <label>
+                    Description
+                    <textarea id="guiConfigDescriptionInput" rows="2" placeholder="Optional notes about why this entry exists."></textarea>
+                  </label>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteConfigButton" class="danger-button" type="button">Delete Entry</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Config Output</h2>
+                    <p>Generated code from all config, preference, and store defaults.</p>
+                  </div>
+                </div>
+
+                <pre id="guiConfigCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="cursorsSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Cursors</h2>
+                    <p>Define hardware cursor styles, displayable cursors, and usage snippets.</p>
+                  </div>
+                </div>
+
+                <div id="guiCursorEmpty" class="panel-empty-state hidden">
+                  No cursor entries yet. Start with a hardware or displayable cursor.
+                </div>
+
+                <div id="guiCursorList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newHardwareCursorButton" class="primary gui-bottom-button" type="button">New Hardware Cursor</button>
+                  <button id="newDisplayableCursorButton" class="secondary gui-bottom-button" type="button">New Displayable Cursor</button>
+                  <button id="newCursorUsageButton" class="secondary gui-bottom-button" type="button">New Usage Snippet</button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiCursorEmptyState" class="gui-empty-detail">
+                  Select a cursor entry to edit it.
+                </div>
+
+                <form id="guiCursorForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Kind
+                      <select id="guiCursorKindInput">
+                        <option value="hardware">Hardware Cursor</option>
+                        <option value="displayable">Displayable Cursor</option>
+                        <option value="usage">Usage Snippet</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Name
+                      <input id="guiCursorNameInput" type="text" placeholder="e.g. menu or talk" />
+                    </label>
+
+                    <label id="guiCursorStyleTargetField">
+                      Style Target
+                      <input id="guiCursorStyleTargetInput" type="text" placeholder="e.g. menu_button" />
+                    </label>
+
+                    <label id="guiCursorTargetCursorField">
+                      Cursor Name Used
+                      <input id="guiCursorTargetCursorInput" type="text" placeholder="e.g. menu" />
+                    </label>
+                  </div>
+
+                  <div class="gui-inline-fields">
+                    <label>
+                      Cursor Image / Displayable
+                      <input id="guiCursorImageInput" type="text" placeholder='e.g. "gui/cursor/menu_idle.png"' />
+                    </label>
+
+                    <label>
+                      Hotspot X
+                      <input id="guiCursorHotspotXInput" type="number" step="1" placeholder="e.g. 4" />
+                    </label>
+
+                    <label>
+                      Hotspot Y
+                      <input id="guiCursorHotspotYInput" type="number" step="1" placeholder="e.g. 4" />
+                    </label>
+                  </div>
+
+                  <label id="guiCursorFramesField">
+                    Frames / Raw Mapping
+                    <textarea id="guiCursorFramesInput" rows="3" placeholder='Optional raw frame list, e.g. [("gui/cursor_a.png", 4, 4), ("gui/cursor_b.png", 4, 4)]'></textarea>
+                  </label>
+
+                  <label>
+                    Note
+                    <textarea id="guiCursorNoteInput" rows="2" placeholder="Optional notes about this cursor entry."></textarea>
+                  </label>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteCursorButton" class="danger-button" type="button">Delete Cursor Entry</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Cursor Output</h2>
+                    <p>Aggregated cursor configuration and usage code.</p>
+                  </div>
+                </div>
+
+                <div id="guiCursorReferenceList" class="gui-diagnostics-list"></div>
+                <pre id="guiCursorCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="shadersSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Text Shaders</h2>
+                    <p>Manage default shader assignments, style-level shaders, callbacks, and registrations.</p>
+                  </div>
+                </div>
+
+                <div id="guiShaderEmpty" class="panel-empty-state hidden">
+                  No shader entries yet. Add a built-in or custom text shader setup.
+                </div>
+
+                <div id="guiShaderList" class="character-list gui-entity-list"></div>
+
+                <button id="newGuiShaderButton" class="primary gui-bottom-button" type="button">New Shader Entry</button>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiShaderEmptyState" class="gui-empty-detail">
+                  Select a shader entry to edit it.
+                </div>
+
+                <form id="guiShaderForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Mode
+                      <select id="guiShaderModeInput">
+                        <option value="default">Default Shader</option>
+                        <option value="style">Style Shader</option>
+                        <option value="callback">Callback Mapping</option>
+                        <option value="custom">Custom Registration</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Name / Key
+                      <input id="guiShaderNameInput" type="text" placeholder="e.g. wave_default or title_glow" />
+                    </label>
+
+                    <label>
+                      Shader Spec
+                      <input id="guiShaderShaderSpecInput" type="text" placeholder='e.g. "wave:10" or "dissolve"' />
+                    </label>
+
+                    <label>
+                      Target
+                      <input id="guiShaderTargetNameInput" type="text" placeholder="e.g. menu_button_text or default" />
+                    </label>
+                  </div>
+
+                  <div class="gui-inline-fields">
+                    <label>
+                      Callback Key
+                      <input id="guiShaderCallbackKeyInput" type="text" placeholder='e.g. "default"' />
+                    </label>
+
+                    <label>
+                      Callback Function
+                      <input id="guiShaderCallbackFunctionInput" type="text" placeholder="e.g. get_default_textshader" />
+                    </label>
+                  </div>
+
+                  <label>
+                    Custom shaders= Expression / Raw Registration Data
+                    <textarea id="guiShaderCustomShadersInput" rows="4" placeholder='e.g. ("textshader.spin",) or raw kwargs lines'></textarea>
+                  </label>
+
+                  <div class="gui-inline-fields">
+                    <label>
+                      include_default
+                      <select id="guiShaderIncludeDefaultInput">
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      redraw
+                      <input id="guiShaderRedrawInput" type="text" placeholder="e.g. 0.02 or None" />
+                    </label>
+                  </div>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteShaderButton" class="danger-button" type="button">Delete Shader Entry</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Shader Output</h2>
+                    <p>Generated text shader code and usage notes.</p>
+                  </div>
+                </div>
+
+                <div id="guiShaderUsageList" class="gui-diagnostics-list"></div>
+                <pre id="guiShaderCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="diagnosticsSection" class="gui-section hidden">
+            <div class="gui-section-grid gui-section-grid-diagnostics">
+              <section class="gui-column gui-detail-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Diagnostics</h2>
+                    <p>Static checks for structure, missing values, unresolved references, and likely GUI issues.</p>
+                  </div>
+                </div>
+
+                <div id="guiDiagnosticsOverview" class="gui-property-summary"></div>
+                <div id="guiDiagnosticsList" class="gui-diagnostics-list"></div>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Suggested Output</h2>
+                    <p>Collected snippets that may need attention based on the current diagnostics.</p>
+                  </div>
+                </div>
+
+                <pre id="guiDiagnosticsCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="./gui_editor.js"></script>
+  </body>
+</html>
