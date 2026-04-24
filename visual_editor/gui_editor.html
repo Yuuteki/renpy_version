@@ -34,6 +34,10 @@
               <span>Screens</span>
               <strong id="screensNavCount">0</strong>
             </button>
+            <button class="gui-nav-button" type="button" data-gui-section="extrasSection">
+              <span>Extras</span>
+              <strong id="extrasNavCount">0</strong>
+            </button>
             <button class="gui-nav-button" type="button" data-gui-section="configSection">
               <span>Config</span>
               <strong id="configNavCount">0</strong>
@@ -54,7 +58,7 @@
 
           <div class="gui-nav-note">
             This editor now covers styles, screen structure, screen actions and values, GUI config, cursor systems,
-            text shaders, special screen templates, preview, and diagnostics.
+            text shaders, replay menus, music rooms, galleries, preview, and diagnostics.
           </div>
         </aside>
 
@@ -642,6 +646,306 @@
                 <pre id="guiScreenCodePreview" class="code-preview"></pre>
                 <div id="guiScreenDiagnostics" class="gui-diagnostics-list"></div>
               </aside>
+            </div>
+          </section>
+
+          <section id="extrasSection" class="gui-section hidden">
+            <div class="gui-extras-stack">
+              <section class="gui-style-panel">
+                <div class="gui-style-panel-header">
+                  <div>
+                    <h2>Replay</h2>
+                    <p>Generate a replay menu from labels that are marked as replay-enabled in the main visual editor.</p>
+                  </div>
+                </div>
+
+                <form id="guiReplayForm" class="character-detail-form">
+                  <div class="gui-style-basics">
+                    <label>
+                      Screen Name
+                      <input id="guiReplayScreenNameInput" type="text" placeholder="e.g. replay_gallery" />
+                    </label>
+
+                    <label>
+                      Menu Button Label
+                      <input id="guiReplayMenuLabelInput" type="text" placeholder="e.g. Memories" />
+                    </label>
+
+                    <label>
+                      Title
+                      <input id="guiReplayTitleInput" type="text" placeholder="e.g. Replay Gallery" />
+                    </label>
+
+                    <label>
+                      Return Action
+                      <input id="guiReplayReturnActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' />
+                    </label>
+                  </div>
+
+                  <label class="character-checkbox">
+                    <input id="guiReplayTagMenuInput" type="checkbox" />
+                    <span>Emit <code>tag menu</code> on the replay screen</span>
+                  </label>
+
+                  <label>
+                    Empty State Text
+                    <input id="guiReplayEmptyTextInput" type="text" placeholder="Shown when no replay labels are enabled." />
+                  </label>
+
+                  <div>
+                    <p class="section-label secondary-label">Enabled Replay Labels</p>
+                    <div id="guiReplayLabelList" class="gui-chip-list"></div>
+                  </div>
+
+                  <pre id="guiReplayCodePreview" class="code-preview"></pre>
+                </form>
+              </section>
+
+              <section class="gui-style-panel">
+                <div class="gui-style-panel-header">
+                  <div>
+                    <h2>Music Rooms</h2>
+                    <p>Build menu screens backed by <code>MusicRoom()</code> using imported music resources or manual file paths.</p>
+                  </div>
+                </div>
+
+                <div class="gui-extra-entity-layout">
+                  <aside class="gui-extra-entity-list">
+                    <div id="guiMusicRoomEmpty" class="panel-empty-state hidden">
+                      No music rooms yet. Create one to start mapping tracks and controls.
+                    </div>
+
+                    <div id="guiMusicRoomList" class="character-list gui-entity-list"></div>
+
+                    <button id="newGuiMusicRoomButton" class="primary gui-bottom-button" type="button">New Music Room</button>
+                  </aside>
+
+                  <section class="gui-extra-entity-detail">
+                    <div id="guiMusicRoomEmptyState" class="gui-empty-detail">
+                      Select a music room to configure its track list and generated screen.
+                    </div>
+
+                    <form id="guiMusicRoomForm" class="character-detail-form hidden">
+                      <div class="gui-style-basics">
+                        <label>
+                          Room Name
+                          <input id="guiMusicRoomNameInput" type="text" placeholder="e.g. Bonus Music" />
+                        </label>
+
+                        <label>
+                          Instance Name
+                          <input id="guiMusicRoomInstanceInput" type="text" placeholder="e.g. bonus_music_room" />
+                        </label>
+
+                        <label>
+                          Screen Name
+                          <input id="guiMusicRoomScreenInput" type="text" placeholder="e.g. bonus_music_room_screen" />
+                        </label>
+
+                        <label>
+                          Menu Button Label
+                          <input id="guiMusicRoomMenuLabelInput" type="text" placeholder="e.g. Music Room" />
+                        </label>
+                      </div>
+
+                      <div class="gui-style-basics">
+                        <label>
+                          Channel
+                          <input id="guiMusicRoomChannelInput" type="text" placeholder="e.g. music" />
+                        </label>
+
+                        <label>
+                          Fade Out
+                          <input id="guiMusicRoomFadeoutInput" type="text" placeholder="e.g. 1.0" />
+                        </label>
+
+                        <label>
+                          Fade In
+                          <input id="guiMusicRoomFadeinInput" type="text" placeholder="e.g. 0.0" />
+                        </label>
+
+                        <label>
+                          Stop Action
+                          <input id="guiMusicRoomRestoreActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' />
+                        </label>
+                      </div>
+
+                      <div class="gui-checkbox-row">
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomLoopInput" type="checkbox" />
+                          <span>Loop</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomSingleTrackInput" type="checkbox" />
+                          <span>Single Track</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomShuffleInput" type="checkbox" />
+                          <span>Shuffle</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomShowVolumeInput" type="checkbox" />
+                          <span>Add Music Volume Bar</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomAutoPlayInput" type="checkbox" />
+                          <span>Play On Screen Show</span>
+                        </label>
+                      </div>
+
+                      <div>
+                        <div class="gui-section-subheader">
+                          <div>
+                            <h3>Tracks</h3>
+                            <p>Each row can reference an imported music definition or fall back to a manual file path.</p>
+                          </div>
+                          <button id="guiMusicRoomAddTrackButton" class="secondary" type="button">Add Track</button>
+                        </div>
+                        <div id="guiMusicRoomTrackList" class="gui-nested-list"></div>
+                      </div>
+
+                      <div class="inspector-actions">
+                        <button id="guiDeleteMusicRoomButton" class="danger-button" type="button">Delete Music Room</button>
+                      </div>
+
+                      <pre id="guiMusicRoomCodePreview" class="code-preview"></pre>
+                    </form>
+                  </section>
+                </div>
+              </section>
+
+              <section class="gui-style-panel">
+                <div class="gui-style-panel-header">
+                  <div>
+                    <h2>Galleries</h2>
+                    <p>Define <code>Gallery()</code> objects, thumbnail buttons, and generated gallery menu screens.</p>
+                  </div>
+                </div>
+
+                <div class="gui-extra-entity-layout">
+                  <aside class="gui-extra-entity-list">
+                    <div id="guiGalleryEmpty" class="panel-empty-state hidden">
+                      No galleries yet. Create one to wire thumbnails to unlockable CG images.
+                    </div>
+
+                    <div id="guiGalleryList" class="character-list gui-entity-list"></div>
+
+                    <button id="newGuiGalleryButton" class="primary gui-bottom-button" type="button">New Gallery</button>
+                  </aside>
+
+                  <section class="gui-extra-entity-detail">
+                    <div id="guiGalleryEmptyState" class="gui-empty-detail">
+                      Select a gallery to configure its object fields, thumbnail buttons, and generated screen.
+                    </div>
+
+                    <form id="guiGalleryForm" class="character-detail-form hidden">
+                      <div class="gui-style-basics">
+                        <label>
+                          Gallery Name
+                          <input id="guiGalleryNameInput" type="text" placeholder="e.g. CG Gallery" />
+                        </label>
+
+                        <label>
+                          Instance Name
+                          <input id="guiGalleryInstanceInput" type="text" placeholder="e.g. cg_gallery" />
+                        </label>
+
+                        <label>
+                          Screen Name
+                          <input id="guiGalleryScreenInput" type="text" placeholder="e.g. cg_gallery_screen" />
+                        </label>
+
+                        <label>
+                          Menu Button Label
+                          <input id="guiGalleryMenuLabelInput" type="text" placeholder="e.g. Gallery" />
+                        </label>
+                      </div>
+
+                      <div class="gui-style-basics">
+                        <label>
+                          Background
+                          <input id="guiGalleryBackgroundInput" type="text" placeholder='e.g. "gui/gallery_bg.png" or bg_beach' />
+                        </label>
+
+                        <label>
+                          Grid Columns
+                          <input id="guiGalleryColumnsInput" type="text" placeholder="e.g. 3" />
+                        </label>
+
+                        <label>
+                          Transition
+                          <input id="guiGalleryTransitionInput" type="text" placeholder="e.g. dissolve" />
+                        </label>
+
+                        <label>
+                          Slideshow Delay
+                          <input id="guiGallerySlideshowDelayInput" type="text" placeholder="e.g. 5.0" />
+                        </label>
+                      </div>
+
+                      <div class="gui-checkbox-row">
+                        <label class="character-checkbox">
+                          <input id="guiGalleryTagMenuInput" type="checkbox" />
+                          <span>Emit <code>tag menu</code></span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiGalleryNavigationInput" type="checkbox" />
+                          <span>Show Gallery Navigation</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiGallerySpanButtonsInput" type="checkbox" />
+                          <span>Allow Span Buttons</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiGalleryUnlockedAdvanceInput" type="checkbox" />
+                          <span>Advance Through Unlocked Images Only</span>
+                        </label>
+                      </div>
+
+                      <div class="gui-style-basics">
+                        <label>
+                          Locked Button Displayable
+                          <input id="guiGalleryLockedButtonInput" type="text" placeholder='e.g. "gui/gallery_locked.png"' />
+                        </label>
+
+                        <label>
+                          Hover Border
+                          <input id="guiGalleryHoverBorderInput" type="text" placeholder='e.g. "gui/gallery_hover.png"' />
+                        </label>
+
+                        <label>
+                          Idle Border
+                          <input id="guiGalleryIdleBorderInput" type="text" placeholder='e.g. "gui/gallery_idle.png"' />
+                        </label>
+                      </div>
+
+                      <div>
+                        <div class="gui-section-subheader">
+                          <div>
+                            <h3>Buttons</h3>
+                            <p>Each button can hold multiple image lines. One line equals one <code>g.image</code> or <code>g.unlock_image</code> call.</p>
+                          </div>
+                          <button id="guiGalleryAddButtonButton" class="secondary" type="button">Add Button</button>
+                        </div>
+                        <div id="guiGalleryButtonList" class="gui-nested-list"></div>
+                      </div>
+
+                      <div class="inspector-actions">
+                        <button id="guiDeleteGalleryButton" class="danger-button" type="button">Delete Gallery</button>
+                      </div>
+
+                      <pre id="guiGalleryCodePreview" class="code-preview"></pre>
+                    </form>
+                  </section>
+                </div>
+              </section>
             </div>
           </section>
 

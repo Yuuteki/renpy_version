@@ -2,6 +2,35 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.6] - 2026-04-24
+
+### Added
+
+- 为主编辑器的 label 代码预览页新增 `Replay` 配置表单，可直接启用回放、设置按钮文本、锁定模式、scope 和自动 `renpy.end_replay()`。
+- 为 `GUI Editor` 新增 `Extras` 工作区内的 `Replay / Music Rooms / Galleries` 三块实际可用的编辑流。
+- 为 `MusicRoom()` 新增曲目列表编辑、导入音频引用、手动文件路径回退和代码预览。
+- 为 `Gallery()` 新增按钮列表编辑、条件行、图片行、缩略图与 `make_button()` 代码预览。
+
+### Changed
+
+- 主编辑器的 `gui` 状态模型现在会保留 `replayMenu / musicRooms / galleries`，避免在两个编辑器之间来回切换时丢失 Extras 数据。
+- `GUI Editor` 左侧导航统计现在会把 `Extras` 计入数量，并在设置面板中显示 `Replay / Music / Gallery` 概览。
+- `Music Room` 表单中的动作字段更明确对应 `stop_action`，生成代码时与 Ren'Py 文档保持一致。
+
+## [0.4.5] - 2026-04-24
+
+### Added
+
+- 为主编辑器的 `Settings` 面板新增 `Side Image Settings`，覆盖常用的 `config.side_image_*` 配置项与代码预览。
+- 为图片定义新增 `Define As Side Image` 工作流，可直接生成 `image side ...` 形式的代码。
+- 为 `GUI Editor` 的 `say` 模板接入 `SideImage()` 节点与近似头像预览。
+
+### Changed
+
+- 将角色资源字段中的 `Image Tag` 明确改为 `Linked Image Tag`，更贴近 `Character(image=...)` 的真实含义。
+- 为 `GUI Editor` 的 `say` 诊断补充 `SideImage()` 缺失提示，方便排查头像为什么不显示。
+- 为主编辑器补充可复用的图像标签建议列表，同时服务角色 linked image tag 和 side image 配置。
+
 ## [0.4.4] - 2026-04-24
 
 ### Added

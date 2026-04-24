@@ -12,6 +12,7 @@ const guiNavButtonEls = Array.from(document.querySelectorAll(".gui-nav-button"))
 const guiSectionEls = Array.from(document.querySelectorAll(".gui-section"));
 const stylesNavCountEl = document.getElementById("stylesNavCount");
 const screensNavCountEl = document.getElementById("screensNavCount");
+const extrasNavCountEl = document.getElementById("extrasNavCount");
 const configNavCountEl = document.getElementById("configNavCount");
 const cursorsNavCountEl = document.getElementById("cursorsNavCount");
 const shadersNavCountEl = document.getElementById("shadersNavCount");
@@ -132,6 +133,64 @@ const guiScreenPreviewEl = document.getElementById("guiScreenPreview");
 const guiScreenCodePreviewEl = document.getElementById("guiScreenCodePreview");
 const guiScreenDiagnosticsEl = document.getElementById("guiScreenDiagnostics");
 
+const guiReplayFormEl = document.getElementById("guiReplayForm");
+const guiReplayScreenNameInput = document.getElementById("guiReplayScreenNameInput");
+const guiReplayMenuLabelInput = document.getElementById("guiReplayMenuLabelInput");
+const guiReplayTitleInput = document.getElementById("guiReplayTitleInput");
+const guiReplayReturnActionInput = document.getElementById("guiReplayReturnActionInput");
+const guiReplayTagMenuInput = document.getElementById("guiReplayTagMenuInput");
+const guiReplayEmptyTextInput = document.getElementById("guiReplayEmptyTextInput");
+const guiReplayLabelListEl = document.getElementById("guiReplayLabelList");
+const guiReplayCodePreviewEl = document.getElementById("guiReplayCodePreview");
+
+const guiMusicRoomEmptyEl = document.getElementById("guiMusicRoomEmpty");
+const guiMusicRoomListEl = document.getElementById("guiMusicRoomList");
+const newGuiMusicRoomButton = document.getElementById("newGuiMusicRoomButton");
+const guiMusicRoomEmptyStateEl = document.getElementById("guiMusicRoomEmptyState");
+const guiMusicRoomFormEl = document.getElementById("guiMusicRoomForm");
+const guiMusicRoomNameInput = document.getElementById("guiMusicRoomNameInput");
+const guiMusicRoomInstanceInput = document.getElementById("guiMusicRoomInstanceInput");
+const guiMusicRoomScreenInput = document.getElementById("guiMusicRoomScreenInput");
+const guiMusicRoomMenuLabelInput = document.getElementById("guiMusicRoomMenuLabelInput");
+const guiMusicRoomChannelInput = document.getElementById("guiMusicRoomChannelInput");
+const guiMusicRoomFadeoutInput = document.getElementById("guiMusicRoomFadeoutInput");
+const guiMusicRoomFadeinInput = document.getElementById("guiMusicRoomFadeinInput");
+const guiMusicRoomRestoreActionInput = document.getElementById("guiMusicRoomRestoreActionInput");
+const guiMusicRoomLoopInput = document.getElementById("guiMusicRoomLoopInput");
+const guiMusicRoomSingleTrackInput = document.getElementById("guiMusicRoomSingleTrackInput");
+const guiMusicRoomShuffleInput = document.getElementById("guiMusicRoomShuffleInput");
+const guiMusicRoomShowVolumeInput = document.getElementById("guiMusicRoomShowVolumeInput");
+const guiMusicRoomAutoPlayInput = document.getElementById("guiMusicRoomAutoPlayInput");
+const guiMusicRoomTrackListEl = document.getElementById("guiMusicRoomTrackList");
+const guiMusicRoomAddTrackButton = document.getElementById("guiMusicRoomAddTrackButton");
+const guiDeleteMusicRoomButton = document.getElementById("guiDeleteMusicRoomButton");
+const guiMusicRoomCodePreviewEl = document.getElementById("guiMusicRoomCodePreview");
+
+const guiGalleryEmptyEl = document.getElementById("guiGalleryEmpty");
+const guiGalleryListEl = document.getElementById("guiGalleryList");
+const newGuiGalleryButton = document.getElementById("newGuiGalleryButton");
+const guiGalleryEmptyStateEl = document.getElementById("guiGalleryEmptyState");
+const guiGalleryFormEl = document.getElementById("guiGalleryForm");
+const guiGalleryNameInput = document.getElementById("guiGalleryNameInput");
+const guiGalleryInstanceInput = document.getElementById("guiGalleryInstanceInput");
+const guiGalleryScreenInput = document.getElementById("guiGalleryScreenInput");
+const guiGalleryMenuLabelInput = document.getElementById("guiGalleryMenuLabelInput");
+const guiGalleryBackgroundInput = document.getElementById("guiGalleryBackgroundInput");
+const guiGalleryColumnsInput = document.getElementById("guiGalleryColumnsInput");
+const guiGalleryTransitionInput = document.getElementById("guiGalleryTransitionInput");
+const guiGallerySlideshowDelayInput = document.getElementById("guiGallerySlideshowDelayInput");
+const guiGalleryTagMenuInput = document.getElementById("guiGalleryTagMenuInput");
+const guiGalleryNavigationInput = document.getElementById("guiGalleryNavigationInput");
+const guiGallerySpanButtonsInput = document.getElementById("guiGallerySpanButtonsInput");
+const guiGalleryUnlockedAdvanceInput = document.getElementById("guiGalleryUnlockedAdvanceInput");
+const guiGalleryLockedButtonInput = document.getElementById("guiGalleryLockedButtonInput");
+const guiGalleryHoverBorderInput = document.getElementById("guiGalleryHoverBorderInput");
+const guiGalleryIdleBorderInput = document.getElementById("guiGalleryIdleBorderInput");
+const guiGalleryButtonListEl = document.getElementById("guiGalleryButtonList");
+const guiGalleryAddButtonButton = document.getElementById("guiGalleryAddButtonButton");
+const guiDeleteGalleryButton = document.getElementById("guiDeleteGalleryButton");
+const guiGalleryCodePreviewEl = document.getElementById("guiGalleryCodePreview");
+
 const guiConfigEmptyEl = document.getElementById("guiConfigEmpty");
 const guiConfigEntryListEl = document.getElementById("guiConfigEntryList");
 const newConfigEntryButton = document.getElementById("newConfigEntryButton");
@@ -200,6 +259,16 @@ const defaultGuiState = {
   store: [],
   cursors: [],
   textShaders: [],
+  replayMenu: {
+    screenName: "replay_gallery",
+    menuLabel: "Memories",
+    title: "Replay Gallery",
+    returnAction: "Return()",
+    tagMenu: true,
+    emptyText: "No replay scenes are enabled yet.",
+  },
+  musicRooms: [],
+  galleries: [],
 };
 
 const stylePrefixMeta = [
@@ -417,7 +486,7 @@ function getValueMetaForNodeType(nodeType) {
 }
 
 const specialScreenTemplateMeta = [
-  { id: "say", label: "say", description: "Dialogue window with speaker and body text." },
+  { id: "say", label: "say", description: "Dialogue window with side image, speaker, and body text." },
   { id: "choice", label: "choice", description: "A menu/choice list with vertically stacked buttons." },
   { id: "input", label: "input", description: "Special renpy.input() screen with prompt + input id field." },
   { id: "nvl", label: "nvl", description: "NVL text stack with a loose window layout." },
@@ -455,12 +524,15 @@ function createScreenTemplate(templateId) {
         name: "say",
         tag: "say",
         modal: false,
-        notes: "Speaker/namebox plus dialogue body.",
+        notes: "Speaker/namebox plus dialogue body and SideImage() support.",
         nodes: [
           buildTemplateNode("window", { title: "Dialogue Window", style: "say_window" }, [
-            buildTemplateNode("vbox", { title: "Dialogue Stack", style: "say_vbox" }, [
-              buildTemplateNode("text", { title: "Who", text: "who", style: "say_label" }),
-              buildTemplateNode("text", { title: "What", text: "what", style: "say_dialogue" }),
+            buildTemplateNode("hbox", { title: "Dialogue Row", style: "say_hbox" }, [
+              buildTemplateNode("add", { title: "Side Image", displayable: "SideImage()", style: "say_side_image" }),
+              buildTemplateNode("vbox", { title: "Dialogue Stack", style: "say_vbox" }, [
+                buildTemplateNode("text", { title: "Who", text: "who", style: "say_label" }),
+                buildTemplateNode("text", { title: "What", text: "what", style: "say_dialogue" }),
+              ]),
             ]),
           ]),
         ],
@@ -675,6 +747,8 @@ let activeScreenNodeId = getFirstNodeId(projectState.gui.screens[0]?.nodes ?? []
 let activeConfigEntryKey = getAllConfigEntries(projectState.gui)[0]?.key ?? null;
 let activeCursorId = projectState.gui.cursors[0]?.id ?? null;
 let activeShaderId = projectState.gui.textShaders[0]?.id ?? null;
+let activeMusicRoomId = projectState.gui.musicRooms[0]?.id ?? null;
+let activeGalleryId = projectState.gui.galleries[0]?.id ?? null;
 
 function loadProjectState() {
   try {
@@ -726,6 +800,13 @@ function normalizeGuiState(rawGui) {
       : [],
     textShaders: Array.isArray(rawGui.textShaders)
       ? rawGui.textShaders.map((entry, index) => normalizeGuiShaderEntry(entry, index))
+      : [],
+    replayMenu: normalizeGuiReplayMenu(rawGui.replayMenu),
+    musicRooms: Array.isArray(rawGui.musicRooms)
+      ? rawGui.musicRooms.map((entry, index) => normalizeGuiMusicRoom(entry, index))
+      : [],
+    galleries: Array.isArray(rawGui.galleries)
+      ? rawGui.galleries.map((entry, index) => normalizeGuiGallery(entry, index))
       : [],
   };
 }
@@ -879,6 +960,98 @@ function normalizeGuiShaderEntry(entry, index) {
   };
 }
 
+function normalizeGuiReplayMenu(entry) {
+  const defaults = defaultGuiState.replayMenu;
+  return {
+    screenName: `${entry?.screenName || ""}`.trim() || defaults.screenName,
+    menuLabel: `${entry?.menuLabel || ""}`.trim() || defaults.menuLabel,
+    title: `${entry?.title || ""}`.trim() || defaults.title,
+    returnAction: `${entry?.returnAction || ""}`.trim() || defaults.returnAction,
+    tagMenu: entry?.tagMenu !== false && entry?.tagMenu !== "false",
+    emptyText: `${entry?.emptyText || ""}`.trim() || defaults.emptyText,
+  };
+}
+
+function normalizeGuiMusicRoomTrack(entry, index) {
+  return {
+    id: entry?.id || createId("music_room_track"),
+    title: `${entry?.title || ""}`.trim() || `Track ${index + 1}`,
+    audioDefinitionId: `${entry?.audioDefinitionId || ""}`.trim(),
+    filename: `${entry?.filename || ""}`.trim(),
+    alwaysUnlocked: entry?.alwaysUnlocked === true || entry?.alwaysUnlocked === "true",
+    actionExpression: `${entry?.actionExpression || ""}`.trim(),
+  };
+}
+
+function normalizeGuiMusicRoom(entry, index) {
+  const nextIndex = index + 1;
+  const instanceName = `${entry?.instanceName || ""}`.trim() || `music_room_${nextIndex}`;
+  const rawTracks = Array.isArray(entry?.tracks) ? entry.tracks : [];
+  const singleTrack = entry?.singleTrack === true || entry?.singleTrack === "true";
+  const shuffle = singleTrack
+    ? false
+    : (entry?.shuffle === true || entry?.shuffle === "true");
+
+  return {
+    id: entry?.id || createId("music_room"),
+    name: `${entry?.name || ""}`.trim() || `Music Room ${nextIndex}`,
+    instanceName,
+    screenName: `${entry?.screenName || ""}`.trim() || `${instanceName}_screen`,
+    menuLabel: `${entry?.menuLabel || ""}`.trim() || `Music Room ${nextIndex}`,
+    channel: `${entry?.channel || ""}`.trim() || "music",
+    fadeout: `${entry?.fadeout ?? ""}`.trim(),
+    fadein: `${entry?.fadein ?? ""}`.trim(),
+    stopAction: `${entry?.stopAction || entry?.restoreAction || ""}`.trim(),
+    loop: entry?.loop !== false && entry?.loop !== "false",
+    singleTrack,
+    shuffle,
+    showVolumeSlider: entry?.showVolumeSlider === true || entry?.showVolumeSlider === "true",
+    autoPlay: entry?.autoPlay === true || entry?.autoPlay === "true",
+    tracks: rawTracks.map((track, trackIndex) => normalizeGuiMusicRoomTrack(track, trackIndex)),
+  };
+}
+
+function normalizeGuiGalleryButton(entry, index) {
+  return {
+    id: entry?.id || createId("gallery_button"),
+    name: `${entry?.name || ""}`.trim() || `gallery_button_${index + 1}`,
+    unlockedThumb: `${entry?.unlockedThumb || ""}`.trim(),
+    lockedThumb: `${entry?.lockedThumb || ""}`.trim(),
+    autoUnlock: entry?.autoUnlock !== false && entry?.autoUnlock !== "false",
+    conditions: `${entry?.conditions || ""}`,
+    imageLines: `${entry?.imageLines || ""}`,
+    transformExpression: `${entry?.transformExpression || entry?.transform || ""}`.trim(),
+    hoverBorder: `${entry?.hoverBorder || ""}`.trim(),
+    idleBorder: `${entry?.idleBorder || ""}`.trim(),
+  };
+}
+
+function normalizeGuiGallery(entry, index) {
+  const nextIndex = index + 1;
+  const instanceName = `${entry?.instanceName || ""}`.trim() || `gallery_${nextIndex}`;
+  const rawButtons = Array.isArray(entry?.buttons) ? entry.buttons : [];
+
+  return {
+    id: entry?.id || createId("gallery"),
+    name: `${entry?.name || ""}`.trim() || `Gallery ${nextIndex}`,
+    instanceName,
+    screenName: `${entry?.screenName || ""}`.trim() || `${instanceName}_screen`,
+    menuLabel: `${entry?.menuLabel || ""}`.trim() || `Gallery ${nextIndex}`,
+    background: `${entry?.background || ""}`.trim(),
+    columns: `${entry?.columns || ""}`.trim() || "3",
+    transition: `${entry?.transition || ""}`.trim(),
+    slideshowDelay: `${entry?.slideshowDelay || ""}`.trim(),
+    tagMenu: entry?.tagMenu === true || entry?.tagMenu === "true",
+    navigation: entry?.navigation === true || entry?.navigation === "true",
+    spanButtons: entry?.spanButtons === true || entry?.spanButtons === "true",
+    unlockedAdvance: entry?.unlockedAdvance === true || entry?.unlockedAdvance === "true",
+    lockedButton: `${entry?.lockedButton || ""}`.trim(),
+    hoverBorder: `${entry?.hoverBorder || ""}`.trim(),
+    idleBorder: `${entry?.idleBorder || ""}`.trim(),
+    buttons: rawButtons.map((button, buttonIndex) => normalizeGuiGalleryButton(button, buttonIndex)),
+  };
+}
+
 function getAllConfigEntries(guiState = projectState.gui) {
   return [
     ...guiState.config.map((entry) => ({ scope: "config", entry, key: `config:${entry.id}` })),
@@ -990,6 +1163,80 @@ function createBlankShaderEntry(mode = "default") {
   }, nextIndex - 1);
 }
 
+function createBlankMusicRoom() {
+  const nextIndex = projectState.gui.musicRooms.length + 1;
+  return normalizeGuiMusicRoom({
+    id: createId("music_room"),
+    name: `Music Room ${nextIndex}`,
+    instanceName: `music_room_${nextIndex}`,
+    screenName: `music_room_${nextIndex}_screen`,
+    menuLabel: `Music Room ${nextIndex}`,
+    channel: "music",
+    fadeout: "1.0",
+    fadein: "0.0",
+    stopAction: "",
+    loop: true,
+    singleTrack: false,
+    shuffle: false,
+    showVolumeSlider: true,
+    autoPlay: false,
+    tracks: [],
+  }, nextIndex - 1);
+}
+
+function createBlankMusicRoomTrack() {
+  const activeRoom = getActiveMusicRoom();
+  const nextIndex = (activeRoom?.tracks.length || 0) + 1;
+  return normalizeGuiMusicRoomTrack({
+    id: createId("music_room_track"),
+    title: `Track ${nextIndex}`,
+    audioDefinitionId: "",
+    filename: "",
+    alwaysUnlocked: false,
+    actionExpression: "",
+  }, nextIndex - 1);
+}
+
+function createBlankGallery() {
+  const nextIndex = projectState.gui.galleries.length + 1;
+  return normalizeGuiGallery({
+    id: createId("gallery"),
+    name: `Gallery ${nextIndex}`,
+    instanceName: `gallery_${nextIndex}`,
+    screenName: `gallery_${nextIndex}_screen`,
+    menuLabel: `Gallery ${nextIndex}`,
+    background: "",
+    columns: "3",
+    transition: "",
+    slideshowDelay: "",
+    tagMenu: true,
+    navigation: true,
+    spanButtons: false,
+    unlockedAdvance: false,
+    lockedButton: "",
+    hoverBorder: "",
+    idleBorder: "",
+    buttons: [],
+  }, nextIndex - 1);
+}
+
+function createBlankGalleryButton() {
+  const activeGallery = getActiveGallery();
+  const nextIndex = (activeGallery?.buttons.length || 0) + 1;
+  return normalizeGuiGalleryButton({
+    id: createId("gallery_button"),
+    name: `gallery_button_${nextIndex}`,
+    unlockedThumb: "",
+    lockedThumb: "",
+    autoUnlock: true,
+    conditions: "",
+    imageLines: "",
+    transformExpression: "",
+    hoverBorder: "",
+    idleBorder: "",
+  }, nextIndex - 1);
+}
+
 function getActiveStyle() {
   return projectState.gui.styles.find((style) => style.id === activeStyleId) ?? null;
 }
@@ -1043,6 +1290,14 @@ function getActiveCursor() {
 
 function getActiveShader() {
   return projectState.gui.textShaders.find((entry) => entry.id === activeShaderId) ?? null;
+}
+
+function getActiveMusicRoom() {
+  return projectState.gui.musicRooms.find((entry) => entry.id === activeMusicRoomId) ?? null;
+}
+
+function getActiveGallery() {
+  return projectState.gui.galleries.find((entry) => entry.id === activeGalleryId) ?? null;
 }
 
 function saveProjectState(message = "Saved GUI draft.") {
@@ -1659,6 +1914,163 @@ function deleteActiveShader() {
   activeShaderId = projectState.gui.textShaders[0]?.id ?? null;
   render();
   saveProjectState(`Deleted shader entry "${activeShader.name}".`);
+}
+
+function updateReplayMenu(patch) {
+  projectState.gui.replayMenu = normalizeGuiReplayMenu({
+    ...projectState.gui.replayMenu,
+    ...patch,
+  });
+  render();
+  saveProjectState(`Updated replay menu "${projectState.gui.replayMenu.screenName}".`);
+}
+
+function updateActiveMusicRoom(patch) {
+  const room = getActiveMusicRoom();
+
+  if (!room) {
+    return;
+  }
+
+  const roomIndex = projectState.gui.musicRooms.findIndex((entry) => entry.id === room.id);
+  const normalizedRoom = normalizeGuiMusicRoom({
+    ...room,
+    ...patch,
+  }, roomIndex >= 0 ? roomIndex : 0);
+
+  Object.assign(room, normalizedRoom);
+  render();
+  saveProjectState(`Updated music room "${room.name}".`);
+}
+
+function updateMusicRoomTrack(trackId, patch) {
+  const room = getActiveMusicRoom();
+
+  if (!room) {
+    return;
+  }
+
+  const trackIndex = room.tracks.findIndex((track) => track.id === trackId);
+
+  if (trackIndex < 0) {
+    return;
+  }
+
+  room.tracks.splice(trackIndex, 1, normalizeGuiMusicRoomTrack({
+    ...room.tracks[trackIndex],
+    ...patch,
+  }, trackIndex));
+  render();
+  saveProjectState(`Updated track "${getMusicRoomTrackDisplayName(room.tracks[trackIndex])}".`);
+}
+
+function deleteMusicRoomTrack(trackId) {
+  const room = getActiveMusicRoom();
+
+  if (!room) {
+    return;
+  }
+
+  const track = room.tracks.find((entry) => entry.id === trackId);
+
+  if (!track) {
+    return;
+  }
+
+  room.tracks = room.tracks.filter((entry) => entry.id !== trackId);
+  render();
+  saveProjectState(`Deleted track "${getMusicRoomTrackDisplayName(track)}".`);
+}
+
+function deleteActiveMusicRoom() {
+  const room = getActiveMusicRoom();
+
+  if (!room) {
+    return;
+  }
+
+  const roomIndex = projectState.gui.musicRooms.findIndex((entry) => entry.id === room.id);
+  projectState.gui.musicRooms = projectState.gui.musicRooms.filter((entry) => entry.id !== room.id);
+  activeMusicRoomId = projectState.gui.musicRooms[roomIndex]?.id
+    || projectState.gui.musicRooms[roomIndex - 1]?.id
+    || projectState.gui.musicRooms[0]?.id
+    || null;
+  render();
+  saveProjectState(`Deleted music room "${room.name}".`);
+}
+
+function updateActiveGallery(patch) {
+  const gallery = getActiveGallery();
+
+  if (!gallery) {
+    return;
+  }
+
+  const galleryIndex = projectState.gui.galleries.findIndex((entry) => entry.id === gallery.id);
+  const normalizedGallery = normalizeGuiGallery({
+    ...gallery,
+    ...patch,
+  }, galleryIndex >= 0 ? galleryIndex : 0);
+
+  Object.assign(gallery, normalizedGallery);
+  render();
+  saveProjectState(`Updated gallery "${gallery.name}".`);
+}
+
+function updateGalleryButton(buttonId, patch) {
+  const gallery = getActiveGallery();
+
+  if (!gallery) {
+    return;
+  }
+
+  const buttonIndex = gallery.buttons.findIndex((button) => button.id === buttonId);
+
+  if (buttonIndex < 0) {
+    return;
+  }
+
+  gallery.buttons.splice(buttonIndex, 1, normalizeGuiGalleryButton({
+    ...gallery.buttons[buttonIndex],
+    ...patch,
+  }, buttonIndex));
+  render();
+  saveProjectState(`Updated gallery button "${gallery.buttons[buttonIndex].name}".`);
+}
+
+function deleteGalleryButton(buttonId) {
+  const gallery = getActiveGallery();
+
+  if (!gallery) {
+    return;
+  }
+
+  const button = gallery.buttons.find((entry) => entry.id === buttonId);
+
+  if (!button) {
+    return;
+  }
+
+  gallery.buttons = gallery.buttons.filter((entry) => entry.id !== buttonId);
+  render();
+  saveProjectState(`Deleted gallery button "${button.name}".`);
+}
+
+function deleteActiveGallery() {
+  const gallery = getActiveGallery();
+
+  if (!gallery) {
+    return;
+  }
+
+  const galleryIndex = projectState.gui.galleries.findIndex((entry) => entry.id === gallery.id);
+  projectState.gui.galleries = projectState.gui.galleries.filter((entry) => entry.id !== gallery.id);
+  activeGalleryId = projectState.gui.galleries[galleryIndex]?.id
+    || projectState.gui.galleries[galleryIndex - 1]?.id
+    || projectState.gui.galleries[0]?.id
+    || null;
+  render();
+  saveProjectState(`Deleted gallery "${gallery.name}".`);
 }
 
 function getStyleProperty(style, key, prefix = activeStylePrefixId) {
@@ -2367,6 +2779,32 @@ function formatGuiScreenCode(screen) {
   return `${header[0]}\n${body.join("\n")}`;
 }
 
+function isSideImageExpression(expression) {
+  return /^SideImage\(\s*\)$/.test(`${expression || ""}`.trim());
+}
+
+function getPreviewSideImageLabel() {
+  const configuredTag = `${projectState.meta?.sideImageTag || ""}`.trim();
+
+  if (configuredTag) {
+    return configuredTag;
+  }
+
+  const linkedCharacterTag = Array.isArray(projectState.characters)
+    ? projectState.characters.find((character) => `${character?.image || ""}`.trim())?.image?.trim()
+    : "";
+
+  if (linkedCharacterTag) {
+    return linkedCharacterTag;
+  }
+
+  const sideImageName = Array.isArray(projectState.images)
+    ? projectState.images.find((image) => image?.isSideImage && `${image?.name || ""}`.trim())?.name?.trim()
+    : "";
+
+  return sideImageName || "side image";
+}
+
 function renderPreviewNode(node) {
   const meta = screenNodeMeta[node.type];
   const previewLabel = escapeHtml(node.text || node.title || meta.label);
@@ -2404,6 +2842,14 @@ function renderPreviewNode(node) {
     case "input":
       return `<input class="gui-preview-input" type="${node.inputMask.trim() ? "password" : "text"}" value="${escapeHtml(node.inputDefaultText || "")}" placeholder="${escapeHtml(node.title || "Input")}" />`;
     case "add":
+      if (isSideImageExpression(node.displayable)) {
+        return `
+          <div class="gui-preview-side-image">
+            <div class="gui-preview-side-image-portrait"></div>
+            <span>SideImage() · ${escapeHtml(getPreviewSideImageLabel())}</span>
+          </div>
+        `;
+      }
       return `<div class="gui-preview-add">${escapeHtml(node.displayable || "displayable")}</div>`;
     case "if":
     case "showif":
@@ -2442,6 +2888,649 @@ function renderScreenPreview() {
       </div>
     </div>
   `;
+}
+
+function getReplayEnabledGraphs() {
+  if (!Array.isArray(projectState.graphs)) {
+    return [];
+  }
+
+  return projectState.graphs
+    .filter((graph) => graph?.replay?.enabled)
+    .map((graph, index) => {
+      const label = `${graph?.label || ""}`.trim() || `label_${index + 1}`;
+      const replay = graph?.replay || {};
+      return {
+        id: graph?.id || `graph_${index + 1}`,
+        label,
+        title: `${replay.title || ""}`.trim() || label,
+        lockedMode: ["auto", "unlocked", "locked"].includes(replay.lockedMode)
+          ? replay.lockedMode
+          : "auto",
+        scope: `${replay.scope || ""}`.trim(),
+      };
+    });
+}
+
+function formatReplayActionExpression(graph) {
+  if (!graph) {
+    return "";
+  }
+
+  const args = [formatRenpyQuotedString(graph.label || "start")];
+
+  if (graph.scope) {
+    args.push(`scope=${graph.scope}`);
+  }
+
+  if (graph.lockedMode === "locked") {
+    args.push("locked=True");
+  } else if (graph.lockedMode === "unlocked") {
+    args.push("locked=False");
+  }
+
+  return `Replay(${args.join(", ")})`;
+}
+
+function formatMenuButtonSnippet(label, screenName) {
+  if (!screenName) {
+    return "";
+  }
+
+  return `# textbutton ${formatScreenTextValue(label || screenName)} action ShowMenu(${formatRenpyQuotedString(screenName)})`;
+}
+
+function formatReplayMenuCode() {
+  const replayMenu = projectState.gui.replayMenu;
+  const replayGraphs = getReplayEnabledGraphs();
+  const lines = [];
+  const menuSnippet = formatMenuButtonSnippet(replayMenu.menuLabel, replayMenu.screenName);
+
+  if (menuSnippet) {
+    lines.push("# Navigation Snippet");
+    lines.push(menuSnippet);
+    lines.push("");
+  }
+
+  lines.push(`screen ${replayMenu.screenName}():`);
+
+  if (replayMenu.tagMenu) {
+    lines.push(indentLine("tag menu", 1));
+  }
+
+  lines.push(indentLine("modal True", 1));
+  lines.push(indentLine("vbox:", 1));
+  lines.push(indentLine(`text ${formatScreenTextValue(replayMenu.title)}`, 2));
+
+  if (replayGraphs.length) {
+    replayGraphs.forEach((graph) => {
+      lines.push(indentLine(`textbutton ${formatScreenTextValue(graph.title)} action ${formatReplayActionExpression(graph)}`, 2));
+    });
+  } else {
+    lines.push(indentLine(`text ${formatScreenTextValue(replayMenu.emptyText)}`, 2));
+  }
+
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Back")} action ${replayMenu.returnAction || "Return()"}`, 2));
+  return lines.join("\n");
+}
+
+function renderReplaySection() {
+  const replayMenu = projectState.gui.replayMenu;
+  const replayGraphs = getReplayEnabledGraphs();
+
+  guiReplayScreenNameInput.value = replayMenu.screenName;
+  guiReplayMenuLabelInput.value = replayMenu.menuLabel;
+  guiReplayTitleInput.value = replayMenu.title;
+  guiReplayReturnActionInput.value = replayMenu.returnAction;
+  guiReplayTagMenuInput.checked = replayMenu.tagMenu;
+  guiReplayEmptyTextInput.value = replayMenu.emptyText;
+
+  guiReplayLabelListEl.innerHTML = replayGraphs.length
+    ? replayGraphs.map((graph) => `
+      <div class="gui-replay-chip">
+        <strong>${escapeHtml(graph.title)}</strong>
+        <span>${escapeHtml(`${graph.label} · ${graph.lockedMode}`)}</span>
+        <code>${escapeHtml(formatReplayActionExpression(graph))}</code>
+      </div>
+    `).join("")
+    : `<div class="gui-inline-empty">No replay-enabled labels yet. Enable replay on a label in the main editor first.</div>`;
+
+  guiReplayCodePreviewEl.textContent = formatReplayMenuCode();
+}
+
+function getAudioDefinitions() {
+  return Array.isArray(projectState.audio) ? projectState.audio : [];
+}
+
+function getAudioDefinitionByIdLocal(audioId) {
+  return getAudioDefinitions().find((entry) => entry.id === audioId) ?? null;
+}
+
+function getAvailableAudioDefinitionsForChannel(channel = "music") {
+  return getAudioDefinitions().filter((entry) => entry.channel === channel);
+}
+
+function getResolvedMusicRoomTrackSource(track) {
+  const importedAudio = getAudioDefinitionByIdLocal(track?.audioDefinitionId || "");
+  return `${importedAudio?.sourcePath || track?.filename || ""}`.trim();
+}
+
+function getMusicRoomTrackDisplayName(track) {
+  const importedAudio = getAudioDefinitionByIdLocal(track?.audioDefinitionId || "");
+  return `${track?.title || ""}`.trim() || `${importedAudio?.name || ""}`.trim() || getResolvedMusicRoomTrackSource(track) || "Untitled Track";
+}
+
+function getMusicRoomTrackSubtitle(track) {
+  const importedAudio = getAudioDefinitionByIdLocal(track?.audioDefinitionId || "");
+  const source = getResolvedMusicRoomTrackSource(track);
+
+  if (importedAudio && source) {
+    return `${importedAudio.name} · ${source}`;
+  }
+
+  return source || "No file path yet";
+}
+
+function getVolumePreferenceNameForChannel(channel) {
+  if (channel === "voice") {
+    return "voice volume";
+  }
+
+  if (channel === "sound") {
+    return "sound volume";
+  }
+
+  return "music volume";
+}
+
+function formatMusicRoomCode(room) {
+  if (!room) {
+    return "";
+  }
+
+  const lines = [];
+  const menuSnippet = formatMenuButtonSnippet(room.menuLabel, room.screenName);
+  const resolvedTracks = room.tracks.filter((track) => getResolvedMusicRoomTrackSource(track));
+  const skippedTracks = room.tracks.filter((track) => !getResolvedMusicRoomTrackSource(track));
+  const constructorArgs = [
+    `channel=${formatRenpyQuotedString(room.channel || "music")}`,
+    `fadeout=${room.fadeout || "0.0"}`,
+    `fadein=${room.fadein || "0.0"}`,
+    `loop=${room.loop ? "True" : "False"}`,
+    `single_track=${room.singleTrack ? "True" : "False"}`,
+    `shuffle=${room.shuffle ? "True" : "False"}`,
+  ];
+
+  if (room.stopAction) {
+    constructorArgs.push(`stop_action=${room.stopAction}`);
+  }
+
+  if (menuSnippet) {
+    lines.push("# Navigation Snippet");
+    lines.push(menuSnippet);
+    lines.push("");
+  }
+
+  lines.push("init python:");
+  lines.push(indentLine(`${room.instanceName} = MusicRoom(${constructorArgs.join(", ")})`, 1));
+
+  resolvedTracks.forEach((track) => {
+    const addArgs = [formatGeneralValue(getResolvedMusicRoomTrackSource(track))];
+
+    if (track.alwaysUnlocked) {
+      addArgs.push("always_unlocked=True");
+    }
+
+    if (track.actionExpression) {
+      addArgs.push(`action=${track.actionExpression}`);
+    }
+
+    lines.push(indentLine(`${room.instanceName}.add(${addArgs.join(", ")})`, 1));
+  });
+
+  skippedTracks.forEach((track) => {
+    lines.push(indentLine(`# Skipped ${getMusicRoomTrackDisplayName(track)} because no audio file is configured yet.`, 1));
+  });
+
+  lines.push("");
+  lines.push(`screen ${room.screenName}():`);
+  lines.push(indentLine("modal True", 1));
+
+  if (room.autoPlay && resolvedTracks.length) {
+    lines.push(indentLine('on "show":', 1));
+    lines.push(indentLine(`action ${room.instanceName}.Play()`, 2));
+  }
+
+  lines.push(indentLine("vbox:", 1));
+  lines.push(indentLine(`text ${formatScreenTextValue(room.name)}`, 2));
+
+  if (resolvedTracks.length) {
+    lines.push(indentLine(`text ${formatScreenTextValue("Choose a track.")}`, 2));
+    resolvedTracks.forEach((track) => {
+      lines.push(indentLine(`textbutton ${formatScreenTextValue(getMusicRoomTrackDisplayName(track))} action ${room.instanceName}.Play(${formatGeneralValue(getResolvedMusicRoomTrackSource(track))})`, 2));
+    });
+  } else {
+    lines.push(indentLine(`text ${formatScreenTextValue("No playable tracks configured yet.")}`, 2));
+  }
+
+  lines.push(indentLine("hbox:", 2));
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Previous")} action ${room.instanceName}.Previous()`, 3));
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Play / Pause")} action ${room.instanceName}.TogglePlay()`, 3));
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Next")} action ${room.instanceName}.Next()`, 3));
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Stop")} action ${room.instanceName}.Stop()`, 3));
+
+  lines.push(indentLine("hbox:", 2));
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Loop")} action ${room.instanceName}.ToggleLoop()`, 3));
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Shuffle")} action ${room.instanceName}.ToggleShuffle()`, 3));
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Single Track")} action ${room.instanceName}.ToggleSingleTrack()`, 3));
+
+  if (room.showVolumeSlider) {
+    lines.push(indentLine(`bar value Preference(${formatRenpyQuotedString(getVolumePreferenceNameForChannel(room.channel))})`, 2));
+  }
+
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Back")} action Return()`, 2));
+  return lines.join("\n");
+}
+
+function renderMusicRoomList() {
+  const hasRooms = projectState.gui.musicRooms.length > 0;
+
+  if (!hasRooms) {
+    activeMusicRoomId = null;
+  } else if (!getActiveMusicRoom()) {
+    activeMusicRoomId = projectState.gui.musicRooms[0].id;
+  }
+
+  guiMusicRoomEmptyEl.classList.toggle("hidden", hasRooms);
+  guiMusicRoomListEl.innerHTML = projectState.gui.musicRooms.map((room) => `
+    <div class="gui-entity-card ${room.id === activeMusicRoomId ? "is-active" : ""}" data-music-room-id="${escapeHtml(room.id)}">
+      <strong>${escapeHtml(room.name)}</strong>
+      <span>${escapeHtml(`${room.tracks.length} tracks · ${room.channel}`)}</span>
+    </div>
+  `).join("");
+}
+
+function renderMusicRoomTrackList(room) {
+  const availableAudioDefinitions = getAvailableAudioDefinitionsForChannel(room.channel || "music");
+
+  guiMusicRoomTrackListEl.innerHTML = room.tracks.length
+    ? room.tracks.map((track) => {
+      const selectedImportedAudio = getAudioDefinitionByIdLocal(track.audioDefinitionId);
+      const hasMissingAudio = Boolean(track.audioDefinitionId) && !selectedImportedAudio;
+      const options = [
+        `<option value="">Manual file path</option>`,
+        ...availableAudioDefinitions.map((entry) => `
+          <option value="${escapeHtml(entry.id)}" ${entry.id === track.audioDefinitionId ? "selected" : ""}>
+            ${escapeHtml(`${entry.name} · ${entry.sourcePath || "No source path yet"}`)}
+          </option>
+        `),
+      ];
+
+      if (hasMissingAudio) {
+        options.push(`
+          <option value="${escapeHtml(track.audioDefinitionId)}" selected>
+            ${escapeHtml(`Missing import · ${track.audioDefinitionId}`)}
+          </option>
+        `);
+      }
+
+      return `
+        <div class="gui-nested-card" data-music-track-id="${escapeHtml(track.id)}">
+          <div class="gui-nested-card-header">
+            <div>
+              <strong>${escapeHtml(getMusicRoomTrackDisplayName(track))}</strong>
+              <span>${escapeHtml(getMusicRoomTrackSubtitle(track))}</span>
+            </div>
+            <button class="danger-button" type="button" data-music-track-action="delete">Delete</button>
+          </div>
+
+          <div class="gui-inline-fields">
+            <label class="gui-compact-label">
+              Title
+              <input type="text" value="${escapeHtml(track.title)}" placeholder="Display name in the menu" data-music-track-field="title" />
+            </label>
+
+            <label class="gui-compact-label">
+              Imported Music
+              <select data-music-track-field="audioDefinitionId">
+                ${options.join("")}
+              </select>
+            </label>
+
+            <label class="gui-compact-label">
+              Manual File Path
+              <input type="text" value="${escapeHtml(track.filename)}" placeholder="audio/bgm/title.ogg" data-music-track-field="filename" />
+            </label>
+          </div>
+
+          <div class="gui-inline-fields">
+            <label class="gui-compact-label">
+              Unlock Action
+              <input type="text" value="${escapeHtml(track.actionExpression)}" placeholder='e.g. Function(renpy.notify, "Unlocked")' data-music-track-field="actionExpression" />
+            </label>
+          </div>
+
+          <label class="character-checkbox">
+            <input type="checkbox" ${track.alwaysUnlocked ? "checked" : ""} data-music-track-field="alwaysUnlocked" />
+            <span>Always Unlocked</span>
+          </label>
+        </div>
+      `;
+    }).join("")
+    : `<div class="gui-inline-empty">No tracks yet. Add one and link it to imported music or a manual file path.</div>`;
+}
+
+function renderMusicRoomDetail() {
+  const room = getActiveMusicRoom();
+  const hasRoom = Boolean(room);
+
+  guiMusicRoomEmptyStateEl.classList.toggle("hidden", hasRoom);
+  guiMusicRoomFormEl.classList.toggle("hidden", !hasRoom);
+
+  if (!room) {
+    guiMusicRoomCodePreviewEl.textContent = "";
+    guiMusicRoomTrackListEl.innerHTML = "";
+    return;
+  }
+
+  guiMusicRoomNameInput.value = room.name;
+  guiMusicRoomInstanceInput.value = room.instanceName;
+  guiMusicRoomScreenInput.value = room.screenName;
+  guiMusicRoomMenuLabelInput.value = room.menuLabel;
+  guiMusicRoomChannelInput.value = room.channel;
+  guiMusicRoomFadeoutInput.value = room.fadeout;
+  guiMusicRoomFadeinInput.value = room.fadein;
+  guiMusicRoomRestoreActionInput.value = room.stopAction;
+  guiMusicRoomLoopInput.checked = room.loop;
+  guiMusicRoomSingleTrackInput.checked = room.singleTrack;
+  guiMusicRoomShuffleInput.checked = room.shuffle;
+  guiMusicRoomShowVolumeInput.checked = room.showVolumeSlider;
+  guiMusicRoomAutoPlayInput.checked = room.autoPlay;
+
+  renderMusicRoomTrackList(room);
+  guiMusicRoomCodePreviewEl.textContent = formatMusicRoomCode(room);
+}
+
+function formatGalleryConditionCall(instanceName, rawLine) {
+  const trimmed = `${rawLine || ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (/^(condition|unlock|allprior)\s*\(/.test(trimmed)) {
+    return `${instanceName}.${trimmed}`;
+  }
+
+  return `${instanceName}.condition(${isQuotedString(trimmed) ? trimmed : formatRenpyQuotedString(trimmed)})`;
+}
+
+function formatGalleryImageCall(instanceName, rawLine, autoUnlock) {
+  const trimmed = `${rawLine || ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (/^(image|unlock_image)\s*\(/.test(trimmed)) {
+    return `${instanceName}.${trimmed}`;
+  }
+
+  return `${instanceName}.${autoUnlock ? "unlock_image" : "image"}(${trimmed})`;
+}
+
+function formatGalleryTransformCall(instanceName, rawExpression) {
+  const trimmed = `${rawExpression || ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (/^transform\s*\(/.test(trimmed)) {
+    return `${instanceName}.${trimmed}`;
+  }
+
+  return `${instanceName}.transform(${trimmed})`;
+}
+
+function getGalleryButtonUnlockedDisplayable(button) {
+  return `${button?.unlockedThumb || ""}`.trim() || 'Solid("#3a3a3a")';
+}
+
+function formatGalleryCode(gallery) {
+  if (!gallery) {
+    return "";
+  }
+
+  const lines = [];
+  const menuSnippet = formatMenuButtonSnippet(gallery.menuLabel, gallery.screenName);
+  const columnCount = Math.max(1, Number.parseInt(gallery.columns, 10) || 3);
+  const rowCount = Math.max(1, Math.ceil(Math.max(gallery.buttons.length, 1) / columnCount));
+
+  if (menuSnippet) {
+    lines.push("# Navigation Snippet");
+    lines.push(menuSnippet);
+    lines.push("");
+  }
+
+  lines.push("init python:");
+  lines.push(indentLine(`${gallery.instanceName} = Gallery()`, 1));
+
+  if (gallery.lockedButton) {
+    lines.push(indentLine(`${gallery.instanceName}.locked_button = ${formatGeneralValue(gallery.lockedButton)}`, 1));
+  }
+
+  if (gallery.hoverBorder) {
+    lines.push(indentLine(`${gallery.instanceName}.hover_border = ${formatGeneralValue(gallery.hoverBorder)}`, 1));
+  }
+
+  if (gallery.idleBorder) {
+    lines.push(indentLine(`${gallery.instanceName}.idle_border = ${formatGeneralValue(gallery.idleBorder)}`, 1));
+  }
+
+  if (gallery.transition) {
+    lines.push(indentLine(`${gallery.instanceName}.transition = ${gallery.transition}`, 1));
+  }
+
+  if (gallery.slideshowDelay) {
+    lines.push(indentLine(`${gallery.instanceName}.slideshow_delay = ${gallery.slideshowDelay}`, 1));
+  }
+
+  if (gallery.navigation) {
+    lines.push(indentLine(`${gallery.instanceName}.navigation = True`, 1));
+  }
+
+  if (gallery.spanButtons) {
+    lines.push(indentLine(`${gallery.instanceName}.span_buttons = True`, 1));
+  }
+
+  if (gallery.unlockedAdvance) {
+    lines.push(indentLine(`${gallery.instanceName}.unlocked_advance = True`, 1));
+  }
+
+  gallery.buttons.forEach((button) => {
+    lines.push(indentLine(`${gallery.instanceName}.button(${formatRenpyQuotedString(button.name)})`, 1));
+
+    splitRawLines(button.conditions).forEach((line) => {
+      const conditionCall = formatGalleryConditionCall(gallery.instanceName, line);
+      if (conditionCall) {
+        lines.push(indentLine(conditionCall, 1));
+      }
+    });
+
+    splitRawLines(button.imageLines).forEach((line) => {
+      const imageCall = formatGalleryImageCall(gallery.instanceName, line, button.autoUnlock);
+      if (imageCall) {
+        lines.push(indentLine(imageCall, 1));
+      }
+    });
+
+    const transformCall = formatGalleryTransformCall(gallery.instanceName, button.transformExpression);
+    if (transformCall) {
+      lines.push(indentLine(transformCall, 1));
+    }
+  });
+
+  lines.push("");
+  lines.push(`screen ${gallery.screenName}():`);
+
+  if (gallery.tagMenu) {
+    lines.push(indentLine("tag menu", 1));
+  }
+
+  lines.push(indentLine("modal True", 1));
+
+  if (gallery.background) {
+    lines.push(indentLine(`add ${formatGeneralValue(gallery.background)}`, 1));
+  }
+
+  lines.push(indentLine("vbox:", 1));
+  lines.push(indentLine(`text ${formatScreenTextValue(gallery.name)}`, 2));
+
+  if (gallery.buttons.length) {
+    lines.push(indentLine(`grid ${columnCount} ${rowCount}:`, 2));
+    gallery.buttons.forEach((button) => {
+      const buttonArgs = [
+        formatRenpyQuotedString(button.name),
+        formatGeneralValue(getGalleryButtonUnlockedDisplayable(button)),
+      ];
+
+      if (button.lockedThumb) {
+        buttonArgs.push(`locked=${formatGeneralValue(button.lockedThumb)}`);
+      }
+
+      if (button.hoverBorder) {
+        buttonArgs.push(`hover_border=${formatGeneralValue(button.hoverBorder)}`);
+      }
+
+      if (button.idleBorder) {
+        buttonArgs.push(`idle_border=${formatGeneralValue(button.idleBorder)}`);
+      }
+
+      lines.push(indentLine(`add ${gallery.instanceName}.make_button(${buttonArgs.join(", ")})`, 3));
+    });
+  } else {
+    lines.push(indentLine(`text ${formatScreenTextValue("No gallery buttons configured yet.")}`, 2));
+  }
+
+  lines.push(indentLine(`textbutton ${formatScreenTextValue("Back")} action Return()`, 2));
+  return lines.join("\n");
+}
+
+function renderGalleryList() {
+  const hasGalleries = projectState.gui.galleries.length > 0;
+
+  if (!hasGalleries) {
+    activeGalleryId = null;
+  } else if (!getActiveGallery()) {
+    activeGalleryId = projectState.gui.galleries[0].id;
+  }
+
+  guiGalleryEmptyEl.classList.toggle("hidden", hasGalleries);
+  guiGalleryListEl.innerHTML = projectState.gui.galleries.map((gallery) => `
+    <div class="gui-entity-card ${gallery.id === activeGalleryId ? "is-active" : ""}" data-gallery-id="${escapeHtml(gallery.id)}">
+      <strong>${escapeHtml(gallery.name)}</strong>
+      <span>${escapeHtml(`${gallery.buttons.length} buttons · ${gallery.columns} cols`)}</span>
+    </div>
+  `).join("");
+}
+
+function renderGalleryButtonList(gallery) {
+  guiGalleryButtonListEl.innerHTML = gallery.buttons.length
+    ? gallery.buttons.map((button) => `
+      <div class="gui-nested-card" data-gallery-button-id="${escapeHtml(button.id)}">
+        <div class="gui-nested-card-header">
+          <div>
+            <strong>${escapeHtml(button.name)}</strong>
+            <span>${escapeHtml(button.autoUnlock ? "unlock_image()" : "image()")} · ${escapeHtml(splitRawLines(button.imageLines).length ? `${splitRawLines(button.imageLines).length} image lines` : "no image lines yet")}</span>
+          </div>
+          <button class="danger-button" type="button" data-gallery-button-action="delete">Delete</button>
+        </div>
+
+        <div class="gui-inline-fields">
+          <label class="gui-compact-label">
+            Button Name
+            <input type="text" value="${escapeHtml(button.name)}" placeholder="e.g. beach_cg" data-gallery-button-field="name" />
+          </label>
+
+          <label class="gui-compact-label">
+            Unlocked Thumbnail
+            <input type="text" value="${escapeHtml(button.unlockedThumb)}" placeholder='e.g. "gui/gallery/thumb_beach.png"' data-gallery-button-field="unlockedThumb" />
+          </label>
+
+          <label class="gui-compact-label">
+            Locked Thumbnail
+            <input type="text" value="${escapeHtml(button.lockedThumb)}" placeholder='e.g. "gui/gallery/locked.png"' data-gallery-button-field="lockedThumb" />
+          </label>
+        </div>
+
+        <div class="gui-inline-fields">
+          <label class="gui-compact-label">
+            Hover Border Override
+            <input type="text" value="${escapeHtml(button.hoverBorder)}" placeholder='e.g. "gui/gallery/hover.png"' data-gallery-button-field="hoverBorder" />
+          </label>
+
+          <label class="gui-compact-label">
+            Idle Border Override
+            <input type="text" value="${escapeHtml(button.idleBorder)}" placeholder='e.g. "gui/gallery/idle.png"' data-gallery-button-field="idleBorder" />
+          </label>
+
+          <label class="gui-compact-label">
+            Transform
+            <input type="text" value="${escapeHtml(button.transformExpression)}" placeholder='e.g. dissolve or crop_transform, None' data-gallery-button-field="transformExpression" />
+          </label>
+        </div>
+
+        <label class="character-checkbox">
+          <input type="checkbox" ${button.autoUnlock ? "checked" : ""} data-gallery-button-field="autoUnlock" />
+          <span>Use <code>unlock_image()</code> for image lines</span>
+        </label>
+
+        <label class="gui-compact-label">
+          Conditions
+          <textarea rows="3" placeholder='One expression per line, e.g. persistent.cg_beach or unlock("cg_beach")' data-gallery-button-field="conditions">${escapeHtml(button.conditions)}</textarea>
+        </label>
+
+        <label class="gui-compact-label">
+          Image Lines
+          <textarea rows="4" placeholder='One argument list per line, e.g. "beach1" or "dawn1", "mary dawn smiling"' data-gallery-button-field="imageLines">${escapeHtml(button.imageLines)}</textarea>
+        </label>
+      </div>
+    `).join("")
+    : `<div class="gui-inline-empty">No gallery buttons yet. Add one to start wiring thumbnails and unlockable images.</div>`;
+}
+
+function renderGalleryDetail() {
+  const gallery = getActiveGallery();
+  const hasGallery = Boolean(gallery);
+
+  guiGalleryEmptyStateEl.classList.toggle("hidden", hasGallery);
+  guiGalleryFormEl.classList.toggle("hidden", !hasGallery);
+
+  if (!gallery) {
+    guiGalleryButtonListEl.innerHTML = "";
+    guiGalleryCodePreviewEl.textContent = "";
+    return;
+  }
+
+  guiGalleryNameInput.value = gallery.name;
+  guiGalleryInstanceInput.value = gallery.instanceName;
+  guiGalleryScreenInput.value = gallery.screenName;
+  guiGalleryMenuLabelInput.value = gallery.menuLabel;
+  guiGalleryBackgroundInput.value = gallery.background;
+  guiGalleryColumnsInput.value = gallery.columns;
+  guiGalleryTransitionInput.value = gallery.transition;
+  guiGallerySlideshowDelayInput.value = gallery.slideshowDelay;
+  guiGalleryTagMenuInput.checked = gallery.tagMenu;
+  guiGalleryNavigationInput.checked = gallery.navigation;
+  guiGallerySpanButtonsInput.checked = gallery.spanButtons;
+  guiGalleryUnlockedAdvanceInput.checked = gallery.unlockedAdvance;
+  guiGalleryLockedButtonInput.value = gallery.lockedButton;
+  guiGalleryHoverBorderInput.value = gallery.hoverBorder;
+  guiGalleryIdleBorderInput.value = gallery.idleBorder;
+
+  renderGalleryButtonList(gallery);
+  guiGalleryCodePreviewEl.textContent = formatGalleryCode(gallery);
 }
 
 function renderConfigList() {
@@ -2802,6 +3891,7 @@ function computeDiagnostics() {
     const nodeCount = countScreenNodes(screen.nodes);
     const isSpecialInputScreen = screen.name === "input";
     const specialInputNodes = [];
+    const saySideImageNodes = [];
 
     if (!screen.nodes.length) {
       diagnostics.push({
@@ -2834,6 +3924,10 @@ function computeDiagnostics() {
       if (node.type === "input" && node.nodeId === "input") {
         specialInputNodes.push(node);
       }
+
+      if (node.type === "add" && isSideImageExpression(node.displayable)) {
+        saySideImageNodes.push(node);
+      }
     });
 
     if (isSpecialInputScreen && !/\bprompt\b/.test(screen.parameters)) {
@@ -2859,6 +3953,15 @@ function computeDiagnostics() {
         severity: "warning",
         title: `${screen.name} defines multiple input id nodes`,
         detail: "renpy.input() expects one primary input widget with id \"input\". Multiple matches can make the screen harder to reason about.",
+        snippet: formatGuiScreenCode(screen),
+      });
+    }
+
+    if (screen.name === "say" && !saySideImageNodes.length) {
+      diagnostics.push({
+        severity: "info",
+        title: "say screen is missing SideImage()",
+        detail: "If you want dialogue avatars, add an `add SideImage()` node somewhere inside the say screen layout.",
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -3045,6 +4148,61 @@ function computeDiagnostics() {
     }
   });
 
+  getReplayEnabledGraphs().forEach((graph) => {
+    if (graph.scope && !/^\{.*\}$/.test(graph.scope)) {
+      diagnostics.push({
+        severity: "info",
+        title: `Replay "${graph.title}" uses a custom scope expression`,
+        detail: "Replay scope is usually a dict literal. Non-dict expressions are still allowed, but worth double-checking.",
+        snippet: formatReplayMenuCode(),
+      });
+    }
+  });
+
+  projectState.gui.musicRooms.forEach((room) => {
+    if (!room.tracks.length) {
+      diagnostics.push({
+        severity: "warning",
+        title: `Music room "${room.name}" has no tracks`,
+        detail: "The screen will render, but there will be nothing to play until at least one track is configured.",
+        snippet: formatMusicRoomCode(room),
+      });
+    }
+
+    room.tracks.forEach((track) => {
+      if (!getResolvedMusicRoomTrackSource(track)) {
+        diagnostics.push({
+          severity: "warning",
+          title: `${room.name} · ${getMusicRoomTrackDisplayName(track)} is missing a file`,
+          detail: "Pick an imported music definition or provide a manual file path so MusicRoom.add() can emit valid code.",
+          snippet: formatMusicRoomCode(room),
+        });
+      }
+    });
+  });
+
+  projectState.gui.galleries.forEach((gallery) => {
+    if (!gallery.buttons.length) {
+      diagnostics.push({
+        severity: "warning",
+        title: `Gallery "${gallery.name}" has no buttons`,
+        detail: "Add at least one button so the gallery screen can expose unlockable CGs.",
+        snippet: formatGalleryCode(gallery),
+      });
+    }
+
+    gallery.buttons.forEach((button) => {
+      if (!splitRawLines(button.imageLines).length) {
+        diagnostics.push({
+          severity: "warning",
+          title: `${gallery.name} · ${button.name} has no image lines`,
+          detail: "Each gallery button should define one or more image()/unlock_image() argument rows.",
+          snippet: formatGalleryCode(gallery),
+        });
+      }
+    });
+  });
+
   return diagnostics;
 }
 
@@ -3120,6 +4278,7 @@ function renderNav() {
   stylesNavCountEl.textContent = String(projectState.gui.styles.length);
   screensNavCountEl.textContent = String(projectState.gui.screens.length);
   configNavCountEl.textContent = String(getAllConfigEntries().length);
+  extrasNavCountEl.textContent = String(getReplayEnabledGraphs().length + projectState.gui.musicRooms.length + projectState.gui.galleries.length);
   cursorsNavCountEl.textContent = String(projectState.gui.cursors.length);
   shadersNavCountEl.textContent = String(projectState.gui.textShaders.length);
   diagnosticsNavCountEl.textContent = String(diagnostics.filter((item) => item.severity !== "info").length);
@@ -3133,6 +4292,11 @@ function render() {
   renderStyleDetail();
   renderScreenList();
   renderScreenDetail();
+  renderReplaySection();
+  renderMusicRoomList();
+  renderMusicRoomDetail();
+  renderGalleryList();
+  renderGalleryDetail();
   renderConfigList();
   renderConfigDetail();
   renderCursorList();
@@ -3623,5 +4787,238 @@ guiDeleteShaderButton.addEventListener("click", () => {
   deleteActiveShader();
 });
 
+guiReplayFormEl.addEventListener("change", () => {
+  updateReplayMenu({
+    screenName: guiReplayScreenNameInput.value.trim() || defaultGuiState.replayMenu.screenName,
+    menuLabel: guiReplayMenuLabelInput.value.trim() || defaultGuiState.replayMenu.menuLabel,
+    title: guiReplayTitleInput.value.trim() || defaultGuiState.replayMenu.title,
+    returnAction: guiReplayReturnActionInput.value.trim() || defaultGuiState.replayMenu.returnAction,
+    tagMenu: guiReplayTagMenuInput.checked,
+    emptyText: guiReplayEmptyTextInput.value.trim() || defaultGuiState.replayMenu.emptyText,
+  });
+});
+
+guiMusicRoomListEl.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-music-room-id]");
+  if (!card) {
+    return;
+  }
+  activeMusicRoomId = card.getAttribute("data-music-room-id");
+  render();
+  setStatus(`Opened music room "${getActiveMusicRoom()?.name || ""}".`);
+});
+
+newGuiMusicRoomButton.addEventListener("click", () => {
+  const room = createBlankMusicRoom();
+  projectState.gui.musicRooms.push(room);
+  activeMusicRoomId = room.id;
+  render();
+  saveProjectState(`Created music room "${room.name}".`);
+});
+
+guiMusicRoomFormEl.addEventListener("change", (event) => {
+  if (event.target.closest("[data-music-track-id]")) {
+    return;
+  }
+
+  const room = getActiveMusicRoom();
+  if (!room) {
+    return;
+  }
+
+  updateActiveMusicRoom({
+    name: guiMusicRoomNameInput.value.trim() || room.name,
+    instanceName: guiMusicRoomInstanceInput.value.trim() || room.instanceName,
+    screenName: guiMusicRoomScreenInput.value.trim() || room.screenName,
+    menuLabel: guiMusicRoomMenuLabelInput.value.trim() || room.menuLabel,
+    channel: guiMusicRoomChannelInput.value.trim() || "music",
+    fadeout: guiMusicRoomFadeoutInput.value.trim(),
+    fadein: guiMusicRoomFadeinInput.value.trim(),
+    stopAction: guiMusicRoomRestoreActionInput.value.trim(),
+    loop: guiMusicRoomLoopInput.checked,
+    singleTrack: guiMusicRoomSingleTrackInput.checked,
+    shuffle: guiMusicRoomShuffleInput.checked,
+    showVolumeSlider: guiMusicRoomShowVolumeInput.checked,
+    autoPlay: guiMusicRoomAutoPlayInput.checked,
+  });
+});
+
+guiMusicRoomAddTrackButton.addEventListener("click", () => {
+  const room = getActiveMusicRoom();
+  if (!room) {
+    return;
+  }
+  room.tracks.push(createBlankMusicRoomTrack());
+  render();
+  saveProjectState(`Added a track to "${room.name}".`);
+});
+
+guiMusicRoomTrackListEl.addEventListener("change", (event) => {
+  const trackCard = event.target.closest("[data-music-track-id]");
+  if (!trackCard) {
+    return;
+  }
+
+  const trackId = trackCard.getAttribute("data-music-track-id");
+  const field = event.target.dataset.musicTrackField;
+
+  if (!trackId || !field) {
+    return;
+  }
+
+  const patch = field === "alwaysUnlocked"
+    ? { [field]: event.target.checked }
+    : { [field]: `${event.target.value || ""}`.trim() };
+
+  updateMusicRoomTrack(trackId, patch);
+});
+
+guiMusicRoomTrackListEl.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest("[data-music-track-action='delete']");
+  if (!deleteButton) {
+    return;
+  }
+
+  const trackCard = event.target.closest("[data-music-track-id]");
+  const trackId = trackCard?.getAttribute("data-music-track-id");
+  const room = getActiveMusicRoom();
+  const track = room?.tracks.find((entry) => entry.id === trackId);
+
+  if (!trackId || !track) {
+    return;
+  }
+
+  if (!window.confirm(`Delete track "${getMusicRoomTrackDisplayName(track)}"?`)) {
+    setStatus(`Kept track "${getMusicRoomTrackDisplayName(track)}".`);
+    return;
+  }
+
+  deleteMusicRoomTrack(trackId);
+});
+
+guiDeleteMusicRoomButton.addEventListener("click", () => {
+  const room = getActiveMusicRoom();
+  if (!room) {
+    return;
+  }
+  if (!window.confirm(`Delete music room "${room.name}"?`)) {
+    setStatus(`Kept music room "${room.name}".`);
+    return;
+  }
+  deleteActiveMusicRoom();
+});
+
+guiGalleryListEl.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-gallery-id]");
+  if (!card) {
+    return;
+  }
+  activeGalleryId = card.getAttribute("data-gallery-id");
+  render();
+  setStatus(`Opened gallery "${getActiveGallery()?.name || ""}".`);
+});
+
+newGuiGalleryButton.addEventListener("click", () => {
+  const gallery = createBlankGallery();
+  projectState.gui.galleries.push(gallery);
+  activeGalleryId = gallery.id;
+  render();
+  saveProjectState(`Created gallery "${gallery.name}".`);
+});
+
+guiGalleryFormEl.addEventListener("change", (event) => {
+  if (event.target.closest("[data-gallery-button-id]")) {
+    return;
+  }
+
+  const gallery = getActiveGallery();
+  if (!gallery) {
+    return;
+  }
+
+  updateActiveGallery({
+    name: guiGalleryNameInput.value.trim() || gallery.name,
+    instanceName: guiGalleryInstanceInput.value.trim() || gallery.instanceName,
+    screenName: guiGalleryScreenInput.value.trim() || gallery.screenName,
+    menuLabel: guiGalleryMenuLabelInput.value.trim() || gallery.menuLabel,
+    background: guiGalleryBackgroundInput.value.trim(),
+    columns: guiGalleryColumnsInput.value.trim() || "3",
+    transition: guiGalleryTransitionInput.value.trim(),
+    slideshowDelay: guiGallerySlideshowDelayInput.value.trim(),
+    tagMenu: guiGalleryTagMenuInput.checked,
+    navigation: guiGalleryNavigationInput.checked,
+    spanButtons: guiGallerySpanButtonsInput.checked,
+    unlockedAdvance: guiGalleryUnlockedAdvanceInput.checked,
+    lockedButton: guiGalleryLockedButtonInput.value.trim(),
+    hoverBorder: guiGalleryHoverBorderInput.value.trim(),
+    idleBorder: guiGalleryIdleBorderInput.value.trim(),
+  });
+});
+
+guiGalleryAddButtonButton.addEventListener("click", () => {
+  const gallery = getActiveGallery();
+  if (!gallery) {
+    return;
+  }
+  gallery.buttons.push(createBlankGalleryButton());
+  render();
+  saveProjectState(`Added a gallery button to "${gallery.name}".`);
+});
+
+guiGalleryButtonListEl.addEventListener("change", (event) => {
+  const buttonCard = event.target.closest("[data-gallery-button-id]");
+  if (!buttonCard) {
+    return;
+  }
+
+  const buttonId = buttonCard.getAttribute("data-gallery-button-id");
+  const field = event.target.dataset.galleryButtonField;
+
+  if (!buttonId || !field) {
+    return;
+  }
+
+  const patch = field === "autoUnlock"
+    ? { [field]: event.target.checked }
+    : { [field]: event.target.value };
+
+  updateGalleryButton(buttonId, patch);
+});
+
+guiGalleryButtonListEl.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest("[data-gallery-button-action='delete']");
+  if (!deleteButton) {
+    return;
+  }
+
+  const buttonCard = event.target.closest("[data-gallery-button-id]");
+  const buttonId = buttonCard?.getAttribute("data-gallery-button-id");
+  const gallery = getActiveGallery();
+  const button = gallery?.buttons.find((entry) => entry.id === buttonId);
+
+  if (!buttonId || !button) {
+    return;
+  }
+
+  if (!window.confirm(`Delete gallery button "${button.name}"?`)) {
+    setStatus(`Kept gallery button "${button.name}".`);
+    return;
+  }
+
+  deleteGalleryButton(buttonId);
+});
+
+guiDeleteGalleryButton.addEventListener("click", () => {
+  const gallery = getActiveGallery();
+  if (!gallery) {
+    return;
+  }
+  if (!window.confirm(`Delete gallery "${gallery.name}"?`)) {
+    setStatus(`Kept gallery "${gallery.name}".`);
+    return;
+  }
+  deleteActiveGallery();
+});
+
 render();
-setStatus("GUI editor ready. Screens, templates, preview, config, cursors, text shaders, and diagnostics are now available.");
+setStatus("GUI editor ready. Styles, screens, replay menus, music rooms, galleries, config, cursors, shaders, and diagnostics are now available.");

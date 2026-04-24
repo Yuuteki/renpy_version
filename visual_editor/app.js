@@ -25,6 +25,13 @@ const labelListViewEl = document.getElementById("labelListView");
 const labelCodePreviewViewEl = document.getElementById("labelCodePreviewView");
 const labelPreviewBackButton = document.getElementById("labelPreviewBackButton");
 const labelCodePreviewTitleEl = document.getElementById("labelCodePreviewTitle");
+const labelReplaySettingsFormEl = document.getElementById("labelReplaySettingsForm");
+const labelReplayEnabledInput = document.getElementById("labelReplayEnabledInput");
+const labelReplayTitleInput = document.getElementById("labelReplayTitleInput");
+const labelReplayLockedModeInput = document.getElementById("labelReplayLockedModeInput");
+const labelReplayScopeInput = document.getElementById("labelReplayScopeInput");
+const labelReplayAutoEndInput = document.getElementById("labelReplayAutoEndInput");
+const labelReplayActionPreviewEl = document.getElementById("labelReplayActionPreview");
 const labelCodePreviewEl = document.getElementById("labelCodePreview");
 const labelContextMenuEl = document.getElementById("labelContextMenu");
 const contextRenameLabelButton = document.getElementById("contextRenameLabelButton");
@@ -49,9 +56,11 @@ const imageDefinitionSolidFieldsEl = document.getElementById("imageDefinitionSol
 const imageDefinitionCompositeFieldsEl = document.getElementById("imageDefinitionCompositeFields");
 const imageDefinitionPlaceholderFieldsEl = document.getElementById("imageDefinitionPlaceholderFields");
 const imageDefinitionAnimationFieldsEl = document.getElementById("imageDefinitionAnimationFields");
+const imageDefinitionSideImageHelpEl = document.getElementById("imageDefinitionSideImageHelp");
 const imageDefinitionNameInput = document.getElementById("imageDefinitionNameInput");
 const imageDefinitionCategoryInput = document.getElementById("imageDefinitionCategoryInput");
 const imageDefinitionTypeInput = document.getElementById("imageDefinitionTypeInput");
+const imageDefinitionIsSideImageInput = document.getElementById("imageDefinitionIsSideImageInput");
 const imageDefinitionSourcePathInput = document.getElementById("imageDefinitionSourcePathInput");
 const imageDefinitionBrowseButton = document.getElementById("imageDefinitionBrowseButton");
 const imageDefinitionFileInput = document.getElementById("imageDefinitionFileInput");
@@ -188,6 +197,15 @@ const projectAutoVoiceTemplateInput = document.getElementById("projectAutoVoiceT
 const projectVoiceMultilingualInput = document.getElementById("projectVoiceMultilingualInput");
 const projectDefaultDialogueVoiceInput = document.getElementById("projectDefaultDialogueVoiceInput");
 const projectVoiceCodePreviewEl = document.getElementById("projectVoiceCodePreview");
+const projectSideImageSettingsFormEl = document.getElementById("projectSideImageSettingsForm");
+const projectSideImageTagInput = document.getElementById("projectSideImageTagInput");
+const projectSideImageOnlyNotShowingInput = document.getElementById("projectSideImageOnlyNotShowingInput");
+const projectSideImagePrefixTagInput = document.getElementById("projectSideImagePrefixTagInput");
+const projectSideImageNullInput = document.getElementById("projectSideImageNullInput");
+const projectSideImageSameTransformInput = document.getElementById("projectSideImageSameTransformInput");
+const projectSideImageChangeTransformInput = document.getElementById("projectSideImageChangeTransformInput");
+const projectSideImageCodePreviewEl = document.getElementById("projectSideImageCodePreview");
+const imageTagSuggestionListEl = document.getElementById("imageTagSuggestionList");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
 const startInspectorFormEl = document.getElementById("startInspectorForm");
@@ -315,6 +333,12 @@ const defaultProjectMeta = {
   autoVoiceTemplate: "voice/{id}.ogg",
   multilingualVoices: true,
   defaultDialogueVoiceEnabled: false,
+  sideImageTag: "",
+  sideImageOnlyNotShowing: false,
+  sideImagePrefixTag: "side",
+  sideImageNull: "",
+  sideImageSameTransform: "",
+  sideImageChangeTransform: "",
 };
 
 const imageCategoryMeta = {
@@ -478,6 +502,7 @@ const live2dDefinitionFieldDefaults = {
 const imageDefinitionFieldDefaults = {
   category: "others",
   definitionType: "static",
+  isSideImage: false,
   sourcePath: "",
   layeredImageFormat: "",
   layeredOfferScreen: "default",
@@ -573,6 +598,7 @@ const imageDefinitionFieldDefaults = {
 };
 
 const imageDefinitionBooleanFields = new Set([
+  "isSideImage",
   "rotate_pad",
   "transform_anchor",
   "nearest",
@@ -874,6 +900,9 @@ function normalizeGuiState(rawGui) {
       store: [],
       cursors: [],
       textShaders: [],
+      replayMenu: null,
+      musicRooms: [],
+      galleries: [],
     };
   }
 
@@ -885,6 +914,11 @@ function normalizeGuiState(rawGui) {
     store: Array.isArray(rawGui.store) ? rawGui.store : [],
     cursors: Array.isArray(rawGui.cursors) ? rawGui.cursors : [],
     textShaders: Array.isArray(rawGui.textShaders) ? rawGui.textShaders : [],
+    replayMenu: rawGui.replayMenu && typeof rawGui.replayMenu === "object" && !Array.isArray(rawGui.replayMenu)
+      ? rawGui.replayMenu
+      : null,
+    musicRooms: Array.isArray(rawGui.musicRooms) ? rawGui.musicRooms : [],
+    galleries: Array.isArray(rawGui.galleries) ? rawGui.galleries : [],
   };
 }
 
@@ -924,6 +958,12 @@ function normalizeState(rawState) {
       autoVoiceTemplate: `${rawMeta.autoVoiceTemplate || ""}`.trim() || defaultProjectMeta.autoVoiceTemplate,
       multilingualVoices: rawMeta.multilingualVoices !== false,
       defaultDialogueVoiceEnabled: rawMeta.defaultDialogueVoiceEnabled === true,
+      sideImageTag: `${rawMeta.sideImageTag || ""}`.trim(),
+      sideImageOnlyNotShowing: rawMeta.sideImageOnlyNotShowing === true,
+      sideImagePrefixTag: `${rawMeta.sideImagePrefixTag || ""}`.trim() || defaultProjectMeta.sideImagePrefixTag,
+      sideImageNull: `${rawMeta.sideImageNull || ""}`.trim(),
+      sideImageSameTransform: `${rawMeta.sideImageSameTransform || ""}`.trim(),
+      sideImageChangeTransform: `${rawMeta.sideImageChangeTransform || ""}`.trim(),
     },
     graphs: normalizedGraphs,
     images: normalizedImageDefinitions,
@@ -970,6 +1010,7 @@ function normalizeGraph(graph, index) {
   return {
     id: graph.id || `label_${index + 1}`,
     label: graph.label || `label_${index + 1}`,
+    replay: normalizeGraphReplay(graph.replay, graph.label || `label_${index + 1}`),
     viewport: {
       ...defaultViewport,
       ...(graph.viewport || {}),
@@ -978,6 +1019,20 @@ function normalizeGraph(graph, index) {
     edges,
     nodes,
     selectedNodeId,
+  };
+}
+
+function normalizeGraphReplay(replay, labelName = "") {
+  const lockedMode = ["auto", "unlocked", "locked"].includes(replay?.lockedMode)
+    ? replay.lockedMode
+    : "auto";
+
+  return {
+    enabled: replay?.enabled === true,
+    title: `${replay?.title || ""}`.trim() || `${labelName || ""}`.trim(),
+    lockedMode,
+    scope: `${replay?.scope || ""}`.trim(),
+    autoEnd: replay?.autoEnd === true,
   };
 }
 
@@ -1479,6 +1534,11 @@ function normalizeImageDefinition(image, index) {
       return;
     }
 
+    if (field === "isSideImage") {
+      normalizedFields.isSideImage = Boolean(image.isSideImage) && normalizedDefinitionType !== "layered";
+      return;
+    }
+
     if (field === "movieChannel") {
       normalizedFields.movieChannel = `${image.movieChannel || ""}`.trim() || "movie";
       return;
@@ -1804,6 +1864,7 @@ function createBlankGraph(label) {
   return {
     id: `label_${Date.now()}`,
     label,
+    replay: normalizeGraphReplay({}, label),
     viewport: structuredClone(defaultViewport),
     edges: [],
     nodes: [
@@ -2199,6 +2260,30 @@ function getProjectDefaultDialogueVoiceEnabled() {
   return state.meta.defaultDialogueVoiceEnabled === true;
 }
 
+function getProjectSideImageTag() {
+  return `${state.meta.sideImageTag || ""}`.trim();
+}
+
+function getProjectSideImageOnlyNotShowing() {
+  return state.meta.sideImageOnlyNotShowing === true;
+}
+
+function getProjectSideImagePrefixTag() {
+  return `${state.meta.sideImagePrefixTag || ""}`.trim() || defaultProjectMeta.sideImagePrefixTag;
+}
+
+function getProjectSideImageNullExpression() {
+  return `${state.meta.sideImageNull || ""}`.trim();
+}
+
+function getProjectSideImageSameTransform() {
+  return `${state.meta.sideImageSameTransform || ""}`.trim();
+}
+
+function getProjectSideImageChangeTransform() {
+  return `${state.meta.sideImageChangeTransform || ""}`.trim();
+}
+
 function formatProjectVoiceCode() {
   const lines = [];
 
@@ -2214,6 +2299,77 @@ function formatProjectVoiceCode() {
   }
 
   return lines.join("\n");
+}
+
+function formatProjectSideImageCode() {
+  const lines = [];
+
+  if (getProjectSideImageTag()) {
+    lines.push(`define config.side_image_tag = "${escapeRenpyString(getProjectSideImageTag())}"`);
+  }
+
+  if (getProjectSideImageOnlyNotShowing()) {
+    lines.push("define config.side_image_only_not_showing = True");
+  }
+
+  if (getProjectSideImagePrefixTag() !== defaultProjectMeta.sideImagePrefixTag) {
+    lines.push(`define config.side_image_prefix_tag = "${escapeRenpyString(getProjectSideImagePrefixTag())}"`);
+  }
+
+  if (getProjectSideImageNullExpression()) {
+    lines.push(`define config.side_image_null = ${getProjectSideImageNullExpression()}`);
+  }
+
+  if (getProjectSideImageSameTransform()) {
+    lines.push(`define config.side_image_same_transform = ${getProjectSideImageSameTransform()}`);
+  }
+
+  if (getProjectSideImageChangeTransform()) {
+    lines.push(`define config.side_image_change_transform = ${getProjectSideImageChangeTransform()}`);
+  }
+
+  if (!lines.length) {
+    lines.push("# Side image config is currently using Ren'Py defaults.");
+  }
+
+  lines.push("# Remember to add SideImage() inside the say screen to display avatar portraits.");
+  return lines.join("\n");
+}
+
+function getAvailableImageTags() {
+  const tags = new Set();
+
+  state.characters.forEach((character) => {
+    const linkedTag = `${character.image || ""}`.trim();
+
+    if (linkedTag) {
+      tags.add(linkedTag);
+    }
+  });
+
+  state.images.forEach((image) => {
+    const imageName = `${image.name || ""}`.trim();
+
+    if (!imageName) {
+      return;
+    }
+
+    const [tag] = imageName.split(/\s+/);
+
+    if (tag) {
+      tags.add(tag);
+    }
+  });
+
+  state.live2d.forEach((definition) => {
+    const live2dName = `${definition.name || ""}`.trim();
+
+    if (live2dName) {
+      tags.add(live2dName.split(/\s+/)[0]);
+    }
+  });
+
+  return [...tags].sort((left, right) => left.localeCompare(right));
 }
 
 function getDialogueVoiceEnabled(node) {
@@ -4058,6 +4214,7 @@ function parseSimpleMatrixColorExpression(expression) {
 
 function getImageDefinitionSummary(image) {
   const definitionType = getImageDefinitionType(image);
+  const sideImagePrefix = image?.isSideImage ? "Side Image · " : "";
 
   if (definitionType === "layered") {
     const alwaysCount = normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers).length;
@@ -4066,16 +4223,16 @@ function getImageDefinitionSummary(image) {
   }
 
   if (definitionType === "movie") {
-    return `Movie · ${image.moviePlay || "No play path yet"}`;
+    return `${sideImagePrefix}Movie · ${image.moviePlay || "No play path yet"}`;
   }
 
   if (definitionType === "solid") {
-    return `Solid · ${image.solidColor || imageDefinitionFieldDefaults.solidColor}`;
+    return `${sideImagePrefix}Solid · ${image.solidColor || imageDefinitionFieldDefaults.solidColor}`;
   }
 
   if (definitionType === "composite") {
     const layerCount = normalizeCompositeLayers(image.compositeLayers).length;
-    return `Composite · ${layerCount} ${layerCount === 1 ? "layer" : "layers"}`;
+    return `${sideImagePrefix}Composite · ${layerCount} ${layerCount === 1 ? "layer" : "layers"}`;
   }
 
   if (definitionType === "placeholder") {
@@ -4086,10 +4243,10 @@ function getImageDefinitionSummary(image) {
       girl: "Girl",
     };
 
-    return `Placeholder · ${baseLabelMap[image.placeholderBase] || "Auto"}`;
+    return `${sideImagePrefix}Placeholder · ${baseLabelMap[image.placeholderBase] || "Auto"}`;
   }
 
-  return `Static · ${image.sourcePath || "No source path yet"}`;
+  return `${sideImagePrefix}Static · ${image.sourcePath || "No source path yet"}`;
 }
 
 function formatMovieDisplayableValue(value) {
@@ -5169,12 +5326,66 @@ function formatLabelGraphCode(graph) {
 
   if (!startEdge) {
     lines.push("    pass");
-    return lines.join("\n");
+  } else {
+    appendNodeCode(graph, startEdge.toNodeId, lines, 1);
   }
 
-  appendNodeCode(graph, startEdge.toNodeId, lines, 1);
+  if (graph.replay?.enabled && graph.replay?.autoEnd) {
+    lines.push("");
+    lines.push("    $ renpy.end_replay()");
+  }
 
   return lines.join("\n");
+}
+
+function formatReplayActionForGraph(graph) {
+  if (!graph?.replay?.enabled) {
+    return "# Replay is disabled for this label.";
+  }
+
+  const args = [formatRenpyQuotedString(getSafeLabelName(graph.label))];
+  const replayScope = `${graph.replay.scope || ""}`.trim();
+
+  if (replayScope) {
+    args.push(`scope=${replayScope}`);
+  }
+
+  if (graph.replay.lockedMode === "locked") {
+    args.push("locked=True");
+  } else if (graph.replay.lockedMode === "unlocked") {
+    args.push("locked=False");
+  }
+
+  return `Replay(${args.join(", ")})`;
+}
+
+function syncLabelReplaySettings() {
+  const graph = getGraphById(labelCodePreviewGraphId);
+
+  if (!labelReplaySettingsFormEl) {
+    return;
+  }
+
+  labelReplaySettingsFormEl.classList.toggle("hidden", !graph);
+
+  if (!graph) {
+    labelReplayEnabledInput.checked = false;
+    labelReplayTitleInput.value = "";
+    labelReplayLockedModeInput.value = "auto";
+    labelReplayScopeInput.value = "";
+    labelReplayAutoEndInput.checked = false;
+    labelReplayActionPreviewEl.textContent = "";
+    return;
+  }
+
+  const replay = normalizeGraphReplay(graph.replay, graph.label);
+  graph.replay = replay;
+  labelReplayEnabledInput.checked = replay.enabled;
+  labelReplayTitleInput.value = replay.title;
+  labelReplayLockedModeInput.value = replay.lockedMode;
+  labelReplayScopeInput.value = replay.scope;
+  labelReplayAutoEndInput.checked = replay.autoEnd;
+  labelReplayActionPreviewEl.textContent = formatReplayActionForGraph(graph);
 }
 
 function syncLabelCodePreview() {
@@ -5182,11 +5393,13 @@ function syncLabelCodePreview() {
 
   if (!graph) {
     labelCodePreviewTitleEl.textContent = "";
+    syncLabelReplaySettings();
     labelCodePreviewEl.textContent = "";
     return;
   }
 
   labelCodePreviewTitleEl.textContent = graph.label;
+  syncLabelReplaySettings();
   labelCodePreviewEl.textContent = formatLabelGraphCode(graph);
 }
 
@@ -5215,6 +5428,27 @@ function closeLabelCodePreview() {
   setStatus("Returned to label list.");
 }
 
+function updateLabelReplaySettings(patch) {
+  const graph = getGraphById(labelCodePreviewGraphId);
+
+  if (!graph) {
+    return;
+  }
+
+  const previousTitle = `${graph.replay?.title || ""}`.trim();
+  graph.replay = normalizeGraphReplay({
+    ...graph.replay,
+    ...patch,
+    title: Object.prototype.hasOwnProperty.call(patch, "title")
+      ? patch.title
+      : previousTitle,
+  }, graph.label);
+  syncLabelCodePreview();
+  renderLabelGraphList();
+  renderVisualProjectStats();
+  saveState();
+}
+
 function startLabelRename(graphId) {
   state.activeGraphId = graphId;
   renamingGraphId = graphId;
@@ -5241,6 +5475,7 @@ function finishLabelRename(graphId, nextLabel, { cancel = false } = {}) {
   }
 
   if (!cancel) {
+    const previousLabel = graph.label;
     const normalizedLabel = nextLabel.trim() || graph.label;
 
     if (normalizedLabel !== graph.label) {
@@ -5259,6 +5494,12 @@ function finishLabelRename(graphId, nextLabel, { cancel = false } = {}) {
       });
 
       graph.label = normalizedLabel;
+      if ((graph.replay?.title || "").trim() === previousLabel.trim()) {
+        graph.replay = normalizeGraphReplay({
+          ...graph.replay,
+          title: normalizedLabel,
+        }, normalizedLabel);
+      }
       saveState(`Renamed label graph to "${graph.label}".`);
     }
   }
@@ -5317,6 +5558,7 @@ function renderLabelGraphList() {
   labelGraphListEl.innerHTML = "";
 
   state.graphs.forEach((graph) => {
+    const replayMeta = graph.replay?.enabled ? " · replay" : "";
     const item = document.createElement("div");
     item.className = "label-graph-item";
     item.dataset.graphId = graph.id;
@@ -5337,7 +5579,7 @@ function renderLabelGraphList() {
       input.value = graph.label;
 
       const meta = document.createElement("span");
-      meta.textContent = `${graph.nodes.length} blocks`;
+      meta.textContent = `${graph.nodes.length} blocks${replayMeta}`;
 
       input.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -5366,7 +5608,7 @@ function renderLabelGraphList() {
       item.tabIndex = 0;
       item.innerHTML = `
         <strong>${escapeHtml(graph.label)}</strong>
-        <span>${graph.nodes.length} blocks</span>
+        <span>${graph.nodes.length} blocks${escapeHtml(replayMeta)}</span>
       `;
 
       item.addEventListener("click", () => {
@@ -5879,6 +6121,10 @@ function formatImageAtlStepLines(image) {
   });
 }
 
+function getImageDefinitionStatementPrefix(image) {
+  return image?.isSideImage ? "image side" : "image";
+}
+
 function formatImageDefinitionCode(image) {
   if (!image) {
     return "";
@@ -5886,17 +6132,18 @@ function formatImageDefinitionCode(image) {
 
   const safeName = image.name.trim() || "image_name";
   const definitionType = getImageDefinitionType(image);
+  const statementPrefix = getImageDefinitionStatementPrefix(image);
 
   if (definitionType === "layered") {
     return formatLayeredImageDefinitionCode(image);
   }
 
   if (!image.atlEnabled && definitionType !== "static") {
-    return `image ${safeName} = ${formatImageDefinitionDisplayableExpression(image)}`;
+    return `${statementPrefix} ${safeName} = ${formatImageDefinitionDisplayableExpression(image)}`;
   }
 
   const displayableExpression = formatImageDefinitionDisplayableExpression(image);
-  const lines = [`image ${safeName}:`];
+  const lines = [`${statementPrefix} ${safeName}:`];
 
   if (definitionType === "static") {
     lines.push(`    ${displayableExpression}`);
@@ -5920,6 +6167,31 @@ function setImageDefinitionTypeFieldVisibility(definitionType) {
   imageDefinitionCompositeFieldsEl.classList.toggle("hidden", definitionType !== "composite");
   imageDefinitionPlaceholderFieldsEl.classList.toggle("hidden", definitionType !== "placeholder");
   imageDefinitionAnimationFieldsEl.classList.toggle("hidden", definitionType === "layered");
+}
+
+function syncImageDefinitionSideImageHelp(image) {
+  if (!imageDefinitionSideImageHelpEl || !imageDefinitionIsSideImageInput) {
+    return;
+  }
+
+  const definitionType = image ? getImageDefinitionType(image) : "static";
+  const isLayered = definitionType === "layered";
+  const isSideImage = Boolean(image?.isSideImage) && !isLayered;
+  let message = "";
+
+  if (isLayered) {
+    imageDefinitionIsSideImageInput.setAttribute("disabled", "disabled");
+    message = "Layered images themselves are not emitted as `image side ...`. Create a separate side image definition when you want a cropped or proxy portrait.";
+  } else {
+    imageDefinitionIsSideImageInput.removeAttribute("disabled");
+
+    if (isSideImage) {
+      message = "Use the Image Name field for the linked tag plus optional attributes, for example `eileen happy`. The generated code will start with `image side ...`.";
+    }
+  }
+
+  imageDefinitionSideImageHelpEl.textContent = message;
+  imageDefinitionSideImageHelpEl.classList.toggle("hidden", !message);
 }
 
 function renderCompositeLayerList(image) {
@@ -6568,6 +6840,7 @@ function syncImageDefinitionDetailFields() {
     renderCompositeLayerList(null);
     renderImageAtlStepList(null);
     syncMatrixColorBuilder("");
+    syncImageDefinitionSideImageHelp(null);
     imageDefinitionMovieLoopInput.disabled = false;
     imageDefinitionCodePreviewEl.textContent = "";
     return;
@@ -6589,6 +6862,7 @@ function syncImageDefinitionDetailFields() {
   renderCompositeLayerList(image);
   renderImageAtlStepList(image);
   syncMatrixColorBuilder(image.matrixcolor);
+  syncImageDefinitionSideImageHelp(image);
   imageDefinitionMovieLoopInput.disabled = (
     getImageDefinitionType(image) === "movie"
     && Boolean(image.movieKeepLastFrame)
@@ -7632,6 +7906,30 @@ function renderProjectVoiceSettings() {
   projectVoiceCodePreviewEl.textContent = formatProjectVoiceCode();
 }
 
+function renderProjectSideImageSettings() {
+  if (!projectSideImageSettingsFormEl) {
+    return;
+  }
+
+  projectSideImageTagInput.value = getProjectSideImageTag();
+  projectSideImageOnlyNotShowingInput.checked = getProjectSideImageOnlyNotShowing();
+  projectSideImagePrefixTagInput.value = getProjectSideImagePrefixTag();
+  projectSideImageNullInput.value = getProjectSideImageNullExpression();
+  projectSideImageSameTransformInput.value = getProjectSideImageSameTransform();
+  projectSideImageChangeTransformInput.value = getProjectSideImageChangeTransform();
+  projectSideImageCodePreviewEl.textContent = formatProjectSideImageCode();
+}
+
+function renderImageTagSuggestions() {
+  if (!imageTagSuggestionListEl) {
+    return;
+  }
+
+  imageTagSuggestionListEl.innerHTML = getAvailableImageTags()
+    .map((tag) => `<option value="${escapeHtml(tag)}"></option>`)
+    .join("");
+}
+
 function renderVisualProjectStats() {
   const graph = getActiveGraph();
   const voicedDialogueCount = state.graphs.reduce(
@@ -7650,12 +7948,20 @@ function renderVisualProjectStats() {
       value: String(state.graphs.length),
     },
     {
+      title: "Replay Labels",
+      value: String(state.graphs.filter((currentGraph) => currentGraph.replay?.enabled).length),
+    },
+    {
       title: "Blocks In Current Graph",
       value: String(graph?.nodes.length || 0),
     },
     {
       title: "Audio Definitions",
       value: String(state.audio.length),
+    },
+    {
+      title: "Side Image Definitions",
+      value: String(state.images.filter((image) => image.isSideImage).length),
     },
     {
       title: "Live2D Definitions",
@@ -7672,6 +7978,10 @@ function renderVisualProjectStats() {
     {
       title: "Voice Strategy",
       value: getProjectVoiceMode() === "auto" ? "Auto Voice" : "Manual Voice",
+    },
+    {
+      title: "Linked Image Tags",
+      value: String(state.characters.filter((character) => `${character.image || ""}`.trim()).length),
     },
     {
       title: "Voiced Dialogues",
@@ -7697,6 +8007,7 @@ function renderGuiEditorPanel() {
   }
 
   const guiState = normalizeGuiState(state.gui);
+  const replayLabelCount = state.graphs.filter((graph) => graph?.replay?.enabled).length;
   const stats = [
     {
       title: "Styles",
@@ -7713,6 +8024,10 @@ function renderGuiEditorPanel() {
     {
       title: "Cursors / Shaders",
       value: `${guiState.cursors.length} / ${guiState.textShaders.length}`,
+    },
+    {
+      title: "Replay / Music / Gallery",
+      value: `${replayLabelCount} / ${guiState.musicRooms.length} / ${guiState.galleries.length}`,
     },
   ];
 
@@ -8073,6 +8388,7 @@ function renderInspector() {
 function render() {
   renderProjectInfo();
   renderGuiEditorPanel();
+  renderImageTagSuggestions();
   renderLabelGraphList();
   renderLabelPanel();
   renderImagesPanel();
@@ -8082,6 +8398,7 @@ function render() {
   renderVariablesPanel();
   renderDefinitionsPanel();
   renderProjectVoiceSettings();
+  renderProjectSideImageSettings();
   renderVisualProjectStats();
   renderGraph();
   renderInspector();
@@ -8352,6 +8669,8 @@ function handleImageDefinitionFieldChange(event) {
     };
 
     if (nextValue === "layered") {
+      patch.isSideImage = false;
+
       if (!normalizeLayeredAlwaysLayers(activeImage.layeredAlwaysLayers).length) {
         patch.layeredAlwaysLayers = [createLayeredAlwaysLayer(1)];
       }
@@ -8374,6 +8693,12 @@ function handleImageDefinitionFieldChange(event) {
     }
 
     updateActiveImageDefinition(patch);
+    return;
+  }
+
+  if (field === "isSideImage" && getImageDefinitionType(activeImage) === "layered") {
+    updateActiveImageDefinition({ isSideImage: false });
+    setStatus("Layered image definitions stay regular layered images. Create a separate side image definition for portraits.");
     return;
   }
 
@@ -9758,6 +10083,21 @@ newLabelButton.addEventListener("click", () => {
 labelPreviewBackButton.addEventListener("click", () => {
   closeLabelCodePreview();
 });
+labelReplayEnabledInput?.addEventListener("change", (event) => {
+  updateLabelReplaySettings({ enabled: event.target.checked });
+});
+labelReplayTitleInput?.addEventListener("input", (event) => {
+  updateLabelReplaySettings({ title: event.target.value });
+});
+labelReplayLockedModeInput?.addEventListener("change", (event) => {
+  updateLabelReplaySettings({ lockedMode: event.target.value });
+});
+labelReplayScopeInput?.addEventListener("input", (event) => {
+  updateLabelReplaySettings({ scope: event.target.value });
+});
+labelReplayAutoEndInput?.addEventListener("change", (event) => {
+  updateLabelReplaySettings({ autoEnd: event.target.checked });
+});
 contextRenameLabelButton.addEventListener("click", () => {
   if (!contextMenuLabelGraphId) {
     return;
@@ -10335,6 +10675,24 @@ projectVoiceMultilingualInput.addEventListener("change", (event) => {
 });
 projectDefaultDialogueVoiceInput.addEventListener("change", (event) => {
   updateProjectMeta({ defaultDialogueVoiceEnabled: event.target.checked });
+});
+projectSideImageTagInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ sideImageTag: event.target.value });
+});
+projectSideImageOnlyNotShowingInput?.addEventListener("change", (event) => {
+  updateProjectMeta({ sideImageOnlyNotShowing: event.target.checked });
+});
+projectSideImagePrefixTagInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ sideImagePrefixTag: event.target.value });
+});
+projectSideImageNullInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ sideImageNull: event.target.value });
+});
+projectSideImageSameTransformInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ sideImageSameTransform: event.target.value });
+});
+projectSideImageChangeTransformInput?.addEventListener("input", (event) => {
+  updateProjectMeta({ sideImageChangeTransform: event.target.value });
 });
 characterIdInput.addEventListener("input", (event) => {
   updateActiveCharacter({ id: event.target.value });

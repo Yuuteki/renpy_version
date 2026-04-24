@@ -376,6 +376,27 @@
   padding-right: 2px;
 }
 
+.gui-extras-stack {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.gui-extra-entity-layout {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 280px minmax(0, 1fr);
+  align-items: start;
+}
+
+.gui-extra-entity-list,
+.gui-extra-entity-detail {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  min-width: 0;
+}
+
 .gui-entity-card {
   display: grid;
   gap: 6px;
@@ -447,6 +468,64 @@
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.gui-nested-list {
+  display: grid;
+  gap: 12px;
+}
+
+.gui-nested-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gui-nested-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.gui-nested-card-header > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.gui-nested-card-header span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.gui-chip-list {
+  display: grid;
+  gap: 12px;
+}
+
+.gui-replay-chip {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gui-replay-chip span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.gui-replay-chip code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--text);
 }
 
 .gui-section-subheader {
@@ -637,6 +716,34 @@
   color: var(--text);
 }
 
+.gui-preview-side-image {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  width: min(180px, 100%);
+  padding: 14px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gui-preview-side-image-portrait {
+  width: 100%;
+  max-width: 112px;
+  aspect-ratio: 3 / 4;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.28) 0 18%, transparent 19%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+}
+
+.gui-preview-side-image span {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
 .gui-preview-add,
 .gui-preview-placeholder {
   padding: 12px 14px;
@@ -738,6 +845,10 @@
 
   .gui-section-grid-wide,
   .gui-section-grid-diagnostics {
+    grid-template-columns: 1fr;
+  }
+
+  .gui-extra-entity-layout {
     grid-template-columns: 1fr;
   }
 

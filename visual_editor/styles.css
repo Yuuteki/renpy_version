@@ -279,6 +279,10 @@ button.danger-button:hover {
   margin-bottom: 16px;
 }
 
+.label-replay-settings {
+  margin-bottom: 16px;
+}
+
 .inspector-panel {
   height: 100%;
   padding: 18px;

@@ -47,6 +47,45 @@
               </div>
 
               <p id="labelCodePreviewTitle" class="section-label"></p>
+              <form id="labelReplaySettingsForm" class="character-detail-form label-replay-settings hidden">
+                <p class="section-label secondary-label">Replay</p>
+
+                <label class="character-checkbox">
+                  <input id="labelReplayEnabledInput" type="checkbox" />
+                  <span>Enable Replay For This Label</span>
+                </label>
+
+                <label>
+                  Replay Button Text
+                  <input id="labelReplayTitleInput" type="text" placeholder="e.g. The Meaning of Life" />
+                </label>
+
+                <label>
+                  Locked Mode
+                  <select id="labelReplayLockedModeInput">
+                    <option value="auto">Auto Unlock By Progress</option>
+                    <option value="unlocked">Always Unlocked</option>
+                    <option value="locked">Always Locked</option>
+                  </select>
+                </label>
+
+                <label>
+                  Replay Scope
+                  <textarea id="labelReplayScopeInput" rows="3" placeholder='e.g. {"route_name": "alice"}'></textarea>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="labelReplayAutoEndInput" type="checkbox" />
+                  <span>Append <code>renpy.end_replay()</code> At The End Of Generated Code</span>
+                </label>
+
+                <p class="project-settings-note">
+                  Use replay on scene-style labels. If your label exits early with <code>jump</code> or <code>return</code>, you may still want a manual replay end step in script.
+                </p>
+
+                <p class="section-label secondary-label">Replay Action Preview</p>
+                <pre id="labelReplayActionPreview" class="code-preview"></pre>
+              </form>
               <pre id="labelCodePreview" class="code-preview"></pre>
             </div>
           </section>
@@ -108,6 +147,13 @@
                     <option value="placeholder">Placeholder</option>
                   </select>
                 </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionIsSideImageInput" data-image-field="isSideImage" type="checkbox" />
+                  <span>Define As Side Image</span>
+                </label>
+
+                <p id="imageDefinitionSideImageHelp" class="project-settings-note hidden"></p>
 
                 <div id="imageDefinitionStaticFields" class="definition-fields">
                   <label>
@@ -989,9 +1035,13 @@
                 <p class="section-label secondary-label">Resources</p>
 
                 <label>
-                  Image Tag
-                  <input id="characterImageInput" type="text" placeholder="e.g. eileen" />
+                  Linked Image Tag
+                  <input id="characterImageInput" list="imageTagSuggestionList" type="text" placeholder="e.g. eileen" />
                 </label>
+
+                <p class="project-settings-note">
+                  Used by <code>Character(image=...)</code>. Side images follow this tag and the current shown attributes.
+                </p>
 
                 <label>
                   Voice Tag
@@ -1302,6 +1352,46 @@
 
               <p class="section-label secondary-label">Generated Voice Config</p>
               <pre id="projectVoiceCodePreview" class="code-preview"></pre>
+            </form>
+
+            <p class="section-label secondary-label">Side Image Settings</p>
+            <form id="projectSideImageSettingsForm" class="character-detail-form">
+              <label>
+                Track Specific Image Tag
+                <input id="projectSideImageTagInput" list="imageTagSuggestionList" type="text" placeholder="e.g. eileen" />
+              </label>
+
+              <label class="character-checkbox">
+                <input id="projectSideImageOnlyNotShowingInput" type="checkbox" />
+                <span>Only show side image when the matching main sprite is not already on screen</span>
+              </label>
+
+              <label>
+                Prefix Tag
+                <input id="projectSideImagePrefixTagInput" type="text" placeholder="e.g. side" />
+              </label>
+
+              <label>
+                Null Displayable
+                <input id="projectSideImageNullInput" type="text" placeholder="e.g. Null(width=200, height=150)" />
+              </label>
+
+              <label>
+                Same Tag Transform
+                <input id="projectSideImageSameTransformInput" type="text" placeholder="e.g. same_transform" />
+              </label>
+
+              <label>
+                Change Transform
+                <input id="projectSideImageChangeTransformInput" type="text" placeholder="e.g. change_transform" />
+              </label>
+
+              <p class="project-settings-note">
+                These map to <code>config.side_image_*</code>. Your <code>say</code> screen still needs <code>SideImage()</code> to actually render the portrait.
+              </p>
+
+              <p class="section-label secondary-label">Generated Side Image Config</p>
+              <pre id="projectSideImageCodePreview" class="code-preview"></pre>
             </form>
 
             <p class="section-label secondary-label">Status</p>
@@ -2095,6 +2185,8 @@
           Delete Character
         </button>
       </div>
+
+      <datalist id="imageTagSuggestionList"></datalist>
     </div>
 
     <script src="./app.js"></script>
