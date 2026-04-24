@@ -30,19 +30,6 @@
             <div id="visualProjectStats" class="visual-project-stats"></div>
           </section>
 
-          <section id="guiEditorSection" class="sidebar-section sidebar-panel status-section">
-            <div class="section-header">
-              <h2>GUI Editor</h2>
-              <p>Open the dedicated editor for styles, screens, config, cursors, and text shaders.</p>
-            </div>
-
-            <div id="guiEditorProjectSummary" class="visual-project-stats"></div>
-
-            <div class="sidebar-actions">
-              <button id="openGuiEditorButton" class="primary" type="button">Open GUI Editor</button>
-            </div>
-          </section>
-
           <section id="labelGraphsSection" class="sidebar-section sidebar-panel">
             <div id="labelListView" class="label-view">
               <button id="newLabelButton" class="secondary" type="button">New Label Graph</button>
@@ -1272,6 +1259,18 @@
           </section>
 
           <section id="visualProjectSection" class="sidebar-section sidebar-panel status-section">
+            <div class="section-header">
+              <h2>Settings</h2>
+              <p>Project-level settings, GUI editing entry, and current editor status.</p>
+            </div>
+
+            <p class="section-label secondary-label">GUI Editor</p>
+            <div id="guiEditorProjectSummary" class="visual-project-stats"></div>
+
+            <div class="sidebar-actions">
+              <button id="openGuiEditorButton" class="primary" type="button">Open GUI Editor</button>
+            </div>
+
             <p class="section-label secondary-label">Voice Settings</p>
             <form id="projectVoiceSettingsForm" class="character-detail-form">
               <label>
@@ -1337,21 +1336,6 @@
               <path d="M4 8.5 12 4l8 4.5"></path>
               <path d="M6.5 9.5V19h11V9.5"></path>
               <path d="M10 19v-5h4v5"></path>
-            </svg>
-          </button>
-
-          <button
-            class="collapsed-rail-button"
-            type="button"
-            data-sidebar-section="guiEditorSection"
-            aria-label="Open GUI editor"
-            title="GUI"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="4" y="5" width="16" height="14" rx="2"></rect>
-              <path d="M8 9h8"></path>
-              <path d="M8 12h5"></path>
-              <path d="M8 15h6"></path>
             </svg>
           </button>
 
@@ -1461,8 +1445,8 @@
             class="collapsed-rail-button"
             type="button"
             data-sidebar-section="visualProjectSection"
-            aria-label="Open visual project info"
-            title="Visual Project"
+            aria-label="Open settings"
+            title="Settings"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="5" y="5" width="14" height="14" rx="2"></rect>
@@ -1502,6 +1486,11 @@
           <button class="node-card node-card-compact" data-node-type="dialogue">
             <strong>Dialogue</strong>
             <span>Line</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="input">
+            <strong>Input</strong>
+            <span><code>renpy.input()</code></span>
           </button>
 
           <button class="node-card node-card-compact" data-node-type="menu">
@@ -1842,6 +1831,83 @@
 
             <div class="inspector-actions">
               <button id="dialogueDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="inputInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="inputNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Target Variable
+              <input id="inputNodeVariableInput" type="text" placeholder="e.g. player_name or persistent.nickname" />
+            </label>
+
+            <label>
+              Prompt
+              <textarea id="inputNodePromptInput" rows="4" placeholder="e.g. What should I call you?"></textarea>
+            </label>
+
+            <label>
+              Default Text
+              <input id="inputNodeDefaultInput" type="text" placeholder="e.g. Eileen" />
+            </label>
+
+            <div class="gui-inline-fields">
+              <label>
+                Allow Characters
+                <input id="inputNodeAllowInput" type="text" placeholder="Optional allowed character list." />
+              </label>
+
+              <label>
+                Exclude Characters
+                <input id="inputNodeExcludeInput" type="text" placeholder='e.g. {} or "\\n"' />
+              </label>
+            </div>
+
+            <div class="gui-inline-fields">
+              <label>
+                Max Length
+                <input id="inputNodeLengthInput" type="number" step="1" placeholder="e.g. 32" />
+              </label>
+
+              <label>
+                Pixel Width
+                <input id="inputNodePixelWidthInput" type="text" placeholder="e.g. 360" />
+              </label>
+
+              <label>
+                Screen Name
+                <input id="inputNodeScreenInput" type="text" placeholder="input" />
+              </label>
+            </div>
+
+            <div class="gui-inline-fields">
+              <label>
+                Mask Character
+                <input id="inputNodeMaskInput" type="text" placeholder='e.g. "*"' />
+              </label>
+
+              <label>
+                Empty Fallback
+                <input id="inputNodeFallbackInput" type="text" placeholder="e.g. Player" />
+              </label>
+            </div>
+
+            <label class="character-checkbox">
+              <input id="inputNodeTrimInput" type="checkbox" />
+              <span>Trim whitespace after input</span>
+            </label>
+
+            <label class="character-checkbox">
+              <input id="inputNodeCopyPasteInput" type="checkbox" />
+              <span>Allow copy / paste</span>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="inputDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 

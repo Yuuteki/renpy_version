@@ -2,6 +2,35 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.4] - 2026-04-24
+
+### Added
+
+- 为 `GUI Editor` 的 `input` 节点补充 `InputValue` 工作流，区分普通 `Value` 和 `InputValue` 绑定。
+- 为 `GUI Editor` 的 `input` 节点补充输入专用属性，包括初始文本、字符限制、长度、像素宽度、掩码和复制粘贴开关。
+- 在主剧情画布中新增 `Input Block`，用于可视化生成 `renpy.input()` 逻辑。
+
+### Changed
+
+- 将 `GUI Editor` 的特殊 `input` 模板改为更贴近官方文档的结构：`screen input(prompt)` 与 `input id "input"`。
+- 为 `GUI Editor` 的 `Screens` 诊断系统补充 `input` 特殊界面检查和 `InputValue` 缺失提示。
+- 为主剧情画布的 `Input Block` 增加空值回退、自动 `strip()` 和常见输入参数生成。
+
+## [0.4.3] - 2026-04-24
+
+### Changed
+
+- 修正 `GUI Editor` 中 `Screens` 左侧底部操作区的横向溢出问题。
+- 为模板选择框和底部按钮补充宽度约束与自动换行规则，避免长文本把整个侧栏撑出范围。
+
+## [0.4.2] - 2026-04-24
+
+### Changed
+
+- 调整 `GUI Editor` 中 `Screens` 模块的详情区排版，拆分为 `Screen Detail / Node Tree / Node Inspector` 三段式结构。
+- 修正 `Screens` 详情容器缺少通用表单栈布局的问题，统一与其他 GUI 面板的间距和卡片层次。
+- 优化节点树区域的滚动与删除按钮位置，减少信息挤压和视觉混乱。
+
 ## [0.4.1] - 2026-04-24
 
 ### Added

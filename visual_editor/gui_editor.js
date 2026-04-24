@@ -81,9 +81,19 @@ const guiNodeActionKindInput = document.getElementById("guiNodeActionKindInput")
 const guiNodeActionArgsInput = document.getElementById("guiNodeActionArgsInput");
 const guiNodeActionRawInput = document.getElementById("guiNodeActionRawInput");
 const guiNodeValueFields = document.getElementById("guiNodeValueFields");
+const guiNodeValuePanelTitle = document.getElementById("guiNodeValuePanelTitle");
+const guiNodeValuePanelDescription = document.getElementById("guiNodeValuePanelDescription");
 const guiNodeValueKindInput = document.getElementById("guiNodeValueKindInput");
 const guiNodeValueArgsInput = document.getElementById("guiNodeValueArgsInput");
 const guiNodeValueRawInput = document.getElementById("guiNodeValueRawInput");
+const guiNodeInputFields = document.getElementById("guiNodeInputFields");
+const guiNodeInputDefaultTextInput = document.getElementById("guiNodeInputDefaultTextInput");
+const guiNodeInputAllowInput = document.getElementById("guiNodeInputAllowInput");
+const guiNodeInputExcludeInput = document.getElementById("guiNodeInputExcludeInput");
+const guiNodeInputLengthInput = document.getElementById("guiNodeInputLengthInput");
+const guiNodeInputPixelWidthInput = document.getElementById("guiNodeInputPixelWidthInput");
+const guiNodeInputMaskInput = document.getElementById("guiNodeInputMaskInput");
+const guiNodeInputCopyPasteInput = document.getElementById("guiNodeInputCopyPasteInput");
 const guiNodeConditionField = document.getElementById("guiNodeConditionField");
 const guiNodeConditionInput = document.getElementById("guiNodeConditionInput");
 const guiNodeVariableField = document.getElementById("guiNodeVariableField");
@@ -313,7 +323,7 @@ const screenNodeMeta = {
   null: { label: "Null", supportsChildren: false, fields: {} },
   bar: { label: "Bar", supportsChildren: false, fields: { value: true } },
   vbar: { label: "VBar", supportsChildren: false, fields: { value: true } },
-  input: { label: "Input", supportsChildren: false, fields: { text: true, value: true } },
+  input: { label: "Input", supportsChildren: false, fields: { value: true, inputSettings: true } },
   viewport: { label: "Viewport", supportsChildren: true, fields: {} },
   vpgrid: { label: "VPGrid", supportsChildren: true, fields: { grid: true } },
   side: { label: "Side", supportsChildren: true, fields: { side: true } },
@@ -387,10 +397,29 @@ const screenValueMeta = [
   { id: "FieldValue", label: "FieldValue(obj, field)", placeholder: 'persistent.settings, "seen"' },
 ];
 
+const screenInputValueMeta = [
+  { id: "none", label: "No InputValue", placeholder: "" },
+  { id: "raw", label: "Raw Expression", placeholder: 'VariableInputValue("player_name", default=True, returnable=False)' },
+  { id: "VariableInputValue", label: "VariableInputValue(variable)", placeholder: '"player_name", default=True, returnable=False' },
+  { id: "ScreenVariableInputValue", label: "ScreenVariableInputValue(variable)", placeholder: '"current_page", default=True, returnable=False' },
+  { id: "LocalVariableInputValue", label: "LocalVariableInputValue(variable)", placeholder: '"nickname", default=True, returnable=False' },
+  { id: "FieldInputValue", label: "FieldInputValue(object, field)", placeholder: 'persistent.player, "nickname", default=True, returnable=False' },
+  { id: "DictInputValue", label: "DictInputValue(dict, key)", placeholder: 'persistent.profile, "nickname", default=True, returnable=False' },
+  { id: "FilePageNameInputValue", label: "FilePageNameInputValue(...)", placeholder: 'pattern="Page {}", auto="Automatic saves", quick="Quick saves", page=None, default=False' },
+];
+
+const knownScreenValueKinds = new Set(
+  [...screenValueMeta, ...screenInputValueMeta].map((item) => item.id),
+);
+
+function getValueMetaForNodeType(nodeType) {
+  return nodeType === "input" ? screenInputValueMeta : screenValueMeta;
+}
+
 const specialScreenTemplateMeta = [
   { id: "say", label: "say", description: "Dialogue window with speaker and body text." },
   { id: "choice", label: "choice", description: "A menu/choice list with vertically stacked buttons." },
-  { id: "input", label: "input", description: "Prompt plus input and confirm button." },
+  { id: "input", label: "input", description: "Special renpy.input() screen with prompt + input id field." },
   { id: "nvl", label: "nvl", description: "NVL text stack with a loose window layout." },
   { id: "notify", label: "notify", description: "Temporary notification popup." },
   { id: "skip_indicator", label: "skip_indicator", description: "Compact skipping status notice." },
@@ -455,13 +484,13 @@ function createScreenTemplate(templateId) {
       return buildTemplateScreen({
         id: createId("screen"),
         name: "input",
-        notes: "Prompt plus input field and accept button.",
+        parameters: "prompt",
+        notes: "Special screen used by renpy.input(). Keep one input node with id \"input\".",
         nodes: [
           buildTemplateNode("window", { title: "Input Window", style: "input_window" }, [
             buildTemplateNode("vbox", { title: "Input Layout", style: "input_vbox" }, [
-              buildTemplateNode("text", { title: "Prompt", text: "_(\"Enter your name\")", style: "input_prompt" }),
-              buildTemplateNode("input", { title: "Player Name", style: "input_field", valueKind: "VariableValue", valueArgs: '"player_name"' }),
-              buildTemplateNode("textbutton", { title: "Confirm", text: "_(\"Confirm\")", style: "input_button", actionKind: "Return" }),
+              buildTemplateNode("text", { title: "Prompt", text: "prompt", style: "input_prompt" }),
+              buildTemplateNode("input", { title: "Input Field", style: "input_field", nodeId: "input" }),
             ]),
           ]),
         ],
@@ -778,9 +807,16 @@ function normalizeGuiScreenNode(node, index) {
     actionKind: screenActionMeta.some((item) => item.id === node?.actionKind) ? node.actionKind : "none",
     actionArgs: `${node?.actionArgs || ""}`.trim(),
     actionRaw: `${node?.actionRaw || ""}`.trim(),
-    valueKind: screenValueMeta.some((item) => item.id === node?.valueKind) ? node.valueKind : "none",
+    valueKind: knownScreenValueKinds.has(node?.valueKind) ? node.valueKind : "none",
     valueArgs: `${node?.valueArgs || ""}`.trim(),
     valueRaw: `${node?.valueRaw || ""}`.trim(),
+    inputDefaultText: `${node?.inputDefaultText ?? ""}`,
+    inputAllow: `${node?.inputAllow ?? ""}`,
+    inputExclude: `${node?.inputExclude ?? ""}`,
+    inputLength: `${node?.inputLength ?? ""}`.trim(),
+    inputPixelWidth: `${node?.inputPixelWidth ?? ""}`.trim(),
+    inputMask: `${node?.inputMask ?? ""}`,
+    inputCopyPaste: node?.inputCopyPaste !== false && node?.inputCopyPaste !== "false",
     condition: `${node?.condition || ""}`.trim(),
     variableName: `${node?.variableName || ""}`.trim(),
     iterableExpression: `${node?.iterableExpression || ""}`.trim(),
@@ -907,6 +943,7 @@ function createBlankScreenNode(type = "text") {
     type: validType,
     title: label,
     text: validType === "text" ? "_(\"Text\")" : "",
+    inputCopyPaste: true,
   }, 0);
 }
 
@@ -1212,6 +1249,24 @@ function formatGeneralValue(value) {
   return formatRenpyQuotedString(trimmed);
 }
 
+function formatStringLikeValue(value) {
+  const trimmed = `${value || ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (
+    isQuotedString(trimmed)
+    || trimmed.includes("(")
+    || /^[A-Za-z_][A-Za-z0-9_\.]*(?:\[[^\]]+\])*$/.test(trimmed)
+  ) {
+    return trimmed;
+  }
+
+  return formatRenpyQuotedString(trimmed);
+}
+
 function formatStyleReference(value) {
   const trimmed = `${value || ""}`.trim();
 
@@ -1407,6 +1462,28 @@ function setActiveNodeType(nextType) {
 
   nodeContext.node.type = nextType;
   nodeContext.node.title = `${nextMeta.label}`;
+
+  if (nextType === "input") {
+    nodeContext.node.text = "";
+    if (!getValueMetaForNodeType("input").some((item) => item.id === nodeContext.node.valueKind)) {
+      nodeContext.node.valueKind = "none";
+      nodeContext.node.valueArgs = "";
+      nodeContext.node.valueRaw = "";
+    }
+
+    if (typeof nodeContext.node.inputCopyPaste !== "boolean") {
+      nodeContext.node.inputCopyPaste = true;
+    }
+  } else {
+    const validValueKinds = getValueMetaForNodeType(nextType);
+
+    if (!validValueKinds.some((item) => item.id === nodeContext.node.valueKind)) {
+      nodeContext.node.valueKind = "none";
+      nodeContext.node.valueArgs = "";
+      nodeContext.node.valueRaw = "";
+    }
+  }
+
   render();
   saveProjectState(`Changed node type to "${nextMeta.label}".`);
 }
@@ -1879,11 +1956,11 @@ function renderScreenNodeTypeOptions() {
   guiScreenNodeTypeInput.innerHTML = options;
 }
 
-function renderActionValueOptions() {
+function renderActionValueOptions(nodeType = "text") {
   guiNodeActionKindInput.innerHTML = screenActionMeta.map((item) => `
     <option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>
   `).join("");
-  guiNodeValueKindInput.innerHTML = screenValueMeta.map((item) => `
+  guiNodeValueKindInput.innerHTML = getValueMetaForNodeType(nodeType).map((item) => `
     <option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>
   `).join("");
 }
@@ -1950,6 +2027,13 @@ function renderScreenNodeDetail() {
     return;
   }
 
+  renderActionValueOptions(node.type);
+  if (!getValueMetaForNodeType(node.type).some((item) => item.id === node.valueKind)) {
+    node.valueKind = "none";
+    node.valueArgs = "";
+    node.valueRaw = "";
+  }
+
   guiScreenNodeTypeInput.value = node.type;
   guiScreenNodeTitleInput.value = node.title;
   guiScreenNodeStyleInput.value = node.style;
@@ -1964,6 +2048,13 @@ function renderScreenNodeDetail() {
   guiNodeValueKindInput.value = node.valueKind;
   guiNodeValueArgsInput.value = node.valueArgs;
   guiNodeValueRawInput.value = node.valueRaw;
+  guiNodeInputDefaultTextInput.value = node.inputDefaultText;
+  guiNodeInputAllowInput.value = node.inputAllow;
+  guiNodeInputExcludeInput.value = node.inputExclude;
+  guiNodeInputLengthInput.value = node.inputLength;
+  guiNodeInputPixelWidthInput.value = node.inputPixelWidth;
+  guiNodeInputMaskInput.value = node.inputMask;
+  guiNodeInputCopyPasteInput.checked = node.inputCopyPaste;
   guiNodeConditionInput.value = node.condition;
   guiNodeVariableInput.value = node.variableName;
   guiNodeIterableInput.value = node.iterableExpression;
@@ -1986,6 +2077,7 @@ function renderScreenNodeDetail() {
   guiNodeHoverDisplayableField.classList.toggle("hidden", !fields.hoverDisplayable);
   guiNodeActionFields.classList.toggle("hidden", !fields.action);
   guiNodeValueFields.classList.toggle("hidden", !fields.value);
+  guiNodeInputFields.classList.toggle("hidden", !fields.inputSettings);
   guiNodeConditionField.classList.toggle("hidden", !fields.condition);
   guiNodeVariableField.classList.toggle("hidden", !fields.variable);
   guiNodeIterableField.classList.toggle("hidden", !fields.iterable);
@@ -2011,9 +2103,17 @@ function renderScreenNodeDetail() {
       : `${meta.label} is a leaf node.`);
 
   const actionMeta = screenActionMeta.find((item) => item.id === node.actionKind) || screenActionMeta[0];
-  const valueMeta = screenValueMeta.find((item) => item.id === node.valueKind) || screenValueMeta[0];
+  const valueMetaList = getValueMetaForNodeType(node.type);
+  const valueMeta = valueMetaList.find((item) => item.id === node.valueKind) || valueMetaList[0];
   guiNodeActionArgsInput.placeholder = actionMeta.placeholder || "";
   guiNodeValueArgsInput.placeholder = valueMeta.placeholder || "";
+  guiNodeValueRawInput.placeholder = node.type === "input"
+    ? 'e.g. VariableInputValue("player_name", default=True)'
+    : 'e.g. Preference("music volume")';
+  guiNodeValuePanelTitle.textContent = node.type === "input" ? "InputValue" : "Value";
+  guiNodeValuePanelDescription.textContent = node.type === "input"
+    ? "Bind the input field to an InputValue helper, or use a raw expression for advanced cases."
+    : "Used by bars, inputs, and other value-driven displayables.";
 }
 
 function renderScreenDetail() {
@@ -2065,6 +2165,36 @@ function formatNodePropertyLines(node, indentLevel) {
 
   if (valueExpression) {
     lines.push(indentLine(`value ${valueExpression}`, indentLevel));
+  }
+
+  if (node.type === "input") {
+    if (node.inputDefaultText) {
+      lines.push(indentLine(`default ${formatScreenTextValue(node.inputDefaultText)}`, indentLevel));
+    }
+
+    if (node.inputAllow.trim()) {
+      lines.push(indentLine(`allow ${formatStringLikeValue(node.inputAllow)}`, indentLevel));
+    }
+
+    if (node.inputExclude.trim()) {
+      lines.push(indentLine(`exclude ${formatStringLikeValue(node.inputExclude)}`, indentLevel));
+    }
+
+    if (node.inputLength) {
+      lines.push(indentLine(`length ${formatGeneralValue(node.inputLength)}`, indentLevel));
+    }
+
+    if (node.inputPixelWidth) {
+      lines.push(indentLine(`pixel_width ${formatGeneralValue(node.inputPixelWidth)}`, indentLevel));
+    }
+
+    if (node.inputMask.trim()) {
+      lines.push(indentLine(`mask ${formatStringLikeValue(node.inputMask)}`, indentLevel));
+    }
+
+    if (!node.inputCopyPaste) {
+      lines.push(indentLine("copypaste False", indentLevel));
+    }
   }
 
   splitRawLines(node.propertiesExpression).forEach((line) => {
@@ -2272,7 +2402,7 @@ function renderPreviewNode(node) {
     case "vbar":
       return `<div class="gui-preview-bar ${node.type === "vbar" ? "is-vertical" : ""}"><span></span></div>`;
     case "input":
-      return `<input class="gui-preview-input" placeholder="${escapeHtml(node.text || "Input")}" />`;
+      return `<input class="gui-preview-input" type="${node.inputMask.trim() ? "password" : "text"}" value="${escapeHtml(node.inputDefaultText || "")}" placeholder="${escapeHtml(node.title || "Input")}" />`;
     case "add":
       return `<div class="gui-preview-add">${escapeHtml(node.displayable || "displayable")}</div>`;
     case "if":
@@ -2670,6 +2800,8 @@ function computeDiagnostics() {
 
   projectState.gui.screens.forEach((screen) => {
     const nodeCount = countScreenNodes(screen.nodes);
+    const isSpecialInputScreen = screen.name === "input";
+    const specialInputNodes = [];
 
     if (!screen.nodes.length) {
       diagnostics.push({
@@ -2699,6 +2831,39 @@ function computeDiagnostics() {
     }
 
     walkScreenNodes(screen.nodes, (node) => {
+      if (node.type === "input" && node.nodeId === "input") {
+        specialInputNodes.push(node);
+      }
+    });
+
+    if (isSpecialInputScreen && !/\bprompt\b/.test(screen.parameters)) {
+      diagnostics.push({
+        severity: "error",
+        title: `${screen.name} is missing the prompt parameter`,
+        detail: "The special input screen should usually be declared as screen input(prompt): so renpy.input() can pass prompt text into it.",
+        snippet: formatGuiScreenCode(screen),
+      });
+    }
+
+    if (isSpecialInputScreen && !specialInputNodes.length) {
+      diagnostics.push({
+        severity: "error",
+        title: `${screen.name} has no input node with id "input"`,
+        detail: "The special input screen must contain an input displayable whose id is set to input.",
+        snippet: formatGuiScreenCode(screen),
+      });
+    }
+
+    if (isSpecialInputScreen && specialInputNodes.length > 1) {
+      diagnostics.push({
+        severity: "warning",
+        title: `${screen.name} defines multiple input id nodes`,
+        detail: "renpy.input() expects one primary input widget with id \"input\". Multiple matches can make the screen harder to reason about.",
+        snippet: formatGuiScreenCode(screen),
+      });
+    }
+
+    walkScreenNodes(screen.nodes, (node) => {
       const meta = screenNodeMeta[node.type];
 
       if (!meta.supportsChildren && node.children.length) {
@@ -2722,13 +2887,43 @@ function computeDiagnostics() {
         }
       }
 
-      if (["bar", "vbar", "input"].includes(node.type)) {
+      if (["bar", "vbar"].includes(node.type)) {
         const valueExpression = formatValueExpression(node.valueKind, node.valueArgs, node.valueRaw);
         if (!valueExpression) {
           diagnostics.push({
             severity: "warning",
             title: `${screen.name} · ${node.title} has no value`,
             detail: "Value-driven widgets like bars and inputs usually need a value expression.",
+            snippet: formatGuiScreenCode(screen),
+          });
+        }
+      }
+
+      if (node.type === "input") {
+        const valueExpression = formatValueExpression(node.valueKind, node.valueArgs, node.valueRaw);
+        const isSpecialInputNode = isSpecialInputScreen && node.nodeId === "input";
+
+        if (!valueExpression && !isSpecialInputNode) {
+          diagnostics.push({
+            severity: "warning",
+            title: `${screen.name} · ${node.title} has no InputValue`,
+            detail: "Standalone input widgets usually bind an InputValue helper. The common exception is the special input screen used by renpy.input().",
+            snippet: formatGuiScreenCode(screen),
+          });
+        }
+
+        if (!isSpecialInputNode && [
+          "VariableInputValue",
+          "ScreenVariableInputValue",
+          "LocalVariableInputValue",
+          "FieldInputValue",
+          "DictInputValue",
+          "FilePageNameInputValue",
+        ].includes(node.valueKind) && !node.valueArgs) {
+          diagnostics.push({
+            severity: "warning",
+            title: `${screen.name} · ${node.title} is missing InputValue arguments`,
+            detail: "This InputValue helper needs arguments to know which variable, field, dict key, or page name it should update.",
             snippet: formatGuiScreenCode(screen),
           });
         }
@@ -3165,6 +3360,13 @@ guiScreenNodeTypeInput.addEventListener("change", () => {
   guiNodeValueKindInput,
   guiNodeValueArgsInput,
   guiNodeValueRawInput,
+  guiNodeInputDefaultTextInput,
+  guiNodeInputAllowInput,
+  guiNodeInputExcludeInput,
+  guiNodeInputLengthInput,
+  guiNodeInputPixelWidthInput,
+  guiNodeInputMaskInput,
+  guiNodeInputCopyPasteInput,
   guiNodeConditionInput,
   guiNodeVariableInput,
   guiNodeIterableInput,
@@ -3196,6 +3398,13 @@ guiScreenNodeTypeInput.addEventListener("change", () => {
       valueKind: guiNodeValueKindInput.value,
       valueArgs: guiNodeValueArgsInput.value.trim(),
       valueRaw: guiNodeValueRawInput.value.trim(),
+      inputDefaultText: guiNodeInputDefaultTextInput.value,
+      inputAllow: guiNodeInputAllowInput.value,
+      inputExclude: guiNodeInputExcludeInput.value,
+      inputLength: guiNodeInputLengthInput.value.trim(),
+      inputPixelWidth: guiNodeInputPixelWidthInput.value.trim(),
+      inputMask: guiNodeInputMaskInput.value,
+      inputCopyPaste: guiNodeInputCopyPasteInput.checked,
       condition: guiNodeConditionInput.value.trim(),
       variableName: guiNodeVariableInput.value.trim(),
       iterableExpression: guiNodeIterableInput.value.trim(),

@@ -341,6 +341,35 @@
   grid-template-columns: minmax(0, 1fr) 380px;
 }
 
+.gui-screen-editor {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.gui-screen-meta-panel,
+.gui-screen-tree-panel,
+.gui-screen-node-form {
+  align-content: start;
+}
+
+.gui-screen-delete-actions {
+  justify-content: flex-start;
+  padding-top: 2px;
+}
+
+.gui-screen-tree-header {
+  padding-top: 0;
+  margin-top: 0;
+  border-top: 0;
+}
+
+.gui-screen-tree-panel .gui-tree {
+  max-height: 420px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
 .gui-entity-list {
   min-height: 0;
   overflow: auto;
@@ -376,11 +405,35 @@
   gap: 10px;
 }
 
+.gui-stack-actions > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .gui-compact-label {
   display: grid;
   gap: 6px;
+  min-width: 0;
   color: var(--muted);
   font-size: 13px;
+}
+
+.gui-compact-label select,
+.gui-compact-label input,
+.gui-compact-label textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gui-stack-actions button,
+.gui-bottom-button {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
 }
 
 .gui-inline-actions {

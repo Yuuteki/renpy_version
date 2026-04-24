@@ -270,80 +270,84 @@
                   Select a screen to edit its structure, then choose nodes in the tree to configure them.
                 </div>
 
-                <div id="guiScreenEditor" class="hidden">
-                  <div class="gui-panel-header gui-panel-header-tight">
-                    <div>
-                      <h2>Screen Detail</h2>
-                      <p>Configure the screen header, then build its node tree below.</p>
+                <div id="guiScreenEditor" class="character-detail-form gui-screen-editor hidden">
+                  <section class="gui-style-panel gui-screen-meta-panel">
+                    <div class="gui-panel-header gui-panel-header-tight">
+                      <div>
+                        <h2>Screen Detail</h2>
+                        <p>Configure the screen header, then build its node tree below.</p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="gui-style-basics">
-                    <label>
-                      Screen Name
-                      <input id="guiScreenNameInput" type="text" placeholder="e.g. preferences" />
-                    </label>
-
-                    <label>
-                      Parameters
-                      <input id="guiScreenParametersInput" type="text" placeholder="e.g. title, items=None" />
-                    </label>
-
-                    <label>
-                      Tag
-                      <input id="guiScreenTagInput" type="text" placeholder="e.g. menu" />
-                    </label>
-
-                    <label>
-                      Modal
-                      <select id="guiScreenModalInput">
-                        <option value="false">False</option>
-                        <option value="true">True</option>
-                      </select>
-                    </label>
-
-                    <label>
-                      zorder
-                      <input id="guiScreenZorderInput" type="number" placeholder="e.g. 100" />
-                    </label>
-
-                    <label>
-                      Variant
-                      <input id="guiScreenVariantInput" type="text" placeholder='e.g. "touch"' />
-                    </label>
-                  </div>
-
-                  <label>
-                    Notes
-                    <textarea id="guiScreenNotesInput" rows="2" placeholder="Optional notes about this screen."></textarea>
-                  </label>
-
-                  <div class="inspector-actions">
-                    <button id="guiDeleteScreenButton" class="danger-button" type="button">Delete Screen</button>
-                  </div>
-
-                  <div class="gui-section-subheader">
-                    <div>
-                      <h3>Node Tree</h3>
-                      <p>Use root and child nodes to model the screen language structure.</p>
-                    </div>
-                    <div class="gui-inline-actions">
-                      <label class="gui-compact-label">
-                        New Node Type
-                        <select id="guiNewScreenNodeTypeInput"></select>
+                    <div class="gui-style-basics">
+                      <label>
+                        Screen Name
+                        <input id="guiScreenNameInput" type="text" placeholder="e.g. preferences" />
                       </label>
-                      <button id="guiAddRootNodeButton" class="secondary" type="button">Add Root Node</button>
-                      <button id="guiAddNodeAsChildButton" class="secondary" type="button">Add Child Node</button>
-                    </div>
-                  </div>
 
-                  <div id="guiScreenNodeTree" class="gui-tree"></div>
+                      <label>
+                        Parameters
+                        <input id="guiScreenParametersInput" type="text" placeholder="e.g. title, items=None" />
+                      </label>
+
+                      <label>
+                        Tag
+                        <input id="guiScreenTagInput" type="text" placeholder="e.g. menu" />
+                      </label>
+
+                      <label>
+                        Modal
+                        <select id="guiScreenModalInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        zorder
+                        <input id="guiScreenZorderInput" type="number" placeholder="e.g. 100" />
+                      </label>
+
+                      <label>
+                        Variant
+                        <input id="guiScreenVariantInput" type="text" placeholder='e.g. "touch"' />
+                      </label>
+                    </div>
+
+                    <label>
+                      Notes
+                      <textarea id="guiScreenNotesInput" rows="2" placeholder="Optional notes about this screen."></textarea>
+                    </label>
+
+                    <div class="inspector-actions gui-screen-delete-actions">
+                      <button id="guiDeleteScreenButton" class="danger-button" type="button">Delete Screen</button>
+                    </div>
+                  </section>
+
+                  <section class="gui-style-panel gui-screen-tree-panel">
+                    <div class="gui-section-subheader gui-screen-tree-header">
+                      <div>
+                        <h3>Node Tree</h3>
+                        <p>Use root and child nodes to model the screen language structure.</p>
+                      </div>
+                      <div class="gui-inline-actions">
+                        <label class="gui-compact-label">
+                          New Node Type
+                          <select id="guiNewScreenNodeTypeInput"></select>
+                        </label>
+                        <button id="guiAddRootNodeButton" class="secondary" type="button">Add Root Node</button>
+                        <button id="guiAddNodeAsChildButton" class="secondary" type="button">Add Child Node</button>
+                      </div>
+                    </div>
+
+                    <div id="guiScreenNodeTree" class="gui-tree"></div>
+                  </section>
 
                   <div id="guiScreenNodeEmptyState" class="gui-inline-empty">
                     Select a node from the tree to edit its fields.
                   </div>
 
-                  <form id="guiScreenNodeForm" class="character-detail-form hidden">
+                  <form id="guiScreenNodeForm" class="character-detail-form gui-style-panel gui-screen-node-form hidden">
                     <div class="gui-style-basics">
                       <label>
                         Node Type
@@ -541,8 +545,8 @@
                     <div id="guiNodeValueFields" class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Value</h3>
-                          <p>Used by bars, inputs, and other value-driven displayables.</p>
+                          <h3 id="guiNodeValuePanelTitle">Value</h3>
+                          <p id="guiNodeValuePanelDescription">Used by bars, inputs, and other value-driven displayables.</p>
                         </div>
                       </div>
 
@@ -562,6 +566,56 @@
                         Raw Value Expression
                         <input id="guiNodeValueRawInput" type="text" placeholder='e.g. Preference("music volume")' />
                       </label>
+                    </div>
+
+                    <div id="guiNodeInputFields" class="gui-style-panel hidden">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Input Settings</h3>
+                          <p>Configure standalone screen input widgets, or the special <code>screen input(prompt)</code> field used by <code>renpy.input()</code>.</p>
+                        </div>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Initial Text
+                          <input id="guiNodeInputDefaultTextInput" type="text" placeholder='e.g. "" or persistent.player_name' />
+                        </label>
+
+                        <label>
+                          Allow Characters
+                          <input id="guiNodeInputAllowInput" type="text" placeholder="Optional allowed characters list." />
+                        </label>
+
+                        <label>
+                          Exclude Characters
+                          <input id="guiNodeInputExcludeInput" type="text" placeholder='e.g. {} or "\\n"' />
+                        </label>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Max Length
+                          <input id="guiNodeInputLengthInput" type="number" step="1" placeholder="e.g. 32" />
+                        </label>
+
+                        <label>
+                          Pixel Width
+                          <input id="guiNodeInputPixelWidthInput" type="text" placeholder="e.g. 360" />
+                        </label>
+
+                        <label>
+                          Mask Character
+                          <input id="guiNodeInputMaskInput" type="text" placeholder='e.g. "*"' />
+                        </label>
+                      </div>
+
+                      <label class="character-checkbox">
+                        <input id="guiNodeInputCopyPasteInput" type="checkbox" />
+                        <span>Allow copy / paste</span>
+                      </label>
+
+                      <p class="gui-info-banner">For the special <code>input</code> screen, set the node <code>id</code> to <code>input</code>. For standalone screen widgets, bind an <code>InputValue</code> above.</p>
                     </div>
 
                     <p id="guiNodeChildrenHint" class="gui-info-banner"></p>

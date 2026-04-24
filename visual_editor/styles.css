@@ -612,6 +612,12 @@ button.danger-button:hover {
   gap: 14px;
 }
 
+.gui-inline-fields {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
 .character-detail-form label {
   display: grid;
   gap: 8px;

@@ -248,6 +248,21 @@ const dialogueVoiceLineListEl = document.getElementById("dialogueVoiceLineList")
 const dialogueContentFieldEl = document.getElementById("dialogueContentField");
 const dialogueNodeContentInput = document.getElementById("dialogueNodeContentInput");
 const dialogueDeleteNodeButton = document.getElementById("dialogueDeleteNodeButton");
+const inputInspectorFormEl = document.getElementById("inputInspectorForm");
+const inputNodeTypeInput = document.getElementById("inputNodeTypeInput");
+const inputNodeVariableInput = document.getElementById("inputNodeVariableInput");
+const inputNodePromptInput = document.getElementById("inputNodePromptInput");
+const inputNodeDefaultInput = document.getElementById("inputNodeDefaultInput");
+const inputNodeAllowInput = document.getElementById("inputNodeAllowInput");
+const inputNodeExcludeInput = document.getElementById("inputNodeExcludeInput");
+const inputNodeLengthInput = document.getElementById("inputNodeLengthInput");
+const inputNodePixelWidthInput = document.getElementById("inputNodePixelWidthInput");
+const inputNodeScreenInput = document.getElementById("inputNodeScreenInput");
+const inputNodeMaskInput = document.getElementById("inputNodeMaskInput");
+const inputNodeFallbackInput = document.getElementById("inputNodeFallbackInput");
+const inputNodeTrimInput = document.getElementById("inputNodeTrimInput");
+const inputNodeCopyPasteInput = document.getElementById("inputNodeCopyPasteInput");
+const inputDeleteNodeButton = document.getElementById("inputDeleteNodeButton");
 const menuInspectorFormEl = document.getElementById("menuInspectorForm");
 const menuNodeTypeInput = document.getElementById("menuNodeTypeInput");
 const menuNodePromptInput = document.getElementById("menuNodePromptInput");
@@ -1078,6 +1093,49 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
         legacyVoiceAudioName: node.dialogueVoiceAudioName || "",
         legacyVoicePath: node.dialogueVoicePath || "",
       }),
+    };
+  }
+
+  if (node.type === "input") {
+    return {
+      ...node,
+      title: node.title || "Input",
+      inputVariable: `${node.inputVariable || ""}`.trim() || "player_name",
+      inputPrompt: `${node.inputPrompt || node.content || ""}`.trim() || "Enter a value.",
+      inputDefault: `${node.inputDefault ?? ""}`,
+      inputAllow: `${node.inputAllow ?? ""}`,
+      inputExclude: `${node.inputExclude ?? ""}`,
+      inputLength: `${node.inputLength ?? ""}`.trim(),
+      inputPixelWidth: `${node.inputPixelWidth ?? ""}`.trim(),
+      inputScreen: `${node.inputScreen || ""}`.trim() || "input",
+      inputMask: `${node.inputMask ?? ""}`,
+      inputFallback: `${node.inputFallback ?? ""}`,
+      inputTrim: Object.prototype.hasOwnProperty.call(node, "inputTrim")
+        ? Boolean(node.inputTrim)
+        : true,
+      inputCopyPaste: node.inputCopyPaste !== false && node.inputCopyPaste !== "false",
+      content: `${node.inputPrompt || node.content || ""}`.trim(),
+    };
+  }
+
+  if (node.type === "input") {
+    const target = `${node.inputVariable || ""}`.trim() || "player_name";
+    const prompt = `${node.inputPrompt || ""}`.trim();
+    const fallback = `${node.inputFallback || ""}`.trim();
+    const detailParts = [target];
+
+    if (prompt) {
+      detailParts.push(prompt);
+    }
+
+    if (fallback) {
+      detailParts.push(`fallback:${fallback}`);
+    }
+
+    return {
+      typeLabel: "input",
+      title: "Input",
+      content: detailParts.join(" · ") || "Configure renpy.input().",
     };
   }
 
@@ -4836,6 +4894,63 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
       appendIndentedLine(lines, indentLevel, `"${escapeRenpyString(entry.text)}"`);
     });
+  } else if (node.type === "input") {
+    const target = `${node.inputVariable || ""}`.trim() || "player_name";
+    const args = [
+      `"${escapeRenpyString(`${node.inputPrompt || ""}`.trim() || "Enter a value.")}"`,
+    ];
+    const defaultText = `${node.inputDefault ?? ""}`;
+    const allow = `${node.inputAllow ?? ""}`;
+    const exclude = `${node.inputExclude ?? ""}`;
+    const length = `${node.inputLength ?? ""}`.trim();
+    const pixelWidth = `${node.inputPixelWidth ?? ""}`.trim();
+    const screenName = `${node.inputScreen || ""}`.trim();
+    const mask = `${node.inputMask ?? ""}`;
+
+    if (defaultText) {
+      args.push(`default=${formatRenpyStringLikeArgument(defaultText)}`);
+    }
+
+    if (allow.trim()) {
+      args.push(`allow=${formatRenpyStringLikeArgument(allow)}`);
+    }
+
+    if (exclude.trim()) {
+      args.push(`exclude=${formatRenpyStringLikeArgument(exclude)}`);
+    }
+
+    if (length) {
+      args.push(`length=${formatRenpyArgumentValue(length)}`);
+    }
+
+    if (pixelWidth) {
+      args.push(`pixel_width=${formatRenpyArgumentValue(pixelWidth)}`);
+    }
+
+    if (screenName && screenName !== "input") {
+      args.push(`screen=${formatRenpyStringLikeArgument(screenName)}`);
+    }
+
+    if (mask.trim()) {
+      args.push(`mask=${formatRenpyStringLikeArgument(mask)}`);
+    }
+
+    if (node.inputCopyPaste === false) {
+      args.push("copypaste=False");
+    }
+
+    const inputExpression = `renpy.input(${args.join(", ")})${node.inputTrim !== false ? ".strip()" : ""}`;
+
+    appendIndentedLine(lines, indentLevel, `$ ${target} = ${inputExpression}`);
+
+    if (`${node.inputFallback ?? ""}`.trim()) {
+      appendIndentedLine(lines, indentLevel, `if not ${target}:`);
+      appendIndentedLine(
+        lines,
+        indentLevel + 1,
+        `$ ${target} = ${formatRenpyStringLikeArgument(node.inputFallback)}`,
+      );
+    }
   } else if (node.type === "audio") {
     const action = getAudioNodeAction(node);
     const channel = getAudioNodeChannel(node);
@@ -7044,6 +7159,67 @@ function escapeRenpyString(value) {
     .replaceAll('"', '\\"');
 }
 
+function isRenpySimpleExpression(value) {
+  const trimmed = `${value || ""}`.trim();
+
+  if (!trimmed) {
+    return false;
+  }
+
+  if (["True", "False", "None"].includes(trimmed)) {
+    return true;
+  }
+
+  if (/^-?\d+(?:\.\d+)?$/.test(trimmed)) {
+    return true;
+  }
+
+  if (
+    trimmed.startsWith("\"")
+    || trimmed.startsWith("'")
+    || trimmed.includes("(")
+    || trimmed.startsWith("[")
+    || trimmed.startsWith("{")
+  ) {
+    return true;
+  }
+
+  return /^[A-Za-z_][A-Za-z0-9_\.]*(?:\[[^\]]+\])*$/.test(trimmed);
+}
+
+function formatRenpyArgumentValue(value) {
+  const trimmed = `${value ?? ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (isRenpySimpleExpression(trimmed)) {
+    return trimmed;
+  }
+
+  return `"${escapeRenpyString(trimmed)}"`;
+}
+
+function formatRenpyStringLikeArgument(value) {
+  const trimmed = `${value ?? ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (
+    (trimmed.startsWith("\"") && trimmed.endsWith("\""))
+    || (trimmed.startsWith("'") && trimmed.endsWith("'"))
+    || trimmed.includes("(")
+    || /^[A-Za-z_][A-Za-z0-9_\.]*(?:\[[^\]]+\])*$/.test(trimmed)
+  ) {
+    return trimmed;
+  }
+
+  return `"${escapeRenpyString(trimmed)}"`;
+}
+
 function syncCharacterDetailFields() {
   const character = getActiveCharacter();
 
@@ -7712,6 +7888,7 @@ function renderInspector() {
     animationInspectorFormEl.classList.add("hidden");
     audioInspectorFormEl.classList.add("hidden");
     dialogueInspectorFormEl.classList.add("hidden");
+    inputInspectorFormEl.classList.add("hidden");
     menuInspectorFormEl.classList.add("hidden");
     conditionInspectorFormEl.classList.add("hidden");
     flowInspectorFormEl.classList.add("hidden");
@@ -7725,6 +7902,7 @@ function renderInspector() {
   const selectedIsAnimation = selectedNode.type === "animation";
   const selectedIsAudio = selectedNode.type === "audio";
   const selectedIsDialogue = selectedNode.type === "dialogue";
+  const selectedIsInput = selectedNode.type === "input";
   const selectedIsMenu = selectedNode.type === "menu";
   const selectedIsCondition = selectedNode.type === "condition";
   const selectedIsFlow = isFlowNode(selectedNode);
@@ -7736,11 +7914,12 @@ function renderInspector() {
   animationInspectorFormEl.classList.toggle("hidden", !selectedIsAnimation);
   audioInspectorFormEl.classList.toggle("hidden", !selectedIsAudio);
   dialogueInspectorFormEl.classList.toggle("hidden", !selectedIsDialogue);
+  inputInspectorFormEl.classList.toggle("hidden", !selectedIsInput);
   menuInspectorFormEl.classList.toggle("hidden", !selectedIsMenu);
   conditionInspectorFormEl.classList.toggle("hidden", !selectedIsCondition);
   flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
   pythonInspectorFormEl.classList.toggle("hidden", !selectedIsPython);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsAudio || selectedIsDialogue || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsPython);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsAudio || selectedIsDialogue || selectedIsInput || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsPython);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -7823,6 +8002,23 @@ function renderInspector() {
     }
 
     dialogueNodeContentInput.value = selectedNode.content || "";
+    return;
+  }
+
+  if (selectedIsInput) {
+    inputNodeTypeInput.value = "Input";
+    inputNodeVariableInput.value = selectedNode.inputVariable || "player_name";
+    inputNodePromptInput.value = selectedNode.inputPrompt || selectedNode.content || "";
+    inputNodeDefaultInput.value = selectedNode.inputDefault || "";
+    inputNodeAllowInput.value = selectedNode.inputAllow || "";
+    inputNodeExcludeInput.value = selectedNode.inputExclude || "";
+    inputNodeLengthInput.value = selectedNode.inputLength || "";
+    inputNodePixelWidthInput.value = selectedNode.inputPixelWidth || "";
+    inputNodeScreenInput.value = selectedNode.inputScreen || "input";
+    inputNodeMaskInput.value = selectedNode.inputMask || "";
+    inputNodeFallbackInput.value = selectedNode.inputFallback || "";
+    inputNodeTrimInput.checked = selectedNode.inputTrim !== false;
+    inputNodeCopyPasteInput.checked = selectedNode.inputCopyPaste !== false;
     return;
   }
 
@@ -9142,6 +9338,45 @@ dialogueVoiceLineListEl.addEventListener("click", (event) => {
 dialogueNodeContentInput.addEventListener("input", (event) => {
   updateSelectedNode({ content: event.target.value });
 });
+inputNodeVariableInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputVariable: event.target.value.trim() || "player_name" });
+});
+inputNodePromptInput.addEventListener("input", (event) => {
+  updateSelectedNode({
+    inputPrompt: event.target.value,
+    content: event.target.value,
+  });
+});
+inputNodeDefaultInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputDefault: event.target.value });
+});
+inputNodeAllowInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputAllow: event.target.value });
+});
+inputNodeExcludeInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputExclude: event.target.value });
+});
+inputNodeLengthInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputLength: event.target.value.trim() });
+});
+inputNodePixelWidthInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputPixelWidth: event.target.value.trim() });
+});
+inputNodeScreenInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputScreen: event.target.value.trim() || "input" });
+});
+inputNodeMaskInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputMask: event.target.value });
+});
+inputNodeFallbackInput.addEventListener("input", (event) => {
+  updateSelectedNode({ inputFallback: event.target.value });
+});
+inputNodeTrimInput.addEventListener("change", (event) => {
+  updateSelectedNode({ inputTrim: event.target.checked });
+});
+inputNodeCopyPasteInput.addEventListener("change", (event) => {
+  updateSelectedNode({ inputCopyPaste: event.target.checked });
+});
 menuNodePromptInput.addEventListener("input", (event) => {
   updateSelectedMenuNode({ menuPrompt: event.target.value });
 });
@@ -10212,6 +10447,15 @@ dialogueDeleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+inputDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 menuDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
@@ -10437,6 +10681,26 @@ function createNodeForType(nodeType, graph, options = {}) {
           },
         ]
         : [],
+    };
+  }
+
+  if (nodeType === "input") {
+    return {
+      ...baseNode,
+      title: "Input",
+      content: "Enter a value.",
+      inputVariable: "player_name",
+      inputPrompt: "Enter a value.",
+      inputDefault: "",
+      inputAllow: "",
+      inputExclude: "",
+      inputLength: "32",
+      inputPixelWidth: "",
+      inputScreen: "input",
+      inputMask: "",
+      inputFallback: "",
+      inputTrim: true,
+      inputCopyPaste: true,
     };
   }
 
