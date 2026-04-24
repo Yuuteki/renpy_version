@@ -15,6 +15,10 @@ Current behavior:
 - renders a lightweight placeholder graph
 - stores draft state in browser `localStorage`
 
+Project history and milestone releases:
+
+- `../CHANGELOG.md` - versioned development log for the visual editor fork
+
 Planned next steps:
 
 - move state into a project-local JSON file
