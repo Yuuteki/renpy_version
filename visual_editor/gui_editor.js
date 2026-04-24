@@ -59,6 +59,7 @@ const guiScreenModalInput = document.getElementById("guiScreenModalInput");
 const guiScreenZorderInput = document.getElementById("guiScreenZorderInput");
 const guiScreenVariantInput = document.getElementById("guiScreenVariantInput");
 const guiScreenNotesInput = document.getElementById("guiScreenNotesInput");
+const guiScreenSpecialInfoEl = document.getElementById("guiScreenSpecialInfo");
 const guiDeleteScreenButton = document.getElementById("guiDeleteScreenButton");
 const guiNewScreenNodeTypeInput = document.getElementById("guiNewScreenNodeTypeInput");
 const guiAddRootNodeButton = document.getElementById("guiAddRootNodeButton");
@@ -500,6 +501,12 @@ const specialScreenTemplateMeta = [
   { id: "preferences", label: "preferences", description: "Preference screen with display and volume controls." },
   { id: "confirm", label: "confirm", description: "Confirmation dialog with yes/no buttons." },
 ];
+
+const autoManagedScreenNames = new Set(specialScreenTemplateMeta.map((template) => template.id));
+
+function isAutoManagedScreenName(screenName) {
+  return autoManagedScreenNames.has(`${screenName || ""}`.trim());
+}
 
 let uniqueIdCounter = 0;
 
@@ -2391,10 +2398,12 @@ function renderScreenList() {
   guiScreenEmptyEl.classList.toggle("hidden", hasScreens);
   guiScreenListEl.innerHTML = projectState.gui.screens.map((screen) => {
     const nodeCount = countScreenNodes(screen.nodes);
+    const isAutoManaged = isAutoManagedScreenName(screen.name);
     return `
       <div class="gui-entity-card ${screen.id === activeScreenId ? "is-active" : ""}" data-screen-id="${escapeHtml(screen.id)}">
         <strong>${escapeHtml(screen.name)}</strong>
         <span>${escapeHtml(`${nodeCount} nodes${screen.tag ? ` · tag ${screen.tag}` : ""}`)}</span>
+        ${isAutoManaged ? '<span class="gui-entity-flag">Auto-managed special screen</span>' : ""}
       </div>
     `;
   }).join("");
@@ -2549,6 +2558,12 @@ function renderScreenDetail() {
   guiScreenZorderInput.value = activeScreen.zorder;
   guiScreenVariantInput.value = activeScreen.variant;
   guiScreenNotesInput.value = activeScreen.notes;
+  guiScreenSpecialInfoEl.classList.toggle("hidden", !isAutoManagedScreenName(activeScreen.name));
+
+  if (isAutoManagedScreenName(activeScreen.name)) {
+    guiScreenSpecialInfoEl.textContent = `"${activeScreen.name}" is a special Ren'Py screen. The engine usually calls it automatically, so in the main visual editor you often do not need a separate Screen Block for it.`;
+  }
+
   renderScreenTree();
   renderScreenNodeDetail();
   renderScreenPreview();

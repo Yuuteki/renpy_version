@@ -1583,6 +1583,11 @@
             <span><code>renpy.input()</code></span>
           </button>
 
+          <button class="node-card node-card-compact" data-node-type="screen">
+            <strong>Screen</strong>
+            <span>Show / Call / Hide</span>
+          </button>
+
           <button class="node-card node-card-compact" data-node-type="menu">
             <strong>Choice</strong>
             <span>Branch</span>
@@ -2073,6 +2078,50 @@
 
             <div class="inspector-actions">
               <button id="flowDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="screenInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="screenNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="screenNodeModeInput">
+                <option value="show">Show Screen</option>
+                <option value="call">Call Screen</option>
+                <option value="hide">Hide Screen</option>
+              </select>
+            </label>
+
+            <label>
+              Screen Name
+              <input id="screenNodeNameInput" type="text" list="screenNodeNameSuggestions" placeholder="e.g. inventory or preferences" />
+              <datalist id="screenNodeNameSuggestions"></datalist>
+            </label>
+
+            <label id="screenNodeArgumentsField">
+              Arguments
+              <textarea id="screenNodeArgumentsInput" rows="3" placeholder='e.g. title="Inventory", page=current_page'></textarea>
+            </label>
+
+            <label id="screenNodeResultVariableField" class="hidden">
+              Store Return In
+              <input id="screenNodeResultVariableInput" type="text" placeholder="e.g. selected_item or ui_result" />
+            </label>
+
+            <p id="screenNodeSpecialInfo" class="project-settings-note hidden">
+              This is a special screen. Ren'Py usually calls it automatically, so you often do not need a Screen Block for it.
+            </p>
+
+            <p id="screenNodeMissingInfo" class="project-settings-note hidden">
+              This screen is not defined in the GUI Editor right now. That's fine if it is a built-in or external screen.
+            </p>
+
+            <div class="inspector-actions">
+              <button id="screenDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
             </div>
           </form>
 

@@ -2,6 +2,19 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.7] - 2026-04-24
+
+### Added
+
+- 为主剧情画布新增 `Screen Block`，支持 `show screen / call screen / hide screen` 三种调用方式。
+- 为 `Screen Block` 新增 GUI screen 建议列表、参数输入、`call screen` 返回值保存和代码生成。
+- 为 `GUI Editor > Screens` 新增特殊 screen 的自动接管提示，明确哪些 screen 通常由 Ren'Py 自动调用。
+
+### Changed
+
+- 主编辑器的 `Screen Block` inspector 现在会区分特殊 screen 与普通自定义 screen，并在缺失定义时给出更明确的提示。
+- `GUI Editor` 的 screen 列表现在会标记 `say / choice / input / preferences` 等自动管理的特殊 screen，降低误以为必须手动调用的概率。
+
 ## [0.4.6] - 2026-04-24
 
 ### Added

@@ -358,6 +358,16 @@
   padding-top: 2px;
 }
 
+.gui-info-banner {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(88, 166, 255, 0.18);
+  background: rgba(88, 166, 255, 0.08);
+  color: var(--text);
+  line-height: 1.6;
+}
+
 .gui-screen-tree-header {
   padding-top: 0;
   margin-top: 0;
@@ -414,6 +424,10 @@
 .gui-entity-card span {
   color: var(--muted);
   font-size: 13px;
+}
+
+.gui-entity-card .gui-entity-flag {
+  color: var(--accent-strong);
 }
 
 .gui-entity-card.is-active {

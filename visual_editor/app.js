@@ -299,6 +299,18 @@ const flowNodeModeInput = document.getElementById("flowNodeModeInput");
 const flowNodeTargetFieldEl = document.getElementById("flowNodeTargetField");
 const flowNodeTargetInput = document.getElementById("flowNodeTargetInput");
 const flowDeleteNodeButton = document.getElementById("flowDeleteNodeButton");
+const screenInspectorFormEl = document.getElementById("screenInspectorForm");
+const screenNodeTypeInput = document.getElementById("screenNodeTypeInput");
+const screenNodeModeInput = document.getElementById("screenNodeModeInput");
+const screenNodeNameInput = document.getElementById("screenNodeNameInput");
+const screenNodeNameSuggestionsEl = document.getElementById("screenNodeNameSuggestions");
+const screenNodeArgumentsFieldEl = document.getElementById("screenNodeArgumentsField");
+const screenNodeArgumentsInput = document.getElementById("screenNodeArgumentsInput");
+const screenNodeResultVariableFieldEl = document.getElementById("screenNodeResultVariableField");
+const screenNodeResultVariableInput = document.getElementById("screenNodeResultVariableInput");
+const screenNodeSpecialInfoEl = document.getElementById("screenNodeSpecialInfo");
+const screenNodeMissingInfoEl = document.getElementById("screenNodeMissingInfo");
+const screenDeleteNodeButton = document.getElementById("screenDeleteNodeButton");
 const pythonInspectorFormEl = document.getElementById("pythonInspectorForm");
 const pythonNodeTypeInput = document.getElementById("pythonNodeTypeInput");
 const pythonNodeModeInput = document.getElementById("pythonNodeModeInput");
@@ -340,6 +352,22 @@ const defaultProjectMeta = {
   sideImageSameTransform: "",
   sideImageChangeTransform: "",
 };
+
+const autoManagedGuiScreenNames = new Set([
+  "say",
+  "choice",
+  "input",
+  "nvl",
+  "notify",
+  "skip_indicator",
+  "ctc",
+  "main_menu",
+  "navigation",
+  "save",
+  "load",
+  "preferences",
+  "confirm",
+]);
 
 const imageCategoryMeta = {
   background: {
@@ -1212,6 +1240,22 @@ function normalizeGraphNode(node, graphIndex, nodeIndex) {
       ...node,
       title: node.title || "Condition",
       conditionClauses: normalizeConditionClauses(node.conditionClauses),
+    };
+  }
+
+  if (node.type === "screen") {
+    const screenMode = ["show", "call", "hide"].includes(node.screenMode)
+      ? node.screenMode
+      : "show";
+
+    return {
+      ...node,
+      title: node.title || `${capitalize(screenMode)} Screen`,
+      screenMode,
+      screenName: `${node.screenName || node.content || ""}`.trim(),
+      screenArguments: `${node.screenArguments || ""}`,
+      screenResultVariable: `${node.screenResultVariable || ""}`.trim(),
+      content: `${node.screenName || node.content || ""}`.trim(),
     };
   }
 
@@ -3504,6 +3548,75 @@ function getFlowNodeTarget(node) {
   };
 }
 
+function getAvailableGuiScreens() {
+  const screenMap = new Map();
+
+  normalizeGuiState(state.gui).screens.forEach((screen) => {
+    const screenName = `${screen?.name || ""}`.trim();
+
+    if (!screenName || screenMap.has(screenName)) {
+      return;
+    }
+
+    screenMap.set(screenName, screen);
+  });
+
+  return [...screenMap.entries()]
+    .sort((left, right) => left[0].localeCompare(right[0]))
+    .map((entry) => entry[1]);
+}
+
+function getGuiScreenByName(screenName) {
+  const normalizedName = `${screenName || ""}`.trim();
+
+  if (!normalizedName) {
+    return null;
+  }
+
+  return getAvailableGuiScreens().find((screen) => `${screen?.name || ""}`.trim() === normalizedName) || null;
+}
+
+function isSpecialGuiScreenName(screenName) {
+  return autoManagedGuiScreenNames.has(`${screenName || ""}`.trim());
+}
+
+function getScreenNodeMode(node) {
+  return ["show", "call", "hide"].includes(node?.screenMode)
+    ? node.screenMode
+    : "show";
+}
+
+function getScreenNodeName(node) {
+  return `${node?.screenName || node?.content || ""}`.trim();
+}
+
+function buildScreenNodeSuggestionOptions(datalistEl, currentName = "") {
+  if (!datalistEl) {
+    return;
+  }
+
+  const suggestionNames = new Set(
+    getAvailableGuiScreens()
+      .map((screen) => `${screen?.name || ""}`.trim())
+      .filter(Boolean),
+  );
+
+  autoManagedGuiScreenNames.forEach((screenName) => {
+    suggestionNames.add(screenName);
+  });
+
+  const normalizedCurrentName = `${currentName || ""}`.trim();
+
+  if (normalizedCurrentName) {
+    suggestionNames.add(normalizedCurrentName);
+  }
+
+  datalistEl.innerHTML = [...suggestionNames]
+    .sort((left, right) => left.localeCompare(right))
+    .map((screenName) => `<option value="${escapeHtml(screenName)}"></option>`)
+    .join("");
+}
+
 function buildFlowTargetOptions(selectEl, node) {
   if (!selectEl) {
     return;
@@ -4450,6 +4563,38 @@ function getNodeDisplay(node) {
     };
   }
 
+  if (node.type === "screen") {
+    const screenMode = getScreenNodeMode(node);
+    const screenName = getScreenNodeName(node);
+    const screenArguments = `${node.screenArguments || ""}`.trim();
+    const screenResultVariable = `${node.screenResultVariable || ""}`.trim();
+    const detailParts = [];
+
+    if (screenName) {
+      detailParts.push(screenName);
+    }
+
+    if (screenName && isSpecialGuiScreenName(screenName)) {
+      detailParts.push("auto-managed");
+    } else if (screenName && !getGuiScreenByName(screenName)) {
+      detailParts.push("external");
+    }
+
+    if (screenArguments && screenMode !== "hide") {
+      detailParts.push("args");
+    }
+
+    if (screenMode === "call" && screenResultVariable) {
+      detailParts.push(`return:${screenResultVariable}`);
+    }
+
+    return {
+      typeLabel: "screen",
+      title: `${capitalize(screenMode)} Screen`,
+      content: detailParts.join(" · ") || "Choose a GUI screen to show or call.",
+    };
+  }
+
   if (node.type === "python") {
     const mode = node.pythonMode === "block" ? "block" : "line";
     const code = `${node.pythonCode || ""}`.trim();
@@ -5219,6 +5364,27 @@ function appendNodeCode(graph, nodeId, lines, indentLevel, visited = new Set()) 
 
     if (flowMode !== "call") {
       return;
+    }
+  } else if (node.type === "screen") {
+    const screenMode = getScreenNodeMode(node);
+    const screenName = getScreenNodeName(node);
+    const screenArguments = `${node.screenArguments || ""}`.trim();
+    const screenResultVariable = `${node.screenResultVariable || ""}`.trim();
+
+    if (!screenName) {
+      appendIndentedLine(lines, indentLevel, `# ${capitalize(screenMode)} screen: choose a screen name.`);
+    } else if (screenMode === "hide") {
+      appendIndentedLine(lines, indentLevel, `hide screen ${screenName}`);
+    } else if (screenMode === "call") {
+      const callTarget = screenArguments ? `${screenName}(${screenArguments})` : screenName;
+      appendIndentedLine(lines, indentLevel, `call screen ${callTarget}`);
+
+      if (screenResultVariable) {
+        appendIndentedLine(lines, indentLevel, `$ ${screenResultVariable} = _return`);
+      }
+    } else {
+      const showTarget = screenArguments ? `${screenName}(${screenArguments})` : screenName;
+      appendIndentedLine(lines, indentLevel, `show screen ${showTarget}`);
     }
   } else if (node.type === "image") {
     const mode = getImageNodeMode(node);
@@ -8207,6 +8373,7 @@ function renderInspector() {
     menuInspectorFormEl.classList.add("hidden");
     conditionInspectorFormEl.classList.add("hidden");
     flowInspectorFormEl.classList.add("hidden");
+    screenInspectorFormEl.classList.add("hidden");
     pythonInspectorFormEl.classList.add("hidden");
     inspectorFormEl.classList.add("hidden");
     return;
@@ -8221,6 +8388,7 @@ function renderInspector() {
   const selectedIsMenu = selectedNode.type === "menu";
   const selectedIsCondition = selectedNode.type === "condition";
   const selectedIsFlow = isFlowNode(selectedNode);
+  const selectedIsScreen = selectedNode.type === "screen";
   const selectedIsPython = selectedNode.type === "python";
 
   inspectorEmptyEl.classList.add("hidden");
@@ -8233,8 +8401,9 @@ function renderInspector() {
   menuInspectorFormEl.classList.toggle("hidden", !selectedIsMenu);
   conditionInspectorFormEl.classList.toggle("hidden", !selectedIsCondition);
   flowInspectorFormEl.classList.toggle("hidden", !selectedIsFlow);
+  screenInspectorFormEl.classList.toggle("hidden", !selectedIsScreen);
   pythonInspectorFormEl.classList.toggle("hidden", !selectedIsPython);
-  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsAudio || selectedIsDialogue || selectedIsInput || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsPython);
+  inspectorFormEl.classList.toggle("hidden", selectedIsStart || selectedIsImage || selectedIsAnimation || selectedIsAudio || selectedIsDialogue || selectedIsInput || selectedIsMenu || selectedIsCondition || selectedIsFlow || selectedIsScreen || selectedIsPython);
 
   if (selectedIsStart) {
     startNodeTypeInput.value = "Start";
@@ -8357,6 +8526,34 @@ function renderInspector() {
     flowNodeModeInput.value = flowMode;
     buildFlowTargetOptions(flowNodeTargetInput, selectedNode);
     flowNodeTargetFieldEl.classList.toggle("hidden", flowMode === "return");
+    return;
+  }
+
+  if (selectedIsScreen) {
+    const screenMode = getScreenNodeMode(selectedNode);
+    const screenName = getScreenNodeName(selectedNode);
+    const matchedScreen = getGuiScreenByName(screenName);
+    const isSpecialScreen = isSpecialGuiScreenName(screenName);
+
+    screenNodeTypeInput.value = "Screen";
+    screenNodeModeInput.value = screenMode;
+    screenNodeNameInput.value = screenName;
+    buildScreenNodeSuggestionOptions(screenNodeNameSuggestionsEl, screenName);
+    screenNodeArgumentsInput.value = selectedNode.screenArguments || "";
+    screenNodeResultVariableInput.value = selectedNode.screenResultVariable || "";
+    screenNodeArgumentsFieldEl.classList.toggle("hidden", screenMode === "hide");
+    screenNodeResultVariableFieldEl.classList.toggle("hidden", screenMode !== "call");
+    screenNodeSpecialInfoEl.classList.toggle("hidden", !isSpecialScreen);
+    screenNodeMissingInfoEl.classList.toggle("hidden", !screenName || isSpecialScreen || Boolean(matchedScreen));
+
+    if (isSpecialScreen) {
+      screenNodeSpecialInfoEl.textContent = `"${screenName}" is a special Ren'Py screen. It is usually called automatically by the engine, so you often do not need a Screen Block for it.`;
+    }
+
+    if (screenName && !isSpecialScreen && !matchedScreen) {
+      screenNodeMissingInfoEl.textContent = `"${screenName}" is not defined in the GUI Editor right now. That's okay if it comes from another .rpy file or a built-in screen.`;
+    }
+
     return;
   }
 
@@ -10035,6 +10232,26 @@ flowNodeTargetInput.addEventListener("change", (event) => {
     content: targetGraph.label,
   });
 });
+screenNodeModeInput.addEventListener("change", (event) => {
+  const nextMode = event.target.value;
+
+  updateSelectedNode({
+    screenMode: nextMode,
+    title: `${capitalize(nextMode)} Screen`,
+  });
+});
+screenNodeNameInput.addEventListener("input", (event) => {
+  updateSelectedNode({
+    screenName: event.target.value,
+    content: event.target.value,
+  });
+});
+screenNodeArgumentsInput.addEventListener("input", (event) => {
+  updateSelectedNode({ screenArguments: event.target.value });
+});
+screenNodeResultVariableInput.addEventListener("input", (event) => {
+  updateSelectedNode({ screenResultVariable: event.target.value });
+});
 pythonNodeModeInput.addEventListener("change", (event) => {
   updateSelectedNode({ pythonMode: event.target.value });
 });
@@ -10841,6 +11058,15 @@ flowDeleteNodeButton.addEventListener("click", () => {
 
   deleteNode(graph.selectedNodeId);
 });
+screenDeleteNodeButton.addEventListener("click", () => {
+  const graph = getActiveGraph();
+
+  if (!graph?.selectedNodeId) {
+    return;
+  }
+
+  deleteNode(graph.selectedNodeId);
+});
 pythonDeleteNodeButton.addEventListener("click", () => {
   const graph = getActiveGraph();
 
@@ -11089,6 +11315,18 @@ function createNodeForType(nodeType, graph, options = {}) {
       flowMode: "jump",
       flowTargetGraphId: "",
       flowTargetLabel: "",
+    };
+  }
+
+  if (nodeType === "screen") {
+    return {
+      ...baseNode,
+      title: "Show Screen",
+      content: "",
+      screenMode: "show",
+      screenName: "",
+      screenArguments: "",
+      screenResultVariable: "",
     };
   }
 
