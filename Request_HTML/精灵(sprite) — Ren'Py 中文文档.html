@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>精灵(sprite) &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/sprites.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="定制按键映射" href="keymap.html" />
+    <link rel="prev" title="拖放组件" href="drag_drop.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">精灵(sprite)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sprite-classes">Sprite类</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Sprite"><code class="docutils literal notranslate"><span class="pre">Sprite</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Sprite.destroy"><code class="docutils literal notranslate"><span class="pre">Sprite.destroy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Sprite.set_child"><code class="docutils literal notranslate"><span class="pre">Sprite.set_child()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#SpriteManager"><code class="docutils literal notranslate"><span class="pre">SpriteManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#SpriteManager.create"><code class="docutils literal notranslate"><span class="pre">SpriteManager.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#SpriteManager.redraw"><code class="docutils literal notranslate"><span class="pre">SpriteManager.redraw()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#SnowBlossom"><code class="docutils literal notranslate"><span class="pre">SnowBlossom()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sprite-examples">Sprite样例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">精灵(sprite)</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/sprites.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sprite">
+<span id="sprites"></span><h1>精灵(sprite)<a class="headerlink" href="#sprite" title="Link to this heading"> link</a></h1>
+<p>为了满足同时显示大量图像的需求，Ren’Py支持精灵(sprite)系统。该系统允许用户创建精灵，每个精灵包含一个可视组件。精灵可以改变自身在界面中的坐标和前后顺序。</p>
+<p>如果不在乎系统性能的话，精灵系统的概念类似于 <a class="reference internal" href="displayables.html#Fixed" title="Fixed"><code class="xref py py-func docutils literal notranslate"><span class="pre">Fixed()</span></code></a> 与 <a class="reference internal" href="transforms.html#Transform" title="Transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">Transform()</span></code></a> 的结合。 精灵的运行速度比变换(transform)快，但是扩展性比较低。精灵系统最大的性能提升方法是，每一帧中每个可视组件只渲染一次。精灵的限制是只能修改自身的xoffset和yoffset值，而不像变换(transform)有许多特性(property)可以修改。</p>
+<p>使用那个精灵系统之前，需要先创建一个SpriteManager对象，然后调用它的create方法创建新的粒子(particle)。根据需要，更新每个精灵的xoffset、yoffset和zorder字段，就能让精灵在界面内移动。通过把 <cite>update</cite> 和 <cite>event</cite> 入参应用于SpriteManager，创作者能根据时间调整精灵，并对用户输入做出响应。</p>
+<section id="sprite-classes">
+<span id="id1"></span><h2>Sprite类<a class="headerlink" href="#sprite-classes" title="Link to this heading"> link</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Sprite">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Sprite</span></span><a class="headerlink" href="#Sprite" title="Link to this definition"> link</a></dt>
+<dd><p>该类表示一个被SpriteManager类管理下的精灵(sprite)对象。其包含的字段控制精灵在界面中的坐标。精灵不能直接创建，而必须调用 <a class="reference internal" href="#SpriteManager.create" title="SpriteManager.create"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SpriteManager.create()</span></code></a> 。</p>
+<p>Sprite对象的各字段如下：</p>
+<dl class="simple">
+<dt><cite>x, y</cite></dt><dd><p>精灵左上角为锚点的x和y轴坐标值，与SpriteManager相关。</p>
+</dd>
+<dt><cite>zorder</cite></dt><dd><p>一个整数值，控制SpriteManager中所有精灵叠放顺序。这个数值越大，对应精灵距离观看者(viewer)越近。</p>
+</dd>
+<dt><cite>events</cite></dt><dd><p>若为True，事件消息会传给子组件。若为False，也是默认值，子组件忽略所有事件消息(并屏蔽事件消息以免浪费时间处理)。</p>
+</dd>
+</dl>
+<p>Sprite对象含有如下的方法：</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Sprite.destroy">
+<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Sprite.destroy" title="Link to this definition"> link</a></dt>
+<dd><p>销毁该精灵，防止其再次显示，并从SpriteManager中移除。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Sprite.set_child">
+<span class="sig-name descname"><span class="pre">set_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Sprite.set_child" title="Link to this definition"> link</a></dt>
+<dd><p>将可视组件与精灵 <cite>d</cite> 关联。</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="SpriteManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SpriteManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SpriteManager" title="Link to this definition"> link</a></dt>
+<dd><p>这是个管理一组精灵的可视组件，并尽可能快地把所有精灵显示出来。</p>
+<dl>
+<dt><cite>update</cite></dt><dd><p>若非None，每次SpriteManager渲染某个精灵都会调用的函数。调用时带一个入参，值是从SpriteManager第一次显示后的时间长度，单位为秒。返回值一般是该函数再次被调用以及SpriteManager再次被渲染的时间间隔，单位为秒。</p>
+</dd>
+<dt><cite>event</cite></dt><dd><p>若非None，当某个事件发生时会调用的函数。其使用以下事件消息作为入参：</p>
+<ul class="simple">
+<li><p>某个pygame事件对象。</p></li>
+<li><p>事件的x坐标调整。</p></li>
+<li><p>事件的y坐标调整。</p></li>
+<li><p>从SpriteManager第一次显示开始计算的时间。</p></li>
+</ul>
+<p>如果该函数返回值不是None，互动结束时会将该值返回。</p>
+</dd>
+<dt><cite>predict</cite></dt><dd><p>若非None，该函数返回一个可视组件列表。SpriteManager存在时，会预加载列表中的可视组件。</p>
+</dd>
+<dt><cite>ignore_time</cite></dt><dd><p>若为True，渲染可视组件时忽略的时间。当SpriteManager使用了一些数量不大的图像，并且这些图像不会变化时，才应该使用这项值。使用这项值的可视组件数量不能多，因为使用后的可视组件在SpriteManager对象的整个生命周期内，会一直保留在内存中。</p>
+</dd>
+<dt><cite>animation</cite></dt><dd><p>若为True，SpriteManager对象使用animation时间轴，防止多次显示时重置动画。</p>
+</dd>
+</dl>
+<p>在首次渲染后(在 <cite>update</cite> 函数调用前)，SpriteManager如有下列字段：</p>
+<dl class="simple">
+<dt><cite>width, height</cite></dt><dd><p>SpriteManager的宽度和高度，单位为像素。</p>
+</dd>
+</dl>
+<p>SpriteManager包含下列方法：</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="SpriteManager.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SpriteManager.create" title="Link to this definition"> link</a></dt>
+<dd><p>为可视组件 <cite>d</cite> 创建一个新的精灵(Sprite)，并添加到该SpriteManager中。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="SpriteManager.redraw">
+<span class="sig-name descname"><span class="pre">redraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SpriteManager.redraw" title="Link to this definition"> link</a></dt>
+<dd><p>在 <cite>delay</cite> 秒后重绘该SpriteManager对象。</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SnowBlossom">
+<span class="sig-name descname"><span class="pre">SnowBlossom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xspeed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(20,</span> <span class="pre">50)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yspeed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(100,</span> <span class="pre">200)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SnowBlossom" title="Link to this definition"> link</a></dt>
+<dd><p>雪花(snowblossom)效果可以让某个精灵(sprite)的多个实例在界面中上下左右移动。当某个精灵离开界面时，其会返回起始点。</p>
+<dl>
+<dt><cite>d</cite></dt><dd><p>用作精灵的可视组件。</p>
+</dd>
+<dt><cite>border</cite></dt><dd><p>界面边界(border)的尺寸。精灵会被看作处于界面内，除非它越出了边界。需要确保精灵不会突然消失。</p>
+</dd>
+<dt><cite>xspeed, yspeed</cite></dt><dd><p>精灵移动速度，分别对应水平和垂直方向。这可以是一个数值或者两个数值的元组。在后面那种情况，每个粒子(particle)的速度可以声明为两个值之间的随机数。速度可以是整数或负数，只要保证后面的数值比前面的大。</p>
+</dd>
+<dt><cite>start</cite></dt><dd><p>每添加一个粒子(particle)，延迟的时间，单位为秒。这项值允许粒子从界面顶部出发，跟“wave”效果不同。</p>
+</dd>
+<dt><cite>fast</cite></dt><dd><p>若为True，粒子从界面中心出发，而不是界面四边。</p>
+</dd>
+<dt><cite>horizontal</cite></dt><dd><p>若为True，粒子在界面的左右两边出现，而不是上下两边。</p>
+</dd>
+<dt><cite>distribution</cite></dt><dd><p>一个函数，或一个字符串表示内建的分布函数名，决定粒子的起始位置。</p>
+<p>若是字符串，必须是下列之一：
+- <cite>linear</cite>: 沿着某一条轴平均分布。
+- <cite>gaussian</cite>: 靠近中心的几率高，靠近边缘的几率低。
+- <cite>arcsine</cite>: 靠近边缘的几率高，靠近中心的几率低。</p>
+<p>若是函数，入参必须是两个浮点数，返回结果也是浮点数。</p>
+<p>默认值为 <cite>linear</cite> 。</p>
+</dd>
+<dt><cite>animation</cite></dt><dd><p>若为True，SnowBlossom使用动画时间轴，防止多次显示时重置动画。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="sprite-examples">
+<span id="id2"></span><h2>Sprite样例<a class="headerlink" href="#sprite-examples" title="Link to this heading"> link</a></h2>
+<p>SnowBlosson类是在界面内放置掉落物体的易用办法。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">image</span> <span class="n">snow</span> <span class="o">=</span> <span class="n">SnowBlossom</span><span class="p">(</span><span class="s2">&quot;snow.png&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这个样例展示了如何使用一个SpriteManager创建复杂行为。在这个例子中，总共显示了400个粒子，并让粒子避开鼠标。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+
+    <span class="k">def</span> <span class="nf">repulsor_update</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
+
+        <span class="c1"># 如果我们不知道鼠标在哪里，先放弃获取鼠标信息</span>
+        <span class="k">if</span> <span class="n">repulsor_pos</span> <span class="k">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">.01</span>
+
+        <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">repulsor_pos</span>
+
+        <span class="c1"># 使用for循环检测每一个精灵……</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">repulsor_sprites</span><span class="p">:</span>
+
+            <span class="c1"># 计算从精灵到鼠标的向量</span>
+            <span class="n">vx</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">px</span>
+            <span class="n">vy</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">py</span>
+
+            <span class="c1"># 计算向量长度，将向量归一化。</span>
+            <span class="n">vl</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">vl</span> <span class="o">&gt;=</span> <span class="mi">150</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># 计算需要移动的距离</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">150</span> <span class="o">-</span> <span class="n">vl</span><span class="p">)</span> <span class="o">/</span> <span class="mi">150</span>
+
+            <span class="c1"># 移动</span>
+            <span class="n">i</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">distance</span> <span class="o">*</span> <span class="n">vx</span> <span class="o">/</span> <span class="n">vl</span>
+            <span class="n">i</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">distance</span> <span class="o">*</span> <span class="n">vy</span> <span class="o">/</span> <span class="n">vl</span>
+
+            <span class="c1"># 确保停留在界面上。</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">i</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">repulsor</span><span class="o">.</span><span class="na">width</span> <span class="o">-</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">i</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">repulsor</span><span class="o">.</span><span class="na">width</span> <span class="o">-</span> <span class="mi">2</span>
+
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">i</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
+
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">repulsor</span><span class="o">.</span><span class="na">height</span> <span class="o">-</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">i</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">repulsor</span><span class="o">.</span><span class="na">height</span> <span class="o">-</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="mf">.01</span>
+
+    <span class="c1"># 收到事件消息时，记录鼠标的坐标。</span>
+    <span class="k">def</span> <span class="nf">repulsor_event</span><span class="p">(</span><span class="n">ev</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">st</span><span class="p">):</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">repulsor_pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="k">label</span> <span class="n">repulsor_demo</span><span class="p">:</span>
+
+    <span class="k">python</span><span class="p">:</span>
+        <span class="c1"># 创建一个SpriteManager。</span>
+        <span class="n">repulsor</span> <span class="o">=</span> <span class="n">SpriteManager</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="n">repulsor_update</span><span class="p">,</span> <span class="k">event</span><span class="o">=</span><span class="n">repulsor_event</span><span class="p">)</span>
+        <span class="n">repulsor_sprites</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+        <span class="n">repulsor_pos</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># 确保只有一个可视组件smile。</span>
+        <span class="n">smile</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;smile.png&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 添加400个精灵。</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="na">range</span><span class="p">(</span><span class="mi">400</span><span class="p">):</span>
+            <span class="n">repulsor_sprites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">repulsor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">smile</span><span class="p">))</span>
+
+        <span class="c1"># 放置这400个精灵。</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">repulsor_sprites</span><span class="p">:</span>
+            <span class="n">i</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">798</span><span class="p">)</span>
+            <span class="n">i</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">598</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">smile</span>
+        <span class="k">del</span> <span class="n">i</span>
+
+    <span class="c1"># 把repulsor添加到界面。</span>
+    <span class="k">show</span> <span class="k">expression</span> <span class="n">repulsor</span> <span class="k">as</span> <span class="n">repulsor</span>
+
+    <span class="s2">&quot;...&quot;</span>
+
+    <span class="k">hide</span> <span class="n">repulsor</span>
+
+    <span class="c1"># 清理。</span>
+    <span class="k">python</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">repulsor</span>
+        <span class="k">del</span> <span class="n">repulsor_sprites</span>
+        <span class="k">del</span> <span class="n">repulsor_pos</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="drag_drop.html" class="btn btn-neutral float-left" title="拖放组件" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="keymap.html" class="btn btn-neutral float-right" title="定制按键映射" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

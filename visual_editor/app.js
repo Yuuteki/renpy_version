@@ -205,6 +205,11 @@ const projectSideImageNullInput = document.getElementById("projectSideImageNullI
 const projectSideImageSameTransformInput = document.getElementById("projectSideImageSameTransformInput");
 const projectSideImageChangeTransformInput = document.getElementById("projectSideImageChangeTransformInput");
 const projectSideImageCodePreviewEl = document.getElementById("projectSideImageCodePreview");
+const projectKeymapSettingsFormEl = document.getElementById("projectKeymapSettingsForm");
+const projectKeymapCustomEventNameInput = document.getElementById("projectKeymapCustomEventNameInput");
+const projectKeymapAddCustomEventButton = document.getElementById("projectKeymapAddCustomEventButton");
+const projectKeymapCategoryListEl = document.getElementById("projectKeymapCategoryList");
+const projectKeymapCodePreviewEl = document.getElementById("projectKeymapCodePreview");
 const imageTagSuggestionListEl = document.getElementById("imageTagSuggestionList");
 
 const inspectorEmptyEl = document.getElementById("inspectorEmpty");
@@ -351,7 +356,291 @@ const defaultProjectMeta = {
   sideImageNull: "",
   sideImageSameTransform: "",
   sideImageChangeTransform: "",
+  keymapOverrides: {},
 };
+
+const projectKeymapEventCategories = [
+  {
+    id: "dialogue",
+    label: "Dialogue & Core",
+    description: "Advance text, rollback, open menus, and common project shortcuts.",
+    eventIds: [
+      "dismiss",
+      "rollback",
+      "rollforward",
+      "game_menu",
+      "hide_windows",
+      "screenshot",
+      "toggle_fullscreen",
+    ],
+  },
+  {
+    id: "navigation",
+    label: "Skip & Focus Navigation",
+    description: "Skip controls and directional navigation between buttons or focusable widgets.",
+    eventIds: [
+      "skip",
+      "toggle_skip",
+      "fast_skip",
+      "focus_left",
+      "focus_right",
+      "focus_up",
+      "focus_down",
+    ],
+  },
+  {
+    id: "input",
+    label: "Text Input",
+    description: "Editing and moving inside input fields.",
+    eventIds: [
+      "input_backspace",
+      "input_enter",
+      "input_left",
+      "input_right",
+      "input_up",
+      "input_down",
+      "input_delete",
+    ],
+  },
+  {
+    id: "viewport",
+    label: "Viewports & Bars",
+    description: "Scrolling viewports and interacting with bar widgets.",
+    eventIds: [
+      "viewport_leftarrow",
+      "viewport_rightarrow",
+      "viewport_uparrow",
+      "viewport_downarrow",
+      "viewport_pageup",
+      "viewport_pagedown",
+      "viewport_wheelup",
+      "viewport_wheeldown",
+      "bar_activate",
+      "bar_deactivate",
+      "bar_left",
+      "bar_right",
+      "bar_up",
+      "bar_down",
+    ],
+  },
+];
+
+const projectKeymapEventMeta = [
+  {
+    id: "dismiss",
+    label: "Dismiss / Advance",
+    description: "Advance dialogue, confirm buttons, and continue through say statements.",
+    defaultBindings: ["K_RETURN", "K_SPACE", "K_KP_ENTER", "K_SELECT", "mouseup_1"],
+  },
+  {
+    id: "rollback",
+    label: "Rollback",
+    description: "Move backward through dialogue and interaction history.",
+    defaultBindings: ["anyrepeat_K_PAGEUP", "anyrepeat_KP_PAGEUP", "K_AC_BACK", "mousedown_4"],
+  },
+  {
+    id: "rollforward",
+    label: "Roll Forward",
+    description: "Move forward again after rollback where allowed.",
+    defaultBindings: ["anyrepeat_K_PAGEDOWN", "anyrepeat_KP_PAGEDOWN", "mousedown_5"],
+  },
+  {
+    id: "game_menu",
+    label: "Game Menu",
+    description: "Open the standard game menu and navigation overlay.",
+    defaultBindings: ["K_ESCAPE", "K_MENU", "K_PAUSE", "mouseup_3"],
+  },
+  {
+    id: "hide_windows",
+    label: "Hide Windows",
+    description: "Temporarily hide the dialogue and UI windows.",
+    defaultBindings: ["mouseup_2", "noshift_K_h"],
+  },
+  {
+    id: "screenshot",
+    label: "Screenshot",
+    description: "Capture a screenshot through Ren'Py's screenshot action.",
+    defaultBindings: ["alt_K_s", "alt_shift_K_s", "noshift_K_s"],
+  },
+  {
+    id: "toggle_fullscreen",
+    label: "Toggle Fullscreen",
+    description: "Switch between windowed and fullscreen display.",
+    defaultBindings: ["alt_K_RETURN", "alt_K_KP_ENTER", "K_F11", "noshift_K_f"],
+  },
+  {
+    id: "skip",
+    label: "Hold To Skip",
+    description: "Temporarily skip while the key is held down.",
+    defaultBindings: ["anymod_K_LCTRL", "anymod_K_RCTRL"],
+  },
+  {
+    id: "toggle_skip",
+    label: "Toggle Skip",
+    description: "Toggle skip mode on or off.",
+    defaultBindings: ["K_TAB"],
+  },
+  {
+    id: "fast_skip",
+    label: "Fast Skip",
+    description: "Use the fast skip binding for quick-forward style flow.",
+    defaultBindings: [">", "shift_K_PERIOD"],
+  },
+  {
+    id: "focus_left",
+    label: "Focus Left",
+    description: "Move UI focus to the left.",
+    defaultBindings: ["anyrepeat_K_LEFT", "anyrepeat_KP_LEFT"],
+  },
+  {
+    id: "focus_right",
+    label: "Focus Right",
+    description: "Move UI focus to the right.",
+    defaultBindings: ["anyrepeat_K_RIGHT", "anyrepeat_KP_RIGHT"],
+  },
+  {
+    id: "focus_up",
+    label: "Focus Up",
+    description: "Move UI focus upward.",
+    defaultBindings: ["anyrepeat_K_UP", "anyrepeat_KP_UP"],
+  },
+  {
+    id: "focus_down",
+    label: "Focus Down",
+    description: "Move UI focus downward.",
+    defaultBindings: ["anyrepeat_K_DOWN", "anyrepeat_KP_DOWN"],
+  },
+  {
+    id: "input_backspace",
+    label: "Input Backspace",
+    description: "Delete one character before the caret inside an input field.",
+    defaultBindings: ["anyrepeat_K_BACKSPACE"],
+  },
+  {
+    id: "input_enter",
+    label: "Input Enter",
+    description: "Confirm the current input field.",
+    defaultBindings: ["K_RETURN", "K_KP_ENTER"],
+  },
+  {
+    id: "input_left",
+    label: "Input Left",
+    description: "Move the caret left in an input field.",
+    defaultBindings: ["anyrepeat_K_LEFT", "anyrepeat_KP_LEFT"],
+  },
+  {
+    id: "input_right",
+    label: "Input Right",
+    description: "Move the caret right in an input field.",
+    defaultBindings: ["anyrepeat_K_RIGHT", "anyrepeat_KP_RIGHT"],
+  },
+  {
+    id: "input_up",
+    label: "Input Up",
+    description: "Move through multi-line input upward.",
+    defaultBindings: ["anyrepeat_K_UP", "anyrepeat_KP_UP"],
+  },
+  {
+    id: "input_down",
+    label: "Input Down",
+    description: "Move through multi-line input downward.",
+    defaultBindings: ["anyrepeat_K_DOWN", "anyrepeat_KP_DOWN"],
+  },
+  {
+    id: "input_delete",
+    label: "Input Delete",
+    description: "Delete one character after the caret.",
+    defaultBindings: ["anyrepeat_K_DELETE", "anyrepeat_KP_DELETE"],
+  },
+  {
+    id: "viewport_leftarrow",
+    label: "Viewport Left",
+    description: "Scroll a viewport to the left with the keyboard.",
+    defaultBindings: ["anyrepeat_K_LEFT", "anyrepeat_KP_LEFT"],
+  },
+  {
+    id: "viewport_rightarrow",
+    label: "Viewport Right",
+    description: "Scroll a viewport to the right with the keyboard.",
+    defaultBindings: ["anyrepeat_K_RIGHT", "anyrepeat_KP_RIGHT"],
+  },
+  {
+    id: "viewport_uparrow",
+    label: "Viewport Up",
+    description: "Scroll a viewport upward with the keyboard.",
+    defaultBindings: ["anyrepeat_K_UP", "anyrepeat_KP_UP"],
+  },
+  {
+    id: "viewport_downarrow",
+    label: "Viewport Down",
+    description: "Scroll a viewport downward with the keyboard.",
+    defaultBindings: ["anyrepeat_K_DOWN", "anyrepeat_KP_DOWN"],
+  },
+  {
+    id: "viewport_pageup",
+    label: "Viewport Page Up",
+    description: "Scroll a viewport by one page upward.",
+    defaultBindings: ["anyrepeat_K_PAGEUP", "anyrepeat_KP_PAGEUP"],
+  },
+  {
+    id: "viewport_pagedown",
+    label: "Viewport Page Down",
+    description: "Scroll a viewport by one page downward.",
+    defaultBindings: ["anyrepeat_K_PAGEDOWN", "anyrepeat_KP_PAGEDOWN"],
+  },
+  {
+    id: "viewport_wheelup",
+    label: "Viewport Wheel Up",
+    description: "Scroll a viewport upward with the mouse wheel.",
+    defaultBindings: ["mousedown_4"],
+  },
+  {
+    id: "viewport_wheeldown",
+    label: "Viewport Wheel Down",
+    description: "Scroll a viewport downward with the mouse wheel.",
+    defaultBindings: ["mousedown_5"],
+  },
+  {
+    id: "bar_activate",
+    label: "Bar Activate",
+    description: "Grab or activate a bar control.",
+    defaultBindings: ["mousedown_1", "K_RETURN", "K_KP_ENTER", "K_SELECT"],
+  },
+  {
+    id: "bar_deactivate",
+    label: "Bar Deactivate",
+    description: "Release or confirm a bar control interaction.",
+    defaultBindings: ["mouseup_1", "K_RETURN", "K_KP_ENTER", "K_SELECT"],
+  },
+  {
+    id: "bar_left",
+    label: "Bar Left",
+    description: "Move a bar value to the left.",
+    defaultBindings: ["anyrepeat_K_LEFT", "anyrepeat_KP_LEFT"],
+  },
+  {
+    id: "bar_right",
+    label: "Bar Right",
+    description: "Move a bar value to the right.",
+    defaultBindings: ["anyrepeat_K_RIGHT", "anyrepeat_KP_RIGHT"],
+  },
+  {
+    id: "bar_up",
+    label: "Bar Up",
+    description: "Move a bar value upward.",
+    defaultBindings: ["anyrepeat_K_UP", "anyrepeat_KP_UP"],
+  },
+  {
+    id: "bar_down",
+    label: "Bar Down",
+    description: "Move a bar value downward.",
+    defaultBindings: ["anyrepeat_K_DOWN", "anyrepeat_KP_DOWN"],
+  },
+];
+
+const projectKeymapEventMetaById = Object.fromEntries(
+  projectKeymapEventMeta.map((meta) => [meta.id, meta]),
+);
 
 const autoManagedGuiScreenNames = new Set([
   "say",
@@ -808,6 +1097,13 @@ let activeVariableId = null;
 let variableDetailOpen = false;
 let activeDefinitionId = null;
 let definitionDetailOpen = false;
+let projectKeymapCategoryState = {
+  dialogue: true,
+  navigation: false,
+  input: false,
+  viewport: false,
+  custom: true,
+};
 let dialogueTextTarget = {
   kind: "content",
   lineId: null,
@@ -918,6 +1214,35 @@ function loadState() {
   }
 }
 
+function normalizeProjectKeymapBindings(bindings) {
+  if (!Array.isArray(bindings)) {
+    return [];
+  }
+
+  return bindings
+    .map((binding) => `${binding ?? ""}`.trim())
+    .filter(Boolean)
+    .filter((binding, index, source) => source.indexOf(binding) === index);
+}
+
+function normalizeProjectKeymapEntry(entry) {
+  return {
+    useCustomList: entry?.useCustomList === true,
+    bindings: normalizeProjectKeymapBindings(entry?.bindings),
+    rawExpression: `${entry?.rawExpression || ""}`.trim(),
+  };
+}
+
+function normalizeProjectKeymapOverrides(rawOverrides) {
+  if (!rawOverrides || typeof rawOverrides !== "object" || Array.isArray(rawOverrides)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(rawOverrides).map(([eventId, entry]) => [eventId, normalizeProjectKeymapEntry(entry)]),
+  );
+}
+
 function normalizeGuiState(rawGui) {
   if (!rawGui || typeof rawGui !== "object" || Array.isArray(rawGui)) {
     return {
@@ -992,6 +1317,7 @@ function normalizeState(rawState) {
       sideImageNull: `${rawMeta.sideImageNull || ""}`.trim(),
       sideImageSameTransform: `${rawMeta.sideImageSameTransform || ""}`.trim(),
       sideImageChangeTransform: `${rawMeta.sideImageChangeTransform || ""}`.trim(),
+      keymapOverrides: normalizeProjectKeymapOverrides(rawMeta.keymapOverrides),
     },
     graphs: normalizedGraphs,
     images: normalizedImageDefinitions,
@@ -2328,6 +2654,198 @@ function getProjectSideImageChangeTransform() {
   return `${state.meta.sideImageChangeTransform || ""}`.trim();
 }
 
+function getProjectKeymapOverrides() {
+  return normalizeProjectKeymapOverrides(state.meta.keymapOverrides);
+}
+
+function cloneProjectKeymapOverrides() {
+  return Object.fromEntries(
+    Object.entries(getProjectKeymapOverrides()).map(([eventId, entry]) => [
+      eventId,
+      {
+        ...entry,
+        bindings: [...entry.bindings],
+      },
+    ]),
+  );
+}
+
+function compactProjectKeymapOverrides(overrides) {
+  return Object.fromEntries(
+    Object.entries(normalizeProjectKeymapOverrides(overrides))
+      .filter(([, entry]) => entry.useCustomList || entry.rawExpression),
+  );
+}
+
+function getProjectKeymapEventMeta(eventId) {
+  const knownMeta = projectKeymapEventMetaById[eventId];
+
+  if (knownMeta) {
+    return knownMeta;
+  }
+
+  return {
+    id: eventId,
+    label: eventId,
+    description: "Custom keymap event override.",
+    defaultBindings: [],
+  };
+}
+
+function getProjectKeymapOverrideEntry(eventId) {
+  return getProjectKeymapOverrides()[eventId] || {
+    useCustomList: false,
+    bindings: [],
+    rawExpression: "",
+  };
+}
+
+function getProjectKeymapEffectiveBindings(eventId) {
+  const meta = getProjectKeymapEventMeta(eventId);
+  const entry = getProjectKeymapOverrideEntry(eventId);
+
+  if (entry.useCustomList) {
+    return [...entry.bindings];
+  }
+
+  return [...meta.defaultBindings];
+}
+
+function updateProjectKeymapOverrides(mutator) {
+  const overrides = cloneProjectKeymapOverrides();
+
+  mutator(overrides);
+
+  updateProjectMeta({
+    keymapOverrides: compactProjectKeymapOverrides(overrides),
+  });
+}
+
+function addProjectKeymapBinding(eventId, binding) {
+  const normalizedBinding = `${binding || ""}`.trim();
+
+  if (!normalizedBinding) {
+    return false;
+  }
+
+  let added = false;
+
+  updateProjectKeymapOverrides((overrides) => {
+    const currentBindings = getProjectKeymapEffectiveBindings(eventId);
+
+    if (currentBindings.includes(normalizedBinding)) {
+      return;
+    }
+
+    overrides[eventId] = normalizeProjectKeymapEntry({
+      ...getProjectKeymapOverrideEntry(eventId),
+      useCustomList: true,
+      bindings: [...currentBindings, normalizedBinding],
+    });
+    added = true;
+  });
+
+  return added;
+}
+
+function removeProjectKeymapBinding(eventId, binding) {
+  const normalizedBinding = `${binding || ""}`.trim();
+
+  if (!normalizedBinding) {
+    return false;
+  }
+
+  let removed = false;
+
+  updateProjectKeymapOverrides((overrides) => {
+    const currentBindings = getProjectKeymapEffectiveBindings(eventId);
+
+    if (!currentBindings.includes(normalizedBinding)) {
+      return;
+    }
+
+    overrides[eventId] = normalizeProjectKeymapEntry({
+      ...getProjectKeymapOverrideEntry(eventId),
+      useCustomList: true,
+      bindings: currentBindings.filter((item) => item !== normalizedBinding),
+    });
+    removed = true;
+  });
+
+  return removed;
+}
+
+function setProjectKeymapRawExpression(eventId, rawExpression) {
+  const normalizedRawExpression = `${rawExpression || ""}`.trim();
+
+  updateProjectKeymapOverrides((overrides) => {
+    const currentEntry = getProjectKeymapOverrideEntry(eventId);
+
+    overrides[eventId] = normalizeProjectKeymapEntry({
+      ...currentEntry,
+      rawExpression: normalizedRawExpression,
+    });
+
+    if (!normalizedRawExpression && !overrides[eventId].useCustomList) {
+      delete overrides[eventId];
+    }
+  });
+}
+
+function resetProjectKeymapEvent(eventId) {
+  updateProjectKeymapOverrides((overrides) => {
+    delete overrides[eventId];
+  });
+}
+
+function ensureProjectKeymapCustomEvent(eventId) {
+  const normalizedEventId = `${eventId || ""}`.trim();
+
+  if (!normalizedEventId) {
+    return false;
+  }
+
+  let created = false;
+
+  updateProjectKeymapOverrides((overrides) => {
+    if (overrides[normalizedEventId] || projectKeymapEventMetaById[normalizedEventId]) {
+      return;
+    }
+
+    overrides[normalizedEventId] = normalizeProjectKeymapEntry({
+      useCustomList: true,
+      bindings: [],
+      rawExpression: "",
+    });
+    created = true;
+  });
+
+  return created;
+}
+
+function getRenderableProjectKeymapCategories() {
+  const knownIds = new Set(projectKeymapEventMeta.map((meta) => meta.id));
+  const customEventIds = Object.keys(getProjectKeymapOverrides())
+    .filter((eventId) => !knownIds.has(eventId))
+    .sort((left, right) => left.localeCompare(right));
+
+  const categories = projectKeymapEventCategories.map((category) => ({
+    ...category,
+    eventIds: [...category.eventIds],
+  }));
+
+  if (customEventIds.length) {
+    categories.push({
+      id: "custom",
+      label: "Custom Events",
+      description: "Event overrides you added outside the tracked common preset list.",
+      eventIds: customEventIds,
+    });
+  }
+
+  return categories;
+}
+
 function formatProjectVoiceCode() {
   const lines = [];
 
@@ -2377,6 +2895,36 @@ function formatProjectSideImageCode() {
   }
 
   lines.push("# Remember to add SideImage() inside the say screen to display avatar portraits.");
+  return lines.join("\n");
+}
+
+function formatProjectKeymapBindingList(bindings) {
+  return `[ ${bindings.map((binding) => formatRenpyStringLikeArgument(binding)).join(", ")} ]`;
+}
+
+function formatProjectKeymapCode() {
+  const overrides = getProjectKeymapOverrides();
+  const overrideEntries = Object.entries(overrides)
+    .sort((left, right) => left[0].localeCompare(right[0]))
+    .filter(([, entry]) => entry.useCustomList || entry.rawExpression);
+
+  if (!overrideEntries.length) {
+    return [
+      "# Using Ren'Py default key bindings.",
+      "# Add overrides here only when your project genuinely needs custom input behavior.",
+    ].join("\n");
+  }
+
+  const lines = ["init python:"];
+
+  overrideEntries.forEach(([eventId, entry]) => {
+    const valueExpression = entry.rawExpression
+      ? entry.rawExpression
+      : formatProjectKeymapBindingList(entry.bindings);
+
+    lines.push(`    config.keymap["${escapeRenpyString(eventId)}"] = ${valueExpression}`);
+  });
+
   return lines.join("\n");
 }
 
@@ -8086,6 +8634,110 @@ function renderProjectSideImageSettings() {
   projectSideImageCodePreviewEl.textContent = formatProjectSideImageCode();
 }
 
+function renderProjectKeymapSettings() {
+  if (!projectKeymapSettingsFormEl || !projectKeymapCategoryListEl || !projectKeymapCodePreviewEl) {
+    return;
+  }
+
+  const categories = getRenderableProjectKeymapCategories();
+
+  projectKeymapCategoryListEl.innerHTML = categories.map((category) => `
+    <details class="project-keymap-category" data-keymap-category="${escapeHtml(category.id)}" ${projectKeymapCategoryState[category.id] !== false ? "open" : ""}>
+      <summary class="project-keymap-category-summary">
+        <span>
+          <strong>${escapeHtml(category.label)}</strong>
+          <small>${escapeHtml(`${category.eventIds.length} events`)}</small>
+        </span>
+        <span>${escapeHtml(category.description)}</span>
+      </summary>
+
+      <div class="project-keymap-card-list">
+        ${category.eventIds.map((eventId) => {
+    const meta = getProjectKeymapEventMeta(eventId);
+    const entry = getProjectKeymapOverrideEntry(eventId);
+    const effectiveBindings = getProjectKeymapEffectiveBindings(eventId);
+    const statusLabel = entry.rawExpression
+      ? "Raw override active."
+      : entry.useCustomList
+        ? "Custom binding list active."
+        : "Using Ren'Py default bindings.";
+
+    return `
+          <article class="project-keymap-card" data-keymap-event-id="${escapeHtml(eventId)}">
+            <div class="project-keymap-card-header">
+              <div class="project-keymap-card-copy">
+                <strong>${escapeHtml(meta.label)}</strong>
+                <code>${escapeHtml(eventId)}</code>
+              </div>
+              <button
+                class="secondary project-keymap-reset-button"
+                type="button"
+                data-keymap-reset-event="${escapeHtml(eventId)}"
+                ${entry.rawExpression || entry.useCustomList ? "" : "disabled"}
+              >
+                Reset
+              </button>
+            </div>
+
+            <p class="project-settings-note">${escapeHtml(meta.description)}</p>
+            <p class="project-keymap-status">${escapeHtml(statusLabel)}</p>
+
+            <p class="project-settings-note">
+              ${meta.defaultBindings.length
+      ? `Default: ${meta.defaultBindings.map((binding) => `<code>${escapeHtml(binding)}</code>`).join(", ")}`
+      : "No tracked default binding list for this custom event."
+    }
+            </p>
+
+            <div class="project-keymap-binding-list">
+              ${effectiveBindings.length
+      ? effectiveBindings.map((binding) => `
+                    <button
+                      class="secondary project-keymap-binding-chip"
+                      type="button"
+                      data-keymap-remove-event="${escapeHtml(eventId)}"
+                      data-keymap-binding="${escapeHtml(binding)}"
+                      title="Remove ${escapeHtml(binding)}"
+                    >
+                      <code>${escapeHtml(binding)}</code>
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  `).join("")
+      : '<span class="project-keymap-empty">No bindings in this list.</span>'
+    }
+            </div>
+
+            <div class="project-keymap-add-row">
+              <input
+                data-keymap-add-input="${escapeHtml(eventId)}"
+                type="text"
+                placeholder="e.g. K_t or shift_K_F5"
+              />
+              <button class="secondary" type="button" data-keymap-add-event="${escapeHtml(eventId)}">Add</button>
+            </div>
+
+            <label>
+              Raw Override Expression
+              <textarea
+                data-keymap-raw-input="${escapeHtml(eventId)}"
+                rows="3"
+                placeholder="e.g. [ 'K_RETURN', 'K_SPACE' ] or config.keymap['dismiss'] + ['K_t']"
+              >${escapeHtml(entry.rawExpression)}</textarea>
+            </label>
+
+            <p class="project-settings-note">
+              If filled, generated code will use this exact expression instead of the binding list above.
+            </p>
+          </article>
+        `;
+  }).join("")}
+      </div>
+    </details>
+  `).join("");
+
+  projectKeymapCodePreviewEl.textContent = formatProjectKeymapCode();
+}
+
 function renderImageTagSuggestions() {
   if (!imageTagSuggestionListEl) {
     return;
@@ -8596,6 +9248,7 @@ function render() {
   renderDefinitionsPanel();
   renderProjectVoiceSettings();
   renderProjectSideImageSettings();
+  renderProjectKeymapSettings();
   renderVisualProjectStats();
   renderGraph();
   renderInspector();
@@ -10910,6 +11563,114 @@ projectSideImageSameTransformInput?.addEventListener("input", (event) => {
 });
 projectSideImageChangeTransformInput?.addEventListener("input", (event) => {
   updateProjectMeta({ sideImageChangeTransform: event.target.value });
+});
+projectKeymapAddCustomEventButton?.addEventListener("click", () => {
+  const nextEventId = `${projectKeymapCustomEventNameInput?.value || ""}`.trim();
+
+  if (!nextEventId) {
+    setStatus("Enter a keymap event name before adding a custom event.");
+    return;
+  }
+
+  projectKeymapCategoryState.custom = true;
+
+  if (ensureProjectKeymapCustomEvent(nextEventId)) {
+    projectKeymapCustomEventNameInput.value = "";
+    setStatus(`Added custom keymap event "${nextEventId}".`);
+    return;
+  }
+
+  projectKeymapCustomEventNameInput.value = "";
+  setStatus(`Keymap event "${nextEventId}" is already available.`);
+});
+projectKeymapCustomEventNameInput?.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") {
+    return;
+  }
+
+  event.preventDefault();
+  projectKeymapAddCustomEventButton?.click();
+});
+projectKeymapCategoryListEl?.addEventListener("toggle", (event) => {
+  const categoryEl = event.target.closest("[data-keymap-category]");
+
+  if (!categoryEl) {
+    return;
+  }
+
+  projectKeymapCategoryState[categoryEl.dataset.keymapCategory] = categoryEl.open;
+});
+projectKeymapCategoryListEl?.addEventListener("click", (event) => {
+  const addButton = event.target.closest("[data-keymap-add-event]");
+
+  if (addButton) {
+    const eventId = addButton.dataset.keymapAddEvent;
+    const inputEl = projectKeymapCategoryListEl.querySelector(`[data-keymap-add-input="${CSS.escape(eventId)}"]`);
+
+    if (!inputEl) {
+      return;
+    }
+
+    if (addProjectKeymapBinding(eventId, inputEl.value)) {
+      setStatus(`Added "${inputEl.value.trim()}" to keymap event "${eventId}".`);
+      return;
+    }
+
+    setStatus(`That keysym is already bound on "${eventId}", or the input was empty.`);
+    return;
+  }
+
+  const removeButton = event.target.closest("[data-keymap-remove-event]");
+
+  if (removeButton) {
+    const eventId = removeButton.dataset.keymapRemoveEvent;
+    const binding = removeButton.dataset.keymapBinding;
+
+    if (removeProjectKeymapBinding(eventId, binding)) {
+      setStatus(`Removed "${binding}" from keymap event "${eventId}".`);
+    }
+
+    return;
+  }
+
+  const resetButton = event.target.closest("[data-keymap-reset-event]");
+
+  if (resetButton && !resetButton.disabled) {
+    const eventId = resetButton.dataset.keymapResetEvent;
+
+    resetProjectKeymapEvent(eventId);
+    setStatus(`Reset keymap event "${eventId}" to Ren'Py defaults.`);
+  }
+});
+projectKeymapCategoryListEl?.addEventListener("keydown", (event) => {
+  const inputEl = event.target.closest("[data-keymap-add-input]");
+
+  if (!inputEl || event.key !== "Enter") {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (addProjectKeymapBinding(inputEl.dataset.keymapAddInput, inputEl.value)) {
+    setStatus(`Added "${inputEl.value.trim()}" to keymap event "${inputEl.dataset.keymapAddInput}".`);
+    return;
+  }
+
+  setStatus(`That keysym is already bound on "${inputEl.dataset.keymapAddInput}", or the input was empty.`);
+});
+projectKeymapCategoryListEl?.addEventListener("change", (event) => {
+  const rawInput = event.target.closest("[data-keymap-raw-input]");
+
+  if (!rawInput) {
+    return;
+  }
+
+  setProjectKeymapRawExpression(rawInput.dataset.keymapRawInput, rawInput.value);
+  setStatus(
+    rawInput.value.trim()
+      ? `Applied a raw override for keymap event "${rawInput.dataset.keymapRawInput}".`
+      : `Cleared the raw override for keymap event "${rawInput.dataset.keymapRawInput}".`,
+  );
 });
 characterIdInput.addEventListener("input", (event) => {
   updateActiveCharacter({ id: event.target.value });

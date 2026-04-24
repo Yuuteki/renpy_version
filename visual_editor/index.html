@@ -1394,6 +1394,30 @@
               <pre id="projectSideImageCodePreview" class="code-preview"></pre>
             </form>
 
+            <p class="section-label secondary-label">Keymap Settings</p>
+            <form id="projectKeymapSettingsForm" class="character-detail-form">
+              <p class="project-settings-note">
+                Customize common <code>config.keymap</code> events here. Ren'Py players usually expect the default bindings to stay familiar, so this editor only emits overrides for the events you actually change.
+              </p>
+
+              <div class="project-keymap-custom-row">
+                <label>
+                  Custom Event
+                  <input id="projectKeymapCustomEventNameInput" type="text" placeholder="e.g. quick_menu_toggle" />
+                </label>
+                <button id="projectKeymapAddCustomEventButton" class="secondary" type="button">Add Custom Event</button>
+              </div>
+
+              <div id="projectKeymapCategoryList" class="project-keymap-category-list"></div>
+
+              <p class="project-settings-note">
+                Keysym examples: <code>K_t</code>, <code>shift_K_F5</code>, <code>mousedown_1</code>, <code>repeat_K_LEFT</code>, <code>osctrl_K_RIGHT</code>.
+              </p>
+
+              <p class="section-label secondary-label">Generated Keymap Config</p>
+              <pre id="projectKeymapCodePreview" class="code-preview"></pre>
+            </form>
+
             <p class="section-label secondary-label">Status</p>
             <p id="statusText" class="status-text">Visual editor scaffold ready.</p>
           </section>
