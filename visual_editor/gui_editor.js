@@ -1,5 +1,8 @@
 const params = new URLSearchParams(window.location.search);
 const projectPath = params.get("project") || "";
+const bridgeUrl = params.get("bridge") || "";
+const bridgeToken = params.get("token") || "";
+const hasBridge = Boolean(bridgeUrl && bridgeToken);
 const storageKey = projectPath
   ? `renpy-visual-editor:${projectPath}`
   : "renpy-visual-editor:default";
@@ -218,6 +221,8 @@ const guiPythonUiListEl = document.getElementById("guiPythonUiList");
 const newGuiPythonActionButton = document.getElementById("newGuiPythonActionButton");
 const newGuiPythonBarButton = document.getElementById("newGuiPythonBarButton");
 const newGuiPythonInputButton = document.getElementById("newGuiPythonInputButton");
+const newGuiPythonDisplayableButton = document.getElementById("newGuiPythonDisplayableButton");
+const newGuiPythonStatementButton = document.getElementById("newGuiPythonStatementButton");
 const newGuiPythonRestartButton = document.getElementById("newGuiPythonRestartButton");
 const newGuiPythonDefineScreenButton = document.getElementById("newGuiPythonDefineScreenButton");
 const guiPythonUiEmptyStateEl = document.getElementById("guiPythonUiEmptyState");
@@ -250,6 +255,31 @@ const guiPythonUiInputReturnableInput = document.getElementById("guiPythonUiInpu
 const guiPythonUiInputGetTextInput = document.getElementById("guiPythonUiInputGetTextInput");
 const guiPythonUiInputSetTextBodyInput = document.getElementById("guiPythonUiInputSetTextBodyInput");
 const guiPythonUiInputEnterBodyInput = document.getElementById("guiPythonUiInputEnterBodyInput");
+const guiPythonUiDisplayableFieldsEl = document.getElementById("guiPythonUiDisplayableFields");
+const guiPythonUiDisplayableInitBodyInput = document.getElementById("guiPythonUiDisplayableInitBodyInput");
+const guiPythonUiDisplayableRenderBodyInput = document.getElementById("guiPythonUiDisplayableRenderBodyInput");
+const guiPythonUiDisplayableEventBodyInput = document.getElementById("guiPythonUiDisplayableEventBodyInput");
+const guiPythonUiDisplayablePerInteractBodyInput = document.getElementById("guiPythonUiDisplayablePerInteractBodyInput");
+const guiPythonUiDisplayableVisitBodyInput = document.getElementById("guiPythonUiDisplayableVisitBodyInput");
+const guiPythonUiDisplayablePlaceBodyInput = document.getElementById("guiPythonUiDisplayablePlaceBodyInput");
+const guiPythonUiStatementFieldsEl = document.getElementById("guiPythonUiStatementFields");
+const guiPythonUiStatementBlockInput = document.getElementById("guiPythonUiStatementBlockInput");
+const guiPythonUiStatementInitInput = document.getElementById("guiPythonUiStatementInitInput");
+const guiPythonUiStatementTranslatableInput = document.getElementById("guiPythonUiStatementTranslatableInput");
+const guiPythonUiStatementPredictAllInput = document.getElementById("guiPythonUiStatementPredictAllInput");
+const guiPythonUiStatementInitPriorityInput = document.getElementById("guiPythonUiStatementInitPriorityInput");
+const guiPythonUiStatementParseBodyInput = document.getElementById("guiPythonUiStatementParseBodyInput");
+const guiPythonUiStatementExecuteBodyInput = document.getElementById("guiPythonUiStatementExecuteBodyInput");
+const guiPythonUiStatementLintBodyInput = document.getElementById("guiPythonUiStatementLintBodyInput");
+const guiPythonUiStatementPredictBodyInput = document.getElementById("guiPythonUiStatementPredictBodyInput");
+const guiPythonUiStatementNextBodyInput = document.getElementById("guiPythonUiStatementNextBodyInput");
+const guiPythonUiStatementExecuteInitBodyInput = document.getElementById("guiPythonUiStatementExecuteInitBodyInput");
+const guiPythonUiStatementLabelInput = document.getElementById("guiPythonUiStatementLabelInput");
+const guiPythonUiStatementWarpInput = document.getElementById("guiPythonUiStatementWarpInput");
+const guiPythonUiStatementPostLabelInput = document.getElementById("guiPythonUiStatementPostLabelInput");
+const guiPythonUiStatementPostExecuteBodyInput = document.getElementById("guiPythonUiStatementPostExecuteBodyInput");
+const guiPythonUiStatementTranslationStringsBodyInput = document.getElementById("guiPythonUiStatementTranslationStringsBodyInput");
+const guiPythonUiStatementExecuteDefaultBodyInput = document.getElementById("guiPythonUiStatementExecuteDefaultBodyInput");
 const guiPythonUiRestartFieldsEl = document.getElementById("guiPythonUiRestartFields");
 const guiPythonUiRestartTargetInput = document.getElementById("guiPythonUiRestartTargetInput");
 const guiPythonUiRestartValueInput = document.getElementById("guiPythonUiRestartValueInput");
@@ -599,6 +629,22 @@ const pythonUiKindMeta = {
     parametersLabel: "Constructor Args",
     parametersPlaceholder: "e.g. field_name=\"player_name\"",
     info: "Create a reusable InputValue subclass for input widgets. The generated class still inherits Enable / Disable / Toggle from InputValue.",
+  },
+  displayable: {
+    label: "Displayable Class",
+    nameLabel: "Class Name",
+    namePlaceholder: "e.g. PulsingPortraitDisplayable",
+    parametersLabel: "Constructor Args",
+    parametersPlaceholder: "e.g. child=None, **kwargs",
+    info: "Create a reusable renpy.Displayable subclass with low-level render(), event(), and redraw hooks. Use it from add / show expression when screen language nodes are not enough.",
+  },
+  statement: {
+    label: "Custom Statement",
+    nameLabel: "Helper Prefix",
+    namePlaceholder: "e.g. codex_statement",
+    parametersLabel: "Statement Keyword",
+    parametersPlaceholder: "e.g. codexsay",
+    info: "Create a python early renpy.register_statement() template with parser, execute, lint, predict, and optional block hooks. Use this for creator-defined script syntax rather than normal screen nodes.",
   },
   restart_helper: {
     label: "restart_interaction Helper",
@@ -1013,6 +1059,99 @@ function loadProjectState() {
   }
 }
 
+function getBridgeEndpoint(path) {
+  const baseUrl = bridgeUrl.endsWith("/") ? bridgeUrl : `${bridgeUrl}/`;
+  const url = new URL(path, baseUrl);
+  url.searchParams.set("token", bridgeToken);
+  return url.toString();
+}
+
+async function callBridge(path, payload = null) {
+  if (!hasBridge) {
+    throw new Error("Launcher bridge is not connected.");
+  }
+
+  const options = payload
+    ? {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }
+    : { method: "GET" };
+  const response = await fetch(getBridgeEndpoint(path), options);
+  const text = await response.text();
+  let data = {};
+
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch (error) {
+      throw new Error(`Launcher bridge returned invalid JSON: ${error.message}`);
+    }
+  }
+
+  if (!response.ok || data.ok === false) {
+    throw new Error(data.error || `Launcher bridge request failed with HTTP ${response.status}.`);
+  }
+
+  return data;
+}
+
+let bridgeSaveTimer = null;
+
+function queueBridgeProjectSave() {
+  if (!hasBridge) {
+    return;
+  }
+
+  window.clearTimeout(bridgeSaveTimer);
+  bridgeSaveTimer = window.setTimeout(async () => {
+    try {
+      await callBridge("state", { state: projectState });
+    } catch (error) {
+      console.error(error);
+      setStatus(`Project JSON sync failed: ${error.message}`);
+    }
+  }, 350);
+}
+
+function resetActiveSelectionsFromProject() {
+  activeStyleId = projectState.gui.styles[0]?.id ?? null;
+  activeStylePrefixId = "base";
+  activeScreenId = projectState.gui.screens[0]?.id ?? null;
+  activeScreenNodeId = getFirstNodeId(projectState.gui.screens[0]?.nodes ?? []);
+  activeConfigEntryKey = getAllConfigEntries(projectState.gui)[0]?.key ?? null;
+  activePythonUiId = projectState.gui.pythonUiHelpers[0]?.id ?? null;
+  activeCursorId = projectState.gui.cursors[0]?.id ?? null;
+  activeShaderId = projectState.gui.textShaders[0]?.id ?? null;
+  activeMusicRoomId = projectState.gui.musicRooms[0]?.id ?? null;
+  activeGalleryId = projectState.gui.galleries[0]?.id ?? null;
+}
+
+async function hydrateProjectStateFromBridge() {
+  if (!hasBridge) {
+    return;
+  }
+
+  try {
+    const response = await callBridge("state");
+
+    if (response.exists && response.state) {
+      projectState = ensureProjectState(response.state);
+      window.localStorage.setItem(storageKey, JSON.stringify(projectState, null, 2));
+      resetActiveSelectionsFromProject();
+      render();
+      setStatus("Loaded GUI state from visual_editor/project.json.");
+    } else {
+      await callBridge("state", { state: projectState });
+      setStatus("Created visual_editor/project.json from the current GUI state.");
+    }
+  } catch (error) {
+    console.error(error);
+    setStatus(`Launcher bridge unavailable: ${error.message}`);
+  }
+}
+
 function ensureProjectState(rawState) {
   const normalizedState = rawState && typeof rawState === "object" && !Array.isArray(rawState)
     ? { ...rawState }
@@ -1184,10 +1323,14 @@ function normalizeGuiConfigEntry(entry, index, scope) {
 
 function normalizeGuiPythonUiEntry(entry, index) {
   const validKind = Object.prototype.hasOwnProperty.call(pythonUiKindMeta, entry?.kind) ? entry.kind : "action";
+  const validStatementBlockModes = new Set(["false", "true", "possible", "script", "script-possible", "atl", "atl-possible"]);
+  const statementBlockValue = `${entry?.statementBlock || ""}`.trim().toLowerCase();
   const fallbackNameByKind = {
     action: `CustomAction${index + 1}`,
     barvalue: `CustomBarValue${index + 1}`,
     inputvalue: `CustomInputValue${index + 1}`,
+    displayable: `CustomDisplayable${index + 1}`,
+    statement: `custom_statement_${index + 1}`,
     restart_helper: `refresh_screen_${index + 1}`,
     define_screen: `build_python_screen_${index + 1}`,
   };
@@ -1217,6 +1360,29 @@ function normalizeGuiPythonUiEntry(entry, index) {
     inputGetText: `${entry?.inputGetText || ""}`.trim(),
     inputSetTextBody: `${entry?.inputSetTextBody || ""}`.trim(),
     inputEnterBody: `${entry?.inputEnterBody || ""}`.trim(),
+    displayableInitBody: `${entry?.displayableInitBody || ""}`.trim(),
+    displayableRenderBody: `${entry?.displayableRenderBody || ""}`.trim(),
+    displayableEventBody: `${entry?.displayableEventBody || ""}`.trim(),
+    displayablePerInteractBody: `${entry?.displayablePerInteractBody || ""}`.trim(),
+    displayableVisitBody: `${entry?.displayableVisitBody || ""}`.trim(),
+    displayablePlaceBody: `${entry?.displayablePlaceBody || ""}`.trim(),
+    statementBlock: validStatementBlockModes.has(statementBlockValue) ? statementBlockValue : "false",
+    statementInit: entry?.statementInit === true || entry?.statementInit === "true" ? "true" : "false",
+    statementTranslatable: entry?.statementTranslatable === true || entry?.statementTranslatable === "true" ? "true" : "false",
+    statementPredictAll: entry?.statementPredictAll === false || entry?.statementPredictAll === "false" ? "false" : "true",
+    statementInitPriority: `${entry?.statementInitPriority ?? ""}`.trim(),
+    statementParseBody: `${entry?.statementParseBody || ""}`.trim(),
+    statementExecuteBody: `${entry?.statementExecuteBody || ""}`.trim(),
+    statementLintBody: `${entry?.statementLintBody || ""}`.trim(),
+    statementPredictBody: `${entry?.statementPredictBody || ""}`.trim(),
+    statementNextBody: `${entry?.statementNextBody || ""}`.trim(),
+    statementExecuteInitBody: `${entry?.statementExecuteInitBody || ""}`.trim(),
+    statementLabel: `${entry?.statementLabel || ""}`.trim(),
+    statementWarp: `${entry?.statementWarp || ""}`.trim(),
+    statementPostLabel: `${entry?.statementPostLabel || ""}`.trim(),
+    statementPostExecuteBody: `${entry?.statementPostExecuteBody || ""}`.trim(),
+    statementTranslationStringsBody: `${entry?.statementTranslationStringsBody || ""}`.trim(),
+    statementExecuteDefaultBody: `${entry?.statementExecuteDefaultBody || ""}`.trim(),
     restartTarget: `${entry?.restartTarget || ""}`.trim(),
     restartValue: `${entry?.restartValue || ""}`.trim(),
     restartBody: `${entry?.restartBody || ""}`.trim(),
@@ -1557,6 +1723,20 @@ function createBlankPythonUiEntry(kind = "action") {
       inputGetText: "store.player_name or \"\"",
       inputSetTextBody: "store.player_name = s",
     },
+    displayable: {
+      kind,
+      name: `CustomDisplayable${nextIndex}`,
+      parameters: "child=None, **kwargs",
+    },
+    statement: {
+      kind,
+      name: `custom_statement_${nextIndex}`,
+      parameters: `codexstmt_${nextIndex}`,
+      statementBlock: "false",
+      statementInit: "false",
+      statementTranslatable: "false",
+      statementPredictAll: "true",
+    },
     restart_helper: {
       kind,
       name: `refresh_screen_${nextIndex}`,
@@ -1759,6 +1939,7 @@ function getActiveGallery() {
 function saveProjectState(message = "Saved GUI draft.") {
   projectState.gui = normalizeGuiState(projectState.gui);
   window.localStorage.setItem(storageKey, JSON.stringify(projectState, null, 2));
+  queueBridgeProjectSave();
   setStatus(message);
 }
 
@@ -4123,8 +4304,26 @@ function parseLeadingParameterName(parameterList) {
   return bareMatch ? bareMatch[1].trim() : "";
 }
 
+function isValidPythonIdentifier(value) {
+  return /^[A-Za-z_][A-Za-z0-9_]*$/.test(`${value || ""}`.trim());
+}
+
 function formatPythonUiHelperName(entry) {
   return entry?.name || getPythonUiKindMeta(entry?.kind).namePlaceholder;
+}
+
+function formatPythonUiStatementBlockValue(value) {
+  const trimmed = `${value || ""}`.trim().toLowerCase();
+
+  if (!trimmed || trimmed === "false") {
+    return "False";
+  }
+
+  if (trimmed === "true") {
+    return "True";
+  }
+
+  return formatRenpyQuotedString(trimmed);
 }
 
 function buildPythonMethodBlock(signature, rawBody, indentLevel, fallbackLines) {
@@ -4191,6 +4390,28 @@ function getPythonUiUsageEntries(entry) {
           detail: "Enable(), Disable(), and Toggle() still come from InputValue unless you replace them yourself.",
         },
       ];
+    case "displayable":
+      return [
+        {
+          title: "Where to use it",
+          detail: `Use add ${formatPythonUiHelperName(entry)}(...) inside a screen, or show expression ${formatPythonUiHelperName(entry)}(...) from script.`,
+        },
+        {
+          title: "Good fit",
+          detail: "Custom rendering, interactive mini UI pieces, particle-like overlays, or widgets that need direct render/event control.",
+        },
+      ];
+    case "statement":
+      return [
+        {
+          title: "Where to use it",
+          detail: `After registration, write ${entry.parameters || "your_keyword"} ... directly in a .rpy script file just like a normal Ren'Py statement.`,
+        },
+        {
+          title: "Good fit",
+          detail: "Project-specific DSLs, shorthand script syntax, or reusable statement families with their own parser and lint hooks.",
+        },
+      ];
     case "restart_helper":
       return [
         {
@@ -4229,10 +4450,9 @@ function formatPythonUiEntryCode(entry) {
     lines.push(`# ${entry.notes}`);
   }
 
-  lines.push("init python:");
-
   switch (entry.kind) {
     case "action": {
+      lines.push("init python:");
       lines.push(indentLine(`class ${formatPythonUiHelperName(entry)}(Action):`, 1));
 
       if (entry.actionAlt) {
@@ -4253,6 +4473,7 @@ function formatPythonUiEntryCode(entry) {
       break;
     }
     case "barvalue": {
+      lines.push("init python:");
       lines.push(indentLine(`class ${formatPythonUiHelperName(entry)}(BarValue):`, 1));
       lines.push(indentLine(`alt = ${entry.barAlt ? formatGeneralValue(entry.barAlt) : "\"Bar\""}`, 2));
 
@@ -4268,6 +4489,7 @@ function formatPythonUiEntryCode(entry) {
       break;
     }
     case "inputvalue": {
+      lines.push("init python:");
       lines.push(indentLine(`class ${formatPythonUiHelperName(entry)}(InputValue):`, 1));
       lines.push(indentLine(`default = ${entry.inputDefault === "false" ? "False" : "True"}`, 2));
       lines.push(indentLine(`editable = ${entry.inputEditable === "false" ? "False" : "True"}`, 2));
@@ -4282,7 +4504,119 @@ function formatPythonUiEntryCode(entry) {
       lines.push(...buildPythonMethodBlock("def enter(self):", entry.inputEnterBody, 2, ["return InputValue.enter(self)"]));
       break;
     }
+    case "displayable": {
+      const helperName = formatPythonUiHelperName(entry);
+      const parameterList = entry.parameters || "child=None, **kwargs";
+      const initFallback = [];
+
+      if (/\*\*kwargs\b/.test(parameterList)) {
+        initFallback.push(`super(${helperName}, self).__init__(**kwargs)`);
+      } else {
+        initFallback.push(`super(${helperName}, self).__init__()`);
+      }
+
+      if (/\bchild\b/.test(parameterList)) {
+        initFallback.push("self.child = renpy.displayable(child) if child is not None else None");
+      }
+
+      lines.push("init python:");
+      lines.push(indentLine(`class ${helperName}(renpy.Displayable):`, 1));
+      lines.push(...buildPythonMethodBlock(`def __init__(self, ${parameterList}):`, entry.displayableInitBody, 2, initFallback));
+      lines.push(...buildPythonMethodBlock("def render(self, width, height, st, at):", entry.displayableRenderBody, 2, [
+        "render = renpy.Render(width, height)",
+        "child = getattr(self, \"child\", None)",
+        "if child is not None:",
+        "    child_render = renpy.render(child, width, height, st, at)",
+        "    render.blit(child_render, (0, 0))",
+        "return render",
+      ]));
+      lines.push(...buildPythonMethodBlock("def event(self, ev, x, y, st):", entry.displayableEventBody, 2, ["return None"]));
+      lines.push(...buildPythonMethodBlock("def per_interact(self):", entry.displayablePerInteractBody, 2, ["return"]));
+      lines.push(...buildPythonMethodBlock("def visit(self):", entry.displayableVisitBody, 2, [
+        "child = getattr(self, \"child\", None)",
+        "return [child] if child is not None else []",
+      ]));
+      lines.push(...buildPythonMethodBlock("def place(self, dest, x, y, width, height, surf, main=True):", entry.displayablePlaceBody, 2, [
+        "return renpy.Displayable.place(self, dest, x, y, width, height, surf, main=main)",
+      ]));
+      break;
+    }
+    case "statement": {
+      const helperName = formatPythonUiHelperName(entry);
+      const statementKeyword = entry.parameters || "custom_statement";
+      const registerArgs = [
+        formatRenpyQuotedString(statementKeyword),
+        `parse=parse_${helperName}`,
+        `execute=execute_${helperName}`,
+        `block=${formatPythonUiStatementBlockValue(entry.statementBlock)}`,
+        `init=${entry.statementInit === "true" ? "True" : "False"}`,
+        `translatable=${entry.statementTranslatable === "true" ? "True" : "False"}`,
+        `predict_all=${entry.statementPredictAll === "false" ? "False" : "True"}`,
+      ];
+
+      lines.push("python early:");
+      lines.push(...buildPythonMethodBlock(`def parse_${helperName}(lexer):`, entry.statementParseBody, 1, ["return lexer.rest()"]));
+      lines.push(...buildPythonMethodBlock(`def execute_${helperName}(parsed_object):`, entry.statementExecuteBody, 1, ["pass"]));
+
+      if (entry.statementLintBody) {
+        lines.push(...buildPythonMethodBlock(`def lint_${helperName}(parsed_object):`, entry.statementLintBody, 1, ["return"]));
+        registerArgs.push(`lint=lint_${helperName}`);
+      }
+
+      if (entry.statementPredictBody) {
+        lines.push(...buildPythonMethodBlock(`def predict_${helperName}(parsed_object):`, entry.statementPredictBody, 1, ["return []"]));
+        registerArgs.push(`predict=predict_${helperName}`);
+      }
+
+      if (entry.statementNextBody) {
+        lines.push(...buildPythonMethodBlock(`def next_${helperName}(parsed_object, *args):`, entry.statementNextBody, 1, ["return None"]));
+        registerArgs.push(`next=next_${helperName}`);
+      }
+
+      if (entry.statementExecuteInitBody) {
+        lines.push(...buildPythonMethodBlock(`def execute_init_${helperName}(parsed_object):`, entry.statementExecuteInitBody, 1, ["pass"]));
+        registerArgs.push(`execute_init=execute_init_${helperName}`);
+      }
+
+      if (entry.statementLabel) {
+        lines.push(...buildPythonMethodBlock(`def label_${helperName}(parsed_object):`, "", 1, [`return ${entry.statementLabel}`]));
+        registerArgs.push(`label=label_${helperName}`);
+      }
+
+      if (entry.statementWarp) {
+        lines.push(...buildPythonMethodBlock(`def warp_${helperName}(parsed_object):`, "", 1, [`return ${entry.statementWarp}`]));
+        registerArgs.push(`warp=warp_${helperName}`);
+      }
+
+      if (entry.statementPostLabel) {
+        lines.push(...buildPythonMethodBlock(`def post_label_${helperName}(parsed_object):`, "", 1, [`return ${entry.statementPostLabel}`]));
+        registerArgs.push(`post_label=post_label_${helperName}`);
+      }
+
+      if (entry.statementPostExecuteBody) {
+        lines.push(...buildPythonMethodBlock(`def post_execute_${helperName}(parsed_object):`, entry.statementPostExecuteBody, 1, ["return"]));
+        registerArgs.push(`post_execute=post_execute_${helperName}`);
+      }
+
+      if (entry.statementTranslationStringsBody) {
+        lines.push(...buildPythonMethodBlock(`def translation_strings_${helperName}(parsed_object):`, entry.statementTranslationStringsBody, 1, ["return []"]));
+        registerArgs.push(`translation_strings=translation_strings_${helperName}`);
+      }
+
+      if (entry.statementExecuteDefaultBody) {
+        lines.push(...buildPythonMethodBlock(`def execute_default_${helperName}(parsed_object):`, entry.statementExecuteDefaultBody, 1, ["pass"]));
+        registerArgs.push(`execute_default=execute_default_${helperName}`);
+      }
+
+      if (entry.statementInitPriority) {
+        registerArgs.push(`init_priority=${entry.statementInitPriority}`);
+      }
+
+      lines.push(indentLine(`renpy.register_statement(${registerArgs.join(", ")})`, 1));
+      break;
+    }
     case "restart_helper": {
+      lines.push("init python:");
       const parameterList = entry.parameters || "value";
       const leadingParameter = parseLeadingParameterName(parameterList) || "value";
       const assignedValue = entry.restartValue || leadingParameter;
@@ -4299,6 +4633,7 @@ function formatPythonUiEntryCode(entry) {
       break;
     }
     case "define_screen": {
+      lines.push("init python:");
       lines.push(...buildPythonMethodBlock(`def ${formatPythonUiHelperName(entry)}(${entry.parameters || ""}):`, entry.defineBody, 1, [
         "ui.window(style=\"say_window\")",
         "ui.text(\"Python-defined screen placeholder\")",
@@ -4372,6 +4707,8 @@ function renderPythonUiDetail() {
   guiPythonUiActionFieldsEl.classList.toggle("hidden", entry.kind !== "action");
   guiPythonUiBarFieldsEl.classList.toggle("hidden", entry.kind !== "barvalue");
   guiPythonUiInputFieldsEl.classList.toggle("hidden", entry.kind !== "inputvalue");
+  guiPythonUiDisplayableFieldsEl.classList.toggle("hidden", entry.kind !== "displayable");
+  guiPythonUiStatementFieldsEl.classList.toggle("hidden", entry.kind !== "statement");
   guiPythonUiRestartFieldsEl.classList.toggle("hidden", entry.kind !== "restart_helper");
   guiPythonUiDefineScreenFieldsEl.classList.toggle("hidden", entry.kind !== "define_screen");
 
@@ -4395,6 +4732,31 @@ function renderPythonUiDetail() {
   guiPythonUiInputGetTextInput.value = entry.inputGetText;
   guiPythonUiInputSetTextBodyInput.value = entry.inputSetTextBody;
   guiPythonUiInputEnterBodyInput.value = entry.inputEnterBody;
+
+  guiPythonUiDisplayableInitBodyInput.value = entry.displayableInitBody;
+  guiPythonUiDisplayableRenderBodyInput.value = entry.displayableRenderBody;
+  guiPythonUiDisplayableEventBodyInput.value = entry.displayableEventBody;
+  guiPythonUiDisplayablePerInteractBodyInput.value = entry.displayablePerInteractBody;
+  guiPythonUiDisplayableVisitBodyInput.value = entry.displayableVisitBody;
+  guiPythonUiDisplayablePlaceBodyInput.value = entry.displayablePlaceBody;
+
+  guiPythonUiStatementBlockInput.value = entry.statementBlock;
+  guiPythonUiStatementInitInput.value = entry.statementInit;
+  guiPythonUiStatementTranslatableInput.value = entry.statementTranslatable;
+  guiPythonUiStatementPredictAllInput.value = entry.statementPredictAll;
+  guiPythonUiStatementInitPriorityInput.value = entry.statementInitPriority;
+  guiPythonUiStatementParseBodyInput.value = entry.statementParseBody;
+  guiPythonUiStatementExecuteBodyInput.value = entry.statementExecuteBody;
+  guiPythonUiStatementLintBodyInput.value = entry.statementLintBody;
+  guiPythonUiStatementPredictBodyInput.value = entry.statementPredictBody;
+  guiPythonUiStatementNextBodyInput.value = entry.statementNextBody;
+  guiPythonUiStatementExecuteInitBodyInput.value = entry.statementExecuteInitBody;
+  guiPythonUiStatementLabelInput.value = entry.statementLabel;
+  guiPythonUiStatementWarpInput.value = entry.statementWarp;
+  guiPythonUiStatementPostLabelInput.value = entry.statementPostLabel;
+  guiPythonUiStatementPostExecuteBodyInput.value = entry.statementPostExecuteBody;
+  guiPythonUiStatementTranslationStringsBodyInput.value = entry.statementTranslationStringsBody;
+  guiPythonUiStatementExecuteDefaultBodyInput.value = entry.statementExecuteDefaultBody;
 
   guiPythonUiRestartTargetInput.value = entry.restartTarget;
   guiPythonUiRestartValueInput.value = entry.restartValue;
@@ -4948,6 +5310,15 @@ function computeDiagnostics() {
       });
     }
 
+    if (entry.name && !isValidPythonIdentifier(entry.name)) {
+      diagnostics.push({
+        severity: "warning",
+        title: `Python UI helper "${entry.name}" is not a valid Python identifier`,
+        detail: "Class names, helper prefixes, and function names should start with a letter or underscore and only contain letters, numbers, or underscores.",
+        snippet: formatPythonUiEntryCode(entry),
+      });
+    }
+
     if (entry.kind === "barvalue" && !entry.barAdjustment) {
       diagnostics.push({
         severity: "warning",
@@ -4964,6 +5335,44 @@ function computeDiagnostics() {
         detail: "Custom InputValue classes should usually implement both get_text() and set_text().",
         snippet: formatPythonUiEntryCode(entry),
       });
+    }
+
+    if (entry.kind === "displayable" && !entry.displayableRenderBody) {
+      diagnostics.push({
+        severity: "warning",
+        title: `Displayable "${entry.name}" is still using the placeholder render()`,
+        detail: "Custom displayables almost always need a real render() body before they are production-ready.",
+        snippet: formatPythonUiEntryCode(entry),
+      });
+    }
+
+    if (entry.kind === "statement") {
+      if (!entry.parameters) {
+        diagnostics.push({
+          severity: "warning",
+          title: `Custom statement "${entry.name}" is missing its statement keyword`,
+          detail: "renpy.register_statement() needs the statement keyword that authors will write in script files.",
+          snippet: formatPythonUiEntryCode(entry),
+        });
+      }
+
+      if (!entry.statementParseBody) {
+        diagnostics.push({
+          severity: "warning",
+          title: `Custom statement "${entry.name}" is still using the placeholder parse()`,
+          detail: "Custom statements usually need a real parse(lexer) implementation so the generated syntax is not just a raw rest() capture.",
+          snippet: formatPythonUiEntryCode(entry),
+        });
+      }
+
+      if (!entry.statementExecuteBody && !entry.statementNextBody && !entry.statementPostExecuteBody && !entry.statementExecuteDefaultBody && !entry.statementExecuteInitBody) {
+        diagnostics.push({
+          severity: "warning",
+          title: `Custom statement "${entry.name}" has no custom runtime hook yet`,
+          detail: "Right now execute() will just fall back to pass. Add execute(), next(), execute_init(), post_execute(), or execute_default() before relying on it.",
+          snippet: formatPythonUiEntryCode(entry),
+        });
+      }
     }
 
     if (entry.kind === "restart_helper" && !entry.restartTarget) {
@@ -5248,12 +5657,25 @@ guiNavButtonEls.forEach((button) => {
 });
 
 guiBackButton.addEventListener("click", () => {
-  const query = projectPath ? `?project=${encodeURIComponent(projectPath)}` : "";
+  const nextParams = new URLSearchParams();
+
+  if (projectPath) {
+    nextParams.set("project", projectPath);
+  }
+
+  if (bridgeUrl && bridgeToken) {
+    nextParams.set("bridge", bridgeUrl);
+    nextParams.set("token", bridgeToken);
+  }
+
+  const query = nextParams.toString() ? `?${nextParams.toString()}` : "";
   window.location.href = `./index.html${query}`;
 });
 
 guiSaveButton.addEventListener("click", () => {
-  saveProjectState("Saved GUI draft.");
+  saveProjectState(hasBridge
+    ? "Saved GUI draft and queued project.json sync."
+    : "Saved GUI draft.");
 });
 
 newGuiStyleButton.addEventListener("click", () => {
@@ -5633,6 +6055,22 @@ newGuiPythonInputButton.addEventListener("click", () => {
   saveProjectState(`Created Python UI helper "${entry.name}".`);
 });
 
+newGuiPythonDisplayableButton.addEventListener("click", () => {
+  const entry = createBlankPythonUiEntry("displayable");
+  projectState.gui.pythonUiHelpers.push(entry);
+  activePythonUiId = entry.id;
+  render();
+  saveProjectState(`Created Python UI helper "${entry.name}".`);
+});
+
+newGuiPythonStatementButton.addEventListener("click", () => {
+  const entry = createBlankPythonUiEntry("statement");
+  projectState.gui.pythonUiHelpers.push(entry);
+  activePythonUiId = entry.id;
+  render();
+  saveProjectState(`Created Python UI helper "${entry.name}".`);
+});
+
 newGuiPythonRestartButton.addEventListener("click", () => {
   const entry = createBlankPythonUiEntry("restart_helper");
   projectState.gui.pythonUiHelpers.push(entry);
@@ -5679,6 +6117,29 @@ guiPythonUiFormEl.addEventListener("change", () => {
     inputGetText: guiPythonUiInputGetTextInput.value.trim(),
     inputSetTextBody: guiPythonUiInputSetTextBodyInput.value.trim(),
     inputEnterBody: guiPythonUiInputEnterBodyInput.value.trim(),
+    displayableInitBody: guiPythonUiDisplayableInitBodyInput.value.trim(),
+    displayableRenderBody: guiPythonUiDisplayableRenderBodyInput.value.trim(),
+    displayableEventBody: guiPythonUiDisplayableEventBodyInput.value.trim(),
+    displayablePerInteractBody: guiPythonUiDisplayablePerInteractBodyInput.value.trim(),
+    displayableVisitBody: guiPythonUiDisplayableVisitBodyInput.value.trim(),
+    displayablePlaceBody: guiPythonUiDisplayablePlaceBodyInput.value.trim(),
+    statementBlock: guiPythonUiStatementBlockInput.value,
+    statementInit: guiPythonUiStatementInitInput.value,
+    statementTranslatable: guiPythonUiStatementTranslatableInput.value,
+    statementPredictAll: guiPythonUiStatementPredictAllInput.value,
+    statementInitPriority: guiPythonUiStatementInitPriorityInput.value.trim(),
+    statementParseBody: guiPythonUiStatementParseBodyInput.value.trim(),
+    statementExecuteBody: guiPythonUiStatementExecuteBodyInput.value.trim(),
+    statementLintBody: guiPythonUiStatementLintBodyInput.value.trim(),
+    statementPredictBody: guiPythonUiStatementPredictBodyInput.value.trim(),
+    statementNextBody: guiPythonUiStatementNextBodyInput.value.trim(),
+    statementExecuteInitBody: guiPythonUiStatementExecuteInitBodyInput.value.trim(),
+    statementLabel: guiPythonUiStatementLabelInput.value.trim(),
+    statementWarp: guiPythonUiStatementWarpInput.value.trim(),
+    statementPostLabel: guiPythonUiStatementPostLabelInput.value.trim(),
+    statementPostExecuteBody: guiPythonUiStatementPostExecuteBodyInput.value.trim(),
+    statementTranslationStringsBody: guiPythonUiStatementTranslationStringsBodyInput.value.trim(),
+    statementExecuteDefaultBody: guiPythonUiStatementExecuteDefaultBodyInput.value.trim(),
     restartTarget: guiPythonUiRestartTargetInput.value.trim(),
     restartValue: guiPythonUiRestartValueInput.value.trim(),
     restartBody: guiPythonUiRestartBodyInput.value.trim(),
@@ -6052,3 +6513,4 @@ guiDeleteGalleryButton.addEventListener("click", () => {
 
 render();
 setStatus("GUI editor ready. Styles, screens, config, Python UI helpers, replay menus, music rooms, galleries, cursors, shaders, and diagnostics are now available.");
+hydrateProjectStateFromBridge();

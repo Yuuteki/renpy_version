@@ -2,11 +2,26 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.13] - 2026-04-26
+
+### Added
+
+- 新增 launcher 侧 Visual Editor 本地桥接服务，打开编辑器时会传入 `bridge` 与一次性 `token`，前端可安全写回当前项目。
+- 新增真实项目状态保存：主编辑器与 GUI 编辑器会在保留 `localStorage` 草稿的同时，同步写入 `<project>/visual_editor/project.json`。
+- 新增真实导出：主编辑器 `Export` 会生成并写入 `<project>/game/generated_visual_editor.rpy`，覆盖项目设置、定义、资源、GUI 与 label 图。
+- 在 launcher 项目页新增 `Sync Visual Editor` 入口，可打开编辑器并自动执行一次状态同步与 `.rpy` 导出。
+
+### Changed
+
+- `visual_editor/README.md` 更新为当前持久化模型说明，明确 `localStorage` 只是兜底草稿，`visual_editor/project.json` 才是 launcher 打开后的项目状态源。
+- 主编辑器与 GUI 编辑器互相跳转时会保留 launcher bridge 参数，避免进入 GUI 页后丢失真保存能力。
+
 ## [0.4.12] - 2026-04-26
 
 ### Added
 
 - 为 `GUI Editor` 新增独立的 `Python UI` 分栏，可集中管理 `Action`、`BarValue`、`InputValue`、`restart_interaction()` helper 和 `renpy.define_screen()` helper 模板。
+- 为 `Python UI` 新增 `Displayable Class` 和 `Custom Statement` 两类模板，可生成 `renpy.Displayable` 子类与 `python early: renpy.register_statement(...)` 骨架代码。
 - 为上述 Python UI 模板新增代码生成与使用提示，方便直接接到现有 `Screens` 节点的 Raw Action / Raw Value 工作流里。
 - 为 `Python UI` 模块新增基础诊断，能检查缺失的 `get_adjustment()`、`get_text()/set_text()`、`define_screen` 名称冲突和缺失的刷新目标。
 
@@ -14,6 +29,7 @@
 
 - 主编辑器对 GUI 状态的兼容保留范围继续扩大，新增的 `pythonUiHelpers` 不会在回到主页面后丢失。
 - 主编辑器的 GUI 概览统计现在会显示 `Python UI` 模板数量，方便确认高级界面脚本资产是否已经建好。
+- `Python UI` 详情页说明更新为覆盖 `Displayable` 与 creator-defined statement，两类模板会根据字段动态切换到对应的方法面板。
 
 ## [0.4.11] - 2026-04-25
 

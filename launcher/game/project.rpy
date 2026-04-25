@@ -35,8 +35,12 @@ init python in project:
     import subprocess
     import re
     import tempfile
+    import threading
     import urllib.parse
     import urllib.request
+    import uuid
+
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
     multipersistent = MultiPersistent("launcher.renpy.org")
 
@@ -1024,19 +1028,207 @@ init python in project:
             self.project.launch()
             renpy.invoke_in_new_context(self.post_launch)
 
+    visual_editor_bridge = None
+
+    def get_visual_editor_state_path(p):
+        return os.path.join(p.path, "visual_editor", "project.json")
+
+    def get_visual_editor_export_path(p):
+        return os.path.join(p.gamedir, "generated_visual_editor.rpy")
+
+    def ensure_visual_editor_parent_dirs(p):
+        visual_editor_dir = os.path.dirname(get_visual_editor_state_path(p))
+
+        if not os.path.isdir(visual_editor_dir):
+            os.makedirs(visual_editor_dir)
+
+        if not os.path.isdir(p.gamedir):
+            os.makedirs(p.gamedir)
+
+    class VisualEditorBridgeHandler(BaseHTTPRequestHandler):
+        server_version = "RenPyVisualEditorBridge/1.0"
+
+        def log_message(self, format, *args):
+            return
+
+        def send_cors_headers(self):
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Visual-Editor-Token")
+
+        def send_json(self, status, payload):
+            encoded = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+            self.send_response(status)
+            self.send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(encoded)))
+            self.end_headers()
+            self.wfile.write(encoded)
+
+        def get_request_token(self):
+            parsed = urllib.parse.urlparse(self.path)
+            query = urllib.parse.parse_qs(parsed.query)
+            return (query.get("token") or [self.headers.get("X-Visual-Editor-Token", "")])[0]
+
+        def is_authorized(self):
+            return self.get_request_token() == self.server.visual_editor_token
+
+        def get_route(self):
+            parsed = urllib.parse.urlparse(self.path)
+            return parsed.path.strip("/")
+
+        def read_payload(self):
+            length = int(self.headers.get("Content-Length", "0") or 0)
+            if length <= 0:
+                return {}
+
+            raw = self.rfile.read(length).decode("utf-8")
+            return json.loads(raw)
+
+        def do_OPTIONS(self):
+            self.send_response(204)
+            self.send_cors_headers()
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        def do_GET(self):
+            if not self.is_authorized():
+                self.send_json(403, { "ok": False, "error": "Invalid visual editor bridge token." })
+                return
+
+            if self.get_route() != "state":
+                self.send_json(404, { "ok": False, "error": "Unknown visual editor bridge route." })
+                return
+
+            p = self.server.visual_editor_project
+            state_path = get_visual_editor_state_path(p)
+
+            if not os.path.exists(state_path):
+                self.send_json(200, {
+                    "ok": True,
+                    "exists": False,
+                    "statePath": state_path,
+                    "exportPath": get_visual_editor_export_path(p),
+                })
+                return
+
+            with open(state_path, "r", encoding="utf-8") as f:
+                state = json.load(f)
+
+            self.send_json(200, {
+                "ok": True,
+                "exists": True,
+                "state": state,
+                "statePath": state_path,
+                "exportPath": get_visual_editor_export_path(p),
+            })
+
+        def do_POST(self):
+            if not self.is_authorized():
+                self.send_json(403, { "ok": False, "error": "Invalid visual editor bridge token." })
+                return
+
+            p = self.server.visual_editor_project
+            route = self.get_route()
+
+            try:
+                payload = self.read_payload()
+                ensure_visual_editor_parent_dirs(p)
+
+                if route == "state":
+                    state = payload.get("state", payload)
+                    state_path = get_visual_editor_state_path(p)
+
+                    with open(state_path, "w", encoding="utf-8") as f:
+                        json.dump(state, f, ensure_ascii=False, indent=2)
+                        f.write("\n")
+
+                    self.send_json(200, {
+                        "ok": True,
+                        "statePath": state_path,
+                    })
+                    return
+
+                if route == "export":
+                    state = payload.get("state", {})
+                    code = payload.get("code", "")
+
+                    if not code:
+                        self.send_json(400, { "ok": False, "error": "Missing generated Ren'Py code." })
+                        return
+
+                    state_path = get_visual_editor_state_path(p)
+                    export_path = get_visual_editor_export_path(p)
+
+                    with open(state_path, "w", encoding="utf-8") as f:
+                        json.dump(state, f, ensure_ascii=False, indent=2)
+                        f.write("\n")
+
+                    with open(export_path, "w", encoding="utf-8") as f:
+                        f.write(code.rstrip())
+                        f.write("\n")
+
+                    self.send_json(200, {
+                        "ok": True,
+                        "statePath": state_path,
+                        "exportPath": export_path,
+                    })
+                    return
+
+                self.send_json(404, { "ok": False, "error": "Unknown visual editor bridge route." })
+            except Exception as e:
+                self.send_json(500, { "ok": False, "error": str(e) })
+
+    class VisualEditorBridge(object):
+        def __init__(self, p):
+            self.project = p
+            self.token = uuid.uuid4().hex
+            self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), VisualEditorBridgeHandler)
+            self.httpd.visual_editor_project = p
+            self.httpd.visual_editor_token = self.token
+            self.httpd.daemon_threads = True
+            self.host, self.port = self.httpd.server_address
+            self.thread = threading.Thread(target=self.httpd.serve_forever)
+            self.thread.daemon = True
+            self.thread.start()
+
+        @property
+        def url(self):
+            return "http://{}:{}/".format(self.host, self.port)
+
+        def stop(self):
+            try:
+                self.httpd.shutdown()
+                self.httpd.server_close()
+            except Exception:
+                pass
+
+    def ensure_visual_editor_bridge(p):
+        global visual_editor_bridge
+
+        if visual_editor_bridge is not None:
+            if visual_editor_bridge.project.path == p.path:
+                return visual_editor_bridge
+
+            visual_editor_bridge.stop()
+
+        visual_editor_bridge = VisualEditorBridge(p)
+        return visual_editor_bridge
+
     class OpenVisualEditor(Action):
         """
         Opens the visual editor for the supplied project, or for the current
         project if no project is supplied.
         """
 
-        def __init__(self, p=None):
+        def __init__(self, p=None, auto_sync=False):
             if p is None:
                 self.project = current
             elif isinstance(p, str):
                 self.project = manager.get(p)
             else:
                 self.project = p
+            self.auto_sync = auto_sync
 
         def get_sensitive(self):
             return self.project is not None
@@ -1048,8 +1240,18 @@ init python in project:
             editor_index = os.path.join(config.renpy_base, "visual_editor", "index.html")
 
             if os.path.exists(editor_index):
+                bridge = ensure_visual_editor_bridge(self.project)
                 url = urllib.parse.urljoin("file:", urllib.request.pathname2url(editor_index))
-                url += "?" + urllib.parse.urlencode({ "project": self.project.path })
+                params = {
+                    "project": self.project.path,
+                    "bridge": bridge.url,
+                    "token": bridge.token,
+                }
+
+                if self.auto_sync:
+                    params["autosync"] = "1"
+
+                url += "?" + urllib.parse.urlencode(params)
                 renpy.open_url(url)
                 return
 

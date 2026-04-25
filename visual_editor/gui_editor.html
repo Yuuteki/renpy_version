@@ -1044,7 +1044,7 @@
                 <div class="gui-panel-header">
                   <div>
                     <h2>Python UI</h2>
-                    <p>Template custom <code>Action</code>, <code>BarValue</code>, <code>InputValue</code>, and low-level GUI helpers.</p>
+                    <p>Template custom <code>Action</code>, <code>BarValue</code>, <code>InputValue</code>, <code>Displayable</code>, creator-defined statements, and other low-level GUI helpers.</p>
                   </div>
                 </div>
 
@@ -1058,6 +1058,8 @@
                   <button id="newGuiPythonActionButton" class="primary gui-bottom-button" type="button">New Action Class</button>
                   <button id="newGuiPythonBarButton" class="secondary gui-bottom-button" type="button">New BarValue Class</button>
                   <button id="newGuiPythonInputButton" class="secondary gui-bottom-button" type="button">New InputValue Class</button>
+                  <button id="newGuiPythonDisplayableButton" class="secondary gui-bottom-button" type="button">New Displayable Class</button>
+                  <button id="newGuiPythonStatementButton" class="secondary gui-bottom-button" type="button">New Custom Statement</button>
                   <button id="newGuiPythonRestartButton" class="secondary gui-bottom-button" type="button">New restart_interaction Helper</button>
                   <button id="newGuiPythonDefineScreenButton" class="secondary gui-bottom-button" type="button">New define_screen Helper</button>
                 </div>
@@ -1076,6 +1078,8 @@
                         <option value="action">Action Class</option>
                         <option value="barvalue">BarValue Class</option>
                         <option value="inputvalue">InputValue Class</option>
+                        <option value="displayable">Displayable Class</option>
+                        <option value="statement">Custom Statement</option>
                         <option value="restart_helper">restart_interaction Helper</option>
                         <option value="define_screen">define_screen Helper</option>
                       </select>
@@ -1229,6 +1233,168 @@
                       enter() Body
                       <textarea id="guiPythonUiInputEnterBodyInput" rows="3" placeholder='Optional. Leave blank to use InputValue.enter(self).'></textarea>
                     </label>
+                  </div>
+
+                  <div id="guiPythonUiDisplayableFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>Displayable Methods</h3>
+                        <p>Build a custom <code>renpy.Displayable</code> subclass for low-level rendering and event handling.</p>
+                      </div>
+                    </div>
+
+                    <label>
+                      __init__ Body
+                      <textarea id="guiPythonUiDisplayableInitBodyInput" rows="4" placeholder='Optional, e.g.&#10;self.child = renpy.displayable(child)&#10;self.alpha = 0.0'></textarea>
+                    </label>
+
+                    <label>
+                      render(width, height, st, at) Body
+                      <textarea id="guiPythonUiDisplayableRenderBodyInput" rows="6" placeholder='e.g.&#10;render = renpy.Render(width, height)&#10;child_render = renpy.render(self.child, width, height, st, at)&#10;render.blit(child_render, (0, 0))&#10;return render'></textarea>
+                    </label>
+
+                    <label>
+                      event(ev, x, y, st) Body
+                      <textarea id="guiPythonUiDisplayableEventBodyInput" rows="4" placeholder='Optional, e.g.&#10;if renpy.map_event(ev, "dismiss"):&#10;    return True&#10;return None'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        per_interact() Body
+                        <textarea id="guiPythonUiDisplayablePerInteractBodyInput" rows="3" placeholder='Optional, e.g.&#10;renpy.redraw(self, 0)'></textarea>
+                      </label>
+
+                      <label>
+                        visit() Body
+                        <textarea id="guiPythonUiDisplayableVisitBodyInput" rows="3" placeholder='Optional, e.g.&#10;return [self.child]'></textarea>
+                      </label>
+                    </div>
+
+                    <label>
+                      place(dest, x, y, width, height, surf, main=True) Body
+                      <textarea id="guiPythonUiDisplayablePlaceBodyInput" rows="4" placeholder='Optional, e.g.&#10;return renpy.Displayable.place(self, dest, x, y, width, height, surf, main=main)'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiStatementFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>Statement Registration</h3>
+                        <p>Build a <code>renpy.register_statement()</code> template with parser, lint, execution, and prediction hooks.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        Block Mode
+                        <select id="guiPythonUiStatementBlockInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                          <option value="possible">possible</option>
+                          <option value="script">script</option>
+                          <option value="script-possible">script-possible</option>
+                          <option value="atl">atl</option>
+                          <option value="atl-possible">atl-possible</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        init
+                        <select id="guiPythonUiStatementInitInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        translatable
+                        <select id="guiPythonUiStatementTranslatableInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        predict_all
+                        <select id="guiPythonUiStatementPredictAllInput">
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        init_priority
+                        <input id="guiPythonUiStatementInitPriorityInput" type="text" placeholder="e.g. 0" />
+                      </label>
+                    </div>
+
+                    <label>
+                      parse(lexer) Body
+                      <textarea id="guiPythonUiStatementParseBodyInput" rows="5" placeholder='e.g.&#10;who = lexer.simple_expression()&#10;what = lexer.rest()&#10;return (who, what)'></textarea>
+                    </label>
+
+                    <label>
+                      execute(parsed_object) Body
+                      <textarea id="guiPythonUiStatementExecuteBodyInput" rows="4" placeholder='e.g.&#10;who, what = parsed_object&#10;renpy.say(eval(who), what)'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        lint(parsed_object) Body
+                        <textarea id="guiPythonUiStatementLintBodyInput" rows="4" placeholder='Optional, e.g.&#10;check = renpy.check_text_tags(parsed_object[1])&#10;if check:&#10;    renpy.error(check)'></textarea>
+                      </label>
+
+                      <label>
+                        predict(parsed_object) Body
+                        <textarea id="guiPythonUiStatementPredictBodyInput" rows="4" placeholder='Optional, e.g.&#10;return []'></textarea>
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        next(parsed_object, *args) Body
+                        <textarea id="guiPythonUiStatementNextBodyInput" rows="4" placeholder='Optional, e.g.&#10;return None'></textarea>
+                      </label>
+
+                      <label>
+                        execute_init(parsed_object) Body
+                        <textarea id="guiPythonUiStatementExecuteInitBodyInput" rows="4" placeholder="Optional"></textarea>
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        label(parsed_object) Expression
+                        <input id="guiPythonUiStatementLabelInput" type="text" placeholder='Optional, e.g. "mystatement_label"' />
+                      </label>
+
+                      <label>
+                        warp(parsed_object) Expression
+                        <input id="guiPythonUiStatementWarpInput" type="text" placeholder="Optional, e.g. True" />
+                      </label>
+
+                      <label>
+                        post_label(parsed_object) Expression
+                        <input id="guiPythonUiStatementPostLabelInput" type="text" placeholder='Optional, e.g. "mystatement_return"' />
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        post_execute(parsed_object) Body
+                        <textarea id="guiPythonUiStatementPostExecuteBodyInput" rows="4" placeholder="Optional"></textarea>
+                      </label>
+
+                      <label>
+                        translation_strings(parsed_object) Body
+                        <textarea id="guiPythonUiStatementTranslationStringsBodyInput" rows="4" placeholder='Optional, e.g.&#10;return [parsed_object[1]]'></textarea>
+                      </label>
+
+                      <label>
+                        execute_default(parsed_object) Body
+                        <textarea id="guiPythonUiStatementExecuteDefaultBodyInput" rows="4" placeholder="Optional"></textarea>
+                      </label>
+                    </div>
                   </div>
 
                   <div id="guiPythonUiRestartFields" class="gui-style-panel hidden">

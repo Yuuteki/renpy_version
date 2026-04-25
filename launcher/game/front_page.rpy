@@ -191,6 +191,7 @@ screen front_page_project:
                             textbutton button_name action editor.Edit(path, check=True)
 
                         textbutton _("Visual Editor") action project.OpenVisualEditor()
+                        textbutton _("Sync Visual Editor") action project.OpenVisualEditor(auto_sync=True)
 
                         if editor.CanEditProject():
                             textbutton _("Open project") action editor.EditProject()

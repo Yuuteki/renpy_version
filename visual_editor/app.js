@@ -1,5 +1,9 @@
 const params = new URLSearchParams(window.location.search);
 const projectPath = params.get("project") || "";
+const bridgeUrl = params.get("bridge") || "";
+const bridgeToken = params.get("token") || "";
+const autoSyncRequested = params.get("autosync") === "1";
+const hasBridge = Boolean(bridgeUrl && bridgeToken);
 
 const projectPathEl = document.getElementById("projectPath");
 const projectFilesEl = document.getElementById("projectFiles");
@@ -1271,6 +1275,92 @@ function loadState() {
   }
 }
 
+function getBridgeEndpoint(path) {
+  const baseUrl = bridgeUrl.endsWith("/") ? bridgeUrl : `${bridgeUrl}/`;
+  const url = new URL(path, baseUrl);
+  url.searchParams.set("token", bridgeToken);
+  return url.toString();
+}
+
+async function callBridge(path, payload = null) {
+  if (!hasBridge) {
+    throw new Error("Launcher bridge is not connected.");
+  }
+
+  const options = payload
+    ? {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }
+    : { method: "GET" };
+
+  const response = await fetch(getBridgeEndpoint(path), options);
+  const text = await response.text();
+  let data = {};
+
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch (error) {
+      throw new Error(`Launcher bridge returned invalid JSON: ${error.message}`);
+    }
+  }
+
+  if (!response.ok || data.ok === false) {
+    throw new Error(data.error || `Launcher bridge request failed with HTTP ${response.status}.`);
+  }
+
+  return data;
+}
+
+let bridgeSaveTimer = null;
+
+function queueBridgeStateSave() {
+  if (!hasBridge) {
+    return;
+  }
+
+  window.clearTimeout(bridgeSaveTimer);
+  bridgeSaveTimer = window.setTimeout(async () => {
+    try {
+      await callBridge("state", { state });
+    } catch (error) {
+      console.error(error);
+      setStatus(`Project JSON sync failed: ${error.message}`);
+    }
+  }, 350);
+}
+
+async function hydrateStateFromBridge() {
+  if (!hasBridge) {
+    return;
+  }
+
+  try {
+    const response = await callBridge("state");
+
+    if (response.exists && response.state) {
+      state = normalizeState(response.state);
+      window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+      render();
+      setSidebarSection(activeSidebarSectionId);
+      setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
+      setStatus("Loaded project state from visual_editor/project.json.");
+    } else {
+      await callBridge("state", { state });
+      setStatus("Created visual_editor/project.json from the current editor state.");
+    }
+
+    if (autoSyncRequested) {
+      await exportGraph();
+    }
+  } catch (error) {
+    console.error(error);
+    setStatus(`Launcher bridge unavailable: ${error.message}`);
+  }
+}
+
 function normalizeProjectKeymapBindings(bindings) {
   if (!Array.isArray(bindings)) {
     return [];
@@ -2177,6 +2267,7 @@ function normalizeDefinition(definition, index) {
 
 function saveState(message) {
   window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+  queueBridgeStateSave();
 
   if (message) {
     setStatus(message);
@@ -6413,6 +6504,865 @@ function formatLabelGraphCode(graph) {
   return lines.join("\n");
 }
 
+function splitGuiRawLines(value) {
+  return `${value || ""}`
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function indentGuiLine(line, indentLevel) {
+  return `${"    ".repeat(indentLevel)}${line}`;
+}
+
+function formatGuiGeneralValue(value, fallback = "\"\"") {
+  return formatRenpyArgumentValue(value) || fallback;
+}
+
+function formatGuiStringValue(value, fallback = "\"\"") {
+  return formatRenpyStringLikeArgument(value) || fallback;
+}
+
+function formatGuiScreenTextValue(value) {
+  const trimmed = `${value || ""}`.trim();
+
+  if (!trimmed) {
+    return "\"\"";
+  }
+
+  if (
+    (trimmed.startsWith("\"") && trimmed.endsWith("\""))
+    || (trimmed.startsWith("'") && trimmed.endsWith("'"))
+    || trimmed.startsWith("_(")
+    || trimmed.includes("(")
+    || trimmed.startsWith("[")
+    || trimmed.startsWith("{")
+  ) {
+    return trimmed;
+  }
+
+  return formatRenpyQuotedString(trimmed);
+}
+
+const guiStylePrefixMap = {
+  base: "",
+  idle: "idle_",
+  hover: "hover_",
+  selected: "selected_",
+  insensitive: "insensitive_",
+  selected_idle: "selected_idle_",
+  selected_hover: "selected_hover_",
+  selected_insensitive: "selected_insensitive_",
+};
+
+function formatGuiStylePropertyValue(property) {
+  const value = `${property?.value || ""}`.trim();
+
+  if (!value) {
+    return "";
+  }
+
+  if (property.type === "bool") {
+    return value === "false" ? "False" : "True";
+  }
+
+  if (property.type === "color" && value.startsWith("#")) {
+    return formatRenpyQuotedString(value);
+  }
+
+  if (property.type === "string") {
+    return formatGuiStringValue(value);
+  }
+
+  return formatGuiGeneralValue(value);
+}
+
+function formatGuiStyleCode(style) {
+  if (!style) {
+    return "";
+  }
+
+  const styleName = `${style.name || ""}`.trim() || "visual_editor_style";
+  const parent = `${style.parent || ""}`.trim();
+  const header = parent ? `style ${styleName} is ${parent}` : `style ${styleName}`;
+  const lines = [];
+
+  if (`${style.variant || ""}`.trim()) {
+    lines.push(indentGuiLine(`variant ${formatGuiGeneralValue(style.variant)}`, 1));
+  }
+
+  if (`${style.propertiesExpression || ""}`.trim()) {
+    lines.push(indentGuiLine(`properties ${style.propertiesExpression.trim()}`, 1));
+  }
+
+  (Array.isArray(style.properties) ? style.properties : [])
+    .filter((property) => property?.key && `${property.value || ""}`.trim())
+    .forEach((property) => {
+      const prefix = guiStylePrefixMap[property.prefix] ?? "";
+      const formattedValue = formatGuiStylePropertyValue(property);
+
+      if (formattedValue) {
+        lines.push(indentGuiLine(`${prefix}${property.key} ${formattedValue}`, 1));
+      }
+    });
+
+  return lines.length ? `${header}:\n${lines.join("\n")}` : header;
+}
+
+function formatGuiActionExpression(kind, args, raw) {
+  const trimmedArgs = `${args || ""}`.trim();
+  const trimmedRaw = `${raw || ""}`.trim();
+
+  if (kind === "raw") {
+    return trimmedRaw;
+  }
+
+  if (!kind || kind === "none") {
+    return "";
+  }
+
+  if (kind === "AchievementSync") {
+    return "achievement.Sync()";
+  }
+
+  if (kind === "GuiRebuild") {
+    return "Function(gui.rebuild)";
+  }
+
+  if (kind === "Start") {
+    return "Start()";
+  }
+
+  if (kind === "Quit") {
+    return trimmedArgs ? `Quit(${trimmedArgs})` : "Quit()";
+  }
+
+  return trimmedArgs ? `${kind}(${trimmedArgs})` : `${kind}()`;
+}
+
+function formatGuiValueExpression(kind, args, raw) {
+  const trimmedArgs = `${args || ""}`.trim();
+  const trimmedRaw = `${raw || ""}`.trim();
+
+  if (kind === "raw") {
+    return trimmedRaw;
+  }
+
+  if (!kind || kind === "none") {
+    return "";
+  }
+
+  return trimmedArgs ? `${kind}(${trimmedArgs})` : `${kind}()`;
+}
+
+function formatGuiNodePropertyLines(node, indentLevel) {
+  const lines = [];
+
+  if (`${node.style || ""}`.trim()) {
+    lines.push(indentGuiLine(`style ${formatGuiStringValue(node.style)}`, indentLevel));
+  }
+
+  if (`${node.nodeId || ""}`.trim()) {
+    lines.push(indentGuiLine(`id ${formatRenpyQuotedString(node.nodeId)}`, indentLevel));
+  }
+
+  const actionExpression = formatGuiActionExpression(node.actionKind, node.actionArgs, node.actionRaw);
+  if (actionExpression) {
+    lines.push(indentGuiLine(`action ${actionExpression}`, indentLevel));
+  }
+
+  const valueExpression = formatGuiValueExpression(node.valueKind, node.valueArgs, node.valueRaw);
+  if (valueExpression) {
+    lines.push(indentGuiLine(`value ${valueExpression}`, indentLevel));
+  }
+
+  if (node.type === "input") {
+    if (`${node.inputDefaultText || ""}`.trim()) {
+      lines.push(indentGuiLine(`default ${formatGuiScreenTextValue(node.inputDefaultText)}`, indentLevel));
+    }
+
+    if (`${node.inputAllow || ""}`.trim()) {
+      lines.push(indentGuiLine(`allow ${formatGuiStringValue(node.inputAllow)}`, indentLevel));
+    }
+
+    if (`${node.inputExclude || ""}`.trim()) {
+      lines.push(indentGuiLine(`exclude ${formatGuiStringValue(node.inputExclude)}`, indentLevel));
+    }
+
+    if (`${node.inputLength || ""}`.trim()) {
+      lines.push(indentGuiLine(`length ${formatGuiGeneralValue(node.inputLength)}`, indentLevel));
+    }
+
+    if (`${node.inputPixelWidth || ""}`.trim()) {
+      lines.push(indentGuiLine(`pixel_width ${formatGuiGeneralValue(node.inputPixelWidth)}`, indentLevel));
+    }
+
+    if (`${node.inputMask || ""}`.trim()) {
+      lines.push(indentGuiLine(`mask ${formatGuiStringValue(node.inputMask)}`, indentLevel));
+    }
+
+    if (node.inputCopyPaste === false) {
+      lines.push(indentGuiLine("copypaste False", indentLevel));
+    }
+  }
+
+  splitGuiRawLines(node.propertiesExpression).forEach((line) => {
+    lines.push(indentGuiLine(line, indentLevel));
+  });
+
+  return lines;
+}
+
+const guiContainerNodeTypes = new Set([
+  "button",
+  "frame",
+  "window",
+  "vbox",
+  "hbox",
+  "fixed",
+  "viewport",
+  "grid",
+  "vpgrid",
+  "side",
+  "if",
+  "showif",
+  "for",
+  "on",
+  "transform",
+]);
+
+function formatGuiScreenNodeCode(node, indentLevel = 1) {
+  if (!node) {
+    return "";
+  }
+
+  const children = Array.isArray(node.children) ? node.children : [];
+  const propertyLines = formatGuiNodePropertyLines(node, indentLevel + 1);
+  const childLines = children.map((child) => formatGuiScreenNodeCode(child, indentLevel + 1)).filter(Boolean);
+  let header = "";
+  let forceBlock = guiContainerNodeTypes.has(node.type);
+
+  switch (node.type) {
+    case "text":
+      header = `text ${formatGuiScreenTextValue(node.text || "Text")}`;
+      break;
+    case "textbutton":
+      header = `textbutton ${formatGuiScreenTextValue(node.text || "Button")}`;
+      break;
+    case "button":
+      header = "button";
+      if (`${node.text || ""}`.trim() && !childLines.length) {
+        childLines.push(indentGuiLine(`text ${formatGuiScreenTextValue(node.text)}`, indentLevel + 1));
+      }
+      break;
+    case "imagebutton":
+      header = `imagebutton idle ${formatGuiGeneralValue(node.displayable || "\"gui/button_idle.png\"")} hover ${formatGuiGeneralValue(node.hoverDisplayable || "\"gui/button_hover.png\"")}`;
+      break;
+    case "frame":
+    case "window":
+    case "vbox":
+    case "hbox":
+    case "fixed":
+    case "viewport":
+      header = node.type;
+      break;
+    case "grid":
+      header = `grid ${node.gridColumns || "1"} ${node.gridRows || "1"}`;
+      break;
+    case "vpgrid":
+      header = `vpgrid ${node.gridColumns || "1"} ${node.gridRows || "1"}`;
+      break;
+    case "side":
+      header = `side ${formatRenpyQuotedString(node.sidePositions || "c")}`;
+      break;
+    case "null":
+      header = "null";
+      forceBlock = false;
+      break;
+    case "bar":
+    case "vbar":
+    case "input":
+      header = node.type;
+      break;
+    case "add":
+      header = `add ${formatGuiGeneralValue(node.displayable || "\"gui/placeholder.png\"")}`;
+      forceBlock = false;
+      break;
+    case "if":
+      header = `if ${node.condition || "True"}:`;
+      break;
+    case "showif":
+      header = `showif ${node.condition || "True"}:`;
+      break;
+    case "for":
+      header = `for ${node.variableName || "item"} in ${node.iterableExpression || "items"}:`;
+      break;
+    case "use":
+      header = `${node.targetArguments ? `use ${node.targetScreen || "screen_name"}(${node.targetArguments})` : `use ${node.targetScreen || "screen_name"}`}`;
+      forceBlock = false;
+      break;
+    case "default":
+      header = `default ${node.defaultName || "value"} = ${node.defaultValue || "None"}`;
+      forceBlock = false;
+      break;
+    case "on":
+      header = `on ${formatGuiScreenTextValue(node.eventName || "show")}:`;
+      break;
+    case "timer":
+      header = `timer ${node.delay || "0.25"}`;
+      break;
+    case "key":
+      header = `key ${formatGuiScreenTextValue(node.keyName || "game_menu")}`;
+      break;
+    case "transform":
+      header = "transform:";
+      break;
+    default:
+      header = `text ${formatGuiScreenTextValue(node.text || node.title || "Text")}`;
+      break;
+  }
+
+  const alreadyBlock = header.endsWith(":");
+  const needsBlock = alreadyBlock || forceBlock || propertyLines.length || childLines.length;
+
+  if (!needsBlock) {
+    return indentGuiLine(header, indentLevel);
+  }
+
+  const lines = [indentGuiLine(alreadyBlock ? header : `${header}:`, indentLevel)];
+  lines.push(...propertyLines);
+  lines.push(...childLines);
+
+  if (lines.length === 1) {
+    lines.push(indentGuiLine("pass", indentLevel + 1));
+  }
+
+  return lines.join("\n");
+}
+
+function formatGuiScreenCode(screen) {
+  if (!screen) {
+    return "";
+  }
+
+  const screenName = `${screen.name || ""}`.trim() || "visual_editor_screen";
+  const parameters = `${screen.parameters || ""}`.trim();
+  const lines = [`screen ${screenName}${parameters ? `(${parameters})` : ""}:`];
+
+  if (`${screen.tag || ""}`.trim()) {
+    lines.push(indentGuiLine(`tag ${formatRenpyQuotedString(screen.tag)}`, 1));
+  }
+
+  lines.push(indentGuiLine(`modal ${screen.modal ? "True" : "False"}`, 1));
+
+  if (`${screen.zorder || ""}`.trim()) {
+    lines.push(indentGuiLine(`zorder ${screen.zorder}`, 1));
+  }
+
+  if (`${screen.variant || ""}`.trim()) {
+    lines.push(indentGuiLine(`variant ${formatGuiGeneralValue(screen.variant)}`, 1));
+  }
+
+  if (`${screen.notes || ""}`.trim()) {
+    lines.push(indentGuiLine(`# ${screen.notes.trim()}`, 1));
+  }
+
+  const nodes = Array.isArray(screen.nodes) ? screen.nodes : [];
+  if (!nodes.length) {
+    lines.push(indentGuiLine("pass", 1));
+  } else {
+    nodes.forEach((node) => {
+      lines.push(formatGuiScreenNodeCode(node, 1));
+    });
+  }
+
+  return lines.join("\n");
+}
+
+function formatGuiConfigEntryCode(entry, scope) {
+  if (!entry) {
+    return "";
+  }
+
+  if (scope === "config") {
+    return `define config.${entry.name} = ${entry.value || "None"}`;
+  }
+
+  if (scope === "guiPreferences") {
+    const preferenceName = `${entry.storePath || ""}`.trim() || entry.name;
+    return `define gui.${entry.name} = gui.preference(${formatRenpyQuotedString(preferenceName)}, ${entry.value || "None"})`;
+  }
+
+  if (scope === "preferences") {
+    return `default preferences.${entry.name} = ${entry.value || "None"}`;
+  }
+
+  const storePrefix = entry.storePath ? `${entry.storePath}.` : "";
+  return `default ${storePrefix}${entry.name} = ${entry.value || "None"}`;
+}
+
+function formatAllGuiConfigCode(gui) {
+  const lines = [];
+  [
+    ["config", gui.config],
+    ["guiPreferences", gui.guiPreferences],
+    ["preferences", gui.preferences],
+    ["store", gui.store],
+  ].forEach(([scope, entries]) => {
+    (Array.isArray(entries) ? entries : []).forEach((entry) => {
+      if (entry.description) {
+        lines.push(`# ${entry.description}`);
+      }
+      lines.push(formatGuiConfigEntryCode(entry, scope));
+      lines.push("");
+    });
+  });
+  return lines.join("\n").trim();
+}
+
+function parseGuiLeadingParameterName(parameterList) {
+  const match = `${parameterList || ""}`.trim().match(/^([A-Za-z_][A-Za-z0-9_]*)/);
+  return match ? match[1] : "";
+}
+
+function formatGuiPythonUiHelperName(entry) {
+  return `${entry?.name || ""}`.trim() || "VisualEditorHelper";
+}
+
+function formatGuiPythonStatementBlockValue(value) {
+  const trimmed = `${value || ""}`.trim().toLowerCase();
+  if (!trimmed || trimmed === "false") {
+    return "False";
+  }
+  if (trimmed === "true") {
+    return "True";
+  }
+  return formatRenpyQuotedString(trimmed);
+}
+
+function buildGuiPythonMethodBlock(signature, rawBody, indentLevel, fallbackLines) {
+  const lines = [indentGuiLine(signature, indentLevel)];
+  const bodyLines = splitGuiRawLines(rawBody);
+  (bodyLines.length ? bodyLines : fallbackLines).forEach((line) => {
+    lines.push(indentGuiLine(line, indentLevel + 1));
+  });
+  return lines;
+}
+
+function formatGuiPythonUiEntryCode(entry) {
+  if (!entry) {
+    return "";
+  }
+
+  const lines = [];
+  const helperName = formatGuiPythonUiHelperName(entry);
+
+  if (entry.notes) {
+    lines.push(`# ${entry.notes}`);
+  }
+
+  switch (entry.kind) {
+    case "action":
+      lines.push("init python:");
+      lines.push(indentGuiLine(`class ${helperName}(Action):`, 1));
+      lines.push(indentGuiLine(`alt = ${entry.actionAlt ? formatGuiGeneralValue(entry.actionAlt) : "None"}`, 2));
+      if (entry.parameters) {
+        lines.push(...buildGuiPythonMethodBlock(`def __init__(self, ${entry.parameters}):`, "", 2, ["pass"]));
+      }
+      lines.push(...buildGuiPythonMethodBlock("def __call__(self):", entry.actionCallBody, 2, ["return None"]));
+      lines.push(...buildGuiPythonMethodBlock("def get_sensitive(self):", "", 2, [`return ${entry.actionSensitive || "True"}`]));
+      lines.push(...buildGuiPythonMethodBlock("def get_selected(self):", "", 2, [`return ${entry.actionSelected || "False"}`]));
+      lines.push(...buildGuiPythonMethodBlock("def get_tooltip(self):", "", 2, [`return ${entry.actionTooltip || "None"}`]));
+      break;
+    case "barvalue":
+      lines.push("init python:");
+      lines.push(indentGuiLine(`class ${helperName}(BarValue):`, 1));
+      lines.push(indentGuiLine(`alt = ${entry.barAlt ? formatGuiGeneralValue(entry.barAlt) : "\"Bar\""}`, 2));
+      if (entry.parameters) {
+        lines.push(...buildGuiPythonMethodBlock(`def __init__(self, ${entry.parameters}):`, "", 2, ["pass"]));
+      }
+      lines.push(...buildGuiPythonMethodBlock("def get_adjustment(self):", "", 2, [`return ${entry.barAdjustment || "ui.adjustment(range=100, value=0)"}`]));
+      lines.push(...buildGuiPythonMethodBlock("def get_style(self):", "", 2, [`return ${entry.barStyle || "(\"bar\", \"vbar\")"}`]));
+      lines.push(...buildGuiPythonMethodBlock("def get_tooltip(self):", "", 2, [`return ${entry.barTooltip || "None"}`]));
+      break;
+    case "inputvalue":
+      lines.push("init python:");
+      lines.push(indentGuiLine(`class ${helperName}(InputValue):`, 1));
+      lines.push(indentGuiLine(`default = ${entry.inputDefault === "false" ? "False" : "True"}`, 2));
+      lines.push(indentGuiLine(`editable = ${entry.inputEditable === "false" ? "False" : "True"}`, 2));
+      lines.push(indentGuiLine(`returnable = ${entry.inputReturnable === "true" ? "True" : "False"}`, 2));
+      if (entry.parameters) {
+        lines.push(...buildGuiPythonMethodBlock(`def __init__(self, ${entry.parameters}):`, "", 2, ["pass"]));
+      }
+      lines.push(...buildGuiPythonMethodBlock("def get_text(self):", "", 2, [`return ${entry.inputGetText || "\"\""}`]));
+      lines.push(...buildGuiPythonMethodBlock("def set_text(self, s):", entry.inputSetTextBody, 2, ["pass"]));
+      lines.push(...buildGuiPythonMethodBlock("def enter(self):", entry.inputEnterBody, 2, ["return InputValue.enter(self)"]));
+      break;
+    case "displayable":
+      lines.push("init python:");
+      lines.push(indentGuiLine(`class ${helperName}(renpy.Displayable):`, 1));
+      lines.push(...buildGuiPythonMethodBlock(`def __init__(self, ${entry.parameters || "child=None, **kwargs"}):`, entry.displayableInitBody, 2, [
+        `super(${helperName}, self).__init__()`,
+        "self.child = renpy.displayable(child) if child is not None else None",
+      ]));
+      lines.push(...buildGuiPythonMethodBlock("def render(self, width, height, st, at):", entry.displayableRenderBody, 2, [
+        "render = renpy.Render(width, height)",
+        "return render",
+      ]));
+      lines.push(...buildGuiPythonMethodBlock("def event(self, ev, x, y, st):", entry.displayableEventBody, 2, ["return None"]));
+      break;
+    case "statement": {
+      const statementKeyword = entry.parameters || "custom_statement";
+      const registerArgs = [
+        formatRenpyQuotedString(statementKeyword),
+        `parse=parse_${helperName}`,
+        `execute=execute_${helperName}`,
+        `block=${formatGuiPythonStatementBlockValue(entry.statementBlock)}`,
+      ];
+      lines.push("python early:");
+      lines.push(...buildGuiPythonMethodBlock(`def parse_${helperName}(lexer):`, entry.statementParseBody, 1, ["return lexer.rest()"]));
+      lines.push(...buildGuiPythonMethodBlock(`def execute_${helperName}(parsed_object):`, entry.statementExecuteBody, 1, ["pass"]));
+      lines.push(indentGuiLine(`renpy.register_statement(${registerArgs.join(", ")})`, 1));
+      break;
+    }
+    case "restart_helper": {
+      const parameterList = entry.parameters || "value";
+      const leadingParameter = parseGuiLeadingParameterName(parameterList) || "value";
+      lines.push("init python:");
+      lines.push(indentGuiLine(`def ${helperName}(${parameterList}):`, 1));
+      const bodyLines = [];
+      if (entry.restartTarget) {
+        bodyLines.push(`${entry.restartTarget} = ${entry.restartValue || leadingParameter}`);
+      }
+      bodyLines.push(...splitGuiRawLines(entry.restartBody));
+      bodyLines.push("renpy.restart_interaction()");
+      bodyLines.forEach((line) => lines.push(indentGuiLine(line, 2)));
+      break;
+    }
+    case "define_screen":
+      lines.push("init python:");
+      lines.push(...buildGuiPythonMethodBlock(`def ${helperName}(${entry.parameters || ""}):`, entry.defineBody, 1, [
+        "ui.window(style=\"say_window\")",
+        "ui.text(\"Python-defined screen placeholder\")",
+      ]));
+      lines.push(indentGuiLine(`renpy.define_screen(${formatRenpyQuotedString(entry.defineScreenName || "python_screen")}, ${helperName}, modal=${entry.defineModal === "true" ? "True" : "False"}, zorder=${entry.defineZorder || "0"})`, 1));
+      break;
+    default:
+      return "";
+  }
+
+  return lines.join("\n");
+}
+
+function formatAllGuiPythonUiCode(gui) {
+  return (Array.isArray(gui.pythonUiHelpers) ? gui.pythonUiHelpers : [])
+    .map((entry) => formatGuiPythonUiEntryCode(entry))
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+function formatAllGuiCursorCode(gui) {
+  const entries = Array.isArray(gui.cursors) ? gui.cursors : [];
+  const hardwareEntries = entries.filter((entry) => entry.kind === "hardware");
+  const displayableEntries = entries.filter((entry) => entry.kind === "displayable");
+  const usageEntries = entries.filter((entry) => entry.kind === "usage");
+  const lines = [];
+
+  if (hardwareEntries.length) {
+    lines.push("define config.mouse = {");
+    hardwareEntries.forEach((entry, index) => {
+      const mapping = `${entry.framesExpression || ""}`.trim()
+        || `[( ${formatGuiGeneralValue(entry.image || "\"gui/cursor.png\"")}, ${entry.hotspotX || "0"}, ${entry.hotspotY || "0"} )]`;
+      lines.push(`    ${formatRenpyQuotedString(entry.name)}: ${mapping}${index < hardwareEntries.length - 1 ? "," : ""}`);
+    });
+    lines.push("}");
+    lines.push("");
+  }
+
+  if (displayableEntries.length) {
+    const [baseEntry, ...restEntries] = displayableEntries;
+    let chain = `define config.mouse_displayable = MouseDisplayable(${formatGuiGeneralValue(baseEntry.image || "\"gui/cursor.png\"")}, ${baseEntry.hotspotX || "0"}, ${baseEntry.hotspotY || "0"})`;
+    restEntries.forEach((entry) => {
+      chain += `\n    .add(${formatRenpyQuotedString(entry.name)}, ${formatGuiGeneralValue(entry.image || "\"gui/cursor.png\"")}, ${entry.hotspotX || "0"}, ${entry.hotspotY || "0"})`;
+    });
+    lines.push(chain);
+    lines.push("");
+  }
+
+  usageEntries.forEach((entry) => {
+    lines.push(`style ${entry.styleTarget || "button"}:`);
+    lines.push(`    mouse ${formatRenpyQuotedString(entry.targetCursor || entry.name)}`);
+    lines.push("");
+  });
+
+  return lines.join("\n").trim();
+}
+
+function formatGuiShaderEntryCode(entry) {
+  switch (entry.mode) {
+    case "default":
+      return `define config.default_textshader = ${formatGuiGeneralValue(entry.shaderSpec || "\"default\"")}`;
+    case "style":
+      return `style ${entry.targetName || "default"}:\n    textshader ${formatGuiGeneralValue(entry.shaderSpec || "\"wave\"")}`;
+    case "callback":
+      return `define config.textshader_callbacks[${formatGuiGeneralValue(entry.callbackKey || "\"default\"")}] = ${entry.callbackFunction || "get_default_textshader"}`;
+    case "custom": {
+      const parts = [
+        `renpy.register_textshader(${formatRenpyQuotedString(entry.name || "custom_shader")}`,
+        `shaders=${entry.customShaders || formatGuiGeneralValue(entry.shaderSpec || "\"textshader.wave\"")}`,
+        `include_default=${entry.includeDefault !== false ? "True" : "False"}`,
+      ];
+      if (entry.redraw) {
+        parts.push(`redraw=${entry.redraw}`);
+      }
+      return `init python:\n    ${parts.join(", ")})`;
+    }
+    default:
+      return "";
+  }
+}
+
+function formatAllGuiShaderCode(gui) {
+  return (Array.isArray(gui.textShaders) ? gui.textShaders : [])
+    .map((entry) => formatGuiShaderEntryCode(entry))
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+function getGuiReplayGraphs() {
+  return state.graphs
+    .filter((graph) => graph?.replay?.enabled)
+    .map((graph, index) => ({
+      label: getSafeLabelName(graph.label || `label_${index + 1}`),
+      title: `${graph.replay?.title || ""}`.trim() || getSafeLabelName(graph.label || `label_${index + 1}`),
+      lockedMode: graph.replay?.lockedMode || "auto",
+      scope: `${graph.replay?.scope || ""}`.trim(),
+    }));
+}
+
+function formatGuiReplayAction(graph) {
+  const args = [formatRenpyQuotedString(graph.label)];
+  if (graph.scope) {
+    args.push(`scope=${graph.scope}`);
+  }
+  if (graph.lockedMode === "locked") {
+    args.push("locked=True");
+  } else if (graph.lockedMode === "unlocked") {
+    args.push("locked=False");
+  }
+  return `Replay(${args.join(", ")})`;
+}
+
+function formatGuiReplayMenuCode(gui) {
+  const replayMenu = gui.replayMenu;
+  if (!replayMenu) {
+    return "";
+  }
+
+  const replayGraphs = getGuiReplayGraphs();
+  const lines = [`screen ${replayMenu.screenName || "replay_gallery"}():`];
+
+  if (replayMenu.tagMenu) {
+    lines.push(indentGuiLine("tag menu", 1));
+  }
+
+  lines.push(indentGuiLine("modal True", 1));
+  lines.push(indentGuiLine("vbox:", 1));
+  lines.push(indentGuiLine(`text ${formatGuiScreenTextValue(replayMenu.title || "Replay Gallery")}`, 2));
+
+  if (replayGraphs.length) {
+    replayGraphs.forEach((graph) => {
+      lines.push(indentGuiLine(`textbutton ${formatGuiScreenTextValue(graph.title)} action ${formatGuiReplayAction(graph)}`, 2));
+    });
+  } else {
+    lines.push(indentGuiLine(`text ${formatGuiScreenTextValue(replayMenu.emptyText || "No replay scenes are enabled yet.")}`, 2));
+  }
+
+  lines.push(indentGuiLine(`textbutton ${formatGuiScreenTextValue("Back")} action ${replayMenu.returnAction || "Return()"}`, 2));
+  return lines.join("\n");
+}
+
+function getGuiAudioDefinition(audioId) {
+  return state.audio.find((entry) => entry.id === audioId) || null;
+}
+
+function getGuiMusicTrackSource(track) {
+  const importedAudio = getGuiAudioDefinition(track?.audioDefinitionId || "");
+  return `${importedAudio?.sourcePath || track?.filename || ""}`.trim();
+}
+
+function getGuiMusicTrackTitle(track) {
+  const importedAudio = getGuiAudioDefinition(track?.audioDefinitionId || "");
+  return `${track?.title || ""}`.trim() || `${importedAudio?.name || ""}`.trim() || getGuiMusicTrackSource(track) || "Untitled Track";
+}
+
+function formatGuiMusicRoomCode(room) {
+  if (!room) {
+    return "";
+  }
+
+  const lines = ["init python:"];
+  const args = [
+    `channel=${formatRenpyQuotedString(room.channel || "music")}`,
+    `fadeout=${room.fadeout || "0.0"}`,
+    `fadein=${room.fadein || "0.0"}`,
+    `loop=${room.loop ? "True" : "False"}`,
+    `single_track=${room.singleTrack ? "True" : "False"}`,
+    `shuffle=${room.shuffle ? "True" : "False"}`,
+  ];
+  const instanceName = room.instanceName || "visual_music_room";
+  const tracks = Array.isArray(room.tracks) ? room.tracks : [];
+
+  if (room.stopAction) {
+    args.push(`stop_action=${room.stopAction}`);
+  }
+
+  lines.push(indentGuiLine(`${instanceName} = MusicRoom(${args.join(", ")})`, 1));
+  tracks.forEach((track) => {
+    const source = getGuiMusicTrackSource(track);
+    if (!source) {
+      lines.push(indentGuiLine(`# Skipped ${getGuiMusicTrackTitle(track)} because no audio file is configured.`, 1));
+      return;
+    }
+    const addArgs = [formatGuiGeneralValue(source)];
+    if (track.alwaysUnlocked) {
+      addArgs.push("always_unlocked=True");
+    }
+    if (track.actionExpression) {
+      addArgs.push(`action=${track.actionExpression}`);
+    }
+    lines.push(indentGuiLine(`${instanceName}.add(${addArgs.join(", ")})`, 1));
+  });
+
+  lines.push("");
+  lines.push(`screen ${room.screenName || "music_room"}():`);
+  lines.push(indentGuiLine("modal True", 1));
+  if (room.autoPlay && tracks.some((track) => getGuiMusicTrackSource(track))) {
+    lines.push(indentGuiLine('on "show":', 1));
+    lines.push(indentGuiLine(`action ${instanceName}.Play()`, 2));
+  }
+  lines.push(indentGuiLine("vbox:", 1));
+  lines.push(indentGuiLine(`text ${formatGuiScreenTextValue(room.name || "Music Room")}`, 2));
+  tracks.filter((track) => getGuiMusicTrackSource(track)).forEach((track) => {
+    const source = getGuiMusicTrackSource(track);
+    lines.push(indentGuiLine(`textbutton ${formatGuiScreenTextValue(getGuiMusicTrackTitle(track))} action ${instanceName}.Play(${formatGuiGeneralValue(source)})`, 2));
+  });
+  lines.push(indentGuiLine(`textbutton ${formatGuiScreenTextValue("Back")} action Return()`, 2));
+  return lines.join("\n");
+}
+
+function formatGuiGalleryCode(gallery) {
+  if (!gallery) {
+    return "";
+  }
+
+  const instanceName = gallery.instanceName || "visual_gallery";
+  const buttons = Array.isArray(gallery.buttons) ? gallery.buttons : [];
+  const columns = Math.max(1, Number.parseInt(gallery.columns, 10) || 3);
+  const rows = Math.max(1, Math.ceil(Math.max(buttons.length, 1) / columns));
+  const lines = ["init python:", indentGuiLine(`${instanceName} = Gallery()`, 1)];
+
+  if (gallery.lockedButton) {
+    lines.push(indentGuiLine(`${instanceName}.locked_button = ${formatGuiGeneralValue(gallery.lockedButton)}`, 1));
+  }
+  if (gallery.transition) {
+    lines.push(indentGuiLine(`${instanceName}.transition = ${gallery.transition}`, 1));
+  }
+
+  buttons.forEach((button) => {
+    lines.push(indentGuiLine(`${instanceName}.button(${formatRenpyQuotedString(button.name || "gallery_button")})`, 1));
+    splitGuiRawLines(button.conditions).forEach((line) => {
+      lines.push(indentGuiLine(`${instanceName}.condition(${formatGuiGeneralValue(line)})`, 1));
+    });
+    splitGuiRawLines(button.imageLines).forEach((line) => {
+      const method = button.autoUnlock ? "unlock_image" : "image";
+      lines.push(indentGuiLine(`${instanceName}.${method}(${line})`, 1));
+    });
+  });
+
+  lines.push("");
+  lines.push(`screen ${gallery.screenName || "gallery"}():`);
+  if (gallery.tagMenu) {
+    lines.push(indentGuiLine("tag menu", 1));
+  }
+  lines.push(indentGuiLine("modal True", 1));
+  if (gallery.background) {
+    lines.push(indentGuiLine(`add ${formatGuiGeneralValue(gallery.background)}`, 1));
+  }
+  lines.push(indentGuiLine("vbox:", 1));
+  lines.push(indentGuiLine(`text ${formatGuiScreenTextValue(gallery.name || "Gallery")}`, 2));
+  if (buttons.length) {
+    lines.push(indentGuiLine(`grid ${columns} ${rows}:`, 2));
+    buttons.forEach((button) => {
+      const thumb = `${button.unlockedThumb || ""}`.trim() || "Solid(\"#3a3a3a\")";
+      lines.push(indentGuiLine(`add ${instanceName}.make_button(${formatRenpyQuotedString(button.name || "gallery_button")}, ${formatGuiGeneralValue(thumb)})`, 3));
+    });
+  } else {
+    lines.push(indentGuiLine(`text ${formatGuiScreenTextValue("No gallery buttons configured yet.")}`, 2));
+  }
+  lines.push(indentGuiLine(`textbutton ${formatGuiScreenTextValue("Back")} action Return()`, 2));
+  return lines.join("\n");
+}
+
+function formatGuiGeneratedCode(gui = state.gui) {
+  const sections = [
+    (Array.isArray(gui.styles) ? gui.styles : []).map(formatGuiStyleCode).filter(Boolean).join("\n\n"),
+    (Array.isArray(gui.screens) ? gui.screens : []).map(formatGuiScreenCode).filter(Boolean).join("\n\n"),
+    formatAllGuiConfigCode(gui),
+    formatAllGuiPythonUiCode(gui),
+    formatAllGuiCursorCode(gui),
+    formatAllGuiShaderCode(gui),
+    formatGuiReplayMenuCode(gui),
+    (Array.isArray(gui.musicRooms) ? gui.musicRooms : []).map(formatGuiMusicRoomCode).filter(Boolean).join("\n\n"),
+    (Array.isArray(gui.galleries) ? gui.galleries : []).map(formatGuiGalleryCode).filter(Boolean).join("\n\n"),
+  ].filter(Boolean);
+
+  return sections.join("\n\n");
+}
+
+function buildGeneratedSection(title, code) {
+  const trimmed = `${code || ""}`.trim();
+  return trimmed ? `# --- ${title} ---\n${trimmed}` : "";
+}
+
+function formatGeneratedVisualEditorCode() {
+  state = normalizeState(state);
+
+  const projectSettingsCode = [
+    formatProjectVoiceCode(),
+    formatProjectSideImageCode(),
+    formatProjectSaveLoadCode(),
+    formatProjectKeymapCode(),
+  ].filter(Boolean).join("\n\n");
+
+  const definitionCode = [
+    ...state.definitions.map(formatDefinitionCode),
+    ...state.variables.map(formatVariableCode),
+    ...state.characters.map(formatCharacterCode),
+    ...state.images.map(formatImageDefinitionCode),
+    ...state.live2d.map(formatLive2DDefinitionCode),
+    ...state.audio.map(formatAudioDefinitionCode),
+    ...state.achievements.map(formatAchievementCode),
+  ].filter(Boolean).join("\n\n");
+
+  const labelCode = state.graphs.map(formatLabelGraphCode).filter(Boolean).join("\n\n");
+  const guiCode = formatGuiGeneratedCode(state.gui);
+  const sections = [
+    buildGeneratedSection("Project Settings", projectSettingsCode),
+    buildGeneratedSection("Definitions", definitionCode),
+    buildGeneratedSection("GUI", guiCode),
+    buildGeneratedSection("Labels", labelCode),
+  ].filter(Boolean);
+
+  return [
+    "# This file was generated by Ren'Py Visual Editor.",
+    "# Do not edit this file by hand unless you also update visual_editor/project.json.",
+    "",
+    ...sections,
+    "",
+  ].join("\n");
+}
+
 function formatReplayActionForGraph(graph) {
   if (!graph?.replay?.enabled) {
     return "# Replay is disabled for this label.";
@@ -10466,9 +11416,26 @@ function resetGraph() {
   render();
 }
 
-function exportGraph() {
-  saveState("Stored local draft and prepared export placeholder.");
-  setStatus("Export placeholder complete. Next step: write generated .rpy into the project.");
+async function exportGraph() {
+  window.clearTimeout(bridgeSaveTimer);
+  state = normalizeState(state);
+  window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+
+  const code = formatGeneratedVisualEditorCode();
+
+  if (!hasBridge) {
+    console.info(code);
+    setStatus("Generated .rpy text, but launcher bridge is not connected. Open from Ren'Py Launcher to write project files.");
+    return;
+  }
+
+  try {
+    await callBridge("export", { state, code });
+    setStatus("Synced visual_editor/project.json and exported game/generated_visual_editor.rpy.");
+  } catch (error) {
+    console.error(error);
+    setStatus(`Export failed: ${error.message}`);
+  }
 }
 
 function deleteNode(nodeId) {
@@ -11684,7 +12651,9 @@ pythonNodeCodeInput.addEventListener("input", (event) => {
 });
 
 saveDraftButton.addEventListener("click", () => {
-  saveState("Saved graph draft to local browser storage.");
+  saveState(hasBridge
+    ? "Saved graph draft and queued project.json sync."
+    : "Saved graph draft to local browser storage.");
 });
 
 exportButton.addEventListener("click", exportGraph);
@@ -12686,7 +13655,18 @@ sidebarCollapsedRailEl.querySelectorAll(".collapsed-rail-button").forEach((butto
   });
 });
 openGuiEditorButton?.addEventListener("click", () => {
-  const query = projectPath ? `?project=${encodeURIComponent(projectPath)}` : "";
+  const nextParams = new URLSearchParams();
+
+  if (projectPath) {
+    nextParams.set("project", projectPath);
+  }
+
+  if (bridgeUrl && bridgeToken) {
+    nextParams.set("bridge", bridgeUrl);
+    nextParams.set("token", bridgeToken);
+  }
+
+  const query = nextParams.toString() ? `?${nextParams.toString()}` : "";
   window.location.href = `./gui_editor.html${query}`;
 });
 canvasEl.addEventListener("pointerdown", beginPan);
@@ -12962,3 +13942,4 @@ setSidebarState(true);
 setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
 setAddBlockState(false);
 setStatus("Visual editor scaffold ready. Drag empty space to move the canvas, and use the mouse wheel to zoom.");
+hydrateStateFromBridge();
