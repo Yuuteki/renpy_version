@@ -774,6 +774,7 @@
 
 .gui-screen-preview-column .code-preview,
 #configSection .gui-preview-column .code-preview,
+#pythonUiSection .gui-preview-column .code-preview,
 #cursorsSection .gui-preview-column .code-preview,
 #shadersSection .gui-preview-column .code-preview,
 #diagnosticsSection .gui-preview-column .code-preview {

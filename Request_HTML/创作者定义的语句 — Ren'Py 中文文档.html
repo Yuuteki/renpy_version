@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>创作者定义的语句 &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/cds.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="定制文本标签" href="custom_text_tags.html" />
+    <link rel="prev" title="创作者定义的可视组件" href="cdd.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">高级GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">创作者定义的语句</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">使用方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API引用</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.register_statement"><code class="docutils literal notranslate"><span class="pre">renpy.register_statement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lexer">Lexer对象</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Lexer"><code class="docutils literal notranslate"><span class="pre">Lexer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lex_string"><code class="docutils literal notranslate"><span class="pre">lex_string()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lint">lint功能函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.check_text_tags"><code class="docutils literal notranslate"><span class="pre">renpy.check_text_tags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.error"><code class="docutils literal notranslate"><span class="pre">renpy.error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.try_compile"><code class="docutils literal notranslate"><span class="pre">renpy.try_compile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renpy.try_eval"><code class="docutils literal notranslate"><span class="pre">renpy.try_eval()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">创作者定义的语句</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/cds.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cds">
+<span id="id1"></span><h1>创作者定义的语句<a class="headerlink" href="#cds" title="Link to this heading"> link</a></h1>
+<p>创作者定义的语句(CDS)允许创作者在Ren’Py中添加自己的语句。这个机制允许添加和使用当前Ren’Py不支持的语法。</p>
+<p>CDS比直接使用Python代码更灵活。</p>
+<p>例如，从一段对话中随机获取一行：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">introduction</span><span class="p">:</span>
+    <span class="k">python</span><span class="p">:</span>
+        <span class="n">greetings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;你好。&#39;</span><span class="p">,</span> <span class="s1">&#39;欢迎光临。&#39;</span><span class="p">,</span> <span class="s1">&#39;有什么需要帮助的吗？&#39;</span><span class="p">]</span>
+        <span class="n">greeting</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="k">choice</span><span class="p">(</span><span class="n">greetings</span><span class="p">)</span>
+
+    <span class="s2">&quot;[greeting]&quot;</span>
+</pre></div>
+</div>
+<p>Ren’Py的处理器并不预先知道这段代码的功能和执行结果。Ren’Py不会执行任何处理，除非遇到代码执行报错。</p>
+<p>使用CDS可以实现下列功能：</p>
+<ul class="simple">
+<li><p>语法检查(例如，传给 renpy.random.choice 的列表元素中是否存在非法文本)。</p></li>
+<li><p>执行时忽略不正确的数据(对非关键函数，一般停止执行比抛异常更好用。)。</p></li>
+<li><p>预加载(函数需要用到的)可视组件。</p></li>
+<li><p>在 <a class="reference internal" href="developer_tools.html#lint"><span class="std std-ref">Lint</span></a> 中向创作者提供额外信息(运行时被忽略的错误可以使用这种方式记录)。</p></li>
+</ul>
+<p>例如，实现随机对话内容的CDS：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span> <span class="n">early</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">parse_random</span><span class="p">(</span><span class="n">lexer</span><span class="p">):</span>
+        <span class="n">subblock_lexer</span> <span class="o">=</span> <span class="n">lexer</span><span class="o">.</span><span class="n">subblock_lexer</span><span class="p">()</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="n">subblock_lexer</span><span class="o">.</span><span class="n">advance</span><span class="p">():</span>
+            <span class="k">with</span> <span class="n">subblock_lexer</span><span class="o">.</span><span class="n">catch_error</span><span class="p">():</span>
+                <span class="n">statement</span> <span class="o">=</span> <span class="n">subblock_lexer</span><span class="o">.</span><span class="n">renpy_statement</span><span class="p">()</span>
+                <span class="n">choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">choices</span>
+
+
+    <span class="k">def</span> <span class="nf">next_random</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">renpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="k">choice</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">lint_random</span><span class="p">(</span><span class="n">parsed_object</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">parsed_object</span><span class="p">:</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">check_text_tags</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="k">block</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">what</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
+                <span class="n">renpy</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">check</span><span class="p">)</span>
+
+   <span class="n">renpy</span><span class="o">.</span><span class="n">register_statement</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
+        <span class="k">block</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">parse</span><span class="o">=</span><span class="n">parse_random</span><span class="p">,</span>
+        <span class="nb">next</span><span class="o">=</span><span class="n">next_random</span><span class="p">,</span>
+        <span class="n">lint</span><span class="o">=</span><span class="n">lint_random</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">random</span></code> 可以直接作为语句使用：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">label</span> <span class="n">introduction</span><span class="p">:</span>
+    <span class="n">random</span><span class="p">:</span>
+        <span class="s2">&quot;你好。&quot;</span>
+        <span class="s2">&quot;欢迎光临。&quot;</span>
+        <span class="s2">&quot;有什么需要帮助的吗？&quot;</span>
+</pre></div>
+</div>
+<p>使用CDS并不保证执行一定会成功。
+但优秀代码定义的语句，更有利于Ren’Py“理解”创作者的设计意图。</p>
+<section id="usage">
+<span id="id2"></span><h2>使用方法<a class="headerlink" href="#usage" title="Link to this heading"> link</a></h2>
+<p>CDS必须符合下列规则：</p>
+<ul class="simple">
+<li><p>必须在 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">early</span></code> 语句块中定义。</p></li>
+<li><p>定义CDS的文件中不能使用该CDS。</p></li>
+<li><p>定义CDS的文件必须在使用对应语句的文件之前加载。
+(由于Ren’Py按照Unicode字符顺序加载文件，所以可以在定义CDS的文件名加个数字前缀，比如01之类的数字。参考 <a class="reference internal" href="lifecycle.html#early-phase"><span class="std std-ref">脚本处理阶段</span></a> 中Ren’Py加载文件顺序，特别是 game/libs/ 和 game/mods/ 目录下的细节。)</p></li>
+</ul>
+<p>CDS使用 <a class="reference internal" href="#renpy.register_statement" title="renpy.register_statement"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.register_statement()</span></code></a> 函数注册。
+该函数会将调用其他函数，并根据CDS的内容执行运算。</p>
+<p>例如，定义了名为 <code class="docutils literal notranslate"><span class="pre">line</span></code> 的新语句，可在文本中使用引号分隔。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">line</span> <span class="n">e</span> <span class="s2">&quot;这里的引号不会显示&quot;</span> <span class="n">艾琳说</span><span class="p">,</span> <span class="s2">&quot;也不需要反斜杠转义符。&quot;</span>
+</pre></div>
+</div>
+<p>parse函数会处理文本内容。
+execute函数会基于处理后的内容运行操作。
+lint函数会记录处理内容中的错误。</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">python</span> <span class="n">early</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">parse_smartline</span><span class="p">(</span><span class="n">lexer</span><span class="p">):</span>
+        <span class="n">who</span> <span class="o">=</span> <span class="n">lexer</span><span class="o">.</span><span class="n">simple_expression</span><span class="p">()</span>
+        <span class="n">what</span> <span class="o">=</span> <span class="n">lexer</span><span class="o">.</span><span class="n">rest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">what</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">execute_smartline</span><span class="p">(</span><span class="n">parsed_object</span><span class="p">):</span>
+        <span class="n">who</span><span class="p">,</span> <span class="n">what</span> <span class="o">=</span> <span class="n">parsed_object</span>
+        <span class="n">renpy</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">who</span><span class="p">),</span> <span class="n">what</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">lint_smartline</span><span class="p">(</span><span class="n">parsed_object</span><span class="p">):</span>
+        <span class="n">who</span><span class="p">,</span> <span class="n">what</span> <span class="o">=</span> <span class="n">parsed_object</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">eval</span><span class="p">(</span><span class="n">who</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">renpy</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;角色对象未定义: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">who</span><span class="p">))</span>
+
+        <span class="n">tte</span> <span class="o">=</span> <span class="n">renpy</span><span class="o">.</span><span class="n">check_text_tags</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tte</span><span class="p">:</span>
+            <span class="n">renpy</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">tte</span><span class="p">)</span>
+
+    <span class="n">renpy</span><span class="o">.</span><span class="n">register_statement</span><span class="p">(</span>
+        <span class="s2">&quot;line&quot;</span><span class="p">,</span>
+        <span class="n">parse</span><span class="o">=</span><span class="n">parse_smartline</span><span class="p">,</span>
+        <span class="n">execute</span><span class="o">=</span><span class="n">execute_smartline</span><span class="p">,</span>
+        <span class="n">lint</span><span class="o">=</span><span class="n">lint_smartline</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="api">
+<span id="api-reference"></span><h2>API引用<a class="headerlink" href="#api" title="Link to this heading"> link</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.register_statement">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">register_statement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translatable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execute_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_priority</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation_strings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_begin_rollback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_execute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict_next</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execute_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reachable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.register_statement" title="Link to this definition"> link</a></dt>
+<dd><p>该函数注册了一条创作者定义的语句。</p>
+<dl>
+<dt><cite>name</cite></dt><dd><p>一个空格分隔的名称列表作为语句的开头，或者空字符串定义一个新的默认语句(默认语句会替换say语句)。</p>
+</dd>
+<dt><cite>block</cite></dt><dd><p>This may be one of:
+该参数可能是下表中的一项：</p>
+<ul class="simple">
+<li><p>False，表示语句后面没有语句块。</p></li>
+<li><p>True，语句后面需要有语句块，并会处理该语句块。</p></li>
+<li><p>“possible”，后面有没有语句块，都行。</p></li>
+<li><p>“script”，表示后面的语句块是某个Ren’Py脚本语句的一部分。详见 <cite>next</cite> 如何使用此参数控制流程。</p></li>
+<li><p>“script-possible”，若后面出现语句块则视作”script”处理，如果没有语句块则视作False处理。</p></li>
+<li><p>“atl”，表示后续语句块是某个ATL变换的一部分。使用该参数后，后续语句块会传给 <cite>execute</cite> 执行。</p></li>
+<li><p>“atl-possible”，若后面出现语句块则视作”atl”处理，如果没有语句块则视作False处理。</p></li>
+</ul>
+</dd>
+<dt><cite>parse</cite></dt><dd><p>该参数是一个函数，入参为一个Lexer对象。函数会处理语句并返回一个对象。返回对象会作为参数创给所有其他函数。</p>
+</dd>
+<dt><cite>lint</cite></dt><dd><p>调用该函数检查语句。入参只有一个，即 <cite>parse</cite> 返回的对象。其调用renpy.error报错。</p>
+</dd>
+<dt><cite>execute</cite></dt><dd><p>当语句执行时，调用该函数。入参只有一个，即 <cite>parse</cite> 返回的对象。
+若语句后面是一个ATL语句块，则关键词参数 <cite>alt</cite> 会与ATL变换一起传入并执行。</p>
+</dd>
+<dt><cite>execute_init</cite></dt><dd><p>在初始化阶段调用的函数，运行在优先级priority 0级别。入参只有一个，即 <cite>parse</cite> 返回的对象。</p>
+</dd>
+<dt><cite>predict</cite></dt><dd><p>预加载语句使用的图像时调用的函数。入参只有一个，即 <cite>parse</cite> 返回的对象。其会返回此自定义语句使用的可视组件列表。</p>
+</dd>
+<dt><cite>next</cite></dt><dd><p>判断下一个语句时调用的函数。</p>
+<p>如果 <cite>block</cite> 的值不是字符串”script”，该函数的入参只有一个，即 <cite>parse</cite> 函数返回的对象。
+如果 <cite>block</cite> 的值是字符串”script”，就会多一个入参，即语句块(block)第一条语句名对应的对象。</p>
+<p>该函数应该返回一个字符串，表示跳转的脚本标签(label)名，第二个入参将主控流程切换到标签对应的语句块；
+该函数也可以返回None，表示继续执行下一条语句。
+在 <cite>parse</cite> 函数中被调用时，该函数还可以返回 <a class="reference internal" href="#Lexer.renpy_statement" title="Lexer.renpy_statement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Lexer.renpy_statement()</span></code></a> 或 <a class="reference internal" href="#Lexer.renpy_block" title="Lexer.renpy_block"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Lexer.renpy_block()</span></code></a> 的执行结果。</p>
+</dd>
+<dt><cite>label</cite></dt><dd><p>调用该函数决定使用语句的脚本标签(label)名。如果函数返回的是字符串，字符串对应的语句标签可以被call或jump。</p>
+</dd>
+<dt><cite>warp</cite></dt><dd><p>调用该函数决定在warp时是否执行该语句。如果函数存在并返回True，warp时就运行该函数，否则在warp时不执行语句。</p>
+</dd>
+<dt><cite>scry</cite></dt><dd><p>Ren’Py内部使用。</p>
+</dd>
+<dt><cite>init</cite></dt><dd><p>如果该语句应该在初始化阶段运行，这项就是True。(如果语句没有在某个init语句块中，会被自动放置到init 0语句块里。)这项会调用execute函数，还有execute_init函数。</p>
+<p>如果设置了 <cite>execute_init</cite> 函数，最好就不要再指定这个字段，不然在init语句块中各种跳转会导致 <cite>execute_init</cite> 和 <cite>execute</cite> 函数被同时调用。</p>
+</dd>
+<dt><cite>translatable</cite></dt><dd><p>若该参数为True，该语句会包含在translation语句块中，跟语句块中的say语句效果类似。
+只有单行语句才可以将该参数设为True。可用于 <code class="docutils literal notranslate"><span class="pre">nvl</span> <span class="pre">clear</span></code> 和 <code class="docutils literal notranslate"><span class="pre">voice</span></code> 等语句，执行结果会随着对话推进而改变。</p>
+</dd>
+<dt><cite>init_priority</cite></dt><dd><p>一个整数，决定 <cite>init</cite> 和 <cite>execute_init</cite> 函数创建的init语句块初始化优先级。
+该参数也可以是一个返回值为整数的函数， 该函数必须是在 <code class="docutils literal notranslate"><span class="pre">parse</span></code> 中运行的函数。</p>
+</dd>
+<dt><cite>translation_strings</cite></dt><dd><p>当所在代码块被执行时，调用的一个函数。返回值是一个字符串列表，并后续在需要多语言支持的地方使用。</p>
+</dd>
+<dt><cite>force_begin_rollback</cite></dt><dd><p>对于想要触发快速跳过功能的语句，类似 <code class="docutils literal notranslate"><span class="pre">menu</span></code> 和 <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">screen</span></code> 语句，该项应设置为True。</p>
+</dd>
+<dt><cite>post_execute</cite></dt><dd><p>本条语句执行完，下一条语句执行前，将执行这个参数的函数。(添加post_execute函数将修改RPYC文件，因此需要强制重新编译。)</p>
+</dd>
+<dt><cite>post_label</cite></dt><dd><p>调用此处的函数，决定执行完上一个语句后跳转的脚本标签(label)。如果该函数返回一个字符串，就表示需要跳转的脚本标签名，可以像其他标签一样正常调用或者跳转。该功能可以用于创建一个唯一返回节点。</p>
+</dd>
+<dt><cite>predict_all</cite></dt><dd><p>若该项为True，词条语句之后的所有语句和分支语句都将预加载。</p>
+</dd>
+<dt><cite>predict_next</cite></dt><dd><p>该项是一个脚本标签(label)，在本条语句执行后将运行对应脚本标签内的语句。</p>
+<p>本条语句后面的语句运行后调用该项实现后续语句的预加载，需要的返回值是一个脚本标签(label)列表或者SubParse对象。当 <cite>predict_all</cite> 为True时，该项不会被调用。</p>
+</dd>
+<dt><cite>execute_default</cite></dt><dd><p>该项是一个函数，调用时机与default语句相同——在初始化阶段后，游戏开始运行前；加载存档后；
+回滚之后；lint检查前；一些其他可能的时机。</p>
+<p>调用该函数时使用单一参数，返回 <cite>parse</cite> 处理后的对象。</p>
+</dd>
+<dt><cite>reachable</cite></dt><dd><p>该项是一个函数，调用后可以允许自定义语句定制自身如何在lint中被处理。</p>
+<p>默认情况下，通过 <a class="reference internal" href="#Lexer.renpy_block" title="Lexer.renpy_block"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Lexer.renpy_block()</span></code></a> 方法创建一条语句的自定义语句块、sub-parse语句块。
+这样创建的自定义语句可以被lint访问的前提下，后面的语句也是可以被lint访问到。
+如果语句中有一个label函数的话，也可以被lint访问到。</p>
+<p>可以提供一个可访问判断函数实现自定义。
+该函数有5个参数(在下表中，“label”可以是字符串或opaque对象)：</p>
+<ul class="simple">
+<li><p>parse函数返回对象。</p></li>
+<li><p>如果语句可访问，则该布尔值为True。</p></li>
+<li><p>语句的标签(label)。</p></li>
+<li><p>下一条语句的标签，如果没有下一条语句则为None。</p></li>
+<li><p>若 <cite>block</cite> 设置为”script”，该参数等于语句块中的第一条语句的标签。如果不存在语句块则为None。</p></li>
+</ul>
+<p>返回结果是一个集合，包含下列信息：</p>
+<ul class="simple">
+<li><p>可访问语句的subparse对象的标签。</p></li>
+<li><p>True，表示该自定义语句不需要lint处理，也不需要被lint访问。(如果通过跟在可访问语句后面，可能会变成可访问。)</p></li>
+<li><p>None，表示忽略返回结果。</p></li>
+</ul>
+<p>该函数可以使用不同的is_reachable参数值多次调用，深度定制自定义语句在lint中的访问权限和行为。
+(例如，跟在自定义语句后面的语句与前者的可访问权限保持一致。)</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>使用空字符串重定义say语句通常是个糟糕的主意。因为这会替换Ren’Py原生语句，影响 <a class="reference internal" href="statement_equivalents.html"><span class="doc">等效语句</span></a>。
+重定义的say语句不再支持 <cite>id`</cite> 和多语言系统。重定义default语句的游戏则不能使用对应的功能特性。</p>
+</div>
+</dd></dl>
+
+<section id="lexer">
+<span id="lexer-object"></span><h3>Lexer对象<a class="headerlink" href="#lexer" title="Link to this heading"> link</a></h3>
+<p>自定义语句的parse方法使用一个Lexer对象作为入参：</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Lexer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Lexer</span></span><a class="headerlink" href="#Lexer" title="Link to this definition"> link</a></dt>
+<dd><dl class="py property">
+<dt class="sig sig-object py" id="Lexer.init">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><a class="headerlink" href="#Lexer.init" title="Link to this definition"> link</a></dt>
+<dd><p>若Lexer对象位于init语句中，该项为True，否则为False.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Lexer.init_priority">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init_priority</span></span><a class="headerlink" href="#Lexer.init_priority" title="Link to this definition"> link</a></dt>
+<dd><p>若init为True，该项表示init语句块中的优先级数值。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.error" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – 处理错误列表中添加的信息。</p>
+</dd>
+</dl>
+<p>在检测到的处理错误列表(当前位置)中添加一个 <cite>msg</cite> 元素。这个方法将中断当前语句的执行，但不妨碍后续语句的处理。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.require">
+<span class="sig-name descname"><span class="pre">require</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.require" title="Link to this definition"> link</a></dt>
+<dd><p>尝试处理 <cite>thing</cite> ，如果无法完成则报一个错误。</p>
+<p>如果 <cite>thing</cite> 是一个字符串，尝试使用 <a class="reference internal" href="#Lexer.match" title="Lexer.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code></a> 进行处理。</p>
+<p>其他情况下， <cite>thing</cite> 必须是一个lexer对象的其他方法，并且该方法调用时没有入参。</p>
+<p>如果没有指定 <cite>name</cite> 的值，方法的名称将会用于报错消息(<cite>thing`为字符串则直接使用该字符串)。
+否则，报错信息使用 `name</cite> 。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.eol">
+<span class="sig-name descname"><span class="pre">eol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.eol" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>如果Lexer对象处于这行结尾则返回True，否则返回False。</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.expect_eol">
+<span class="sig-name descname"><span class="pre">expect_eol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.expect_eol" title="Link to this definition"> link</a></dt>
+<dd><p>如果Lexer对象不处于某一行脚本的结尾，则产生一个错误。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.expect_noblock">
+<span class="sig-name descname"><span class="pre">expect_noblock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stmt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.expect_noblock" title="Link to this definition"> link</a></dt>
+<dd><p>调用该方法判断当前语句后面是否为语句块。
+如果找到语句块则产生一个错误。 <cite>stmt</cite> 应是一个字符串，并被添加到报错消息中。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.expect_block">
+<span class="sig-name descname"><span class="pre">expect_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stmt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.expect_block" title="Link to this definition"> link</a></dt>
+<dd><p>调用该方法判断当前语句后面是否需要一个非空语句块。
+<cite>stmt</cite> 应是一个字符串，并被添加到报错消息中。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.has_block">
+<span class="sig-name descname"><span class="pre">has_block</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.has_block" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>当前行含有一个非空语句块时返回True，否则返回False。</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.match">
+<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">re</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.match" title="Link to this definition"> link</a></dt>
+<dd><p>匹配一个任意的正则表达式(regexp)字符串。</p>
+<p>Lexer对象中的所有语句都会使用这个方法。首先跳过空白，尝试在一行中匹配。如果匹配成功，返回匹配到的文本。否则，返回None，但Lexer对象不会发生变化。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.keyword">
+<span class="sig-name descname"><span class="pre">keyword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.keyword" title="Link to this definition"> link</a></dt>
+<dd><p>匹配关键词 <cite>s</cite> 。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.name" title="Link to this definition"> link</a></dt>
+<dd><p>匹配一个名称。名称不会是内建的关键词。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.word">
+<span class="sig-name descname"><span class="pre">word</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.word" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>匹配目标词所在的整段文本。</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<p>匹配任何词，包括关键词。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.image_name_component">
+<span class="sig-name descname"><span class="pre">image_name_component</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.image_name_component" title="Link to this definition"> link</a></dt>
+<dd><p>匹配一个图像名组件。与word不同，图像名组件可以用数字开头。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.string">
+<span class="sig-name descname"><span class="pre">string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.string" title="Link to this definition"> link</a></dt>
+<dd><p>匹配一个Ren’Py字符串。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.integer">
+<span class="sig-name descname"><span class="pre">integer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.integer" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>包含这个整数的字符串。</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<p>匹配一个整数。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.float">
+<span class="sig-name descname"><span class="pre">float</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.float" title="Link to this definition"> link</a></dt>
+<dd><p>:return:包含这个浮点数的字符串。
+:rtype: str</p>
+<p>匹配一个浮点数。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.label_name">
+<span class="sig-name descname"><span class="pre">label_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">declare</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.label_name" title="Link to this definition"> link</a></dt>
+<dd><p>匹配一个脚本标签(label)名，可以是绝对或关联名称。
+当 <cite>declare</cite> 为True时，设置为全局脚本标签名。
+(注意该方法实际上不能定义脚本标签——定义脚本标签需要使用 <cite>label</cite> 函数。)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.simple_expression">
+<span class="sig-name descname"><span class="pre">simple_expression</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.simple_expression" title="Link to this definition"> link</a></dt>
+<dd><p>匹配一个简单Python表达式，并将其作为字符串返回。
+常用于需要一个变量名的情况。不建议修改得到的结果。
+正确的做法是将返回结果直接用作计算。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.delimited_python">
+<span class="sig-name descname"><span class="pre">delimited_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.delimited_python" title="Link to this definition"> link</a></dt>
+<dd><p>匹配一个以 <cite>delim</cite> 结尾的Python表达式，比如‘:’。
+常用于获取某个分隔符之前表达式的情况。不建议修改得到的结果。
+正确的做法是将返回结果直接用作计算。
+如果在行尾未匹配到分隔符则产生一个报错。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.arguments">
+<span class="sig-name descname"><span class="pre">arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.arguments" title="Link to this definition"> link</a></dt>
+<dd><p>在使用括号内的入参列表之前必须先调用该方法。如果入参没有指定值就返回None，否则返回一个对象。
+返回对象有一个 <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> 方法和一个可选的 <cite>scope</cite> 字典，返回一个元组。返回元组的第一个元素是固定位置入参的元组，第二个元素是关键字入参字典。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.rest">
+<span class="sig-name descname"><span class="pre">rest</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.rest" title="Link to this definition"> link</a></dt>
+<dd><p>跳过空白，返回一行的其他内容。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.checkpoint">
+<span class="sig-name descname"><span class="pre">checkpoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.checkpoint" title="Link to this definition"> link</a></dt>
+<dd><p>返回一个不透明对象，这个对方表现出Lexer当前状态。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.revert">
+<span class="sig-name descname"><span class="pre">revert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.revert" title="Link to this definition"> link</a></dt>
+<dd><p>当 <cite>o</cite> 是一个checkpoint()返回的对象时，将Lexer恢复为调用checkpoint()时的状态。(用于回溯。)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.subblock_lexer">
+<span class="sig-name descname"><span class="pre">subblock_lexer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.subblock_lexer" title="Link to this definition"> link</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>一个Lexer对象，用于当前行相关联的语句块(block)。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.advance">
+<span class="sig-name descname"><span class="pre">advance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.advance" title="Link to this definition"> link</a></dt>
+<dd><p>在一个子块(subblock)Lexer中，前进到下一行。在第一行之前必须调用这个方法，这样第一行才会被处理。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.renpy_statement">
+<span class="sig-name descname"><span class="pre">renpy_statement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.renpy_statement" title="Link to this definition"> link</a></dt>
+<dd><p>调用该方法后，将当前代码行当作Ren’Py脚本语句处理，如果处理失败则生成一个错误。
+该方法返回一个不透明对象。这种不透明对象也可以从 <a class="reference internal" href="#renpy.register_statement" title="renpy.register_statement"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.register_statement()</span></code></a> 方法返回，可以传给 <a class="reference internal" href="statement_equivalents.html#renpy.jump" title="renpy.jump"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.jump()</span></code></a> 和 <a class="reference internal" href="statement_equivalents.html#renpy.call" title="renpy.call"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.call()</span></code></a> 函数处理。
+除非这种不透明需要作为语句处理结果的一部分，一般不进行存储。</p>
+<p>包含该方法的语句执行完毕后，主控流程会切换为CDS语句之后的语句。(很可能是使用post_execute创建的语句。)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.renpy_block">
+<span class="sig-name descname"><span class="pre">renpy_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">empty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.renpy_block" title="Link to this definition"> link</a></dt>
+<dd><p>该方法将当前语句块中剩余的代码行都当作Ren’Py脚本处理，并返回一个SubParse对象，该对象相当于后续整个代码块的第一条语句。
+代码块中所有语句将串联起来并顺序运行，然后主控流程切换到CDS之后的那条语句。</p>
+<p>注意该方法只处理当前代码块。在很多情况下，我们还需要处理当前语句的子块(subblock)，正确的做法如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mystatement_parse</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+
+    <span class="n">l</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">expect_eol</span><span class="p">()</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">expect_block</span><span class="p">(</span><span class="s2">&quot;mystatement&quot;</span><span class="p">)</span>
+
+    <span class="na">child</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">subblock_lexer</span><span class="p">()</span><span class="o">.</span><span class="n">renpy_block</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;child&quot;</span> <span class="p">:</span> <span class="na">child</span> <span class="p">}</span>
+</pre></div>
+</div>
+<dl>
+<dt><cite>empty</cite></dt><dd><p>若为True，允许处理空的代码块。
+(空代码块等于一条 <code class="docutils literal notranslate"><span class="pre">pass</span></code> 语句。)</p>
+<p>若为False，空代码块将触发报错。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lexer.catch_error">
+<span class="sig-name descname"><span class="pre">catch_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lexer.catch_error" title="Link to this definition"> link</a></dt>
+<dd><p>该方法是一个上下文修饰器(context decorator)，与 with 语句协同使用，捕获和记录lexer上下文语句块内的报错，然后继续执行语句块后面的内容。</p>
+<p>这是一个样例，使用该方法并在一个子块(subblock)中记录多个错误：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mystatement_parse</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+
+    <span class="n">l</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">expect_eol</span><span class="p">()</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">expect_block</span><span class="p">(</span><span class="s2">&quot;mystatement&quot;</span><span class="p">)</span>
+
+    <span class="k">strings</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+    <span class="n">ll</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">subblock_lexer</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="n">ll</span><span class="o">.</span><span class="n">advance</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">ll</span><span class="o">.</span><span class="n">catch_errors</span><span class="p">():</span>
+            <span class="k">strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ll</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ll</span><span class="o">.</span><span class="n">string</span><span class="p">))</span>
+            <span class="n">ll</span><span class="o">.</span><span class="n">expect_noblock</span><span class="p">(</span><span class="s2">&quot;string inside mystatement&quot;</span><span class="p">)</span>
+            <span class="n">ll</span><span class="o">.</span><span class="n">expect_eol</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;strings&quot;</span> <span class="p">:</span> <span class="k">strings</span> <span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<p>A function allows you to lex arbitrary strings:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="lex_string">
+<span class="sig-name descname"><span class="pre">lex_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'&lt;string&gt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linenumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">advance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#Lexer" title="Lexer"><span class="pre">Lexer</span></a></span></span><a class="headerlink" href="#lex_string" title="Link to this definition"> link</a></dt>
+<dd><p>返回一个Lexer对象，可用于解析指定文本。</p>
+<dl class="simple">
+<dt><cite>text</cite></dt><dd><p>待解析文本。</p>
+</dd>
+<dt><cite>filename</cite></dt><dd><p>一个文件名。报错信息写入该文件。</p>
+</dd>
+<dt><cite>linenumber</cite></dt><dd><p>报错时记录的行号。</p>
+</dd>
+<dt><cite>advance</cite></dt><dd><p>若为True，解析是会调用Lexer对象的 <a class="reference internal" href="#Lexer.advance" title="Lexer.advance"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Lexer.advance()</span></code></a> 方法。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+<section id="lint">
+<span id="lint-utility-functions"></span><h2>lint功能函数<a class="headerlink" href="#lint" title="Link to this heading"> link</a></h2>
+<p>在编写lint函数时，下列函数很有用。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.check_text_tags">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">check_text_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.check_text_tags" title="Link to this definition"> link</a></dt>
+<dd><p>检查文本标签 <cite>s</cite> 的正确性。如果存在错误则返回错误字符串，没有错误则返回None。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.error">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.error" title="Link to this definition"> link</a></dt>
+<dd><p>将字符串 <em>msg</em> 作为错误信息报给使用者。通常作为parse或lint错误记录日志，其他情况会抛出异常。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.try_compile">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">try_compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">where</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.try_compile" title="Link to this definition"> link</a></dt>
+<dd><p>尝试编译一个表达式，如果失败则将错误写入lint.txt文件。</p>
+<dl class="simple">
+<dt><cite>where</cite></dt><dd><p>一个字符串，表示表达式位置。常见的错误信息格式为“Could not evaluate <em>expr</em> in <em>where</em>”。</p>
+</dd>
+<dt><cite>expr</cite></dt><dd><p>尝试编译的表达式。</p>
+</dd>
+<dt><cite>additional</cite></dt><dd><p>添加到错误消息中的额外信息。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="renpy.try_eval">
+<span class="sig-prename descclassname"><span class="pre">renpy.</span></span><span class="sig-name descname"><span class="pre">try_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">where</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#renpy.try_eval" title="Link to this definition"> link</a></dt>
+<dd><p>尝试计算一个表达式，如果失败则将错误写入lint.txt文件。</p>
+<dl class="simple">
+<dt><cite>where</cite></dt><dd><p>一个字符串，表示表达式位置。常见的错误信息格式为“Could not evaluate <em>expr</em> in <em>where</em>”。</p>
+</dd>
+<dt><cite>expr</cite></dt><dd><p>尝试编译的表达式。</p>
+</dd>
+<dt><cite>additional</cite></dt><dd><p>添加到错误消息中的额外信息。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cdd.html" class="btn btn-neutral float-left" title="创作者定义的可视组件" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="custom_text_tags.html" class="btn btn-neutral float-right" title="定制文本标签" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

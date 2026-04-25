@@ -14,6 +14,7 @@ const stylesNavCountEl = document.getElementById("stylesNavCount");
 const screensNavCountEl = document.getElementById("screensNavCount");
 const extrasNavCountEl = document.getElementById("extrasNavCount");
 const configNavCountEl = document.getElementById("configNavCount");
+const pythonUiNavCountEl = document.getElementById("pythonUiNavCount");
 const cursorsNavCountEl = document.getElementById("cursorsNavCount");
 const shadersNavCountEl = document.getElementById("shadersNavCount");
 const diagnosticsNavCountEl = document.getElementById("diagnosticsNavCount");
@@ -195,17 +196,75 @@ const guiGalleryCodePreviewEl = document.getElementById("guiGalleryCodePreview")
 const guiConfigEmptyEl = document.getElementById("guiConfigEmpty");
 const guiConfigEntryListEl = document.getElementById("guiConfigEntryList");
 const newConfigEntryButton = document.getElementById("newConfigEntryButton");
+const newGuiPreferenceEntryButton = document.getElementById("newGuiPreferenceEntryButton");
 const newPreferenceEntryButton = document.getElementById("newPreferenceEntryButton");
 const newStoreEntryButton = document.getElementById("newStoreEntryButton");
 const guiConfigEmptyStateEl = document.getElementById("guiConfigEmptyState");
 const guiConfigFormEl = document.getElementById("guiConfigForm");
 const guiConfigScopeInput = document.getElementById("guiConfigScopeInput");
+const guiConfigNameLabelEl = document.getElementById("guiConfigNameLabel");
 const guiConfigNameInput = document.getElementById("guiConfigNameInput");
+const guiConfigStorePathLabelEl = document.getElementById("guiConfigStorePathLabel");
 const guiConfigStorePathInput = document.getElementById("guiConfigStorePathInput");
+const guiConfigScopeInfoEl = document.getElementById("guiConfigScopeInfo");
+const guiConfigValueLabelEl = document.getElementById("guiConfigValueLabel");
 const guiConfigValueInput = document.getElementById("guiConfigValueInput");
 const guiConfigDescriptionInput = document.getElementById("guiConfigDescriptionInput");
 const guiDeleteConfigButton = document.getElementById("guiDeleteConfigButton");
 const guiConfigCodePreviewEl = document.getElementById("guiConfigCodePreview");
+
+const guiPythonUiEmptyEl = document.getElementById("guiPythonUiEmpty");
+const guiPythonUiListEl = document.getElementById("guiPythonUiList");
+const newGuiPythonActionButton = document.getElementById("newGuiPythonActionButton");
+const newGuiPythonBarButton = document.getElementById("newGuiPythonBarButton");
+const newGuiPythonInputButton = document.getElementById("newGuiPythonInputButton");
+const newGuiPythonRestartButton = document.getElementById("newGuiPythonRestartButton");
+const newGuiPythonDefineScreenButton = document.getElementById("newGuiPythonDefineScreenButton");
+const guiPythonUiEmptyStateEl = document.getElementById("guiPythonUiEmptyState");
+const guiPythonUiFormEl = document.getElementById("guiPythonUiForm");
+const guiPythonUiKindInput = document.getElementById("guiPythonUiKindInput");
+const guiPythonUiNameLabelEl = document.getElementById("guiPythonUiNameLabel");
+const guiPythonUiNameInput = document.getElementById("guiPythonUiNameInput");
+const guiPythonUiParametersLabelEl = document.getElementById("guiPythonUiParametersLabel");
+const guiPythonUiParametersInput = document.getElementById("guiPythonUiParametersInput");
+const guiPythonUiUsageInput = document.getElementById("guiPythonUiUsageInput");
+const guiPythonUiKindInfoEl = document.getElementById("guiPythonUiKindInfo");
+const guiPythonUiActionFieldsEl = document.getElementById("guiPythonUiActionFields");
+const guiPythonUiActionCallBodyInput = document.getElementById("guiPythonUiActionCallBodyInput");
+const guiPythonUiActionSensitiveInput = document.getElementById("guiPythonUiActionSensitiveInput");
+const guiPythonUiActionSelectedInput = document.getElementById("guiPythonUiActionSelectedInput");
+const guiPythonUiActionTooltipInput = document.getElementById("guiPythonUiActionTooltipInput");
+const guiPythonUiActionAltInput = document.getElementById("guiPythonUiActionAltInput");
+const guiPythonUiActionPeriodicBodyInput = document.getElementById("guiPythonUiActionPeriodicBodyInput");
+const guiPythonUiBarFieldsEl = document.getElementById("guiPythonUiBarFields");
+const guiPythonUiBarAdjustmentInput = document.getElementById("guiPythonUiBarAdjustmentInput");
+const guiPythonUiBarStyleInput = document.getElementById("guiPythonUiBarStyleInput");
+const guiPythonUiBarTooltipInput = document.getElementById("guiPythonUiBarTooltipInput");
+const guiPythonUiBarAltInput = document.getElementById("guiPythonUiBarAltInput");
+const guiPythonUiBarReplacesBodyInput = document.getElementById("guiPythonUiBarReplacesBodyInput");
+const guiPythonUiBarPeriodicBodyInput = document.getElementById("guiPythonUiBarPeriodicBodyInput");
+const guiPythonUiInputFieldsEl = document.getElementById("guiPythonUiInputFields");
+const guiPythonUiInputDefaultInput = document.getElementById("guiPythonUiInputDefaultInput");
+const guiPythonUiInputEditableInput = document.getElementById("guiPythonUiInputEditableInput");
+const guiPythonUiInputReturnableInput = document.getElementById("guiPythonUiInputReturnableInput");
+const guiPythonUiInputGetTextInput = document.getElementById("guiPythonUiInputGetTextInput");
+const guiPythonUiInputSetTextBodyInput = document.getElementById("guiPythonUiInputSetTextBodyInput");
+const guiPythonUiInputEnterBodyInput = document.getElementById("guiPythonUiInputEnterBodyInput");
+const guiPythonUiRestartFieldsEl = document.getElementById("guiPythonUiRestartFields");
+const guiPythonUiRestartTargetInput = document.getElementById("guiPythonUiRestartTargetInput");
+const guiPythonUiRestartValueInput = document.getElementById("guiPythonUiRestartValueInput");
+const guiPythonUiRestartBodyInput = document.getElementById("guiPythonUiRestartBodyInput");
+const guiPythonUiDefineScreenFieldsEl = document.getElementById("guiPythonUiDefineScreenFields");
+const guiPythonUiDefineScreenNameInput = document.getElementById("guiPythonUiDefineScreenNameInput");
+const guiPythonUiDefineModalInput = document.getElementById("guiPythonUiDefineModalInput");
+const guiPythonUiDefineZorderInput = document.getElementById("guiPythonUiDefineZorderInput");
+const guiPythonUiDefineTagInput = document.getElementById("guiPythonUiDefineTagInput");
+const guiPythonUiDefineVariantInput = document.getElementById("guiPythonUiDefineVariantInput");
+const guiPythonUiDefineBodyInput = document.getElementById("guiPythonUiDefineBodyInput");
+const guiPythonUiNotesInput = document.getElementById("guiPythonUiNotesInput");
+const guiDeletePythonUiButton = document.getElementById("guiDeletePythonUiButton");
+const guiPythonUiUsageListEl = document.getElementById("guiPythonUiUsageList");
+const guiPythonUiCodePreviewEl = document.getElementById("guiPythonUiCodePreview");
 
 const guiCursorEmptyEl = document.getElementById("guiCursorEmpty");
 const guiCursorListEl = document.getElementById("guiCursorList");
@@ -256,8 +315,10 @@ const defaultGuiState = {
   styles: [],
   screens: [],
   config: [],
+  guiPreferences: [],
   preferences: [],
   store: [],
+  pythonUiHelpers: [],
   cursors: [],
   textShaders: [],
   replayMenu: {
@@ -452,6 +513,9 @@ const screenActionMeta = [
   { id: "SetVariable", label: "SetVariable(name, value)", placeholder: '"flag", True' },
   { id: "ToggleVariable", label: "ToggleVariable(name)", placeholder: '"show_advanced"' },
   { id: "Preference", label: "Preference(name, value)", placeholder: '"display", "fullscreen"' },
+  { id: "gui.SetPreference", label: "gui.SetPreference(name, value)", placeholder: '"size", 24' },
+  { id: "gui.TogglePreference", label: "gui.TogglePreference(name, a, b)", placeholder: '"font", "OpenDyslexic-Regular.otf", "DejaVuSans.ttf"' },
+  { id: "GuiRebuild", label: "Function(gui.rebuild)", placeholder: "" },
   { id: "FileAction", label: "FileAction(slot)", placeholder: "1" },
   { id: "FileSave", label: "FileSave(slot)", placeholder: "slot" },
   { id: "FileLoad", label: "FileLoad(slot)", placeholder: "slot" },
@@ -510,6 +574,49 @@ const specialScreenTemplateMeta = [
   { id: "preferences", label: "preferences", description: "Preference screen with display and volume controls." },
   { id: "confirm", label: "confirm", description: "Confirmation dialog with yes/no buttons." },
 ];
+
+const pythonUiKindMeta = {
+  action: {
+    label: "Action Class",
+    nameLabel: "Class Name",
+    namePlaceholder: "e.g. ToggleCodexAction",
+    parametersLabel: "Constructor Args",
+    parametersPlaceholder: "e.g. flag_name, enabled_value=True",
+    info: "Create a reusable Action subclass for buttons, selected states, sensitivity checks, and tooltips. Use the generated class from a screen node's Raw Action expression.",
+  },
+  barvalue: {
+    label: "BarValue Class",
+    nameLabel: "Class Name",
+    namePlaceholder: "e.g. VolumeBarValue",
+    parametersLabel: "Constructor Args",
+    parametersPlaceholder: "e.g. channel=\"music\"",
+    info: "Create a reusable BarValue subclass for bars, sliders, and other value-driven widgets. Use the generated class from a bar or vbar node's Raw Value expression.",
+  },
+  inputvalue: {
+    label: "InputValue Class",
+    nameLabel: "Class Name",
+    namePlaceholder: "e.g. PlayerNameInputValue",
+    parametersLabel: "Constructor Args",
+    parametersPlaceholder: "e.g. field_name=\"player_name\"",
+    info: "Create a reusable InputValue subclass for input widgets. The generated class still inherits Enable / Disable / Toggle from InputValue.",
+  },
+  restart_helper: {
+    label: "restart_interaction Helper",
+    nameLabel: "Function Name",
+    namePlaceholder: "e.g. set_overlay_mode",
+    parametersLabel: "Function Args",
+    parametersPlaceholder: "e.g. value",
+    info: "Build a helper that updates a variable and immediately calls renpy.restart_interaction(). This is useful when Python-side screen state needs an immediate refresh.",
+  },
+  define_screen: {
+    label: "define_screen Helper",
+    nameLabel: "Builder Function Name",
+    namePlaceholder: "e.g. build_python_overlay",
+    parametersLabel: "Function Args",
+    parametersPlaceholder: "e.g. message=\"Hello\"",
+    info: "Build a Python-defined screen function and register it through renpy.define_screen(). This is intentionally low-level and best reserved for advanced screen behavior.",
+  },
+};
 
 const autoManagedScreenNames = new Set(specialScreenTemplateMeta.map((template) => template.id));
 
@@ -812,13 +919,31 @@ function createScreenTemplate(templateId) {
         tag: "menu",
         modal: true,
         zorder: "100",
-        notes: "Preference screen scaffold based on Preference actions and values.",
+        notes: "Preference screen scaffold based on Preference actions, GUI preference helpers, and values.",
         nodes: [
           buildTemplateNode("vbox", { title: "Preferences Layout", style: "preferences_vbox" }, [
             buildTemplateNode("text", { title: "Preferences Title", text: "_(\"Preferences\")", style: "preferences_title" }),
             buildTemplateNode("hbox", { title: "Display Mode", style: "preferences_row" }, [
               buildTemplateNode("textbutton", { title: "Window", text: "_(\"Window\")", actionKind: "Preference", actionArgs: '"display", "window"', style: "preferences_button" }),
               buildTemplateNode("textbutton", { title: "Fullscreen", text: "_(\"Fullscreen\")", actionKind: "Preference", actionArgs: '"display", "fullscreen"', style: "preferences_button" }),
+            ]),
+            buildTemplateNode("vbox", { title: "GUI Font Options", style: "preferences_group" }, [
+              buildTemplateNode("text", { title: "GUI Font Label", text: '_("GUI Font")', style: "preferences_group_label" }),
+              buildTemplateNode("textbutton", {
+                title: "OpenDyslexic Toggle",
+                text: '_("OpenDyslexic")',
+                actionKind: "gui.TogglePreference",
+                actionArgs: '"font", "OpenDyslexic-Regular.otf", "DejaVuSans.ttf"',
+                style: "preferences_button",
+              }),
+            ]),
+            buildTemplateNode("vbox", { title: "GUI Text Size", style: "preferences_group" }, [
+              buildTemplateNode("text", { title: "GUI Size Label", text: '_("GUI Text Size")', style: "preferences_group_label" }),
+              buildTemplateNode("hbox", { title: "Size Buttons", style: "preferences_row" }, [
+                buildTemplateNode("textbutton", { title: "Small", text: '_("Small")', actionKind: "gui.SetPreference", actionArgs: '"size", 20', style: "preferences_button" }),
+                buildTemplateNode("textbutton", { title: "Medium", text: '_("Medium")', actionKind: "gui.SetPreference", actionArgs: '"size", 22', style: "preferences_button" }),
+                buildTemplateNode("textbutton", { title: "Large", text: '_("Big")', actionKind: "gui.SetPreference", actionArgs: '"size", 24', style: "preferences_button" }),
+              ]),
             ]),
             buildTemplateNode("bar", { title: "Text Speed", style: "preferences_bar", valueKind: "Preference", valueArgs: '"text speed"' }),
             buildTemplateNode("bar", { title: "Music Volume", style: "preferences_bar", valueKind: "Preference", valueArgs: '"music volume"' }),
@@ -867,6 +992,7 @@ let activeStylePrefixId = "base";
 let activeScreenId = projectState.gui.screens[0]?.id ?? null;
 let activeScreenNodeId = getFirstNodeId(projectState.gui.screens[0]?.nodes ?? []);
 let activeConfigEntryKey = getAllConfigEntries(projectState.gui)[0]?.key ?? null;
+let activePythonUiId = projectState.gui.pythonUiHelpers[0]?.id ?? null;
 let activeCursorId = projectState.gui.cursors[0]?.id ?? null;
 let activeShaderId = projectState.gui.textShaders[0]?.id ?? null;
 let activeMusicRoomId = projectState.gui.musicRooms[0]?.id ?? null;
@@ -911,11 +1037,17 @@ function normalizeGuiState(rawGui) {
     config: Array.isArray(rawGui.config)
       ? rawGui.config.map((entry, index) => normalizeGuiConfigEntry(entry, index, "config"))
       : [],
+    guiPreferences: Array.isArray(rawGui.guiPreferences)
+      ? rawGui.guiPreferences.map((entry, index) => normalizeGuiConfigEntry(entry, index, "guiPreferences"))
+      : [],
     preferences: Array.isArray(rawGui.preferences)
       ? rawGui.preferences.map((entry, index) => normalizeGuiConfigEntry(entry, index, "preferences"))
       : [],
     store: Array.isArray(rawGui.store)
       ? rawGui.store.map((entry, index) => normalizeGuiConfigEntry(entry, index, "store"))
+      : [],
+    pythonUiHelpers: Array.isArray(rawGui.pythonUiHelpers)
+      ? rawGui.pythonUiHelpers.map((entry, index) => normalizeGuiPythonUiEntry(entry, index))
       : [],
     cursors: Array.isArray(rawGui.cursors)
       ? rawGui.cursors.map((entry, index) => normalizeGuiCursorEntry(entry, index))
@@ -1050,6 +1182,53 @@ function normalizeGuiConfigEntry(entry, index, scope) {
   };
 }
 
+function normalizeGuiPythonUiEntry(entry, index) {
+  const validKind = Object.prototype.hasOwnProperty.call(pythonUiKindMeta, entry?.kind) ? entry.kind : "action";
+  const fallbackNameByKind = {
+    action: `CustomAction${index + 1}`,
+    barvalue: `CustomBarValue${index + 1}`,
+    inputvalue: `CustomInputValue${index + 1}`,
+    restart_helper: `refresh_screen_${index + 1}`,
+    define_screen: `build_python_screen_${index + 1}`,
+  };
+
+  return {
+    id: entry?.id || createId("python_ui"),
+    kind: validKind,
+    name: `${entry?.name || ""}`.trim() || fallbackNameByKind[validKind],
+    parameters: `${entry?.parameters || ""}`.trim(),
+    usage: `${entry?.usage || ""}`.trim(),
+    notes: `${entry?.notes || ""}`.trim(),
+    actionCallBody: `${entry?.actionCallBody || ""}`.trim(),
+    actionSensitive: `${entry?.actionSensitive || ""}`.trim(),
+    actionSelected: `${entry?.actionSelected || ""}`.trim(),
+    actionTooltip: `${entry?.actionTooltip || ""}`.trim(),
+    actionAlt: `${entry?.actionAlt || ""}`.trim(),
+    actionPeriodicBody: `${entry?.actionPeriodicBody || ""}`.trim(),
+    barAdjustment: `${entry?.barAdjustment || ""}`.trim(),
+    barStyle: `${entry?.barStyle || ""}`.trim(),
+    barTooltip: `${entry?.barTooltip || ""}`.trim(),
+    barAlt: `${entry?.barAlt || ""}`.trim(),
+    barReplacesBody: `${entry?.barReplacesBody || ""}`.trim(),
+    barPeriodicBody: `${entry?.barPeriodicBody || ""}`.trim(),
+    inputDefault: entry?.inputDefault === false || entry?.inputDefault === "false" ? "false" : "true",
+    inputEditable: entry?.inputEditable === false || entry?.inputEditable === "false" ? "false" : "true",
+    inputReturnable: entry?.inputReturnable === true || entry?.inputReturnable === "true" ? "true" : "false",
+    inputGetText: `${entry?.inputGetText || ""}`.trim(),
+    inputSetTextBody: `${entry?.inputSetTextBody || ""}`.trim(),
+    inputEnterBody: `${entry?.inputEnterBody || ""}`.trim(),
+    restartTarget: `${entry?.restartTarget || ""}`.trim(),
+    restartValue: `${entry?.restartValue || ""}`.trim(),
+    restartBody: `${entry?.restartBody || ""}`.trim(),
+    defineScreenName: `${entry?.defineScreenName || ""}`.trim() || (validKind === "define_screen" ? `python_screen_${index + 1}` : ""),
+    defineModal: entry?.defineModal === true || entry?.defineModal === "true" ? "true" : "false",
+    defineZorder: `${entry?.defineZorder ?? ""}`.trim(),
+    defineTag: `${entry?.defineTag || ""}`.trim(),
+    defineVariant: `${entry?.defineVariant || ""}`.trim(),
+    defineBody: `${entry?.defineBody || ""}`.trim(),
+  };
+}
+
 function normalizeGuiCursorEntry(entry, index) {
   const validKind = ["hardware", "displayable", "usage"].includes(entry?.kind) ? entry.kind : "hardware";
   return {
@@ -1177,9 +1356,90 @@ function normalizeGuiGallery(entry, index) {
 function getAllConfigEntries(guiState = projectState.gui) {
   return [
     ...guiState.config.map((entry) => ({ scope: "config", entry, key: `config:${entry.id}` })),
+    ...guiState.guiPreferences.map((entry) => ({ scope: "guiPreferences", entry, key: `guiPreferences:${entry.id}` })),
     ...guiState.preferences.map((entry) => ({ scope: "preferences", entry, key: `preferences:${entry.id}` })),
     ...guiState.store.map((entry) => ({ scope: "store", entry, key: `store:${entry.id}` })),
   ];
+}
+
+const configScopeMeta = {
+  config: {
+    label: "Config",
+    nameLabel: "Name",
+    namePlaceholder: "e.g. default_textshader",
+    auxLabel: "Store Path",
+    auxPlaceholder: "Optional, e.g. persistent or my_store",
+    auxVisible: false,
+    valueLabel: "Value",
+    valuePlaceholder: 'e.g. "wave:10", True, 0.25, {"idle": [("gui/cursor.png", 4, 4)]}',
+    info: "Emit a project-level `define config.*` statement.",
+  },
+  guiPreferences: {
+    label: "GUI Preference",
+    nameLabel: "GUI Variable",
+    namePlaceholder: "e.g. text_font or text_size",
+    auxLabel: "Preference Key",
+    auxPlaceholder: 'e.g. "font" or "size"',
+    auxVisible: true,
+    valueLabel: "Default Value",
+    valuePlaceholder: 'e.g. "DejaVuSans.ttf" or 22',
+    info: "Emit `define gui.<variable> = gui.preference(<key>, <default>)` so screens can later use gui.SetPreference / gui.TogglePreference.",
+  },
+  preferences: {
+    label: "Preference Default",
+    nameLabel: "Preference Name",
+    namePlaceholder: "e.g. fullscreen",
+    auxLabel: "Store Path",
+    auxPlaceholder: "Optional, e.g. persistent or my_store",
+    auxVisible: false,
+    valueLabel: "Value",
+    valuePlaceholder: "e.g. True or 1.0",
+    info: "Emit a `default preferences.*` statement.",
+  },
+  store: {
+    label: "Store Default",
+    nameLabel: "Variable Name",
+    namePlaceholder: "e.g. current_theme",
+    auxLabel: "Store Path",
+    auxPlaceholder: "Optional, e.g. persistent or my_store",
+    auxVisible: true,
+    valueLabel: "Default Value",
+    valuePlaceholder: "e.g. None or []",
+    info: "Emit a `default` statement in the selected store namespace.",
+  },
+};
+
+function getConfigScopeMeta(scope) {
+  return configScopeMeta[scope] || configScopeMeta.config;
+}
+
+function getGuiPreferenceName(entry) {
+  return `${entry?.storePath || entry?.name || ""}`.trim();
+}
+
+function getDefinedGuiPreferenceNames() {
+  return new Set(
+    (projectState.gui.guiPreferences || [])
+      .map((entry) => getGuiPreferenceName(entry))
+      .filter(Boolean),
+  );
+}
+
+function parseLeadingArgumentName(argumentList) {
+  const trimmed = `${argumentList || ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  const quotedMatch = trimmed.match(/^(['"])(.*?)\1/);
+
+  if (quotedMatch) {
+    return quotedMatch[2].trim();
+  }
+
+  const bareMatch = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)/);
+  return bareMatch ? bareMatch[1].trim() : "";
 }
 
 function getFirstNodeId(nodes) {
@@ -1245,12 +1505,82 @@ function createBlankScreenNode(type = "text") {
 function createBlankConfigEntry(scope = "config") {
   const baseArray = projectState.gui[scope] || [];
   const nextIndex = baseArray.length + 1;
+
+  if (scope === "guiPreferences") {
+    return normalizeGuiConfigEntry({
+      id: createId(`${scope}_entry`),
+      name: `gui_pref_${nextIndex}`,
+      storePath: `pref_${nextIndex}`,
+      value: "None",
+      description: "",
+    }, nextIndex - 1, scope);
+  }
+
   return normalizeGuiConfigEntry({
     id: createId(`${scope}_entry`),
     name: `${scope}_entry_${nextIndex}`,
     value: "",
     description: "",
   }, nextIndex - 1, scope);
+}
+
+function createBlankPythonUiEntry(kind = "action") {
+  const baseArray = projectState.gui.pythonUiHelpers || [];
+  const nextIndex = baseArray.length + 1;
+
+  const presets = {
+    action: {
+      kind,
+      name: `CustomAction${nextIndex}`,
+      parameters: "flag_name",
+      actionSensitive: "True",
+      actionSelected: "False",
+      actionTooltip: "None",
+      actionAlt: "_(\"Activate action\")",
+    },
+    barvalue: {
+      kind,
+      name: `CustomBarValue${nextIndex}`,
+      parameters: "channel=\"music\"",
+      barAdjustment: "ui.adjustment(range=100, value=0)",
+      barStyle: "(\"bar\", \"vbar\")",
+      barTooltip: "None",
+      barAlt: "_(\"Bar value\")",
+    },
+    inputvalue: {
+      kind,
+      name: `CustomInputValue${nextIndex}`,
+      parameters: "field_name=\"player_name\"",
+      inputDefault: "true",
+      inputEditable: "true",
+      inputReturnable: "false",
+      inputGetText: "store.player_name or \"\"",
+      inputSetTextBody: "store.player_name = s",
+    },
+    restart_helper: {
+      kind,
+      name: `refresh_screen_${nextIndex}`,
+      parameters: "value",
+      restartTarget: "store.python_screen_flag",
+      restartValue: "value",
+    },
+    define_screen: {
+      kind,
+      name: `build_python_screen_${nextIndex}`,
+      parameters: "",
+      defineScreenName: `python_screen_${nextIndex}`,
+      defineModal: "false",
+      defineZorder: "0",
+      defineBody: "ui.window(style=\"say_window\")\nui.text(\"Python-defined screen placeholder\")",
+    },
+  };
+
+  return normalizeGuiPythonUiEntry({
+    id: createId("python_ui"),
+    usage: "",
+    notes: "",
+    ...presets[kind],
+  }, nextIndex - 1);
 }
 
 function createBlankCursorEntry(kind = "hardware") {
@@ -1404,6 +1734,10 @@ function getActiveScreenNodeContext() {
 function getActiveConfigEntryContext() {
   const allEntries = getAllConfigEntries();
   return allEntries.find((item) => item.key === activeConfigEntryKey) ?? null;
+}
+
+function getActivePythonUiEntry() {
+  return projectState.gui.pythonUiHelpers.find((entry) => entry.id === activePythonUiId) ?? null;
 }
 
 function getActiveCursor() {
@@ -1699,6 +2033,10 @@ function formatActionExpression(kind, args, raw) {
     return "achievement.Sync()";
   }
 
+  if (kind === "GuiRebuild") {
+    return "Function(gui.rebuild)";
+  }
+
   if (["Start"].includes(kind)) {
     return `${kind}()`;
   }
@@ -1990,6 +2328,31 @@ function deleteActiveConfigEntry() {
   activeConfigEntryKey = getAllConfigEntries(projectState.gui)[0]?.key ?? null;
   render();
   saveProjectState(`Deleted ${context.scope} entry "${context.entry.name}".`);
+}
+
+function updateActivePythonUiEntry(patch) {
+  const entry = getActivePythonUiEntry();
+
+  if (!entry) {
+    return;
+  }
+
+  Object.assign(entry, patch);
+  render();
+  saveProjectState(`Updated Python UI helper "${entry.name}".`);
+}
+
+function deleteActivePythonUiEntry() {
+  const entry = getActivePythonUiEntry();
+
+  if (!entry) {
+    return;
+  }
+
+  projectState.gui.pythonUiHelpers = projectState.gui.pythonUiHelpers.filter((item) => item.id !== entry.id);
+  activePythonUiId = projectState.gui.pythonUiHelpers[0]?.id ?? null;
+  render();
+  saveProjectState(`Deleted Python UI helper "${entry.name}".`);
 }
 
 function updateActiveCursor(patch) {
@@ -3681,7 +4044,7 @@ function renderConfigList() {
   guiConfigEntryListEl.innerHTML = allEntries.map(({ scope, entry, key }) => `
     <div class="gui-entity-card ${key === activeConfigEntryKey ? "is-active" : ""}" data-config-entry-key="${escapeHtml(key)}">
       <strong>${escapeHtml(entry.name)}</strong>
-      <span>${escapeHtml(`${scope}${entry.storePath ? ` · ${entry.storePath}` : ""}`)}</span>
+      <span>${escapeHtml(`${getConfigScopeMeta(scope).label}${entry.storePath ? ` · ${entry.storePath}` : ""}`)}</span>
     </div>
   `).join("");
 }
@@ -3689,6 +4052,10 @@ function renderConfigList() {
 function formatConfigEntryCode(entry, scope) {
   if (scope === "config") {
     return `define config.${entry.name} = ${entry.value || "None"}`;
+  }
+
+  if (scope === "guiPreferences") {
+    return `define gui.${entry.name} = gui.preference(${formatRenpyQuotedString(getGuiPreferenceName(entry) || entry.name)}, ${entry.value || "None"})`;
   }
 
   if (scope === "preferences") {
@@ -3711,12 +4078,21 @@ function renderConfigDetail() {
     return;
   }
 
+  const scopeMeta = getConfigScopeMeta(context.scope);
   guiConfigScopeInput.value = context.scope;
   guiConfigNameInput.value = context.entry.name;
   guiConfigStorePathInput.value = context.entry.storePath;
   guiConfigValueInput.value = context.entry.value;
   guiConfigDescriptionInput.value = context.entry.description;
-  guiConfigStorePathInput.closest("label").classList.toggle("hidden", context.scope !== "store");
+  guiConfigNameLabelEl.textContent = scopeMeta.nameLabel;
+  guiConfigNameInput.placeholder = scopeMeta.namePlaceholder;
+  guiConfigStorePathLabelEl.textContent = scopeMeta.auxLabel;
+  guiConfigStorePathInput.placeholder = scopeMeta.auxPlaceholder;
+  guiConfigValueLabelEl.textContent = scopeMeta.valueLabel;
+  guiConfigValueInput.placeholder = scopeMeta.valuePlaceholder;
+  guiConfigScopeInfoEl.textContent = scopeMeta.info;
+  guiConfigScopeInfoEl.classList.toggle("hidden", !scopeMeta.info);
+  guiConfigStorePathInput.closest("label").classList.toggle("hidden", !scopeMeta.auxVisible);
   guiConfigCodePreviewEl.textContent = formatAllConfigCode();
 }
 
@@ -3730,6 +4106,318 @@ function formatAllConfigCode() {
     lines.push("");
   });
   return lines.join("\n").trim();
+}
+
+function getPythonUiKindMeta(kind) {
+  return pythonUiKindMeta[kind] || pythonUiKindMeta.action;
+}
+
+function parseLeadingParameterName(parameterList) {
+  const trimmed = `${parameterList || ""}`.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  const bareMatch = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)/);
+  return bareMatch ? bareMatch[1].trim() : "";
+}
+
+function formatPythonUiHelperName(entry) {
+  return entry?.name || getPythonUiKindMeta(entry?.kind).namePlaceholder;
+}
+
+function buildPythonMethodBlock(signature, rawBody, indentLevel, fallbackLines) {
+  const lines = [indentLine(signature, indentLevel)];
+  const bodyLines = splitRawLines(rawBody);
+  const effectiveLines = bodyLines.length ? bodyLines : fallbackLines;
+
+  effectiveLines.forEach((line) => {
+    lines.push(indentLine(line, indentLevel + 1));
+  });
+
+  return lines;
+}
+
+function getPythonUiUsageEntries(entry) {
+  if (!entry) {
+    return [];
+  }
+
+  if (entry.usage) {
+    return [
+      {
+        title: "Custom Usage",
+        detail: entry.usage,
+      },
+    ];
+  }
+
+  switch (entry.kind) {
+    case "action":
+      return [
+        {
+          title: "Where to use it",
+          detail: `In Screens, pick an interactive node and set Action -> Raw Expression to ${formatPythonUiHelperName(entry)}(...).`,
+        },
+        {
+          title: "Good fit",
+          detail: "Buttons that need custom selected/sensitive logic, tooltips, or Python-side side effects.",
+        },
+      ];
+    case "barvalue":
+      return [
+        {
+          title: "Where to use it",
+          detail: `In bar or vbar nodes, set Value -> Raw Expression to ${formatPythonUiHelperName(entry)}(...).`,
+        },
+        {
+          title: "Good fit",
+          detail: "Custom sliders, volume widgets, meters, and advanced adjustment-driven controls.",
+        },
+      ];
+    case "inputvalue":
+      return [
+        {
+          title: "Where to use it",
+          detail: `In input nodes, set InputValue -> Raw Expression to ${formatPythonUiHelperName(entry)}(...).`,
+        },
+        {
+          title: "Good fit",
+          detail: "When input text should read from and write to a custom Python source.",
+        },
+        {
+          title: "Inherited helpers",
+          detail: "Enable(), Disable(), and Toggle() still come from InputValue unless you replace them yourself.",
+        },
+      ];
+    case "restart_helper":
+      return [
+        {
+          title: "Where to use it",
+          detail: `Call it from Function(${formatPythonUiHelperName(entry)}, ...) in a screen action, or from another Python helper.`,
+        },
+        {
+          title: "Good fit",
+          detail: "Variable updates that need renpy.restart_interaction() before the screen visually refreshes.",
+        },
+      ];
+    case "define_screen":
+      return [
+        {
+          title: "Where to use it",
+          detail: `After registration, call it like a normal screen with show/call screen ${entry.defineScreenName || "python_screen"}.`,
+        },
+        {
+          title: "Good fit",
+          detail: "Very low-level UI cases that do not map cleanly to regular screen language nodes.",
+        },
+      ];
+    default:
+      return [];
+  }
+}
+
+function formatPythonUiEntryCode(entry) {
+  if (!entry) {
+    return "";
+  }
+
+  const lines = [];
+
+  if (entry.notes) {
+    lines.push(`# ${entry.notes}`);
+  }
+
+  lines.push("init python:");
+
+  switch (entry.kind) {
+    case "action": {
+      lines.push(indentLine(`class ${formatPythonUiHelperName(entry)}(Action):`, 1));
+
+      if (entry.actionAlt) {
+        lines.push(indentLine(`alt = ${formatGeneralValue(entry.actionAlt)}`, 2));
+      } else {
+        lines.push(indentLine("alt = None", 2));
+      }
+
+      if (entry.parameters) {
+        lines.push(...buildPythonMethodBlock(`def __init__(self, ${entry.parameters}):`, "", 2, ["pass"]));
+      }
+
+      lines.push(...buildPythonMethodBlock("def __call__(self):", entry.actionCallBody, 2, ["return None"]));
+      lines.push(...buildPythonMethodBlock("def get_sensitive(self):", "", 2, [`return ${entry.actionSensitive || "True"}`]));
+      lines.push(...buildPythonMethodBlock("def get_selected(self):", "", 2, [`return ${entry.actionSelected || "False"}`]));
+      lines.push(...buildPythonMethodBlock("def get_tooltip(self):", "", 2, [`return ${entry.actionTooltip || "None"}`]));
+      lines.push(...buildPythonMethodBlock("def periodic(self, st):", entry.actionPeriodicBody, 2, ["return"]));
+      break;
+    }
+    case "barvalue": {
+      lines.push(indentLine(`class ${formatPythonUiHelperName(entry)}(BarValue):`, 1));
+      lines.push(indentLine(`alt = ${entry.barAlt ? formatGeneralValue(entry.barAlt) : "\"Bar\""}`, 2));
+
+      if (entry.parameters) {
+        lines.push(...buildPythonMethodBlock(`def __init__(self, ${entry.parameters}):`, "", 2, ["pass"]));
+      }
+
+      lines.push(...buildPythonMethodBlock("def replaces(self, other):", entry.barReplacesBody, 2, ["return"]));
+      lines.push(...buildPythonMethodBlock("def periodic(self, st):", entry.barPeriodicBody, 2, ["return"]));
+      lines.push(...buildPythonMethodBlock("def get_adjustment(self):", "", 2, [`return ${entry.barAdjustment || "ui.adjustment(range=100, value=0)"}`]));
+      lines.push(...buildPythonMethodBlock("def get_style(self):", "", 2, [`return ${entry.barStyle || "(\"bar\", \"vbar\")"}`]));
+      lines.push(...buildPythonMethodBlock("def get_tooltip(self):", "", 2, [`return ${entry.barTooltip || "None"}`]));
+      break;
+    }
+    case "inputvalue": {
+      lines.push(indentLine(`class ${formatPythonUiHelperName(entry)}(InputValue):`, 1));
+      lines.push(indentLine(`default = ${entry.inputDefault === "false" ? "False" : "True"}`, 2));
+      lines.push(indentLine(`editable = ${entry.inputEditable === "false" ? "False" : "True"}`, 2));
+      lines.push(indentLine(`returnable = ${entry.inputReturnable === "true" ? "True" : "False"}`, 2));
+
+      if (entry.parameters) {
+        lines.push(...buildPythonMethodBlock(`def __init__(self, ${entry.parameters}):`, "", 2, ["pass"]));
+      }
+
+      lines.push(...buildPythonMethodBlock("def get_text(self):", "", 2, [`return ${entry.inputGetText || "\"\""}`]));
+      lines.push(...buildPythonMethodBlock("def set_text(self, s):", entry.inputSetTextBody, 2, ["pass"]));
+      lines.push(...buildPythonMethodBlock("def enter(self):", entry.inputEnterBody, 2, ["return InputValue.enter(self)"]));
+      break;
+    }
+    case "restart_helper": {
+      const parameterList = entry.parameters || "value";
+      const leadingParameter = parseLeadingParameterName(parameterList) || "value";
+      const assignedValue = entry.restartValue || leadingParameter;
+      lines.push(indentLine(`def ${formatPythonUiHelperName(entry)}(${parameterList}):`, 1));
+      const bodyLines = [];
+      if (entry.restartTarget) {
+        bodyLines.push(`${entry.restartTarget} = ${assignedValue}`);
+      }
+      bodyLines.push(...splitRawLines(entry.restartBody));
+      bodyLines.push("renpy.restart_interaction()");
+      (bodyLines.length ? bodyLines : ["pass"]).forEach((line) => {
+        lines.push(indentLine(line, 2));
+      });
+      break;
+    }
+    case "define_screen": {
+      lines.push(...buildPythonMethodBlock(`def ${formatPythonUiHelperName(entry)}(${entry.parameters || ""}):`, entry.defineBody, 1, [
+        "ui.window(style=\"say_window\")",
+        "ui.text(\"Python-defined screen placeholder\")",
+      ]));
+
+      const screenName = formatRenpyQuotedString(entry.defineScreenName || "python_screen");
+      const modalValue = entry.defineModal === "true" ? "True" : "False";
+      const zorderValue = entry.defineZorder || "0";
+      const tagValue = entry.defineTag ? formatGeneralValue(entry.defineTag) : "None";
+      const variantValue = entry.defineVariant ? formatGeneralValue(entry.defineVariant) : "None";
+      lines.push(indentLine(`renpy.define_screen(${screenName}, ${formatPythonUiHelperName(entry)}, modal=${modalValue}, zorder=${zorderValue}, tag=${tagValue}, variant=${variantValue})`, 1));
+      break;
+    }
+    default:
+      break;
+  }
+
+  return lines.join("\n");
+}
+
+function formatAllPythonUiCode() {
+  return projectState.gui.pythonUiHelpers
+    .map((entry) => formatPythonUiEntryCode(entry))
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+function renderPythonUiList() {
+  const hasEntries = projectState.gui.pythonUiHelpers.length > 0;
+
+  if (!hasEntries) {
+    activePythonUiId = null;
+  } else if (!getActivePythonUiEntry()) {
+    activePythonUiId = projectState.gui.pythonUiHelpers[0].id;
+  }
+
+  guiPythonUiEmptyEl.classList.toggle("hidden", hasEntries);
+  guiPythonUiListEl.innerHTML = projectState.gui.pythonUiHelpers.map((entry) => `
+    <div class="gui-entity-card ${entry.id === activePythonUiId ? "is-active" : ""}" data-python-ui-id="${escapeHtml(entry.id)}">
+      <strong>${escapeHtml(entry.name)}</strong>
+      <span>${escapeHtml(getPythonUiKindMeta(entry.kind).label)}</span>
+    </div>
+  `).join("");
+}
+
+function renderPythonUiDetail() {
+  const entry = getActivePythonUiEntry();
+  const hasEntry = Boolean(entry);
+
+  guiPythonUiEmptyStateEl.classList.toggle("hidden", hasEntry);
+  guiPythonUiFormEl.classList.toggle("hidden", !hasEntry);
+
+  if (!entry) {
+    guiPythonUiUsageListEl.innerHTML = `<div class="gui-inline-empty">No helper usage notes yet.</div>`;
+    guiPythonUiCodePreviewEl.textContent = formatAllPythonUiCode();
+    return;
+  }
+
+  const kindMeta = getPythonUiKindMeta(entry.kind);
+  guiPythonUiKindInput.value = entry.kind;
+  guiPythonUiNameLabelEl.textContent = kindMeta.nameLabel;
+  guiPythonUiNameInput.placeholder = kindMeta.namePlaceholder;
+  guiPythonUiNameInput.value = entry.name;
+  guiPythonUiParametersLabelEl.textContent = kindMeta.parametersLabel;
+  guiPythonUiParametersInput.placeholder = kindMeta.parametersPlaceholder;
+  guiPythonUiParametersInput.value = entry.parameters;
+  guiPythonUiUsageInput.value = entry.usage;
+  guiPythonUiKindInfoEl.textContent = kindMeta.info;
+  guiPythonUiNotesInput.value = entry.notes;
+
+  guiPythonUiActionFieldsEl.classList.toggle("hidden", entry.kind !== "action");
+  guiPythonUiBarFieldsEl.classList.toggle("hidden", entry.kind !== "barvalue");
+  guiPythonUiInputFieldsEl.classList.toggle("hidden", entry.kind !== "inputvalue");
+  guiPythonUiRestartFieldsEl.classList.toggle("hidden", entry.kind !== "restart_helper");
+  guiPythonUiDefineScreenFieldsEl.classList.toggle("hidden", entry.kind !== "define_screen");
+
+  guiPythonUiActionCallBodyInput.value = entry.actionCallBody;
+  guiPythonUiActionSensitiveInput.value = entry.actionSensitive;
+  guiPythonUiActionSelectedInput.value = entry.actionSelected;
+  guiPythonUiActionTooltipInput.value = entry.actionTooltip;
+  guiPythonUiActionAltInput.value = entry.actionAlt;
+  guiPythonUiActionPeriodicBodyInput.value = entry.actionPeriodicBody;
+
+  guiPythonUiBarAdjustmentInput.value = entry.barAdjustment;
+  guiPythonUiBarStyleInput.value = entry.barStyle;
+  guiPythonUiBarTooltipInput.value = entry.barTooltip;
+  guiPythonUiBarAltInput.value = entry.barAlt;
+  guiPythonUiBarReplacesBodyInput.value = entry.barReplacesBody;
+  guiPythonUiBarPeriodicBodyInput.value = entry.barPeriodicBody;
+
+  guiPythonUiInputDefaultInput.value = entry.inputDefault;
+  guiPythonUiInputEditableInput.value = entry.inputEditable;
+  guiPythonUiInputReturnableInput.value = entry.inputReturnable;
+  guiPythonUiInputGetTextInput.value = entry.inputGetText;
+  guiPythonUiInputSetTextBodyInput.value = entry.inputSetTextBody;
+  guiPythonUiInputEnterBodyInput.value = entry.inputEnterBody;
+
+  guiPythonUiRestartTargetInput.value = entry.restartTarget;
+  guiPythonUiRestartValueInput.value = entry.restartValue;
+  guiPythonUiRestartBodyInput.value = entry.restartBody;
+
+  guiPythonUiDefineScreenNameInput.value = entry.defineScreenName;
+  guiPythonUiDefineModalInput.value = entry.defineModal;
+  guiPythonUiDefineZorderInput.value = entry.defineZorder;
+  guiPythonUiDefineTagInput.value = entry.defineTag;
+  guiPythonUiDefineVariantInput.value = entry.defineVariant;
+  guiPythonUiDefineBodyInput.value = entry.defineBody;
+
+  const usageEntries = getPythonUiUsageEntries(entry);
+  guiPythonUiUsageListEl.innerHTML = usageEntries.length
+    ? usageEntries.map((item) => `
+      <div class="gui-diagnostic-card is-info">
+        <strong>${escapeHtml(item.title)}</strong>
+        <span>${escapeHtml(item.detail)}</span>
+      </div>
+    `).join("")
+    : `<div class="gui-inline-empty">No helper usage notes yet.</div>`;
+
+  guiPythonUiCodePreviewEl.textContent = formatAllPythonUiCode();
 }
 
 function renderCursorList() {
@@ -4122,6 +4810,35 @@ function computeDiagnostics() {
             snippet: formatGuiScreenCode(screen),
           });
         }
+
+        if (["gui.SetPreference", "gui.TogglePreference"].includes(node.actionKind)) {
+          const preferenceName = parseLeadingArgumentName(node.actionArgs);
+
+          if (!preferenceName) {
+            diagnostics.push({
+              severity: "warning",
+              title: `${screen.name} · ${node.title} is missing a GUI preference name`,
+              detail: "gui.SetPreference and gui.TogglePreference should usually start with the GUI preference key as their first argument.",
+              snippet: formatGuiScreenCode(screen),
+            });
+          } else if (!getDefinedGuiPreferenceNames().has(preferenceName)) {
+            diagnostics.push({
+              severity: "warning",
+              title: `${screen.name} · ${node.title} references missing GUI preference "${preferenceName}"`,
+              detail: "Define the preference in Config & Defaults first, or the action will write to a key your GUI variables are not using.",
+              snippet: formatGuiScreenCode(screen),
+            });
+          }
+        }
+
+        if (node.actionKind === "GuiRebuild") {
+          diagnostics.push({
+            severity: "info",
+            title: `${screen.name} · ${node.title} triggers gui.rebuild`,
+            detail: "gui.rebuild is intentionally exposed here, but the Ren'Py docs warn that it is slow. Prefer using it sparingly and not in rapid-fire interactions.",
+            snippet: formatGuiScreenCode(screen),
+          });
+        }
       }
 
       if (["bar", "vbar"].includes(node.type)) {
@@ -4205,13 +4922,77 @@ function computeDiagnostics() {
   });
 
   getAllConfigEntries().forEach(({ scope, entry }) => {
-    if (!entry.name || !entry.value) {
+    const missingAuxValue = scope === "guiPreferences" && !getGuiPreferenceName(entry);
+
+    if (!entry.name || !entry.value || missingAuxValue) {
       diagnostics.push({
         severity: "warning",
-        title: `${scope} entry "${entry.name || "(unnamed)"}" is incomplete`,
-        detail: "Config-like entries should have both a name and a value to emit valid code.",
+        title: `${getConfigScopeMeta(scope).label} "${entry.name || "(unnamed)"}" is incomplete`,
+        detail: scope === "guiPreferences"
+          ? "GUI preference bindings need a GUI variable, a preference key, and a default value."
+          : "Config-like entries should have both a name and a value to emit valid code.",
         snippet: formatAllConfigCode(),
       });
+    }
+  });
+
+  const definedScreenNames = new Set(projectState.gui.screens.map((screen) => screen.name));
+
+  projectState.gui.pythonUiHelpers.forEach((entry) => {
+    if (!entry.name) {
+      diagnostics.push({
+        severity: "warning",
+        title: `Python UI helper is missing a name`,
+        detail: "Each helper should have a class name or function name so the generated code is reusable.",
+        snippet: formatAllPythonUiCode(),
+      });
+    }
+
+    if (entry.kind === "barvalue" && !entry.barAdjustment) {
+      diagnostics.push({
+        severity: "warning",
+        title: `BarValue "${entry.name}" is missing get_adjustment()`,
+        detail: "Custom BarValue classes need a get_adjustment() expression so bars know what Adjustment to render.",
+        snippet: formatPythonUiEntryCode(entry),
+      });
+    }
+
+    if (entry.kind === "inputvalue" && (!entry.inputGetText || !entry.inputSetTextBody)) {
+      diagnostics.push({
+        severity: "warning",
+        title: `InputValue "${entry.name}" is incomplete`,
+        detail: "Custom InputValue classes should usually implement both get_text() and set_text().",
+        snippet: formatPythonUiEntryCode(entry),
+      });
+    }
+
+    if (entry.kind === "restart_helper" && !entry.restartTarget) {
+      diagnostics.push({
+        severity: "warning",
+        title: `restart_interaction helper "${entry.name}" has no assignment target`,
+        detail: "These helpers are most useful when they update a variable before calling renpy.restart_interaction().",
+        snippet: formatPythonUiEntryCode(entry),
+      });
+    }
+
+    if (entry.kind === "define_screen") {
+      if (!entry.defineScreenName) {
+        diagnostics.push({
+          severity: "warning",
+          title: `define_screen helper "${entry.name}" is missing a screen name`,
+          detail: "renpy.define_screen() needs a target screen name to register.",
+          snippet: formatPythonUiEntryCode(entry),
+        });
+      }
+
+      if (entry.defineScreenName && definedScreenNames.has(entry.defineScreenName)) {
+        diagnostics.push({
+          severity: "warning",
+          title: `Python screen "${entry.defineScreenName}" duplicates a screen-language screen`,
+          detail: "A Python-defined screen and a screen-language screen with the same name can be confusing. Prefer one source of truth.",
+          snippet: formatPythonUiEntryCode(entry),
+        });
+      }
     }
   });
 
@@ -4412,6 +5193,7 @@ function renderNav() {
   stylesNavCountEl.textContent = String(projectState.gui.styles.length);
   screensNavCountEl.textContent = String(projectState.gui.screens.length);
   configNavCountEl.textContent = String(getAllConfigEntries().length);
+  pythonUiNavCountEl.textContent = String(projectState.gui.pythonUiHelpers.length);
   extrasNavCountEl.textContent = String(getReplayEnabledGraphs().length + projectState.gui.musicRooms.length + projectState.gui.galleries.length);
   cursorsNavCountEl.textContent = String(projectState.gui.cursors.length);
   shadersNavCountEl.textContent = String(projectState.gui.textShaders.length);
@@ -4433,6 +5215,8 @@ function render() {
   renderGalleryDetail();
   renderConfigList();
   renderConfigDetail();
+  renderPythonUiList();
+  renderPythonUiDetail();
   renderCursorList();
   renderCursorDetail();
   renderShaderList();
@@ -4764,6 +5548,14 @@ newConfigEntryButton.addEventListener("click", () => {
   saveProjectState(`Created config entry "${entry.name}".`);
 });
 
+newGuiPreferenceEntryButton.addEventListener("click", () => {
+  const entry = createBlankConfigEntry("guiPreferences");
+  projectState.gui.guiPreferences.push(entry);
+  activeConfigEntryKey = `guiPreferences:${entry.id}`;
+  render();
+  saveProjectState(`Created GUI preference "${getGuiPreferenceName(entry)}".`);
+});
+
 newPreferenceEntryButton.addEventListener("click", () => {
   const entry = createBlankConfigEntry("preferences");
   projectState.gui.preferences.push(entry);
@@ -4805,6 +5597,110 @@ guiDeleteConfigButton.addEventListener("click", () => {
     return;
   }
   deleteActiveConfigEntry();
+});
+
+guiPythonUiListEl.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-python-ui-id]");
+  if (!card) {
+    return;
+  }
+  activePythonUiId = card.getAttribute("data-python-ui-id");
+  render();
+  setStatus(`Opened Python UI helper "${getActivePythonUiEntry()?.name || ""}".`);
+});
+
+newGuiPythonActionButton.addEventListener("click", () => {
+  const entry = createBlankPythonUiEntry("action");
+  projectState.gui.pythonUiHelpers.push(entry);
+  activePythonUiId = entry.id;
+  render();
+  saveProjectState(`Created Python UI helper "${entry.name}".`);
+});
+
+newGuiPythonBarButton.addEventListener("click", () => {
+  const entry = createBlankPythonUiEntry("barvalue");
+  projectState.gui.pythonUiHelpers.push(entry);
+  activePythonUiId = entry.id;
+  render();
+  saveProjectState(`Created Python UI helper "${entry.name}".`);
+});
+
+newGuiPythonInputButton.addEventListener("click", () => {
+  const entry = createBlankPythonUiEntry("inputvalue");
+  projectState.gui.pythonUiHelpers.push(entry);
+  activePythonUiId = entry.id;
+  render();
+  saveProjectState(`Created Python UI helper "${entry.name}".`);
+});
+
+newGuiPythonRestartButton.addEventListener("click", () => {
+  const entry = createBlankPythonUiEntry("restart_helper");
+  projectState.gui.pythonUiHelpers.push(entry);
+  activePythonUiId = entry.id;
+  render();
+  saveProjectState(`Created Python UI helper "${entry.name}".`);
+});
+
+newGuiPythonDefineScreenButton.addEventListener("click", () => {
+  const entry = createBlankPythonUiEntry("define_screen");
+  projectState.gui.pythonUiHelpers.push(entry);
+  activePythonUiId = entry.id;
+  render();
+  saveProjectState(`Created Python UI helper "${entry.name}".`);
+});
+
+guiPythonUiFormEl.addEventListener("change", () => {
+  const entry = getActivePythonUiEntry();
+  if (!entry) {
+    return;
+  }
+
+  updateActivePythonUiEntry({
+    kind: guiPythonUiKindInput.value,
+    name: guiPythonUiNameInput.value.trim() || entry.name,
+    parameters: guiPythonUiParametersInput.value.trim(),
+    usage: guiPythonUiUsageInput.value.trim(),
+    notes: guiPythonUiNotesInput.value.trim(),
+    actionCallBody: guiPythonUiActionCallBodyInput.value.trim(),
+    actionSensitive: guiPythonUiActionSensitiveInput.value.trim(),
+    actionSelected: guiPythonUiActionSelectedInput.value.trim(),
+    actionTooltip: guiPythonUiActionTooltipInput.value.trim(),
+    actionAlt: guiPythonUiActionAltInput.value.trim(),
+    actionPeriodicBody: guiPythonUiActionPeriodicBodyInput.value.trim(),
+    barAdjustment: guiPythonUiBarAdjustmentInput.value.trim(),
+    barStyle: guiPythonUiBarStyleInput.value.trim(),
+    barTooltip: guiPythonUiBarTooltipInput.value.trim(),
+    barAlt: guiPythonUiBarAltInput.value.trim(),
+    barReplacesBody: guiPythonUiBarReplacesBodyInput.value.trim(),
+    barPeriodicBody: guiPythonUiBarPeriodicBodyInput.value.trim(),
+    inputDefault: guiPythonUiInputDefaultInput.value,
+    inputEditable: guiPythonUiInputEditableInput.value,
+    inputReturnable: guiPythonUiInputReturnableInput.value,
+    inputGetText: guiPythonUiInputGetTextInput.value.trim(),
+    inputSetTextBody: guiPythonUiInputSetTextBodyInput.value.trim(),
+    inputEnterBody: guiPythonUiInputEnterBodyInput.value.trim(),
+    restartTarget: guiPythonUiRestartTargetInput.value.trim(),
+    restartValue: guiPythonUiRestartValueInput.value.trim(),
+    restartBody: guiPythonUiRestartBodyInput.value.trim(),
+    defineScreenName: guiPythonUiDefineScreenNameInput.value.trim(),
+    defineModal: guiPythonUiDefineModalInput.value,
+    defineZorder: guiPythonUiDefineZorderInput.value.trim(),
+    defineTag: guiPythonUiDefineTagInput.value.trim(),
+    defineVariant: guiPythonUiDefineVariantInput.value.trim(),
+    defineBody: guiPythonUiDefineBodyInput.value.trim(),
+  });
+});
+
+guiDeletePythonUiButton.addEventListener("click", () => {
+  const entry = getActivePythonUiEntry();
+  if (!entry) {
+    return;
+  }
+  if (!window.confirm(`Delete Python UI helper "${entry.name}"?`)) {
+    setStatus(`Kept Python UI helper "${entry.name}".`);
+    return;
+  }
+  deleteActivePythonUiEntry();
 });
 
 guiCursorListEl.addEventListener("click", (event) => {
@@ -5155,4 +6051,4 @@ guiDeleteGalleryButton.addEventListener("click", () => {
 });
 
 render();
-setStatus("GUI editor ready. Styles, screens, replay menus, music rooms, galleries, config, cursors, shaders, and diagnostics are now available.");
+setStatus("GUI editor ready. Styles, screens, config, Python UI helpers, replay menus, music rooms, galleries, cursors, shaders, and diagnostics are now available.");

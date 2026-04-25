@@ -2,6 +2,33 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.12] - 2026-04-26
+
+### Added
+
+- 为 `GUI Editor` 新增独立的 `Python UI` 分栏，可集中管理 `Action`、`BarValue`、`InputValue`、`restart_interaction()` helper 和 `renpy.define_screen()` helper 模板。
+- 为上述 Python UI 模板新增代码生成与使用提示，方便直接接到现有 `Screens` 节点的 Raw Action / Raw Value 工作流里。
+- 为 `Python UI` 模块新增基础诊断，能检查缺失的 `get_adjustment()`、`get_text()/set_text()`、`define_screen` 名称冲突和缺失的刷新目标。
+
+### Changed
+
+- 主编辑器对 GUI 状态的兼容保留范围继续扩大，新增的 `pythonUiHelpers` 不会在回到主页面后丢失。
+- 主编辑器的 GUI 概览统计现在会显示 `Python UI` 模板数量，方便确认高级界面脚本资产是否已经建好。
+
+## [0.4.11] - 2026-04-25
+
+### Added
+
+- 为 `GUI Editor > Config & Defaults` 新增 `GUI Preference` 条目类型，可生成 `define gui.* = gui.preference(...)` 绑定。
+- 为 `GUI Editor > Screens` 的 action 列表新增 `gui.SetPreference(...)`、`gui.TogglePreference(...)` 和 `Function(gui.rebuild)`。
+- 为 `preferences` 特殊 screen 模板补充高级 GUI 示例，直接展示字体切换和字号切换用法。
+
+### Changed
+
+- `Config & Defaults` 详情表单现在会根据 scope 动态切换字段标签、占位提示和说明，不再把 GUI preference 误混到普通 `preferences` / `store` 条目里。
+- `Diagnostics` 现在会检查 screen 里的 GUI preference action 是否引用了已定义的 GUI preference，并对 `gui.rebuild` 给出性能提示。
+- 主编辑器对 GUI 数据的兼容保留范围扩大，新增的 `guiPreferences` 不会在回到主页面后被清掉。
+
 ## [0.4.10] - 2026-04-25
 
 ### Added

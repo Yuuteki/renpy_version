@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>高级GUI &mdash; Ren&#39;Py 中文文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=40c59d4b" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.cn/forum.php/gui_advanced.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8fa47e9b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="界面与Python" href="screen_python.html" />
+    <link rel="prev" title="持久化数据" href="persistent.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.cn/" style="margin-bottom: 0">Ren'Py 中文空间
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 5px">8.5.2&#47;7.8.7 说明文档首页</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">起步</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI(图形用户接口)定制化指导</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Ren'Py语言</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">编程语言基础</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">脚本标签(label)和主控流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">对话(dialogue)和旁白(narration)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">显示图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">游戏内菜单</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">条件语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">音频</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">音频滤波器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">影片</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">文本、可视组件、变换和转场</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">文本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">多语言支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">变换</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">变换特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">转场(transition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">层叠式图像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D舞台</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">定制化Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">样式(style)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">样式特性(property)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">界面和界面语言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">界面行为(action)、值(value)和函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">特殊界面名称</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">界面语言优化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">配置项变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">环境设定配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">存储区配置项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">定制鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#hardware-mouse-cursor">硬件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#displayable-mouse-cursor">可视组件鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html#using-mouse-cursors">使用鼠标光标</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">文本着色器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">工具</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">启动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">开发者工具</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">交互式编导器(interactive director)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testcases.html">自动化测试</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">其他功能</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL模式教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">气泡式台词</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">文本输入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">头像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">画廊、音乐空间和场景回放</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">拖放组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">精灵(sprite)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">定制按键映射</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">成就</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html#steamworks-api">Steamworks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">对话历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">多角色对话</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">启动界面和加载等待</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Ren’Py游戏的生命周期(lifecycle)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python和Ren'Py</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">等效语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">存档、读档和回滚</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">持久化数据</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">高级GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python">Python函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gui.button_properties"><code class="docutils literal notranslate"><span class="pre">gui.button_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui.init"><code class="docutils literal notranslate"><span class="pre">gui.init()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui.rebuild"><code class="docutils literal notranslate"><span class="pre">gui.rebuild()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui.text_properties"><code class="docutils literal notranslate"><span class="pre">gui.text_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variant"><code class="docutils literal notranslate"><span class="pre">variant()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui.button_text_properties"><code class="docutils literal notranslate"><span class="pre">gui.button_text_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui-rebuild">更多关于gui.rebuild的内容</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defaultguigui-rebuild">default语句、gui命名空间和gui.rebuild</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gui-preferences">GUI环境设定设置</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gui.SetPreference"><code class="docutils literal notranslate"><span class="pre">gui.SetPreference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui.TogglePreference"><code class="docutils literal notranslate"><span class="pre">gui.TogglePreference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui.preference"><code class="docutils literal notranslate"><span class="pre">gui.preference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui-advanced-example">样例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">界面与Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">创作者定义的可视组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">创作者定义的语句</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">定制文本标签</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">角色回调函数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">文件读写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color类</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">基于模型的渲染器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">其他函数和配置变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py 文件——Python中的Ren’Py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">fetch形式的HTTPS/HTTP请求</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">截图</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">生成分发版、更新和其他平台</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">构建发行版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">安卓(Android)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chrome浏览器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">树莓派</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">程序内购</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP更新器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">手机端下载大容量游戏</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">手势</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">终端用户文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">安全问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">处理故障</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">环境变量</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">自动语音</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">库和开发工具文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">项目模板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">命令行交互界面</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">引擎开发者文档</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">集成文本编辑器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">皮肤</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Ren’Py多语言支持</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">变更、许可和制作人员</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">变更日志(Ren’Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">变更日志 (Ren’Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">不兼容的变更</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">许可证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">制作人员</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren’Py开发赞助者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">高级GUI</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://gitee.com/kurororo666/Renpydoc-ranslate/tree/master/source/gui_advanced.rst" class="fa fa-git-square"> 文档捉虫</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gui">
+<span id="gui-advanced"></span><h1>高级GUI<a class="headerlink" href="#gui" title="Link to this heading"> link</a></h1>
+<p>这个章节有一些关于GUI高级用法的细节。</p>
+<section id="python">
+<span id="python-functions"></span><h2>Python函数<a class="headerlink" href="#python" title="Link to this heading"> link</a></h2>
+<p>一些支持GUI的Python函数。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.button_properties">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">button_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gui.button_properties" title="Link to this definition"> link</a></dt>
+<dd><p>给定按钮的 <em>kind</em> 类型，返回那个按钮对应的标准样式特性的字典数据。字典中包括：</p>
+<dl class="simple">
+<dt><a class="reference internal" href="style_properties.html#style-property-background"><code class="xref std std-propref docutils literal notranslate"><span class="pre">background</span></code></a></dt><dd><p>详见后面的内容。</p>
+</dd>
+<dt><a class="reference internal" href="style_properties.html#style-property-padding"><code class="xref std std-propref docutils literal notranslate"><span class="pre">padding</span></code></a></dt><dd><p>用于gui.kind_borders.padding(前提是这项存在)。</p>
+</dd>
+<dt><a class="reference internal" href="style_properties.html#style-property-xsize"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xsize</span></code></a></dt><dd><p>用于gui.kind_width(前提是这项存在)。</p>
+</dd>
+<dt><a class="reference internal" href="style_properties.html#style-property-ysize"><code class="xref std std-propref docutils literal notranslate"><span class="pre">ysize</span></code></a></dt><dd><p>用于gui.kind_height(前提是这项存在)。</p>
+</dd>
+</dl>
+<p>(需要注意，如果 <cite>kind</cite> 的值是字符串“nvl_button”，就会寻找gui.nvl_button_background配置项的值。)</p>
+<p>background是一个frame，使用以下第一个能匹配到的文件作为其背景图：</p>
+<ul class="simple">
+<li><p>gui/button/kind_[prefix_].background.png</p></li>
+<li><p>gui/button/[prefix_].background.png</p></li>
+</ul>
+<p>如果某个GUI变量名为gui.kind_borders存在就使用。否则，使用 <a class="reference internal" href="gui.html#var-gui.button_borders"><code class="xref std std-var docutils literal notranslate"><span class="pre">gui.button_borders</span></code></a> 。如果gui.kind_tile存在，他决定边界是否使用tile风格， <a class="reference internal" href="gui.html#var-gui.button_tile"><code class="xref std std-var docutils literal notranslate"><span class="pre">gui.button_tile</span></code></a> 项控制tile。</p>
+<p>[prefix_]代表的意思，详见 <a class="reference internal" href="style_properties.html#style-prefix-search"><span class="std std-ref">样式前缀搜索</span></a> 。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.init">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">75</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gui.init" title="Link to this definition"> link</a></dt>
+<dd><p>初始化GUI。</p>
+<dl class="simple">
+<dt><cite>width</cite></dt><dd><p>默认窗口宽度。</p>
+</dd>
+<dt><cite>height</cite></dt><dd><p>默认窗口高度。</p>
+</dd>
+<dt><cite>fov</cite></dt><dd><p>3D舞台的视野(field of view)。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.rebuild">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">rebuild</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gui.rebuild" title="Link to this definition"> link</a></dt>
+<dd><p>重建GUI。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.text_properties">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">text_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gui.text_properties" title="Link to this definition"> link</a></dt>
+<dd><p>给定按钮的 <cite>kind</cite> 类型，返回那个按钮对应的标准样式特性的字典数据。字典中包括：</p>
+<dl class="simple">
+<dt><a class="reference internal" href="style_properties.html#style-property-font"><code class="xref std std-propref docutils literal notranslate"><span class="pre">font</span></code></a></dt><dd><p>用于gui.kind_text_font，前提是它存在。</p>
+</dd>
+<dt><a class="reference internal" href="style_properties.html#style-property-size"><code class="xref std std-propref docutils literal notranslate"><span class="pre">size</span></code></a></dt><dd><p>用于gui.kind_text_size，前提是它存在。</p>
+</dd>
+<dt><a class="reference internal" href="style_properties.html#style-property-xalign"><code class="xref std std-propref docutils literal notranslate"><span class="pre">xalign</span></code></a></dt><dd><p>用于gui.kind_text_xalign，前提是它存在。</p>
+</dd>
+<dt><code class="xref std std-propref docutils literal notranslate"><span class="pre">text_align</span></code></dt><dd><p>用于gui.kind_text_xalign，前提是它存在。</p>
+</dd>
+<dt><a class="reference internal" href="style_properties.html#style-property-layout"><code class="xref std std-propref docutils literal notranslate"><span class="pre">layout</span></code></a></dt><dd><p>用于“subtitle”，前提是gui.kind_text_xalign大于0小于1。</p>
+</dd>
+</dl>
+<p>还有一些变量设置文本的 <code class="docutils literal notranslate"><span class="pre">color</span></code> 样式特性(property)。</p>
+<dl class="simple">
+<dt><strong>color</strong></dt><dd><p>用于gui.kind_text_color，前提是它存在。如果变量没有设置，那么 <em>accent</em> 的值是True，将文本颜色设置为默认的强调(accent)色。</p>
+</dd>
+<dt><strong>insensitive_color</strong></dt><dd><p>用于gui.kind_text_insensitive_color，前提是它存在。</p>
+</dd>
+<dt><strong>idle_color</strong></dt><dd><p>用于gui.kind_text_idle_color，前提是它存在。</p>
+</dd>
+<dt><strong>hover_color</strong></dt><dd><p>用于gui.kind_text_hover_color，前提是它存在。</p>
+</dd>
+<dt><strong>selected_color</strong></dt><dd><p>用于gui.kind_text_selected_color，前提是它存在。</p>
+</dd>
+</dl>
+<p>也可以使用所有其他 <a class="reference internal" href="style_properties.html#text-style-properties"><span class="std std-ref">文本样式特性</span></a> 。
+若 <cite>kind</cite> 不为None，还可以使用 <a class="reference internal" href="style_properties.html#position-style-properties"><span class="std std-ref">位置样式特性</span></a> 。
+例如，使用gui.kind_text_outlines设置outlines样式特性，使用gui.kind_text_kerning设置行距，等等</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="variant">
+<span class="sig-name descname"><span class="pre">variant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#variant" title="Link to this definition"> link</a></dt>
+<dd><p>函数装饰器，在GUI初始化或重建GUI时调用。使用方法如下：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="nd">@gui</span><span class="o">.</span><span class="na">variant</span>
+<span class="k">def</span> <span class="nf">small</span><span class="p">():</span>
+    <span class="n">gui</span><span class="o">.</span><span class="na">text_size</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>指定variant名称后，可以使用 <cite>f</cite> (一个函数) 和 <cite>variant</cite> (一个字符串)调用该函数。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.button_text_properties">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">button_text_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gui.button_text_properties" title="Link to this definition"> link</a></dt>
+<dd><p><a class="reference internal" href="#gui.text_properties" title="gui.text_properties"><code class="xref py py-func docutils literal notranslate"><span class="pre">gui.text_properties()</span></code></a> 的一个已过时(obsolete)异名。</p>
+</dd></dl>
+
+<section id="gui-rebuild">
+<span id="more-on-gui-rebuild"></span><h3>更多关于gui.rebuild的内容<a class="headerlink" href="#gui-rebuild" title="Link to this heading"> link</a></h3>
+<p>gui.rebuild函数是一个非常慢的函数，更新整套GUI以适应Ren’Py当前的状态。它的处理的内容包括：</p>
+<ul class="simple">
+<li><p>重新运行所有在gui命名空间(namespace)中定义变量的 <code class="docutils literal notranslate"><span class="pre">define</span></code> 语句。</p></li>
+<li><p>重新运行所有针对当前语言的多语言支持 <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">python</span></code> 语句块(block)。</p></li>
+<li><p>重新运行所有 <code class="docutils literal notranslate"><span class="pre">style</span></code> 语句。</p></li>
+<li><p>重建系统内所有样式。</p></li>
+</ul>
+<p>注意， <code class="docutils literal notranslate"><span class="pre">gui.rebuild</span></code> 中 <code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> 语句块不会重新运行。使用这种方式定义：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">gui</span><span class="o">.</span><span class="na">text_size</span> <span class="o">=</span> <span class="n">persistent</span><span class="o">.</span><span class="na">text_size</span>
+</pre></div>
+</div>
+<p>跟使用这种方式定义：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span><span class="p">:</span>
+    <span class="n">gui</span><span class="o">.</span><span class="na">text_size</span> <span class="o">=</span> <span class="n">persistent</span><span class="o">.</span><span class="na">text_size</span>
+</pre></div>
+</div>
+<p>在调用gui.rebuild后得到的结果不同。</p>
+</section>
+<section id="defaultguigui-rebuild">
+<span id="the-default-statement-the-gui-namespace-and-gui-rebuild"></span><h3>default语句、gui命名空间和gui.rebuild<a class="headerlink" href="#defaultguigui-rebuild" title="Link to this heading"> link</a></h3>
+<p>应用于 <code class="docutils literal notranslate"><span class="pre">gui</span></code> 命名空间时， <code class="docutils literal notranslate"><span class="pre">default</span></code> 语句会改变语义。default语句与define语句穿插运行，调用 <a class="reference internal" href="#gui.rebuild" title="gui.rebuild"><code class="xref py py-func docutils literal notranslate"><span class="pre">gui.rebuild()</span></code></a> 函数时default语句不会重新运行。</p>
+<p>这表示，如果我们有如下语句：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">default</span> <span class="n">gui</span><span class="o">.</span><span class="n">accent_color</span> <span class="o">=</span> <span class="s2">&quot;#c04040&quot;</span>
+<span class="k">define</span> <span class="n">gui</span><span class="o">.</span><span class="na">hover_color</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">accent_color</span>
+</pre></div>
+</div>
+<p>游戏首次运行时，会设置accent_color，并且将hover_color设为与accent_color相同。</p>
+<p>另外，如果我们的脚本中还有这样一段：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">$</span> <span class="n">gui</span><span class="o">.</span><span class="n">accent_color</span> <span class="o">=</span> <span class="s2">&quot;#4040c0&quot;</span>
+<span class="k">$</span> <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Ren’Py值会重新运行define语句，所以它会将hover_color设置为accent_color，并更新样式。这个机制就能让部分gui随着游戏进度一起改变。</p>
+</section>
+</section>
+<section id="gui-preferences">
+<span id="id1"></span><h2>GUI环境设定设置<a class="headerlink" href="#gui-preferences" title="Link to this heading"> link</a></h2>
+<p>Ren’Py也支持GUI环境设定设置(preference)系统，包括一个函数和一系列行为(action)。</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.SetPreference">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">SetPreference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rebuild</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gui.SetPreference" title="Link to this definition"> link</a></dt>
+<dd><p>这个行为(action)将名为 <em>name</em> 的环境设定设置项的值设置为 <em>value</em> 。</p>
+<dl class="simple">
+<dt><cite>rebuild</cite></dt><dd><p>若为True，也就是默认值，调用 <a class="reference internal" href="#gui.rebuild" title="gui.rebuild"><code class="xref py py-func docutils literal notranslate"><span class="pre">gui.rebuild()</span></code></a> 会让修改生效。这项应该始终为True，除了存在多个gui.SetPreference行为的情况。那种情况除了最后一个设置为True其他都设置为False。</p>
+</dd>
+</dl>
+<p>这是一个非常慢的行为，所以不适合在按钮处于指针悬垂(hover)状态时使用。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.TogglePreference">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">TogglePreference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rebuild</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gui.TogglePreference" title="Link to this definition"> link</a></dt>
+<dd><p>这个行为切换gui中名为 <em>name</em> 的环境设定设置在值 <em>a</em> 和 <em>b</em> 之间切换。当这个值等于 <em>a</em> 时表示该项被选中。</p>
+<dl class="simple">
+<dt><cite>rebuild</cite></dt><dd><p>若为True，也就是默认值，调用 <a class="reference internal" href="#gui.rebuild" title="gui.rebuild"><code class="xref py py-func docutils literal notranslate"><span class="pre">gui.rebuild()</span></code></a> 会让修改生效。这项应该始终为True，除了存在多个gui.SetPreference行为的情况，那种情况除了最后一个设置为True其他都设置为False。</p>
+</dd>
+</dl>
+<p>这是一个非常慢的行为，所以不适合在按钮处于指针悬垂(hover)状态时使用。</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui.preference">
+<span class="sig-prename descclassname"><span class="pre">gui.</span></span><span class="sig-name descname"><span class="pre">preference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=&lt;renpy.python.RevertableObject</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f77abf8a6d0&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gui.preference" title="Link to this definition"> link</a></dt>
+<dd><p>这个函数返回gui中名为 <em>name</em> 的环境设定设置的值。</p>
+<dl class="simple">
+<dt><cite>default</cite></dt><dd><p>若存在，这个值会成为gui环境设定设置 <em>name</em> 的默认值。第一次使用环境设定设置就需要用到默认值。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="gui-advanced-example">
+<span id="id2"></span><h3>样例<a class="headerlink" href="#gui-advanced-example" title="Link to this heading"> link</a></h3>
+<p>当通过调用 <a class="reference internal" href="#gui.preference" title="gui.preference"><code class="xref py py-func docutils literal notranslate"><span class="pre">gui.preference()</span></code></a> 函数，使用环境设定设置名称和默认值定义变量后，就能使用GUI环境设定设置系统了。例如，我们可以环境设定配置文本字体和字号：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">define</span> <span class="n">gui</span><span class="o">.</span><span class="na">text_font</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">preference</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="s2">&quot;DejaVuSans.ttf&quot;</span><span class="p">)</span>
+<span class="k">define</span> <span class="n">gui</span><span class="o">.</span><span class="na">text_size</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">preference</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>使用 <a class="reference internal" href="#gui.SetPreference" title="gui.SetPreference"><code class="xref py py-func docutils literal notranslate"><span class="pre">gui.SetPreference()</span></code></a> 和 <a class="reference internal" href="#gui.TogglePreference" title="gui.TogglePreference"><code class="xref py py-func docutils literal notranslate"><span class="pre">gui.TogglePreference()</span></code></a> 行为可以添加和修改环境设定配置的值。这是添加到环境设定配置界面的样例：</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">vbox</span><span class="p">:</span>
+    <span class="na">style_prefix</span> <span class="s2">&quot;check&quot;</span>
+    <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Options&quot;</span><span class="p">)</span>
+    <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;OpenDyslexic&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">gui</span><span class="o">.</span><span class="n">TogglePreference</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="s2">&quot;OpenDyslexic-Regular.otf&quot;</span><span class="p">,</span> <span class="s2">&quot;DejaVuSans.ttf&quot;</span><span class="p">)</span>
+
+<span class="k">vbox</span><span class="p">:</span>
+    <span class="na">style_prefix</span> <span class="s2">&quot;radio&quot;</span>
+    <span class="k">label</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Text Size&quot;</span><span class="p">)</span>
+    <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Small&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">gui</span><span class="o">.</span><span class="n">SetPreference</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Medium&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">gui</span><span class="o">.</span><span class="n">SetPreference</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+    <span class="k">textbutton</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Big&quot;</span><span class="p">)</span> <span class="na">action</span> <span class="n">gui</span><span class="o">.</span><span class="n">SetPreference</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="persistent.html" class="btn btn-neutral float-left" title="持久化数据" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="screen_python.html" class="btn btn-neutral float-right" title="界面与Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

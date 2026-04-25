@@ -42,6 +42,10 @@
               <span>Config</span>
               <strong id="configNavCount">0</strong>
             </button>
+            <button class="gui-nav-button" type="button" data-gui-section="pythonUiSection">
+              <span>Python UI</span>
+              <strong id="pythonUiNavCount">0</strong>
+            </button>
             <button class="gui-nav-button" type="button" data-gui-section="cursorsSection">
               <span>Cursors</span>
               <strong id="cursorsNavCount">0</strong>
@@ -58,7 +62,7 @@
 
           <div class="gui-nav-note">
             This editor now covers styles, screen structure, screen actions and values, GUI config, cursor systems,
-            text shaders, replay menus, music rooms, galleries, preview, and diagnostics.
+            text shaders, Python UI helper templates, replay menus, music rooms, galleries, preview, and diagnostics.
           </div>
         </aside>
 
@@ -957,7 +961,7 @@
                 <div class="gui-panel-header">
                   <div>
                     <h2>Config & Defaults</h2>
-                    <p>Manage <code>config</code>, <code>preferences</code>, and default store values.</p>
+                    <p>Manage <code>config</code>, GUI preference bindings, <code>preferences</code>, and default store values.</p>
                   </div>
                 </div>
 
@@ -969,6 +973,7 @@
 
                 <div class="gui-stack-actions">
                   <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button">New Config Entry</button>
+                  <button id="newGuiPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New GUI Preference</button>
                   <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New Preference Default</button>
                   <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button">New Store Default</button>
                 </div>
@@ -985,24 +990,27 @@
                       Scope
                       <select id="guiConfigScopeInput">
                         <option value="config">config</option>
+                        <option value="guiPreferences">gui preferences</option>
                         <option value="preferences">preferences</option>
                         <option value="store">store</option>
                       </select>
                     </label>
 
                     <label>
-                      Name
+                      <span id="guiConfigNameLabel">Name</span>
                       <input id="guiConfigNameInput" type="text" placeholder="e.g. default_textshader" />
                     </label>
 
                     <label>
-                      Store Path
+                      <span id="guiConfigStorePathLabel">Store Path</span>
                       <input id="guiConfigStorePathInput" type="text" placeholder="Optional, e.g. persistent or my_store" />
                     </label>
                   </div>
 
+                  <p id="guiConfigScopeInfo" class="gui-info-banner hidden"></p>
+
                   <label>
-                    Value
+                    <span id="guiConfigValueLabel">Value</span>
                     <textarea id="guiConfigValueInput" rows="4" placeholder='e.g. "wave:10", True, 0.25, {"idle": [("gui/cursor.png", 4, 4)]}'></textarea>
                   </label>
 
@@ -1026,6 +1034,294 @@
                 </div>
 
                 <pre id="guiConfigCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="pythonUiSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Python UI</h2>
+                    <p>Template custom <code>Action</code>, <code>BarValue</code>, <code>InputValue</code>, and low-level GUI helpers.</p>
+                  </div>
+                </div>
+
+                <div id="guiPythonUiEmpty" class="panel-empty-state hidden">
+                  No Python UI helpers yet. Add one of the common templates below.
+                </div>
+
+                <div id="guiPythonUiList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newGuiPythonActionButton" class="primary gui-bottom-button" type="button">New Action Class</button>
+                  <button id="newGuiPythonBarButton" class="secondary gui-bottom-button" type="button">New BarValue Class</button>
+                  <button id="newGuiPythonInputButton" class="secondary gui-bottom-button" type="button">New InputValue Class</button>
+                  <button id="newGuiPythonRestartButton" class="secondary gui-bottom-button" type="button">New restart_interaction Helper</button>
+                  <button id="newGuiPythonDefineScreenButton" class="secondary gui-bottom-button" type="button">New define_screen Helper</button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiPythonUiEmptyState" class="gui-empty-detail">
+                  Select a helper to edit its template and generated Python code.
+                </div>
+
+                <form id="guiPythonUiForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Kind
+                      <select id="guiPythonUiKindInput">
+                        <option value="action">Action Class</option>
+                        <option value="barvalue">BarValue Class</option>
+                        <option value="inputvalue">InputValue Class</option>
+                        <option value="restart_helper">restart_interaction Helper</option>
+                        <option value="define_screen">define_screen Helper</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      <span id="guiPythonUiNameLabel">Class Name</span>
+                      <input id="guiPythonUiNameInput" type="text" placeholder="e.g. ToggleCodexAction" />
+                    </label>
+
+                    <label>
+                      <span id="guiPythonUiParametersLabel">Constructor Args</span>
+                      <input id="guiPythonUiParametersInput" type="text" placeholder="e.g. flag_name, enabled_value=True" />
+                    </label>
+
+                    <label>
+                      Usage Example
+                      <input id="guiPythonUiUsageInput" type="text" placeholder='Optional override, e.g. action ToggleCodexAction("dev_mode")' />
+                    </label>
+                  </div>
+
+                  <p id="guiPythonUiKindInfo" class="gui-info-banner"></p>
+
+                  <div id="guiPythonUiActionFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>Action Methods</h3>
+                        <p>Build a custom action object for button actions, selected states, and tooltips.</p>
+                      </div>
+                    </div>
+
+                    <label>
+                      __call__ Body
+                      <textarea id="guiPythonUiActionCallBodyInput" rows="4" placeholder='e.g. store.dev_mode = not store.dev_mode&#10;return None'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        get_sensitive() Expression
+                        <input id="guiPythonUiActionSensitiveInput" type="text" placeholder="e.g. not main_menu" />
+                      </label>
+
+                      <label>
+                        get_selected() Expression
+                        <input id="guiPythonUiActionSelectedInput" type="text" placeholder="e.g. persistent.dev_mode" />
+                      </label>
+
+                      <label>
+                        get_tooltip() Expression
+                        <input id="guiPythonUiActionTooltipInput" type="text" placeholder='e.g. _("Toggle dev mode")' />
+                      </label>
+
+                      <label>
+                        alt
+                        <input id="guiPythonUiActionAltInput" type="text" placeholder='e.g. _("Toggle developer mode")' />
+                      </label>
+                    </div>
+
+                    <label>
+                      periodic(st) Body
+                      <textarea id="guiPythonUiActionPeriodicBodyInput" rows="3" placeholder='Optional, e.g.&#10;if store.needs_refresh:&#10;    renpy.restart_interaction()'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiBarFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>BarValue Methods</h3>
+                        <p>Build a custom value source for bars, sliders, and scroll-style widgets.</p>
+                      </div>
+                    </div>
+
+                    <label>
+                      get_adjustment() Expression
+                      <textarea id="guiPythonUiBarAdjustmentInput" rows="3" placeholder='e.g. ui.adjustment(range=100, value=preferences.get_volume("music"))'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        get_style() Expression
+                        <input id="guiPythonUiBarStyleInput" type="text" placeholder='e.g. ("bar", "vbar")' />
+                      </label>
+
+                      <label>
+                        get_tooltip() Expression
+                        <input id="guiPythonUiBarTooltipInput" type="text" placeholder='e.g. _("Master volume")' />
+                      </label>
+
+                      <label>
+                        alt
+                        <input id="guiPythonUiBarAltInput" type="text" placeholder='e.g. _("Volume bar")' />
+                      </label>
+                    </div>
+
+                    <label>
+                      replaces(other) Body
+                      <textarea id="guiPythonUiBarReplacesBodyInput" rows="3" placeholder='Optional, e.g.&#10;return isinstance(other, VolumeBarValue) and other.channel == self.channel'></textarea>
+                    </label>
+
+                    <label>
+                      periodic(st) Body
+                      <textarea id="guiPythonUiBarPeriodicBodyInput" rows="3" placeholder="Optional, e.g. return None"></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiInputFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>InputValue Methods</h3>
+                        <p>Build a custom text binding for screen input widgets.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        default
+                        <select id="guiPythonUiInputDefaultInput">
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        editable
+                        <select id="guiPythonUiInputEditableInput">
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        returnable
+                        <select id="guiPythonUiInputReturnableInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <label>
+                      get_text() Expression
+                      <input id="guiPythonUiInputGetTextInput" type="text" placeholder='e.g. store.player_name or ""' />
+                    </label>
+
+                    <label>
+                      set_text(s) Body
+                      <textarea id="guiPythonUiInputSetTextBodyInput" rows="4" placeholder='e.g. store.player_name = s'></textarea>
+                    </label>
+
+                    <label>
+                      enter() Body
+                      <textarea id="guiPythonUiInputEnterBodyInput" rows="3" placeholder='Optional. Leave blank to use InputValue.enter(self).'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiRestartFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>restart_interaction Helper</h3>
+                        <p>Build a helper function for screen-scope or store updates that need an immediate refresh.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        Assignment Target
+                        <input id="guiPythonUiRestartTargetInput" type="text" placeholder="e.g. store.overlay_mode" />
+                      </label>
+
+                      <label>
+                        Assigned Expression
+                        <input id="guiPythonUiRestartValueInput" type="text" placeholder="e.g. value" />
+                      </label>
+                    </div>
+
+                    <label>
+                      Extra Body Before restart_interaction()
+                      <textarea id="guiPythonUiRestartBodyInput" rows="4" placeholder='Optional, e.g.&#10;store.overlay_dirty = True'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiDefineScreenFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>define_screen Registration</h3>
+                        <p>Build a Python-defined screen and register it through <code>renpy.define_screen()</code>.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        Screen Name
+                        <input id="guiPythonUiDefineScreenNameInput" type="text" placeholder="e.g. python_overlay" />
+                      </label>
+
+                      <label>
+                        modal
+                        <select id="guiPythonUiDefineModalInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        zorder
+                        <input id="guiPythonUiDefineZorderInput" type="number" step="1" placeholder="e.g. 0" />
+                      </label>
+
+                      <label>
+                        tag
+                        <input id="guiPythonUiDefineTagInput" type="text" placeholder='Optional, e.g. "menu"' />
+                      </label>
+
+                      <label>
+                        variant
+                        <input id="guiPythonUiDefineVariantInput" type="text" placeholder='Optional, e.g. "touch"' />
+                      </label>
+                    </div>
+
+                    <label>
+                      Function Body
+                      <textarea id="guiPythonUiDefineBodyInput" rows="6" placeholder='e.g.&#10;ui.window(style="say_window")&#10;ui.vbox()&#10;ui.text("Python screen placeholder")'></textarea>
+                    </label>
+                  </div>
+
+                  <label>
+                    Notes
+                    <textarea id="guiPythonUiNotesInput" rows="3" placeholder="Optional notes about where this helper is used."></textarea>
+                  </label>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeletePythonUiButton" class="danger-button" type="button">Delete Helper</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Python Output</h2>
+                    <p>Generated helper code plus usage hints for the currently selected template.</p>
+                  </div>
+                </div>
+
+                <div id="guiPythonUiUsageList" class="gui-diagnostics-list"></div>
+                <pre id="guiPythonUiCodePreview" class="code-preview"></pre>
               </aside>
             </div>
           </section>

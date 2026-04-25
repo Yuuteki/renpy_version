@@ -1306,8 +1306,10 @@ function normalizeGuiState(rawGui) {
       styles: [],
       screens: [],
       config: [],
+      guiPreferences: [],
       preferences: [],
       store: [],
+      pythonUiHelpers: [],
       cursors: [],
       textShaders: [],
       replayMenu: null,
@@ -1320,8 +1322,10 @@ function normalizeGuiState(rawGui) {
     styles: Array.isArray(rawGui.styles) ? rawGui.styles : [],
     screens: Array.isArray(rawGui.screens) ? rawGui.screens : [],
     config: Array.isArray(rawGui.config) ? rawGui.config : [],
+    guiPreferences: Array.isArray(rawGui.guiPreferences) ? rawGui.guiPreferences : [],
     preferences: Array.isArray(rawGui.preferences) ? rawGui.preferences : [],
     store: Array.isArray(rawGui.store) ? rawGui.store : [],
+    pythonUiHelpers: Array.isArray(rawGui.pythonUiHelpers) ? rawGui.pythonUiHelpers : [],
     cursors: Array.isArray(rawGui.cursors) ? rawGui.cursors : [],
     textShaders: Array.isArray(rawGui.textShaders) ? rawGui.textShaders : [],
     replayMenu: rawGui.replayMenu && typeof rawGui.replayMenu === "object" && !Array.isArray(rawGui.replayMenu)
@@ -9452,12 +9456,12 @@ function renderGuiEditorPanel() {
       value: String(guiState.screens.length),
     },
     {
-      title: "Config / Prefs / Store",
-      value: `${guiState.config.length} / ${guiState.preferences.length} / ${guiState.store.length}`,
+      title: "Config / GUI Prefs / Prefs / Store",
+      value: `${guiState.config.length} / ${guiState.guiPreferences.length} / ${guiState.preferences.length} / ${guiState.store.length}`,
     },
     {
-      title: "Cursors / Shaders",
-      value: `${guiState.cursors.length} / ${guiState.textShaders.length}`,
+      title: "Python UI / Cursors / Shaders",
+      value: `${guiState.pythonUiHelpers.length} / ${guiState.cursors.length} / ${guiState.textShaders.length}`,
     },
     {
       title: "Replay / Music / Gallery",
