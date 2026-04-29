@@ -1,0 +1,1552 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automated Testing &mdash; Ren&#39;Py Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a7a157b0" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+    <link rel="canonical" href="https://www.renpy.org/doc/html/testcases.html" />
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=08128045"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+      <script src="_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="NVL-Mode Tutorial" href="nvl_mode.html" />
+    <link rel="prev" title="Interactive Director" href="director.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+<a href="https://www.renpy.org/" style="margin-bottom: 0">Ren'Py Visual Novel Engine
+<img src="_static/navbar-logo.png" alt="Logo" style="width: 93px; height: 100px; border-radius: 0; margin: 0 auto; padding: 0; margin-top: 5px; background-color: unset;" />
+</a>
+
+<a href="index.html" style="margin-bottom: 0px">8.5.2 Documentation</a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI Customization Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The Ren'Py Language</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_basics.html">Language Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="label.html">Labels &amp; Control Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialogue.html">Dialogue and Narration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displaying_images.html">Displaying Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="menus.html">In-Game Menus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python Statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditional.html">Conditional Statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">Audio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_filters.html">Audio Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="movie.html">Movie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voice.html">Voice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Text, Displayables, Transforms, and Transitions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text.html">Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">Translation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="displayables.html">Displayables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">Transforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_properties.html">Transform Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transitions.html">Transitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrixcolor.html">Matrixcolor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layeredimage.html">Layered Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3dstage.html">3D Stage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="live2d.html">Live2D Cubism</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Customizing Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="style.html">Styles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="style_properties.html">Style Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screens.html">Screens and Screen Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_actions.html">Screen Actions, Values, and Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_special.html">Special Screen Names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_optimization.html">Screen Language Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preferences.html">Preference Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store_variables.html">Store Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mouse.html">Custom Mouse Cursors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textshaders.html">Text Shaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="launcher.html">Launcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_tools.html">Developer Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="director.html">Interactive Director</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Automated Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#running-testcases">Running Testcases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testcase-statement">Testcase Statement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testsuite-statement">Testsuite Statement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hooks">Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lifecycle-of-a-test-run">Lifecycle of a Test Run</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skipping-testcases">Skipping Testcases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameterized-tests">Parameterized Tests</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#grouped-parameters">Grouped Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameter-combinations">Parameter Combinations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-parameters-in-expressions">Using Parameters in Expressions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suites">Test Suites</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#exceptions-and-failures">Exceptions And Failures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#test-reporting">Test Reporting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-results">Test results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#test-settings">Test Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-statements">Test Statements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-commands">Basic Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advance">Advance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exit">Exit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pass">Pass</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pause">Pause</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#run">Run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skip">Skip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#mouse-commands">Mouse Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#click">Click</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drag">Drag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#move">Move</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scroll">Scroll</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#keyboard-commands">Keyboard Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#keysym">Keysym</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#type">Type</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#condition-statements">Condition Statements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#boolean-values">Boolean Values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boolean-operations">Boolean Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eval">Eval</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#label">Label</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#selector-statements">Selector Statements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#displayable-selector">Displayable Selector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#text-selector">Text Selector</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#control-statements">Control Statements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#assert">Assert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#if">If</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#repeat">Repeat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#screenshot">Screenshot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#until">Until</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#python-blocks-and-dollar-lines">Python Blocks And Dollar-Lines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other Functionality</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nvl_mode.html">NVL-Mode Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bubble.html">Speech Bubbles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Text Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="side_image.html">Side Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rooms.html">Image Gallery, Music Room, and Replay Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drag_drop.html">Drag and Drop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">Sprites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keymap.html">Customizing the Keymap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="achievement.html">Achievements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Dialogue History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple.html">Multiple Character Dialogue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="splashscreen_presplash.html">Splashscreen and Presplash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">Lifecycle of a Running Ren'Py Game</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python and Ren'Py</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statement_equivalents.html">Statement Equivalents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="save_load_rollback.html">Saving, Loading, and Rollback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistent.html">Persistent Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui_advanced.html">Advanced GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screen_python.html">Screens and Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdd.html">Creator-Defined Displayables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cds.html">Creator-Defined Statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_text_tags.html">Custom Text Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character_callbacks.html">Character Callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_python.html">File Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_class.html">Color Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix.html">Matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model-Based Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other Functions and Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ren_py.html">_ren.py Files - Ren'Py in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fetch.html">HTTPS/HTTP Fetch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="screenshot.html">Screenshots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Building, Updating, and Other Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">Building Distributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android.html">Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ios.html">iOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web.html">Web / HTML5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chromeos.html">Chrome OS/Chromebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raspi.html">Raspberry Pi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iap.html">In-App Purchasing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="updater.html">HTTPS/HTTP Updater</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloader.html">Downloader for Large Games on Mobile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gesture.html">Gestures</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">End-User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problems.html">Dealing with Problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_variables.html">Environment Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self_voicing.html">Self-Voicing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Library and Tool Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="template_projects.html">Template Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Engine Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">Text Editor Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skins.html">Skins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translating_renpy.html">Translating Ren'Py</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changes, License, and Credits</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog (Ren'Py 7.x-)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog6.html">Changelog (Ren'Py 6.11 - 6.99)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incompatible.html">Incompatible Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sponsors.html">Ren'Py Development Sponsors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ren'Py Visual Novel Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Automated Testing</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/renpy/renpy/blob/master/sphinx/source/testcases.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="automated-testing">
+<h1>Automated Testing<a class="headerlink" href="#automated-testing" title="Link to this heading"></a></h1>
+<p>Ren'Py allows creators to put automated tests in their games to make sure that
+alterations to the game don't break existing functionality. This is especially
+useful for large games, or for games that are frequently updated.</p>
+<p>The two main components of the testing system are the <code class="docutils literal notranslate"><span class="pre">testcase</span></code> and
+<code class="docutils literal notranslate"><span class="pre">testsuite</span></code> statements.</p>
+<p>The <a class="reference internal" href="other.html#renpy.is_in_test" title="renpy.is_in_test"><code class="xref py py-func docutils literal notranslate"><span class="pre">renpy.is_in_test()</span></code></a> function is helpful to know whether a test is currently
+executing or not.</p>
+<section id="running-testcases">
+<span id="id1"></span><h2>Running Testcases<a class="headerlink" href="#running-testcases" title="Link to this heading"></a></h2>
+<p>Testcases can be run in two ways. The first is from the laucher, by selecting the
+&quot;Run Testcases&quot; button. The second is from the command line, using the
+<a class="reference internal" href="cli.html#cli-test"><span class="std std-ref">test command</span></a>. In both cases, the testcase or test suite named
+<code class="docutils literal notranslate"><span class="pre">global</span></code> is run by default.</p>
+<p>The &quot;Run Testcases&quot; button is only present in the launcher if at least one testcase
+exists in global test suite. Testcauses and test suites found at the top level of a Ren'Py
+script file are automatically added to the global test suite. When adding the first testcase
+to a project, launch the game normally, then hit 'refresh' in the launcher to have the
+&quot;Run Testcases&quot; button appear.</p>
+</section>
+<section id="testcase-statement">
+<span id="id2"></span><h2>Testcase Statement<a class="headerlink" href="#testcase-statement" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">testcase</span></code> statement creates a named test case. Each case contains a
+block of test statements (see below). Test cases are similar to Ren'Py
+<a class="reference internal" href="label.html#label-statement"><span class="std std-ref">labels</span></a>, with a few differences:</p>
+<ul class="simple">
+<li><p>The Ren'Py label statement takes Ren'Py code, while the testcase statement
+takes test statements (listed on this page). They are mutually exclusive.</p></li>
+<li><p>There is no testcase equivalent of the return statement.</p></li>
+<li><p>There can be no test statement outside of a test block, while there can be
+Ren'Py code outside labels.</p></li>
+</ul>
+<p>It takes the following properties:</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#var-description" title="Link to this definition"></a></dt>
+<dd><p>A string describing the test case. This is used in the test report.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-enabled">
+<span class="sig-name descname"><span class="pre">enabled</span></span><a class="headerlink" href="#var-enabled" title="Link to this definition"></a></dt>
+<dd><p>If this expression evaluates to <code class="docutils literal notranslate"><span class="pre">False</span></code>, this test is skipped.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<p>This can conditionally disable tests, for example on platforms
+where they are not supported.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">windows</span><span class="p">:</span>
+    <span class="n">enabled</span> <span class="n">renpy</span><span class="o">.</span><span class="n">windows</span>
+    <span class="o">...</span>
+
+<span class="k">testcase</span> <span class="n">not_on_mobile</span><span class="p">:</span>
+    <span class="n">enabled</span> <span class="k">not</span> <span class="n">renpy</span><span class="o">.</span><span class="n">mobile</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="#skipping-testcases"><span class="std std-ref">Skipping Testcases</span></a> for more information.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-only">
+<span class="sig-name descname"><span class="pre">only</span></span><a class="headerlink" href="#var-only" title="Link to this definition"></a></dt>
+<dd><p>If this expression evaluates to <code class="docutils literal notranslate"><span class="pre">True</span></code>, only this test case
+(and other tests with <code class="docutils literal notranslate"><span class="pre">only</span> <span class="pre">True</span></code>) will be run. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p>See <a class="reference internal" href="#skipping-testcases"><span class="std std-ref">Skipping Testcases</span></a> for more information.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-xfail">
+<span class="sig-name descname"><span class="pre">xfail</span></span><a class="headerlink" href="#var-xfail" title="Link to this definition"></a></dt>
+<dd><p>If this expression evaluates to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the test is expected to fail.
+If the test does fail, it will be marked as xfailed instead of failed.
+Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-parameter">
+<span class="sig-name descname"><span class="pre">parameter</span></span><a class="headerlink" href="#var-parameter" title="Link to this definition"></a></dt>
+<dd><p>A variable name (or tuple of variable names) and a list of values (or
+list of tuples of values). The test will run once for each value (or
+tuple of values) in the list.</p>
+<p>A test may have multiple <code class="docutils literal notranslate"><span class="pre">parameter</span></code> properties, in which case
+the test will run for every possible combination of the values.</p>
+<p>See <a class="reference internal" href="#parameterized-tests"><span class="std std-ref">Parameterized Tests</span></a> for more information.</p>
+</dd></dl>
+
+</section>
+<section id="testsuite-statement">
+<h2>Testsuite Statement<a class="headerlink" href="#testsuite-statement" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">testsuite</span></code> statement is used to group test cases together. Test suites
+can contain test cases, other test suites, and hooks (see below).</p>
+<p>The default test suite is named <code class="docutils literal notranslate"><span class="pre">global</span></code>, and it is automatically created
+by Ren'Py if not specified by the user. It contains all other top-level test suites
+and test cases in the game.</p>
+<p>It takes the same properties as the <a class="reference internal" href="#testcase-statement"><span class="std std-ref">testcase statement</span></a>.</p>
+<section id="hooks">
+<h3>Hooks<a class="headerlink" href="#hooks" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">testsuite</span></code> statement can contain the following hooks:</p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">setup</span></span></dt>
+<dd><p>A block of test statements that is executed once, before running any tests
+contained within the current suite.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">before</span> <span class="pre">testsuite</span></span></dt>
+<dd><p>A block of test statements that is executed repeatedly, running before each test suite
+within the current suite.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">before</span> <span class="pre">testcase</span></span></dt>
+<dd><p>A block of test statements that is executed repeatedly, running before each test case
+within the current suite.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">after</span> <span class="pre">testcase</span></span></dt>
+<dd><p>A block of test statements that is executed repeatedly, running after each test case
+in the current suite. The is run even if the testcase fails or raises an
+exception.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">after</span> <span class="pre">testsuite</span></span></dt>
+<dd><p>A block of test statements that is executed repeatedly, running after each test suite
+in the current suite. The is run even if the testsuite fails or raises an
+exception.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">teardown</span></span></dt>
+<dd><p>A block of test statements that is executed once, after running all tests
+contained within the current suite. This is run even if a test
+fails or raises an exception.</p>
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">before</span> <span class="pre">*</span></code> and <code class="docutils literal notranslate"><span class="pre">after</span> <span class="pre">*</span></code> hooks take the following properties:</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-depth">
+<span class="sig-name descname"><span class="pre">depth</span></span><a class="headerlink" href="#var-depth" title="Link to this definition"></a></dt>
+<dd><p>An integer specifying how deep the hook should apply.</p>
+<p>For testcases, defaults to <code class="docutils literal notranslate"><span class="pre">-1</span></code>, meaning it applies to all nested test suites and test cases.</p>
+<p>For testsuites, defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>, meaning it applies only to test suites directly
+contained within the current suite.</p>
+<p>For more information, see <a class="reference internal" href="#lifecycle-of-a-test-run"><span class="std std-ref">Lifecycle of a Test Run</span></a>.</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="lifecycle-of-a-test-run">
+<span id="id3"></span><h2>Lifecycle of a Test Run<a class="headerlink" href="#lifecycle-of-a-test-run" title="Link to this heading"></a></h2>
+<p>This section describes the order in which testcases and testsuites are
+executed, and how the hooks are called. The following example illustrates this:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Code</p></th>
+<th class="head"><p>Execution Order</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testsuite</span> <span class="k">global</span><span class="p">:</span>
+    <span class="c1"># Hooks</span>
+    <span class="n">setup</span><span class="p">:</span>
+        <span class="n">skip</span> <span class="n">until</span> <span class="n">main_menu</span>
+
+    <span class="n">before</span> <span class="k">testsuite</span><span class="p">:</span>
+        <span class="k">if</span> <span class="k">not</span> <span class="k">screen</span> <span class="s2">&quot;main_menu&quot;</span><span class="p">:</span>
+            <span class="n">run</span> <span class="n">MainMenu</span><span class="p">(</span><span class="n">confirm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">click</span> <span class="s2">&quot;Start&quot;</span>
+
+    <span class="n">before</span> <span class="k">testcase</span><span class="p">:</span>
+        <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting a testcase.&quot;</span><span class="p">)</span>
+
+    <span class="n">after</span> <span class="k">testcase</span><span class="p">:</span>
+        <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished a testcase.&quot;</span><span class="p">)</span>
+
+    <span class="n">after</span> <span class="k">testsuite</span><span class="p">:</span>
+        <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished a testsuite.&quot;</span><span class="p">)</span>
+
+    <span class="n">teardown</span><span class="p">:</span>
+        <span class="n">exit</span>
+
+    <span class="c1"># Subtests</span>
+    <span class="k">testsuite</span> <span class="n">basic</span><span class="p">:</span>
+        <span class="k">testcase</span> <span class="n">first_testcase</span><span class="p">:</span>
+            <span class="n">advance</span>
+
+    <span class="k">testsuite</span> <span class="n">test_choices</span><span class="p">:</span>
+        <span class="c1"># Hooks</span>
+        <span class="n">setup</span><span class="p">:</span>
+            <span class="n">run</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;chapter1&quot;</span><span class="p">)</span>
+
+        <span class="n">before</span> <span class="k">testcase</span><span class="p">:</span>
+            <span class="n">advance</span> <span class="n">until</span> <span class="k">menu</span> <span class="k">choice</span>
+
+        <span class="n">after</span> <span class="k">testcase</span><span class="p">:</span>
+            <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished a choice test.&quot;</span><span class="p">)</span>
+
+        <span class="n">teardown</span><span class="p">:</span>
+            <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished all choice tests.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Subtests</span>
+        <span class="k">testcase</span> <span class="n">choice1</span><span class="p">:</span>
+            <span class="n">click</span> <span class="s2">&quot;First Choice&quot;</span>
+
+        <span class="k">testcase</span> <span class="n">choice2</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="n">click</span> <span class="s2">&quot;Second Choice&quot;</span>
+
+        <span class="k">testcase</span> <span class="n">choice3</span><span class="p">:</span>
+            <span class="n">click</span> <span class="s2">&quot;Third Choice&quot;</span>
+</pre></div>
+</div>
+</td>
+<td><div class="execution-block docutils container">
+<div class="execution-entry docutils container">
+<p><strong>global</strong> :: setup</p>
+</div>
+<div class="execution-block2 docutils container">
+<div class="execution-entry docutils container">
+<p><strong>global</strong> :: before testsuite</p>
+</div>
+<div class="execution-block2 docutils container">
+<div class="execution-entry2 docutils container">
+<p><strong>global</strong> :: before testcase</p>
+</div>
+<div class="execution-entry3 docutils container">
+<p><strong>simple</strong> :: first_testcase</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>global</strong> :: after testcase</p>
+</div>
+</div>
+<div class="execution-entry docutils container">
+<p><strong>global</strong> :: after testsuite</p>
+</div>
+</div>
+<div class="execution-block2 docutils container">
+<div class="execution-entry docutils container">
+<p><strong>global</strong> :: before testsuite</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>test_choices</strong> :: setup</p>
+</div>
+<div class="execution-block2 docutils container">
+<div class="execution-entry2 docutils container">
+<p><strong>global</strong> :: before testcase</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>test_choices</strong> :: before testcase</p>
+</div>
+<div class="execution-entry3 docutils container">
+<p><strong>test_choices</strong> :: choice1</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>test_choices</strong> :: after testcase</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>global</strong> :: after testcase</p>
+</div>
+</div>
+<div class="execution-block2 docutils container">
+<div class="execution-entry2 docutils container">
+<p><strong>global</strong> :: before testcase</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>test_choices</strong> :: before testcase</p>
+</div>
+<div class="execution-entry3 docutils container">
+<p><strong>test_choices</strong> :: choice3</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>test_choices</strong> :: after testcase</p>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>global</strong> :: after testcase</p>
+</div>
+</div>
+<div class="execution-entry2 docutils container">
+<p><strong>test_choices</strong> :: teardown</p>
+</div>
+<div class="execution-entry docutils container">
+<p><strong>global</strong> :: after testsuite</p>
+</div>
+</div>
+<div class="execution-entry docutils container">
+<p><strong>global</strong> :: teardown</p>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">global</span> <span class="pre">::</span> <span class="pre">before</span> <span class="pre">testcase</span></code> and <code class="docutils literal notranslate"><span class="pre">global</span> <span class="pre">::</span> <span class="pre">after</span> <span class="pre">testcase</span></code> are
+executed before and after each test case, even if the test case is inside a
+nested test suite.</p>
+<p>In order to limit the scope of a hook, set its <code class="docutils literal notranslate"><span class="pre">depth</span></code> property.
+Setting it to <code class="docutils literal notranslate"><span class="pre">0</span></code> will make the hook execute only for tests
+directly inside the test suite containing the hook.</p>
+<p>For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testsuite</span> <span class="k">global</span><span class="p">:</span>
+    <span class="n">before</span> <span class="k">testcase</span><span class="p">:</span>
+        <span class="n">depth</span> <span class="mi">0</span>
+        <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting a testcase.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On the other hand, the <code class="docutils literal notranslate"><span class="pre">before</span> <span class="pre">testsuite</span></code> and <code class="docutils literal notranslate"><span class="pre">after</span> <span class="pre">testsuite</span></code> hooks
+have a default <code class="docutils literal notranslate"><span class="pre">depth</span></code> of <code class="docutils literal notranslate"><span class="pre">0</span></code>, meaning they will only execute for testsuites
+directly inside the testsuite containing the hook.</p>
+<p>To increase the scope of a hook to include nested testsuites and testcases,
+set its <code class="docutils literal notranslate"><span class="pre">depth</span></code> property to <code class="docutils literal notranslate"><span class="pre">-1</span></code> (for infinite depth) or to a positive
+integer (for a specific depth).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When a testsuite finishes executing, the game doesn't close itself.
+Instead, it will return control of the game back to the player,
+awaiting user input.</p>
+<p>To close the game after a testsuite, you can use the <code class="docutils literal notranslate"><span class="pre">exit</span></code> test
+statement in the <code class="docutils literal notranslate"><span class="pre">after</span></code> hook of the testsuite. For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testsuite</span> <span class="k">global</span><span class="p">:</span>
+    <span class="n">teardown</span><span class="p">:</span>
+        <span class="n">exit</span>
+</pre></div>
+</div>
+</div>
+<section id="skipping-testcases">
+<span id="id4"></span><h3>Skipping Testcases<a class="headerlink" href="#skipping-testcases" title="Link to this heading"></a></h3>
+<p>If a testcase is skipped, it will not be executed. In addition, the
+<code class="docutils literal notranslate"><span class="pre">before</span> <span class="pre">testcase</span></code> and <code class="docutils literal notranslate"><span class="pre">after</span> <span class="pre">testcase</span></code> hooks of the testsuite will not be executed
+for that testcase.</p>
+<p>If <em>all</em> tests are skipped in a testsuite, then the <code class="docutils literal notranslate"><span class="pre">setup</span></code> and
+<code class="docutils literal notranslate"><span class="pre">teardown</span></code> hooks will not be executed either. In addition, the
+<code class="docutils literal notranslate"><span class="pre">before</span> <span class="pre">testsuite</span></code> and <code class="docutils literal notranslate"><span class="pre">after</span> <span class="pre">testsuite</span></code> hooks will not be executed from
+the parent testsuite(s).</p>
+</section>
+<section id="parameterized-tests">
+<span id="id5"></span><h3>Parameterized Tests<a class="headerlink" href="#parameterized-tests" title="Link to this heading"></a></h3>
+<p>A test case can run multiple times with different values by using the <code class="docutils literal notranslate"><span class="pre">parameter</span></code> property.</p>
+<p>To do this, give a variable name and a list of values. The test will run once
+for each value in the list. For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">example</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will run the test three times: once with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span></code>, once with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">2</span></code>,
+and once with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">3</span></code>.</p>
+<p>Each run will execute the <code class="docutils literal notranslate"><span class="pre">before</span> <span class="pre">testcase</span></code> and <code class="docutils literal notranslate"><span class="pre">after</span> <span class="pre">testcase</span></code> hooks,
+and each test is reported separately in the test report.</p>
+<section id="grouped-parameters">
+<h4>Grouped Parameters<a class="headerlink" href="#grouped-parameters" title="Link to this heading"></a></h4>
+<p>It is possible to specify several variables at once by grouping them
+in parentheses and giving a list of value groups. For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">addition</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span> <span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">==</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will run three times, each time using one set of values:
+<code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">2,</span> <span class="pre">3)</span></code>, <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">3,</span> <span class="pre">5)</span></code>, and <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">5,</span> <span class="pre">8)</span></code>.</p>
+</section>
+<section id="parameter-combinations">
+<h4>Parameter Combinations<a class="headerlink" href="#parameter-combinations" title="Link to this heading"></a></h4>
+<p>If multiple <code class="docutils literal notranslate"><span class="pre">parameter</span></code> properties are provided, the test case will run
+for every possible combination of the values. For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">combinations</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">parameter</span> <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+    <span class="n">parameter</span> <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="k">in</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This will run eight times, once for each combination of <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b,</span> <span class="pre">c)</span></code>:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">3,</span> <span class="pre">5)</span></code>, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">3,</span> <span class="pre">6)</span></code>, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">4,</span> <span class="pre">5)</span></code>, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">4,</span> <span class="pre">6)</span></code>, <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">3,</span> <span class="pre">5)</span></code>, <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">3,</span> <span class="pre">6)</span></code>, <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">4,</span> <span class="pre">5)</span></code>, <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">4,</span> <span class="pre">6)</span></code></p>
+</div></blockquote>
+<p>It is possible to mix grouped parameters with non-grouped parameters. For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">mixed</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">parameter</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="k">in</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This will run four times, using these combinations for <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">(b,</span> <span class="pre">c))</span></code>:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">(3,</span> <span class="pre">5))</span></code>, <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">(4,</span> <span class="pre">6))</span></code>, <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">(3,</span> <span class="pre">5))</span></code>, <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">(4,</span> <span class="pre">6))</span></code></p>
+</div></blockquote>
+</section>
+<section id="using-parameters-in-expressions">
+<h4>Using Parameters in Expressions<a class="headerlink" href="#using-parameters-in-expressions" title="Link to this heading"></a></h4>
+<p>You can use parameters in any test property that takes an expression.</p>
+<p>For example, here's a test that runs three times, once for each value of <code class="docutils literal notranslate"><span class="pre">x</span></code>.
+The test will pass when <code class="docutils literal notranslate"><span class="pre">x</span></code> is 0 or 1, and will be expected to fail (<code class="docutils literal notranslate"><span class="pre">xfail</span></code>) when <code class="docutils literal notranslate"><span class="pre">x</span></code> is 2:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">choice_test</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">xfail</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">2</span>
+
+    <span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also use parameters to select screens or buttons by name.
+For example, this test will click either the &quot;first&quot; or &quot;second&quot; choice,
+depending on the value of <code class="docutils literal notranslate"><span class="pre">choice_text</span></code>:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">show_menu</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="n">screen_name</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;preferences&quot;</span><span class="p">,</span> <span class="s2">&quot;load&quot;</span><span class="p">]</span>
+
+    <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Showing screen &#39;</span><span class="si">{</span><span class="n">screen_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="n">run</span> <span class="n">ShowMenu</span><span class="p">(</span><span class="n">screen_name</span><span class="p">)</span>
+    <span class="k">pause</span> <span class="n">until</span> <span class="k">screen</span> <span class="n">screen_name</span>
+    <span class="n">run</span> <span class="n">Return</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Parameters can also be used inside Python code blocks.
+For example, this test prints the current values of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>,
+and then clicks at that position:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">param_test</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]</span>
+
+    <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Clicking at position (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="n">click</span> <span class="na">pos</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="test-suites">
+<h4>Test Suites<a class="headerlink" href="#test-suites" title="Link to this heading"></a></h4>
+<p>Parameters can also be provided to the whole test suite. In this case, all hooks and test cases
+inside the suite will run once for each parameter set.</p>
+<p>Each parameterized run will execute the <code class="docutils literal notranslate"><span class="pre">setup</span></code>, <code class="docutils literal notranslate"><span class="pre">before/after</span> <span class="pre">testsuite</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">teardown</span></code> hooks.</p>
+<p>For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testsuite</span> <span class="n">math_tests</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span> <span class="p">]</span>
+
+    <span class="n">setup</span><span class="p">:</span>
+        <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running math tests with x=</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">, z=</span><span class="si">{</span><span class="n">z</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">testcase</span> <span class="n">addition</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">==</span> <span class="n">z</span><span class="p">)</span>
+
+    <span class="k">testcase</span> <span class="n">multiplication</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">==</span> <span class="n">z</span><span class="o">*</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters may be nested, and all combinations will be tested. For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testsuite</span> <span class="n">parameter_field</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="n">choice_text</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">]</span>
+
+    <span class="k">testcase</span> <span class="n">param_test2</span><span class="p">:</span>
+        <span class="n">parameter</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)]</span>
+
+        <span class="n">advance</span> <span class="n">until</span> <span class="k">screen</span> <span class="s2">&quot;choice&quot;</span>
+        <span class="n">click</span> <span class="n">choice_text</span>
+        <span class="n">click</span> <span class="na">pos</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will run four times, once for each combination of <code class="docutils literal notranslate"><span class="pre">(choice_text,</span> <span class="pre">(x,</span> <span class="pre">y))</span></code>:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">(&quot;first&quot;,</span> <span class="pre">(0.0,</span> <span class="pre">0.0))</span></code>, <code class="docutils literal notranslate"><span class="pre">(&quot;first&quot;,</span> <span class="pre">(0.5,</span> <span class="pre">0.5))</span></code>,
+<code class="docutils literal notranslate"><span class="pre">(&quot;second&quot;,</span> <span class="pre">(0.0,</span> <span class="pre">0.0))</span></code>, <code class="docutils literal notranslate"><span class="pre">(&quot;second&quot;,</span> <span class="pre">(0.5,</span> <span class="pre">0.5))</span></code></p>
+</div></blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Test parameters are passed directly to tests, without any copying. If you change
+a parameter that is mutable (eg. a list or dictionary) inside a test, that change
+will affect other tests using the same object.</p>
+</div>
+</section>
+</section>
+<section id="exceptions-and-failures">
+<h3>Exceptions And Failures<a class="headerlink" href="#exceptions-and-failures" title="Link to this heading"></a></h3>
+<p>If an error occurs during a test case:</p>
+<ol class="arabic simple">
+<li><p>The test case will stop executing immediately</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">after</span> <span class="pre">testcase</span></code> hook of the testsuite containing the test case will run</p></li>
+<li><p>If there are more test cases, they will continue to be executed (including the
+<code class="docutils literal notranslate"><span class="pre">before</span> <span class="pre">testcase</span></code> hook)</p></li>
+<li><p>If no more test cases exist, the <code class="docutils literal notranslate"><span class="pre">after</span></code> hook of the testsuite will run</p></li>
+</ol>
+<p>If an error occurs during a hook (eg. <code class="docutils literal notranslate"><span class="pre">before</span> <span class="pre">testcase</span></code>):</p>
+<ol class="arabic simple">
+<li><p>The test suite will stop executing immediately</p></li>
+<li><p>If the suite was called by another suite, the parent suite will continue
+executing.</p></li>
+<li><p>If no parent suite exists, the game will end the test run.</p></li>
+</ol>
+</section>
+</section>
+<section id="test-reporting">
+<h2>Test Reporting<a class="headerlink" href="#test-reporting" title="Link to this heading"></a></h2>
+<p>After a test run, a report is printed to the console, listing all test cases
+and their results. If the <code class="docutils literal notranslate"><span class="pre">--print_details</span></code> option is provided, the report
+will include additional information about each test.</p>
+<p>Below is an example of a test report after successfully testing &quot;The Question&quot;:</p>
+<img alt="Test report example" class="screenshot" src="_images/testcases_the_question.png" />
+<section id="test-results">
+<h3>Test results<a class="headerlink" href="#test-results" title="Link to this heading"></a></h3>
+<p>A test can have one of the following results:</p>
+<ul class="simple">
+<li><p><strong>Passed</strong>: The test executed successfully, without any errors.</p></li>
+<li><p><strong>Failed</strong>: The test executed, but one of the statements failed.</p></li>
+<li><p><strong>XFailed</strong>: The test was expected to fail (because its <code class="docutils literal notranslate"><span class="pre">xfail</span></code>
+property evaluated to <code class="docutils literal notranslate"><span class="pre">True</span></code>), and it did fail.</p></li>
+<li><p><strong>XPassed</strong>: The test was expected to fail (because its <code class="docutils literal notranslate"><span class="pre">xfail</span></code>
+property evaluated to <code class="docutils literal notranslate"><span class="pre">True</span></code>), but it passed instead.</p></li>
+<li><p><strong>Skipped</strong>: The test was skipped, either because its <code class="docutils literal notranslate"><span class="pre">enabled</span></code>
+property evaluated to <code class="docutils literal notranslate"><span class="pre">False</span></code>, or because another test with <code class="docutils literal notranslate"><span class="pre">only</span> <span class="pre">True</span></code>
+exists.</p></li>
+</ul>
+<p>In general, a test is considered successful if it passed or xfailed,
+and unsuccessful if it failed or xpassed.</p>
+</section>
+</section>
+<section id="test-settings">
+<h2>Test Settings<a class="headerlink" href="#test-settings" title="Link to this heading"></a></h2>
+<p>The following variables can be set to change the behavior of tests:</p>
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_test.maximum_framerate">
+<span class="sig-name descname"><span class="pre">_test.maximum_framerate</span></span><a class="headerlink" href="#var-_test.maximum_framerate" title="Link to this definition"></a></dt>
+<dd><p>A boolean specifying whether to use maximum framerate mode during tests.
+This will unlock the framerate beyond your screens refresh rate if possible.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_test.timeout">
+<span class="sig-name descname"><span class="pre">_test.timeout</span></span><a class="headerlink" href="#var-_test.timeout" title="Link to this definition"></a></dt>
+<dd><p>A float specifying the maximum number of seconds a test statement
+should wait for a condition to be met. Defaults to <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p>
+<p>This can be overridden on a per-statement basis by providing a <code class="docutils literal notranslate"><span class="pre">timeout</span></code>
+property to statements that support it (like <code class="docutils literal notranslate"><span class="pre">assert</span></code> and <code class="docutils literal notranslate"><span class="pre">until</span></code>).</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_test.force">
+<span class="sig-name descname"><span class="pre">_test.force</span></span><a class="headerlink" href="#var-_test.force" title="Link to this definition"></a></dt>
+<dd><p>A boolean specifying whether to force the test to proceed even if
+<code class="docutils literal notranslate"><span class="pre">renpy.config.suppress_underlay</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_test.transition_timeout">
+<span class="sig-name descname"><span class="pre">_test.transition_timeout</span></span><a class="headerlink" href="#var-_test.transition_timeout" title="Link to this definition"></a></dt>
+<dd><p>A float specifying the maximum number of seconds to wait for a transition
+to complete before skipping it and proceeding with the test.
+Defaults to <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_test.focus_trials">
+<span class="sig-name descname"><span class="pre">_test.focus_trials</span></span><a class="headerlink" href="#var-_test.focus_trials" title="Link to this definition"></a></dt>
+<dd><p>An integer specifying how many times the test system should try to find
+a valid spot to <a class="reference internal" href="#test-move-statement"><span class="std std-ref">move the mouse</span></a> when using a
+selector without a position. Defaults to <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_test.screenshot_directory">
+<span class="sig-name descname"><span class="pre">_test.screenshot_directory</span></span><a class="headerlink" href="#var-_test.screenshot_directory" title="Link to this definition"></a></dt>
+<dd><p>A string specifying the directory to store screenshots in.
+Defaults to <code class="docutils literal notranslate"><span class="pre">tests/screenshots</span></code>.</p>
+</dd></dl>
+
+<dl class="std var">
+<dt class="sig sig-object std" id="var-_test.vc_revision">
+<span class="sig-name descname"><span class="pre">_test.vc_revision</span></span><a class="headerlink" href="#var-_test.vc_revision" title="Link to this definition"></a></dt>
+<dd><p>The version control (often git) revision of the current source tree, if available.
+Defaults to the RENPY_TEST_VC_REVISION <a class="reference internal" href="environment_variables.html"><span class="doc">environment variable</span></a>,
+or an empty string if not set.</p>
+</dd></dl>
+
+</section>
+<section id="test-statements">
+<span id="id6"></span><h2>Test Statements<a class="headerlink" href="#test-statements" title="Link to this heading"></a></h2>
+<p>Test statements are the building blocks of test cases. They can be broadly
+divided into three categories: command statements, condition/selector statements, and
+control statements.</p>
+<section id="basic-commands">
+<h3>Basic Commands<a class="headerlink" href="#basic-commands" title="Link to this heading"></a></h3>
+<section id="advance">
+<span id="test-advance-statement"></span><h4>Advance<a class="headerlink" href="#advance" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">advance</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Advances the game by one dialogue line.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">advance</span>
+<span class="n">advance</span> <span class="n">until</span> <span class="k">screen</span> <span class="s2">&quot;choice&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="exit">
+<h4>Exit<a class="headerlink" href="#exit" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">exit</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Quits the game without calling the confirmation screen.
+Does not save the game when quitting.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">eval</span> <span class="n">need_to_confirm</span><span class="p">:</span>
+    <span class="c1"># Asks for confirmation, and autosaves if config.autosave_on_quit is True</span>
+    <span class="n">run</span> <span class="n">Quit</span><span class="p">(</span><span class="n">confirm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="nb">eval</span> <span class="n">persistent</span><span class="o">.</span><span class="n">quit_test_using_action</span><span class="p">:</span>
+    <span class="c1"># Does not ask, but still autosaves if config.autosave_on_quit is True</span>
+    <span class="n">run</span> <span class="n">Quit</span><span class="p">(</span><span class="n">confirm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">exit</span> <span class="c1"># neither asks nor autosaves</span>
+</pre></div>
+</div>
+</section>
+<section id="pass">
+<h4>Pass<a class="headerlink" href="#pass" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">pass</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Does not do anything. It's a no-op, allowing for empty testcases.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">not_yet_implemented</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<section id="pause">
+<h4>Pause<a class="headerlink" href="#pause" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">pause</span> <span class="pre">[time</span> <span class="pre">(float)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Pauses test execution for a given number of seconds. Similar to the
+<a class="reference internal" href="quickstart.html#pause-statement"><span class="std std-ref">Pause Statement</span></a>, but requires a value, or it can be specified without
+a time if it is followed by an <cite>until</cite> clause.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">pause</span> <span class="mf">5.0</span>
+<span class="k">pause</span> <span class="n">until</span> <span class="k">screen</span> <span class="s2">&quot;inventory&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="run">
+<h4>Run<a class="headerlink" href="#run" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">run</span> <span class="pre">&lt;action&gt;</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Runs the provided <a class="reference internal" href="screen_actions.html"><span class="doc">screen-language action</span></a> (or list of
+actions).</p>
+<p>Ready if and when a button containing the provided action (or list) would be
+sensitive.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">chapter_3</span><span class="p">:</span>
+    <span class="n">run</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;chapter_3&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="skip">
+<span id="test-skip-statement"></span><h4>Skip<a class="headerlink" href="#skip" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">skip</span> <span class="pre">[fast]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Causes the game to begin skipping. If the game is in a menu context,
+then this returns to the game. Otherwise, it just enables skipping.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">fast</span></code> is provided, the game will skip directly to the next menu choice.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">skip</span>
+<span class="n">skip</span> <span class="n">fast</span>
+<span class="n">skip</span> <span class="n">until</span> <span class="k">screen</span> <span class="s2">&quot;choice&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="mouse-commands">
+<h3>Mouse Commands<a class="headerlink" href="#mouse-commands" title="Link to this heading"></a></h3>
+<section id="click">
+<h4>Click<a class="headerlink" href="#click" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">click</span> <span class="pre">[button</span> <span class="pre">(int)]</span> <span class="pre">[selector]</span> <span class="pre">[pos</span> <span class="pre">(x,</span> <span class="pre">y)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Executes a simulated click on the screen. It takes the following optional
+properties:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">button</span></code> specifies which button of the simulated mouse is to be clicked</dt><dd><p>with. It takes an integer and defaults to 1. 1 is a left-click, 2 is a
+right-click, 3 is a middle-click, 4 and 5 are additional buttons found on
+some mouses. Normally only 1 and 2 trigger any response from Ren'Py.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">selector</span></code> and/or <code class="docutils literal notranslate"><span class="pre">pos</span></code> are given, the virtual test mouse is moved according to
+the rules of the <a class="reference internal" href="#test-move-statement"><span class="std std-ref">move statement</span></a> before the click is sent.</p>
+<p>Click behaves like a <a class="reference internal" href="#test-text-selector"><span class="std std-ref">pattern</span></a>-taking clause which would
+not be given a pattern: if no <code class="docutils literal notranslate"><span class="pre">pos</span></code> is provided, it will look for a neutral
+place where a click would not occur on a focusable element.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Use the <a class="reference internal" href="#test-advance-statement"><span class="std std-ref">advance</span></a> or <a class="reference internal" href="#test-skip-statement"><span class="std std-ref">skip</span></a>
+statements if you want to advance the game's dialogue.
+Clicking may result in unpredictable results, depending on where the mouse
+is positioned and what is currently on the screen.</p>
+</div>
+</section>
+<section id="drag">
+<h4>Drag<a class="headerlink" href="#drag" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">drag</span> <span class="pre">&lt;[selector]</span> <span class="pre">[pos</span> <span class="pre">(x,</span> <span class="pre">y)]&gt;</span> <span class="pre">to</span> <span class="pre">&lt;[selector]</span> <span class="pre">[pos</span> <span class="pre">(x,</span> <span class="pre">y)]&gt;</span> <span class="pre">[button</span> <span class="pre">(int)]</span> <span class="pre">[steps</span> <span class="pre">(int)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Simulates a drag action on the screen. It takes the following properties:</p>
+<ul class="simple">
+<li><p>The first part (before the <code class="docutils literal notranslate"><span class="pre">to</span></code>) specifies the starting point of the drag.
+It takes an optional <code class="docutils literal notranslate"><span class="pre">selector</span></code> and/or <code class="docutils literal notranslate"><span class="pre">pos</span></code> property, which are
+interpreted according to the rules of the <a class="reference internal" href="#test-move-statement"><span class="std std-ref">move statement</span></a>.</p></li>
+<li><p>The second part (after the <code class="docutils literal notranslate"><span class="pre">to</span></code>) specifies the ending point of the drag.
+It also takes an optional <code class="docutils literal notranslate"><span class="pre">selector</span></code> and/or <code class="docutils literal notranslate"><span class="pre">pos</span></code> property, which are
+interpreted according to the rules of the <a class="reference internal" href="#test-move-statement"><span class="std std-ref">move statement</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">button</span></code> specifies which button of the simulated mouse is to be used
+for the drag. It takes an integer and defaults to 1. 1 is a left-click, 2 is a
+right-click, 3 is a middle-click, 4 and 5 are additional buttons found on
+some mouses. Normally only 1 and 2 trigger any response from Ren'Py.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">steps</span></code> specifies how many intermediate steps the drag should take.
+It takes an integer and defaults to <cite>10</cite>. More steps result in a smoother
+drag, but also take more time.</p></li>
+</ul>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">drag</span> <span class="na">id</span> <span class="s2">&quot;item_icon&quot;</span> <span class="n">to</span> <span class="na">id</span> <span class="s2">&quot;inventory_slot_3&quot;</span> <span class="k">button</span> <span class="mi">1</span> <span class="n">steps</span> <span class="mi">20</span>
+<span class="k">drag</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span> <span class="n">to</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span> <span class="k">button</span> <span class="mi">1</span>
+<span class="k">drag</span> <span class="na">id</span> <span class="s2">&quot;item_icon&quot;</span> <span class="na">pos</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="n">to</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span> <span class="n">steps</span> <span class="mi">5</span>
+<span class="k">drag</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="n">to</span> <span class="na">id</span> <span class="s2">&quot;inventory_slot_1&quot;</span>
+<span class="k">drag</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="n">to</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="move">
+<span id="test-move-statement"></span><h4>Move<a class="headerlink" href="#move" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">move</span> <span class="pre">[selector]</span> <span class="pre">[pos</span> <span class="pre">(x,</span> <span class="pre">y)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Moves the virtual test mouse to a given position on the screen.</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">selector</span></code> is given, and:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">pos</span></code> is specified, the mouse is moved to that position relative to the selector.</p></li>
+<li><p>If no <code class="docutils literal notranslate"><span class="pre">pos</span></code> is specified, the mouse attempts to find a pixel that would focus the
+selector if clicked. This takes into account things like <a class="reference internal" href="style_properties.html#style-property-focus_mask"><code class="xref std std-propref docutils literal notranslate"><span class="pre">focus_mask</span></code></a>.</p></li>
+</ul>
+<p>If no <code class="docutils literal notranslate"><span class="pre">selector</span></code> is given, and:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">pos</span></code> is specified, the mouse is moved to that position relative to the screen.</p></li>
+<li><p>If no <code class="docutils literal notranslate"><span class="pre">pos</span></code> is specified, an error is thrown.</p></li>
+</ul>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># Move to a random clickable point within `back_btn`</span>
+<span class="n">move</span> <span class="na">id</span> <span class="s2">&quot;back_btn&quot;</span>
+
+<span class="c1"># Move to the center of `back_btn`</span>
+<span class="n">move</span> <span class="na">id</span> <span class="s2">&quot;back_btn&quot;</span> <span class="na">pos</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Move to a point 20 pixels right and 10 pixels down from the top-left corner of `back_btn`</span>
+<span class="n">move</span> <span class="na">id</span> <span class="s2">&quot;back_btn&quot;</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Move to the top right corner of the screen</span>
+<span class="n">move</span> <span class="na">pos</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<span class="c1"># Move to a point 20 pixels right and 10 pixels down from the top-left corner of the screen</span>
+<span class="n">move</span> <span class="na">pos</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="scroll">
+<h4>Scroll<a class="headerlink" href="#scroll" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">scroll</span> <span class="pre">[amount</span> <span class="pre">(int)]</span> <span class="pre">[selector]</span> <span class="pre">[pos</span> <span class="pre">(x,</span> <span class="pre">y)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Simulates a scroll event. It takes the following optional properties:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">amount</span></code> specifies how many &quot;notches&quot; to scroll. It takes an integer
+and defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>. Positive values scroll down, negative values scroll up.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">selector</span></code> and/or <code class="docutils literal notranslate"><span class="pre">pos</span></code> are given, the virtual test mouse is moved according to
+the rules of the <a class="reference internal" href="#test-move-statement"><span class="std std-ref">move statement</span></a> before the scroll is sent.</p></li>
+</ul>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">scroll</span> <span class="s2">&quot;bar&quot;</span>
+<span class="n">scroll</span> <span class="na">id</span> <span class="s2">&quot;inventory_scroll&quot;</span>
+<span class="n">scroll</span> <span class="n">amount</span> <span class="mi">10</span> <span class="na">id</span> <span class="s2">&quot;inventory_scroll&quot;</span> <span class="na">pos</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">scroll</span> <span class="c1"># scrolls down at the current mouse position</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This only simulates the mousewheel event. You may consider using
+the Scroll action from <a class="reference internal" href="screen_actions.html"><span class="doc">Screen Actions, Values, and Functions</span></a>.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">run</span> <span class="n">Scroll</span><span class="p">(</span><span class="s2">&quot;inventory_scroll&quot;</span><span class="p">,</span> <span class="s2">&quot;increase&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="na">delay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="keyboard-commands">
+<h3>Keyboard Commands<a class="headerlink" href="#keyboard-commands" title="Link to this heading"></a></h3>
+<section id="keysym">
+<h4>Keysym<a class="headerlink" href="#keysym" title="Link to this heading"></a></h4>
+<blockquote id="test-keysym-statement">
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">keysym</span> <span class="pre">&lt;keysym&gt;</span> <span class="pre">[selector]</span> <span class="pre">[pos</span> <span class="pre">(x,</span> <span class="pre">y)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Simulate a keysym event. This includes the keys of <a class="reference internal" href="keymap.html"><span class="doc">config.keymap</span></a>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">selector</span></code> and/or <code class="docutils literal notranslate"><span class="pre">pos</span></code> are given, the virtual test mouse is moved according to
+the rules of the <a class="reference internal" href="#test-move-statement"><span class="std std-ref">move statement</span></a> before the keysym is sent.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="na">keysym</span> <span class="s2">&quot;skip&quot;</span>
+<span class="na">keysym</span> <span class="s2">&quot;help&quot;</span>
+<span class="na">keysym</span> <span class="s2">&quot;ctrl_K_a&quot;</span>
+<span class="na">keysym</span> <span class="s2">&quot;K_BACKSPACE&quot;</span> <span class="k">repeat</span> <span class="mi">30</span>
+<span class="na">keysym</span> <span class="s2">&quot;pad_a_press&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="type">
+<span id="test-type-statement"></span><h4>Type<a class="headerlink" href="#type" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">type</span> <span class="pre">&lt;string&gt;</span> <span class="pre">[selector]</span> <span class="pre">[pos</span> <span class="pre">(x,</span> <span class="pre">y)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Types the provided string as if it was typed on the keyboard.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">selector</span></code> and/or <code class="docutils literal notranslate"><span class="pre">pos</span></code> are given, the virtual test mouse is moved according to
+the rules of the <a class="reference internal" href="#test-move-statement"><span class="std std-ref">move statement</span></a> before the text is sent.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="s2">&quot;Hello, World!&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="condition-statements">
+<span id="test-conditions"></span><h3>Condition Statements<a class="headerlink" href="#condition-statements" title="Link to this heading"></a></h3>
+<p>Conditions are used to check whether a certain condition is true or not.
+They are used in condition-taking test statements
+like <code class="docutils literal notranslate"><span class="pre">if</span></code>, <code class="docutils literal notranslate"><span class="pre">assert</span></code> or <code class="docutils literal notranslate"><span class="pre">until</span></code>.</p>
+<section id="boolean-values">
+<h4>Boolean Values<a class="headerlink" href="#boolean-values" title="Link to this heading"></a></h4>
+<p>Tests can use the literal boolean values <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">False</span></code>.
+These are always ready.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">click</span> <span class="s2">&quot;Start&quot;</span>
+
+<span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+    <span class="n">click</span> <span class="s2">&quot;Settings&quot;</span> <span class="c1"># does not execute, since the condition is always false</span>
+</pre></div>
+</div>
+</section>
+<section id="boolean-operations">
+<h4>Boolean Operations<a class="headerlink" href="#boolean-operations" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Conditions support the <code class="docutils literal notranslate"><span class="pre">not</span></code>, <code class="docutils literal notranslate"><span class="pre">and</span></code> and <code class="docutils literal notranslate"><span class="pre">or</span></code> operators.
+That expression may or may not be enclosed in parentheses.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">renpy</span><span class="o">.</span><span class="n">is_in_test</span><span class="p">()</span> <span class="k">and</span> <span class="k">screen</span> <span class="s2">&quot;main_menu&quot;</span><span class="p">)</span>
+<span class="n">advance</span> <span class="n">until</span> <span class="s2">&quot;ask her right&quot;</span> <span class="k">or</span> <span class="k">label</span> <span class="s2">&quot;chapter_five&quot;</span>
+<span class="n">click</span> <span class="s2">&quot;Next&quot;</span> <span class="n">until</span> <span class="k">not</span> <span class="k">screen</span> <span class="s2">&quot;choice&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="eval">
+<span id="test-eval-statement"></span><h4>Eval<a class="headerlink" href="#eval" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Condition</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">eval</span> <span class="pre">&lt;expression&gt;</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Evaluates the provided python expression. This exists only to be used inside condition-taking test
+statements like <code class="docutils literal notranslate"><span class="pre">assert</span></code>, <code class="docutils literal notranslate"><span class="pre">if</span></code> or <code class="docutils literal notranslate"><span class="pre">until</span></code>.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">renpy</span><span class="o">.</span><span class="n">is_in_test</span><span class="p">()</span> <span class="k">and</span> <span class="p">(</span><span class="s2">&quot;Ren&#39;Py&quot;</span> <span class="k">in</span> <span class="n">renpy</span><span class="o">.</span><span class="n">version_string</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Differences between a dollar-line and the eval clause:</p>
+<ul class="simple">
+<li><p>Eval cannot be used on a line by itself, it must be used inside a
+statement like <code class="docutils literal notranslate"><span class="pre">if</span></code> or <code class="docutils literal notranslate"><span class="pre">until</span></code>, while dollar-lines must be on
+their own line.</p></li>
+<li><p>A dollar-line executes any python statement, which does not necessarily
+have a value - for example <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">import</span> <span class="pre">math</span></code> - while the eval clause
+requires a return value.</p></li>
+</ul>
+</div>
+</section>
+<section id="label">
+<h4>Label<a class="headerlink" href="#label" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Condition</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">label</span> <span class="pre">&lt;labelname&gt;</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Checks if the provided Ren'Py label has been reached since the last time
+a test statement was executed.</p>
+<p>Considering the following example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">run</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;chapter_1&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="k">label</span> <span class="n">chapter_1</span> <span class="c1"># works</span>
+<span class="k">assert</span> <span class="k">label</span> <span class="n">chapter_1</span> <span class="c1"># fails</span>
+</pre></div>
+</div>
+<p>The first <code class="docutils literal notranslate"><span class="pre">assert</span></code> statement works because the label <code class="docutils literal notranslate"><span class="pre">chapter_1</span></code> has been
+reached by the <code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">Jump(&quot;chapter_1&quot;)</span></code> statement. The second <code class="docutils literal notranslate"><span class="pre">assert</span></code>
+statement fails because the label <code class="docutils literal notranslate"><span class="pre">chapter_1</span></code> has not been reached again
+since the first <code class="docutils literal notranslate"><span class="pre">assert</span></code> statement.</p>
+<p>That also means the following example will not work:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">run</span> <span class="n">Jump</span><span class="p">(</span><span class="s2">&quot;chapter_1&quot;</span><span class="p">)</span>
+<span class="n">advance</span> <span class="k">repeat</span> <span class="mi">3</span>
+<span class="k">assert</span> <span class="k">label</span> <span class="n">chapter_1</span> <span class="c1"># fails</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This test statement should not be confused with the Ren'Py native
+<a class="reference internal" href="label.html#label-statement"><span class="std std-ref">label</span></a> statement it refers to, or with the unrelated
+<a class="reference internal" href="screens.html#sl-label"><span class="std std-ref">label element</span></a> used in screens.</p>
+</div>
+</section>
+</section>
+<section id="selector-statements">
+<h3>Selector Statements<a class="headerlink" href="#selector-statements" title="Link to this heading"></a></h3>
+<p>Selector statements are used to check if a certain element is on the screen,
+and to use that element for further actions.</p>
+<p>Selectors are a special kind of condition.</p>
+<section id="displayable-selector">
+<h4>Displayable Selector<a class="headerlink" href="#displayable-selector" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Condition, Selector</em></p>
+</div></blockquote>
+<p>Check if a screen or element with given id is currently displayed.</p>
+<p>It takes one parameter, the name of the screen. It takes the following properties:</p>
+<blockquote>
+<div><dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">screen</span> <span class="pre">&lt;name&gt;</span></span></dt>
+<dd><p>The name of the screen to check.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">id</span> <span class="pre">&lt;name&gt;</span></span></dt>
+<dd><p>The id of the element to check.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">layer</span> <span class="pre">&lt;name&gt;</span></span></dt>
+<dd><p>The layer on which the screen is displayed. If not given, the layer is
+automatically determined by the screen name.</p>
+</dd></dl>
+
+</div></blockquote>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="k">screen</span> <span class="s2">&quot;main_menu&quot;</span><span class="p">:</span>
+    <span class="n">click</span> <span class="s2">&quot;Start&quot;</span>
+
+<span class="n">advance</span> <span class="n">until</span> <span class="na">id</span> <span class="s2">&quot;inventory_viewport&quot;</span> <span class="na">layer</span> <span class="s2">&quot;overlay&quot;</span>
+
+<span class="n">click</span> <span class="s2">&quot;Close&quot;</span> <span class="n">until</span> <span class="k">not</span> <span class="na">id</span> <span class="s2">&quot;close_button&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="text-selector">
+<span id="test-text-selector"></span><h4>Text Selector<a class="headerlink" href="#text-selector" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Condition, Selector</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">&quot;&lt;text&gt;&quot;</span> <span class="pre">[raw]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">text</span></code> selector takes a string which resolves to a target
+found on the screen. The search is performed by going through all focusable
+elements on the screen (which are typically buttons and the main textbox),
+and looking through their text and <a class="reference internal" href="style_properties.html#style-property-alt"><code class="xref std std-propref docutils literal notranslate"><span class="pre">alt</span></code></a> text.</p>
+<p>This search is case-insensitive and looks for the shortest match.
+For example, if the string <code class="docutils literal notranslate"><span class="pre">&quot;log&quot;</span></code> is given, and the screen contains
+the texts <code class="docutils literal notranslate"><span class="pre">&quot;CATALOG&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;illogical&quot;</span></code>, the target
+will be the <code class="docutils literal notranslate"><span class="pre">&quot;CATALOG&quot;</span></code> text.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">raw</span></code> is given, the search is performed on the text as given in the
+script, before translation and <a class="reference internal" href="text.html#text-interpolation"><span class="std std-ref">interpolation</span></a>.
+If not given, the search is performed on the text as it appears on screen,
+after translation and interpolation.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="c1"># This may be in a button</span>
+<span class="n">skip</span> <span class="n">until</span> <span class="s2">&quot;Start Game&quot;</span>
+
+<span class="c1"># This may be in the main textbox</span>
+<span class="n">advance</span> <span class="n">until</span> <span class="s2">&quot;Hey, that&#39;s not fair!&quot;</span>
+
+<span class="c1"># Case-insensitive search</span>
+<span class="k">assert</span> <span class="s2">&quot;AsK HeR RighT AwaY&quot;</span>
+
+<span class="c1"># Search unsubstituted text</span>
+<span class="k">assert</span> <span class="s2">&quot;Welcome, Eileen!&quot;</span>
+<span class="k">assert</span> <span class="s2">&quot;Welcome, [player_name]!&quot;</span> <span class="n">raw</span>
+
+<span class="c1"># Search untranslated text after changing the language</span>
+<span class="n">run</span> <span class="n">Language</span><span class="p">(</span><span class="s2">&quot;japanese&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="s2">&quot;スタート&quot;</span>
+<span class="k">assert</span> <span class="s2">&quot;Start&quot;</span> <span class="n">raw</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="control-statements">
+<h3>Control Statements<a class="headerlink" href="#control-statements" title="Link to this heading"></a></h3>
+<p>These statements control the flow of the test execution.</p>
+<section id="assert">
+<h4>Assert<a class="headerlink" href="#assert" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Control</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">assert</span> <span class="pre">&lt;condition&gt;</span> <span class="pre">[timeout</span> <span class="pre">(float)]</span> <span class="pre">[xfail</span> <span class="pre">(bool)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>This statement takes a condition and raise a
+RenpyTestAssertionError if the condition is not met at the time when
+the assert statement executes.</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">timeout</span></code> is given, the statement will wait up to that many seconds
+for the condition to be met. If the condition is not met within that time,
+the assertion fails.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">xfail</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the assert statement is expected to fail.
+This inverts the meaning of the statement: if the condition is met, the
+assertion fails. If the condition is not met, the assertion passes.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="k">screen</span> <span class="s2">&quot;main_menu&quot;</span>
+<span class="k">assert</span> <span class="nb">eval</span> <span class="n">some_function</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="k">assert</span> <span class="na">id</span> <span class="s2">&quot;start_button&quot;</span> <span class="n">timeout</span> <span class="mf">5.0</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/reference/simple_stmts.html#the-assert-statement">Python asserts</a></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/library/stdtypes.html#truth-value-testing">Boolean evaluation</a></p></li>
+</ul>
+</div>
+</section>
+<section id="if">
+<h4>If<a class="headerlink" href="#if" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Control</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">if</span> <span class="pre">&lt;condition&gt;</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>This statement executes a block of test statements if and when the provided
+condition is met.</p>
+<p>Example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="k">label</span> <span class="s2">&quot;chapter_five&quot;</span><span class="p">:</span>
+    <span class="n">exit</span>
+
+<span class="k">if</span> <span class="nb">eval</span> <span class="p">(</span><span class="n">persistent</span><span class="o">.</span><span class="n">should_advance</span> <span class="k">and</span> <span class="n">i_should_advance</span><span class="p">[</span><span class="s2">&quot;now&quot;</span><span class="p">]):</span>
+    <span class="n">advance</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">elif</span></code> and <code class="docutils literal notranslate"><span class="pre">else</span></code> statements can be used to add
+additional conditions to the <code class="docutils literal notranslate"><span class="pre">if</span></code> statement.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">eval</span> <span class="n">persistent</span><span class="o">.</span><span class="n">should_advance</span><span class="p">:</span>
+    <span class="n">advance</span>
+<span class="k">elif</span> <span class="nb">eval</span> <span class="n">i_should_advance</span><span class="p">[</span><span class="s2">&quot;now&quot;</span><span class="p">]:</span>
+    <span class="n">advance</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">click</span> <span class="s2">&quot;Start&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="repeat">
+<h4>Repeat<a class="headerlink" href="#repeat" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Control</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">&lt;command&gt;</span> <span class="pre">repeat</span> <span class="pre">&lt;number&gt;</span> <span class="pre">[timeout</span> <span class="pre">(float)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Repeats a statement for a given number of times. It consists of an
+Command statement on the left-hand side and a number of repetitions
+on the right-hand side, separated by the word <code class="docutils literal notranslate"><span class="pre">repeat</span></code>.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">click</span> <span class="s2">&quot;+&quot;</span> <span class="k">repeat</span> <span class="mi">3</span>
+<span class="na">keysym</span> <span class="s2">&quot;K_BACKSPACE&quot;</span> <span class="k">repeat</span> <span class="mi">10</span>
+<span class="n">advance</span> <span class="k">repeat</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</section>
+<section id="screenshot">
+<span id="test-screenshot-statement"></span><h4>Screenshot<a class="headerlink" href="#screenshot" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Command</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">screenshot</span> <span class="pre">&lt;path&gt;</span> <span class="pre">[max_pixel_difference</span> <span class="pre">(int</span> <span class="pre">or</span> <span class="pre">float)]</span> <span class="pre">[crop</span> <span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">width,</span> <span class="pre">height)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Takes a screenshot of the current screen and saves it to the provided path.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> specifies the path (relative to <code class="docutils literal notranslate"><span class="pre">_test.screenshot_directory</span></code>)
+where the screenshot will be saved. It may include a file extension.
+Only <code class="docutils literal notranslate"><span class="pre">.png</span></code> is supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_pixel_difference</span></code> specifies how many pixels may differ between
+the taken screenshot and an existing screenshot for the test to pass.
+Integer values specify the number of pixels, while float values
+specify a percentage of the total number of pixels. Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">crop</span></code> specifies a rectangle to crop the screenshot to, given as
+<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">width,</span> <span class="pre">height)</span></code>. Coordinates must be given as integers.</p></li>
+</ul>
+<p>If the project is in a git repository, the hash of the current commit is
+automatically appended to the filename as <code class="docutils literal notranslate"><span class="pre">&#64;{hash}.png</span></code>. This allows
+the developer to track changes to screenshots over time.</p>
+<p>If the file already exists, the current screenshot is compared to the existing
+file. If the files differ by more than <code class="docutils literal notranslate"><span class="pre">max_pixel_difference</span></code> pixels, a
+RenpyTestScreenshotError is raised.</p>
+<p>To overwrite an existing screenshot, either delete the file or run the test with
+the <code class="docutils literal notranslate"><span class="pre">--overwrite_screenshots</span></code> command-line option.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">screenshot</span> <span class="s2">&quot;screens/main_menu.png&quot;</span>
+<span class="n">screenshot</span> <span class="s2">&quot;screens/inventory&quot;</span> <span class="n">max_pixel_difference</span> <span class="mf">0.01</span>
+<span class="n">screenshot</span> <span class="s2">&quot;button.png&quot;</span> <span class="na">crop</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This may be used in a parameterized test to take multiple screenshots:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">testcase</span> <span class="n">screen_tester</span><span class="p">:</span>
+    <span class="n">parameter</span> <span class="n">screen_name</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;inventory&quot;</span><span class="p">,</span> <span class="s2">&quot;stats&quot;</span><span class="p">,</span> <span class="s2">&quot;map&quot;</span><span class="p">]</span>
+
+    <span class="n">run</span> <span class="n">Show</span><span class="p">(</span><span class="n">screen_name</span><span class="p">)</span>
+    <span class="n">screenshot</span> <span class="sa">f</span><span class="s2">&quot;screens/</span><span class="si">{</span><span class="n">screen_name</span><span class="si">}</span><span class="s2">.png&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="until">
+<h4>Until<a class="headerlink" href="#until" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Type: <em class="dfn">Control</em></p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">&lt;command&gt;</span> <span class="pre">until</span> <span class="pre">&lt;condition&gt;</span> <span class="pre">[timeout</span> <span class="pre">(float)]</span></span></dt>
+<dd></dd></dl>
+
+</div></blockquote>
+<p>Repeats a statement until a condition is met. It consists of an
+Command statement on the left-hand side and a condition on the right-hand
+side, separated by the word <code class="docutils literal notranslate"><span class="pre">until</span></code>.</p>
+<p>If and when the condition on the right is met, control is
+passed to the next statement. Otherwise, the left-hand statement
+is executed repeatedly until the condition is ready.</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">timeout</span></code> is given, the statement will wait up to that many seconds
+for the condition to be met. If the condition is not met within that time,
+a RenpyTestTimeoutError is raised.</p>
+<p>This timeout temporarily overrides the global <code class="docutils literal notranslate"><span class="pre">_test.timeout</span></code> setting.</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="n">advance</span> <span class="n">until</span> <span class="k">screen</span> <span class="s2">&quot;choice&quot;</span>
+<span class="n">click</span> <span class="s2">&quot;Next&quot;</span>
+<span class="n">advance</span> <span class="n">until</span> <span class="k">label</span> <span class="s2">&quot;chapter_5&quot;</span>
+
+<span class="n">skip</span> <span class="n">until</span> <span class="k">screen</span> <span class="s2">&quot;inventory&quot;</span> <span class="n">timeout</span> <span class="mf">20.0</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="python-blocks-and-dollar-lines">
+<h3>Python Blocks And Dollar-Lines<a class="headerlink" href="#python-blocks-and-dollar-lines" title="Link to this heading"></a></h3>
+<p>A <a class="reference internal" href="python.html#python-statement"><span class="std std-ref">python block</span></a> or a <a class="reference internal" href="python.html#dollar-line"><span class="std std-ref">One-line Python Statement</span></a> can be added
+within a testcase. Unlike in normal Ren'Py code, the python blocks don't take
+the <code class="docutils literal notranslate"><span class="pre">in</span> <span class="pre">substore</span></code> parameter, but it does take the <code class="docutils literal notranslate"><span class="pre">hide</span></code> keyword. They
+(both) allow execution of arbitrary python code.</p>
+<p>Init code gets executed before the test occurs, so functions and classes defined
+in <code class="docutils literal notranslate"><span class="pre">init</span> <span class="pre">python</span></code> blocks can be called in test python blocks and in test
+dollar-lines. For example:</p>
+<div class="highlight-renpy notranslate"><div class="highlight"><pre><span></span><span class="k">init</span> <span class="k">python</span> <span class="k">in</span> <span class="n">test</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">afunction</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">renpy</span><span class="o">.</span><span class="n">is_in_test</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s2">&quot;test&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;not test&quot;</span>
+
+<span class="k">testcase</span> <span class="k">default</span><span class="p">:</span>
+    <span class="k">$</span> <span class="nb">print</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">afunction</span><span class="p">())</span> <span class="c1"># ends up in the console</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="director.html" class="btn btn-neutral float-left" title="Interactive Director" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nvl_mode.html" class="btn btn-neutral float-right" title="NVL-Mode Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

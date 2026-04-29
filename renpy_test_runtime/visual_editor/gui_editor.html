@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ren'Py GUI Editor</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./gui_editor.css" />
+  </head>
+  <body>
+    <div class="gui-shell">
+      <header class="gui-topbar">
+        <div class="gui-topbar-copy">
+          <p class="gui-eyebrow">Ren'Py Visual Editor</p>
+          <h1>GUI Editor</h1>
+          <p id="guiProjectPath" class="project-path">No project path provided.</p>
+          <p id="guiStatusText" class="gui-status-text">GUI editor ready.</p>
+        </div>
+
+        <div class="gui-topbar-actions">
+          <button id="guiBackButton" class="secondary" type="button">Back to Visual Editor</button>
+          <button id="guiSaveButton" class="primary" type="button">Save GUI Draft</button>
+        </div>
+      </header>
+
+      <div class="gui-layout">
+        <aside class="gui-nav-panel">
+          <div class="gui-nav-stack">
+            <button class="gui-nav-button is-active" type="button" data-gui-section="stylesSection">
+              <span>Styles</span>
+              <strong id="stylesNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="screensSection">
+              <span>Screens</span>
+              <strong id="screensNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="extrasSection">
+              <span>Extras</span>
+              <strong id="extrasNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="configSection">
+              <span>Config</span>
+              <strong id="configNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="pythonUiSection">
+              <span>Python UI</span>
+              <strong id="pythonUiNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="cursorsSection">
+              <span>Cursors</span>
+              <strong id="cursorsNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="shadersSection">
+              <span>Shaders</span>
+              <strong id="shadersNavCount">0</strong>
+            </button>
+            <button class="gui-nav-button" type="button" data-gui-section="diagnosticsSection">
+              <span>Diagnostics</span>
+              <strong id="diagnosticsNavCount">0</strong>
+            </button>
+          </div>
+
+          <div class="gui-nav-note">
+            This editor now covers styles, screen structure, screen actions and values, GUI config, cursor systems,
+            text shaders, Python UI helper templates, replay menus, music rooms, galleries, preview, and diagnostics.
+          </div>
+        </aside>
+
+        <main class="gui-content">
+          <section id="stylesSection" class="gui-section is-active">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Styles</h2>
+                    <p>Reusable <code>style</code> definitions for GUI components.</p>
+                  </div>
+                </div>
+
+                <div id="guiStyleEmpty" class="panel-empty-state hidden">
+                  No styles yet. Create one to start building GUI appearance rules.
+                </div>
+
+                <div id="guiStyleList" class="character-list gui-style-list"></div>
+
+                <button id="newGuiStyleButton" class="primary gui-bottom-button" type="button">New Style</button>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiStyleEmptyState" class="gui-empty-detail">
+                  Select a style from the list or create a new one to start editing.
+                </div>
+
+                <form id="guiStyleForm" class="character-detail-form hidden">
+                  <div class="gui-panel-header gui-panel-header-tight">
+                    <div>
+                      <h2>Style Detail</h2>
+                      <p>Define the style statement and its property overrides.</p>
+                    </div>
+                  </div>
+
+                  <div class="gui-style-basics">
+                    <label>
+                      Style Name
+                      <input id="guiStyleNameInput" type="text" placeholder="e.g. say_dialogue" />
+                    </label>
+
+                    <label>
+                      Parent Style
+                      <input id="guiStyleParentInput" type="text" placeholder="e.g. default or button" />
+                    </label>
+
+                    <label>
+                      Variant Expression
+                      <input id="guiStyleVariantInput" type="text" placeholder='e.g. "touch" or ["small", "touch"]' />
+                    </label>
+
+                    <label>
+                      Primary Category
+                      <select id="guiStyleCategoryInput">
+                        <option value="text">Text</option>
+                        <option value="window">Window</option>
+                        <option value="button">Button</option>
+                        <option value="bar">Bar</option>
+                        <option value="box">Box</option>
+                        <option value="grid">Grid</option>
+                        <option value="margin">Margin</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <label>
+                    properties Expression
+                    <textarea id="guiStylePropertiesExpressionInput" rows="3" placeholder='e.g. {"font": gui.default_font, "size": 36}'></textarea>
+                  </label>
+
+                  <div class="gui-prefix-toolbar">
+                    <div>
+                      <p class="section-label secondary-label">State Prefix</p>
+                      <p id="guiStylePrefixSummary" class="image-definition-help"></p>
+                    </div>
+                    <div id="guiStylePrefixTabs" class="gui-prefix-tabs"></div>
+                  </div>
+
+                  <div class="gui-style-panels">
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Position & Layout</h3>
+                          <p>Typed editors for common position-related properties.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelPosition" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Text</h3>
+                          <p>Font, color, outlines, text speed, and line handling.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelText" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Window</h3>
+                          <p>Backgrounds, padding, fill behavior, and grouping.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelWindow" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Button</h3>
+                          <p>State-aware button visuals, sounds, focus, and cursors.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelButton" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Bar</h3>
+                          <p>Thumbs, gutters, orientation, and bar displayables.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelBar" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Box</h3>
+                          <p>Spacing, wrapping, reversing, and justification behavior.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelBox" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Grid</h3>
+                          <p>Horizontal and vertical spacing controls for grid layouts.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelGrid" class="gui-property-grid"></div>
+                    </section>
+
+                    <section class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Margin</h3>
+                          <p>Outer spacing around windows, frames, buttons, and layout containers.</p>
+                        </div>
+                      </div>
+                      <div id="guiStylePanelMargin" class="gui-property-grid"></div>
+                    </section>
+                  </div>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteStyleButton" class="danger-button" type="button">Delete Style</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Style Output</h2>
+                    <p>Current code preview and active property summary.</p>
+                  </div>
+                </div>
+
+                <div id="guiStylePropertySummary" class="gui-property-summary"></div>
+
+                <pre id="guiStyleCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="screensSection" class="gui-section hidden">
+            <div class="gui-section-grid gui-section-grid-wide">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Screens</h2>
+                    <p>Build screen trees, apply templates, and wire actions and values.</p>
+                  </div>
+                </div>
+
+                <div id="guiScreenEmpty" class="panel-empty-state hidden">
+                  No screens yet. Create one or start from a special-screen template.
+                </div>
+
+                <div id="guiScreenList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newGuiScreenButton" class="primary gui-bottom-button" type="button">New Screen</button>
+                  <label class="gui-compact-label">
+                    Template
+                    <select id="guiScreenTemplateInput"></select>
+                  </label>
+                  <button id="createGuiScreenFromTemplateButton" class="secondary gui-bottom-button" type="button">
+                    Create From Template
+                  </button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiScreenEmptyState" class="gui-empty-detail">
+                  Select a screen to edit its structure, then choose nodes in the tree to configure them.
+                </div>
+
+                <div id="guiScreenEditor" class="character-detail-form gui-screen-editor hidden">
+                  <section class="gui-style-panel gui-screen-meta-panel">
+                    <div class="gui-panel-header gui-panel-header-tight">
+                      <div>
+                        <h2>Screen Detail</h2>
+                        <p>Configure the screen header, then build its node tree below.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-style-basics">
+                      <label>
+                        Screen Name
+                        <input id="guiScreenNameInput" type="text" placeholder="e.g. preferences" />
+                      </label>
+
+                      <label>
+                        Parameters
+                        <input id="guiScreenParametersInput" type="text" placeholder="e.g. title, items=None" />
+                      </label>
+
+                      <label>
+                        Tag
+                        <input id="guiScreenTagInput" type="text" placeholder="e.g. menu" />
+                      </label>
+
+                      <label>
+                        Modal
+                        <select id="guiScreenModalInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        zorder
+                        <input id="guiScreenZorderInput" type="number" placeholder="e.g. 100" />
+                      </label>
+
+                      <label>
+                        Variant
+                        <input id="guiScreenVariantInput" type="text" placeholder='e.g. "touch"' />
+                      </label>
+                    </div>
+
+                    <label>
+                      Notes
+                      <textarea id="guiScreenNotesInput" rows="2" placeholder="Optional notes about this screen."></textarea>
+                    </label>
+
+                    <p id="guiScreenSpecialInfo" class="gui-info-banner hidden"></p>
+
+                    <div class="inspector-actions gui-screen-delete-actions">
+                      <button id="guiDeleteScreenButton" class="danger-button" type="button">Delete Screen</button>
+                    </div>
+                  </section>
+
+                  <section class="gui-style-panel gui-screen-tree-panel">
+                    <div class="gui-section-subheader gui-screen-tree-header">
+                      <div>
+                        <h3>Node Tree</h3>
+                        <p>Use root and child nodes to model the screen language structure.</p>
+                      </div>
+                      <div class="gui-inline-actions">
+                        <label class="gui-compact-label">
+                          New Node Type
+                          <select id="guiNewScreenNodeTypeInput"></select>
+                        </label>
+                        <button id="guiAddRootNodeButton" class="secondary" type="button">Add Root Node</button>
+                        <button id="guiAddNodeAsChildButton" class="secondary" type="button">Add Child Node</button>
+                      </div>
+                    </div>
+
+                    <div id="guiScreenNodeTree" class="gui-tree"></div>
+                  </section>
+
+                  <div id="guiScreenNodeEmptyState" class="gui-inline-empty">
+                    Select a node from the tree to edit its fields.
+                  </div>
+
+                  <form id="guiScreenNodeForm" class="character-detail-form gui-style-panel gui-screen-node-form hidden">
+                    <div class="gui-style-basics">
+                      <label>
+                        Node Type
+                        <select id="guiScreenNodeTypeInput"></select>
+                      </label>
+
+                      <label>
+                        Title
+                        <input id="guiScreenNodeTitleInput" type="text" placeholder="Shown in the tree only." />
+                      </label>
+
+                      <label>
+                        style
+                        <input id="guiScreenNodeStyleInput" type="text" placeholder="e.g. menu_button" />
+                      </label>
+
+                      <label>
+                        id
+                        <input id="guiScreenNodeIdInput" type="text" placeholder="Optional screen id." />
+                      </label>
+                    </div>
+
+                    <label>
+                      Extra Properties
+                      <textarea id="guiScreenNodePropertiesInput" rows="3" placeholder="Additional screen-language properties, one per line."></textarea>
+                    </label>
+
+                    <div id="guiNodeTextField">
+                      <label>
+                        Text / Label
+                        <textarea id="guiNodeTextInput" rows="2" placeholder="Text, input prompt, or button caption."></textarea>
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeDisplayableField">
+                        <label>
+                          Displayable / Image
+                          <input id="guiNodeDisplayableInput" type="text" placeholder='e.g. "gui/logo.png"' />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeHoverDisplayableField">
+                        <label>
+                          Hover / Alternate Displayable
+                          <input id="guiNodeHoverDisplayableInput" type="text" placeholder='e.g. "gui/button_hover.png"' />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div id="guiNodeConditionField">
+                      <label>
+                        Condition
+                        <input id="guiNodeConditionInput" type="text" placeholder="e.g. persistent.unlocked" />
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeVariableField">
+                        <label>
+                          Variable Name
+                          <input id="guiNodeVariableInput" type="text" placeholder="e.g. item or player_name" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeIterableField">
+                        <label>
+                          Iterable / Source
+                          <input id="guiNodeIterableInput" type="text" placeholder="e.g. inventory_items" />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeTargetScreenField">
+                        <label>
+                          Target Screen / Use Target
+                          <input id="guiNodeTargetScreenInput" type="text" placeholder="e.g. save or inventory_panel" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeTargetArgsField">
+                        <label>
+                          Target Arguments
+                          <input id="guiNodeTargetArgsInput" type="text" placeholder="Comma-separated args or keyword args." />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeEventField">
+                        <label>
+                          Event Name
+                          <input id="guiNodeEventInput" type="text" placeholder='e.g. "show" or "replace"' />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeKeyField">
+                        <label>
+                          Key
+                          <input id="guiNodeKeyInput" type="text" placeholder='e.g. "game_menu"' />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeDelayField">
+                        <label>
+                          Delay
+                          <input id="guiNodeDelayInput" type="number" step="any" placeholder="e.g. 0.25" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeRepeatsField">
+                        <label>
+                          Repeat
+                          <select id="guiNodeRepeatsInput">
+                            <option value="false">False</option>
+                            <option value="true">True</option>
+                          </select>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeDefaultNameField">
+                        <label>
+                          Default Name
+                          <input id="guiNodeDefaultNameInput" type="text" placeholder="e.g. current_page" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeDefaultValueField">
+                        <label>
+                          Default Value
+                          <input id="guiNodeDefaultValueInput" type="text" placeholder="e.g. 1 or []" />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <div id="guiNodeTransformField">
+                        <label>
+                          Transform / ATL Name
+                          <input id="guiNodeTransformInput" type="text" placeholder="e.g. menu_fade" />
+                        </label>
+                      </div>
+
+                      <div id="guiNodeSidePositionsField">
+                        <label>
+                          side positions
+                          <input id="guiNodeSidePositionsInput" type="text" placeholder='e.g. "c tl tr"' />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div id="guiNodeGridFields" class="gui-inline-fields">
+                      <label>
+                        Grid Columns
+                        <input id="guiNodeGridColumnsInput" type="number" step="1" placeholder="e.g. 2" />
+                      </label>
+
+                      <label>
+                        Grid Rows
+                        <input id="guiNodeGridRowsInput" type="number" step="1" placeholder="e.g. 3" />
+                      </label>
+                    </div>
+
+                    <div id="guiNodeActionFields" class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Action</h3>
+                          <p>Choose a common action or fall back to a raw action expression.</p>
+                        </div>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Action Kind
+                          <select id="guiNodeActionKindInput"></select>
+                        </label>
+
+                        <label>
+                          Action Args
+                          <input id="guiNodeActionArgsInput" type="text" placeholder='e.g. "load" or flag_name, True' />
+                        </label>
+                      </div>
+
+                      <label>
+                        Raw Action Expression
+                        <input id="guiNodeActionRawInput" type="text" placeholder='e.g. [SetVariable("page", 2), Return()]' />
+                      </label>
+                    </div>
+
+                    <div id="guiNodeValueFields" class="gui-style-panel">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3 id="guiNodeValuePanelTitle">Value</h3>
+                          <p id="guiNodeValuePanelDescription">Used by bars, inputs, and other value-driven displayables.</p>
+                        </div>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Value Kind
+                          <select id="guiNodeValueKindInput"></select>
+                        </label>
+
+                        <label>
+                          Value Args
+                          <input id="guiNodeValueArgsInput" type="text" placeholder='e.g. "text speed" or player_name' />
+                        </label>
+                      </div>
+
+                      <label>
+                        Raw Value Expression
+                        <input id="guiNodeValueRawInput" type="text" placeholder='e.g. Preference("music volume")' />
+                      </label>
+                    </div>
+
+                    <div id="guiNodeInputFields" class="gui-style-panel hidden">
+                      <div class="gui-style-panel-header">
+                        <div>
+                          <h3>Input Settings</h3>
+                          <p>Configure standalone screen input widgets, or the special <code>screen input(prompt)</code> field used by <code>renpy.input()</code>.</p>
+                        </div>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Initial Text
+                          <input id="guiNodeInputDefaultTextInput" type="text" placeholder='e.g. "" or persistent.player_name' />
+                        </label>
+
+                        <label>
+                          Allow Characters
+                          <input id="guiNodeInputAllowInput" type="text" placeholder="Optional allowed characters list." />
+                        </label>
+
+                        <label>
+                          Exclude Characters
+                          <input id="guiNodeInputExcludeInput" type="text" placeholder='e.g. {} or "\\n"' />
+                        </label>
+                      </div>
+
+                      <div class="gui-inline-fields">
+                        <label>
+                          Max Length
+                          <input id="guiNodeInputLengthInput" type="number" step="1" placeholder="e.g. 32" />
+                        </label>
+
+                        <label>
+                          Pixel Width
+                          <input id="guiNodeInputPixelWidthInput" type="text" placeholder="e.g. 360" />
+                        </label>
+
+                        <label>
+                          Mask Character
+                          <input id="guiNodeInputMaskInput" type="text" placeholder='e.g. "*"' />
+                        </label>
+                      </div>
+
+                      <label class="character-checkbox">
+                        <input id="guiNodeInputCopyPasteInput" type="checkbox" />
+                        <span>Allow copy / paste</span>
+                      </label>
+
+                      <p class="gui-info-banner">For the special <code>input</code> screen, set the node <code>id</code> to <code>input</code>. For standalone screen widgets, bind an <code>InputValue</code> above.</p>
+                    </div>
+
+                    <p id="guiNodeChildrenHint" class="gui-info-banner"></p>
+
+                    <div class="inspector-actions">
+                      <button id="guiAddChildNodeButton" class="secondary" type="button">Add Child</button>
+                      <button id="guiMoveNodeUpButton" class="secondary" type="button">Move Up</button>
+                      <button id="guiMoveNodeDownButton" class="secondary" type="button">Move Down</button>
+                      <button id="guiDeleteNodeButton" class="danger-button" type="button">Delete Node</button>
+                    </div>
+                  </form>
+                </div>
+              </section>
+
+              <aside class="gui-column gui-preview-column gui-screen-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Preview & Code</h2>
+                    <p>Approximate HTML preview, generated <code>screen</code> code, and screen-level diagnostics.</p>
+                  </div>
+                </div>
+
+                <div id="guiScreenPreview" class="gui-preview-surface"></div>
+                <pre id="guiScreenCodePreview" class="code-preview"></pre>
+                <div id="guiScreenDiagnostics" class="gui-diagnostics-list"></div>
+              </aside>
+            </div>
+          </section>
+
+          <section id="extrasSection" class="gui-section hidden">
+            <div class="gui-extras-stack">
+              <section class="gui-style-panel">
+                <div class="gui-style-panel-header">
+                  <div>
+                    <h2>Replay</h2>
+                    <p>Generate a replay menu from labels that are marked as replay-enabled in the main visual editor.</p>
+                  </div>
+                </div>
+
+                <form id="guiReplayForm" class="character-detail-form">
+                  <div class="gui-style-basics">
+                    <label>
+                      Screen Name
+                      <input id="guiReplayScreenNameInput" type="text" placeholder="e.g. replay_gallery" />
+                    </label>
+
+                    <label>
+                      Menu Button Label
+                      <input id="guiReplayMenuLabelInput" type="text" placeholder="e.g. Memories" />
+                    </label>
+
+                    <label>
+                      Title
+                      <input id="guiReplayTitleInput" type="text" placeholder="e.g. Replay Gallery" />
+                    </label>
+
+                    <label>
+                      Return Action
+                      <input id="guiReplayReturnActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' />
+                    </label>
+                  </div>
+
+                  <label class="character-checkbox">
+                    <input id="guiReplayTagMenuInput" type="checkbox" />
+                    <span>Emit <code>tag menu</code> on the replay screen</span>
+                  </label>
+
+                  <label>
+                    Empty State Text
+                    <input id="guiReplayEmptyTextInput" type="text" placeholder="Shown when no replay labels are enabled." />
+                  </label>
+
+                  <div>
+                    <p class="section-label secondary-label">Enabled Replay Labels</p>
+                    <div id="guiReplayLabelList" class="gui-chip-list"></div>
+                  </div>
+
+                  <pre id="guiReplayCodePreview" class="code-preview"></pre>
+                </form>
+              </section>
+
+              <section class="gui-style-panel">
+                <div class="gui-style-panel-header">
+                  <div>
+                    <h2>Music Rooms</h2>
+                    <p>Build menu screens backed by <code>MusicRoom()</code> using imported music resources or manual file paths.</p>
+                  </div>
+                </div>
+
+                <div class="gui-extra-entity-layout">
+                  <aside class="gui-extra-entity-list">
+                    <div id="guiMusicRoomEmpty" class="panel-empty-state hidden">
+                      No music rooms yet. Create one to start mapping tracks and controls.
+                    </div>
+
+                    <div id="guiMusicRoomList" class="character-list gui-entity-list"></div>
+
+                    <button id="newGuiMusicRoomButton" class="primary gui-bottom-button" type="button">New Music Room</button>
+                  </aside>
+
+                  <section class="gui-extra-entity-detail">
+                    <div id="guiMusicRoomEmptyState" class="gui-empty-detail">
+                      Select a music room to configure its track list and generated screen.
+                    </div>
+
+                    <form id="guiMusicRoomForm" class="character-detail-form hidden">
+                      <div class="gui-style-basics">
+                        <label>
+                          Room Name
+                          <input id="guiMusicRoomNameInput" type="text" placeholder="e.g. Bonus Music" />
+                        </label>
+
+                        <label>
+                          Instance Name
+                          <input id="guiMusicRoomInstanceInput" type="text" placeholder="e.g. bonus_music_room" />
+                        </label>
+
+                        <label>
+                          Screen Name
+                          <input id="guiMusicRoomScreenInput" type="text" placeholder="e.g. bonus_music_room_screen" />
+                        </label>
+
+                        <label>
+                          Menu Button Label
+                          <input id="guiMusicRoomMenuLabelInput" type="text" placeholder="e.g. Music Room" />
+                        </label>
+                      </div>
+
+                      <div class="gui-style-basics">
+                        <label>
+                          Channel
+                          <input id="guiMusicRoomChannelInput" type="text" placeholder="e.g. music" />
+                        </label>
+
+                        <label>
+                          Fade Out
+                          <input id="guiMusicRoomFadeoutInput" type="text" placeholder="e.g. 1.0" />
+                        </label>
+
+                        <label>
+                          Fade In
+                          <input id="guiMusicRoomFadeinInput" type="text" placeholder="e.g. 0.0" />
+                        </label>
+
+                        <label>
+                          Stop Action
+                          <input id="guiMusicRoomRestoreActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' />
+                        </label>
+                      </div>
+
+                      <div class="gui-checkbox-row">
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomLoopInput" type="checkbox" />
+                          <span>Loop</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomSingleTrackInput" type="checkbox" />
+                          <span>Single Track</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomShuffleInput" type="checkbox" />
+                          <span>Shuffle</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomShowVolumeInput" type="checkbox" />
+                          <span>Add Music Volume Bar</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiMusicRoomAutoPlayInput" type="checkbox" />
+                          <span>Play On Screen Show</span>
+                        </label>
+                      </div>
+
+                      <div>
+                        <div class="gui-section-subheader">
+                          <div>
+                            <h3>Tracks</h3>
+                            <p>Each row can reference an imported music definition or fall back to a manual file path.</p>
+                          </div>
+                          <button id="guiMusicRoomAddTrackButton" class="secondary" type="button">Add Track</button>
+                        </div>
+                        <div id="guiMusicRoomTrackList" class="gui-nested-list"></div>
+                      </div>
+
+                      <div class="inspector-actions">
+                        <button id="guiDeleteMusicRoomButton" class="danger-button" type="button">Delete Music Room</button>
+                      </div>
+
+                      <pre id="guiMusicRoomCodePreview" class="code-preview"></pre>
+                    </form>
+                  </section>
+                </div>
+              </section>
+
+              <section class="gui-style-panel">
+                <div class="gui-style-panel-header">
+                  <div>
+                    <h2>Galleries</h2>
+                    <p>Define <code>Gallery()</code> objects, thumbnail buttons, and generated gallery menu screens.</p>
+                  </div>
+                </div>
+
+                <div class="gui-extra-entity-layout">
+                  <aside class="gui-extra-entity-list">
+                    <div id="guiGalleryEmpty" class="panel-empty-state hidden">
+                      No galleries yet. Create one to wire thumbnails to unlockable CG images.
+                    </div>
+
+                    <div id="guiGalleryList" class="character-list gui-entity-list"></div>
+
+                    <button id="newGuiGalleryButton" class="primary gui-bottom-button" type="button">New Gallery</button>
+                  </aside>
+
+                  <section class="gui-extra-entity-detail">
+                    <div id="guiGalleryEmptyState" class="gui-empty-detail">
+                      Select a gallery to configure its object fields, thumbnail buttons, and generated screen.
+                    </div>
+
+                    <form id="guiGalleryForm" class="character-detail-form hidden">
+                      <div class="gui-style-basics">
+                        <label>
+                          Gallery Name
+                          <input id="guiGalleryNameInput" type="text" placeholder="e.g. CG Gallery" />
+                        </label>
+
+                        <label>
+                          Instance Name
+                          <input id="guiGalleryInstanceInput" type="text" placeholder="e.g. cg_gallery" />
+                        </label>
+
+                        <label>
+                          Screen Name
+                          <input id="guiGalleryScreenInput" type="text" placeholder="e.g. cg_gallery_screen" />
+                        </label>
+
+                        <label>
+                          Menu Button Label
+                          <input id="guiGalleryMenuLabelInput" type="text" placeholder="e.g. Gallery" />
+                        </label>
+                      </div>
+
+                      <div class="gui-style-basics">
+                        <label>
+                          Background
+                          <input id="guiGalleryBackgroundInput" type="text" placeholder='e.g. "gui/gallery_bg.png" or bg_beach' />
+                        </label>
+
+                        <label>
+                          Grid Columns
+                          <input id="guiGalleryColumnsInput" type="text" placeholder="e.g. 3" />
+                        </label>
+
+                        <label>
+                          Transition
+                          <input id="guiGalleryTransitionInput" type="text" placeholder="e.g. dissolve" />
+                        </label>
+
+                        <label>
+                          Slideshow Delay
+                          <input id="guiGallerySlideshowDelayInput" type="text" placeholder="e.g. 5.0" />
+                        </label>
+                      </div>
+
+                      <div class="gui-checkbox-row">
+                        <label class="character-checkbox">
+                          <input id="guiGalleryTagMenuInput" type="checkbox" />
+                          <span>Emit <code>tag menu</code></span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiGalleryNavigationInput" type="checkbox" />
+                          <span>Show Gallery Navigation</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiGallerySpanButtonsInput" type="checkbox" />
+                          <span>Allow Span Buttons</span>
+                        </label>
+
+                        <label class="character-checkbox">
+                          <input id="guiGalleryUnlockedAdvanceInput" type="checkbox" />
+                          <span>Advance Through Unlocked Images Only</span>
+                        </label>
+                      </div>
+
+                      <div class="gui-style-basics">
+                        <label>
+                          Locked Button Displayable
+                          <input id="guiGalleryLockedButtonInput" type="text" placeholder='e.g. "gui/gallery_locked.png"' />
+                        </label>
+
+                        <label>
+                          Hover Border
+                          <input id="guiGalleryHoverBorderInput" type="text" placeholder='e.g. "gui/gallery_hover.png"' />
+                        </label>
+
+                        <label>
+                          Idle Border
+                          <input id="guiGalleryIdleBorderInput" type="text" placeholder='e.g. "gui/gallery_idle.png"' />
+                        </label>
+                      </div>
+
+                      <div>
+                        <div class="gui-section-subheader">
+                          <div>
+                            <h3>Buttons</h3>
+                            <p>Each button can hold multiple image lines. One line equals one <code>g.image</code> or <code>g.unlock_image</code> call.</p>
+                          </div>
+                          <button id="guiGalleryAddButtonButton" class="secondary" type="button">Add Button</button>
+                        </div>
+                        <div id="guiGalleryButtonList" class="gui-nested-list"></div>
+                      </div>
+
+                      <div class="inspector-actions">
+                        <button id="guiDeleteGalleryButton" class="danger-button" type="button">Delete Gallery</button>
+                      </div>
+
+                      <pre id="guiGalleryCodePreview" class="code-preview"></pre>
+                    </form>
+                  </section>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section id="configSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Config & Defaults</h2>
+                    <p>Manage <code>config</code>, GUI preference bindings, <code>preferences</code>, and default store values.</p>
+                  </div>
+                </div>
+
+                <div id="guiConfigEmpty" class="panel-empty-state hidden">
+                  No config entries yet. Add one of the common scopes below.
+                </div>
+
+                <div id="guiConfigEntryList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button">New Config Entry</button>
+                  <button id="newGuiPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New GUI Preference</button>
+                  <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New Preference Default</button>
+                  <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button">New Store Default</button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiConfigEmptyState" class="gui-empty-detail">
+                  Select an entry to edit its scope and emitted Ren'Py statement.
+                </div>
+
+                <form id="guiConfigForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Scope
+                      <select id="guiConfigScopeInput">
+                        <option value="config">config</option>
+                        <option value="guiPreferences">gui preferences</option>
+                        <option value="preferences">preferences</option>
+                        <option value="store">store</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      <span id="guiConfigNameLabel">Name</span>
+                      <input id="guiConfigNameInput" type="text" placeholder="e.g. default_textshader" />
+                    </label>
+
+                    <label>
+                      <span id="guiConfigStorePathLabel">Store Path</span>
+                      <input id="guiConfigStorePathInput" type="text" placeholder="Optional, e.g. persistent or my_store" />
+                    </label>
+                  </div>
+
+                  <p id="guiConfigScopeInfo" class="gui-info-banner hidden"></p>
+
+                  <label>
+                    <span id="guiConfigValueLabel">Value</span>
+                    <textarea id="guiConfigValueInput" rows="4" placeholder='e.g. "wave:10", True, 0.25, {"idle": [("gui/cursor.png", 4, 4)]}'></textarea>
+                  </label>
+
+                  <label>
+                    Description
+                    <textarea id="guiConfigDescriptionInput" rows="2" placeholder="Optional notes about why this entry exists."></textarea>
+                  </label>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteConfigButton" class="danger-button" type="button">Delete Entry</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Config Output</h2>
+                    <p>Generated code from all config, preference, and store defaults.</p>
+                  </div>
+                </div>
+
+                <pre id="guiConfigCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="pythonUiSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Python UI</h2>
+                    <p>Template custom <code>Action</code>, <code>BarValue</code>, <code>InputValue</code>, <code>Displayable</code>, creator-defined statements, and other low-level GUI helpers.</p>
+                  </div>
+                </div>
+
+                <div id="guiPythonUiEmpty" class="panel-empty-state hidden">
+                  No Python UI helpers yet. Add one of the common templates below.
+                </div>
+
+                <div id="guiPythonUiList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newGuiPythonActionButton" class="primary gui-bottom-button" type="button">New Action Class</button>
+                  <button id="newGuiPythonBarButton" class="secondary gui-bottom-button" type="button">New BarValue Class</button>
+                  <button id="newGuiPythonInputButton" class="secondary gui-bottom-button" type="button">New InputValue Class</button>
+                  <button id="newGuiPythonDisplayableButton" class="secondary gui-bottom-button" type="button">New Displayable Class</button>
+                  <button id="newGuiPythonStatementButton" class="secondary gui-bottom-button" type="button">New Custom Statement</button>
+                  <button id="newGuiPythonRestartButton" class="secondary gui-bottom-button" type="button">New restart_interaction Helper</button>
+                  <button id="newGuiPythonDefineScreenButton" class="secondary gui-bottom-button" type="button">New define_screen Helper</button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiPythonUiEmptyState" class="gui-empty-detail">
+                  Select a helper to edit its template and generated Python code.
+                </div>
+
+                <form id="guiPythonUiForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Kind
+                      <select id="guiPythonUiKindInput">
+                        <option value="action">Action Class</option>
+                        <option value="barvalue">BarValue Class</option>
+                        <option value="inputvalue">InputValue Class</option>
+                        <option value="displayable">Displayable Class</option>
+                        <option value="statement">Custom Statement</option>
+                        <option value="restart_helper">restart_interaction Helper</option>
+                        <option value="define_screen">define_screen Helper</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      <span id="guiPythonUiNameLabel">Class Name</span>
+                      <input id="guiPythonUiNameInput" type="text" placeholder="e.g. ToggleCodexAction" />
+                    </label>
+
+                    <label>
+                      <span id="guiPythonUiParametersLabel">Constructor Args</span>
+                      <input id="guiPythonUiParametersInput" type="text" placeholder="e.g. flag_name, enabled_value=True" />
+                    </label>
+
+                    <label>
+                      Usage Example
+                      <input id="guiPythonUiUsageInput" type="text" placeholder='Optional override, e.g. action ToggleCodexAction("dev_mode")' />
+                    </label>
+                  </div>
+
+                  <p id="guiPythonUiKindInfo" class="gui-info-banner"></p>
+
+                  <div id="guiPythonUiActionFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>Action Methods</h3>
+                        <p>Build a custom action object for button actions, selected states, and tooltips.</p>
+                      </div>
+                    </div>
+
+                    <label>
+                      __call__ Body
+                      <textarea id="guiPythonUiActionCallBodyInput" rows="4" placeholder='e.g. store.dev_mode = not store.dev_mode&#10;return None'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        get_sensitive() Expression
+                        <input id="guiPythonUiActionSensitiveInput" type="text" placeholder="e.g. not main_menu" />
+                      </label>
+
+                      <label>
+                        get_selected() Expression
+                        <input id="guiPythonUiActionSelectedInput" type="text" placeholder="e.g. persistent.dev_mode" />
+                      </label>
+
+                      <label>
+                        get_tooltip() Expression
+                        <input id="guiPythonUiActionTooltipInput" type="text" placeholder='e.g. _("Toggle dev mode")' />
+                      </label>
+
+                      <label>
+                        alt
+                        <input id="guiPythonUiActionAltInput" type="text" placeholder='e.g. _("Toggle developer mode")' />
+                      </label>
+                    </div>
+
+                    <label>
+                      periodic(st) Body
+                      <textarea id="guiPythonUiActionPeriodicBodyInput" rows="3" placeholder='Optional, e.g.&#10;if store.needs_refresh:&#10;    renpy.restart_interaction()'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiBarFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>BarValue Methods</h3>
+                        <p>Build a custom value source for bars, sliders, and scroll-style widgets.</p>
+                      </div>
+                    </div>
+
+                    <label>
+                      get_adjustment() Expression
+                      <textarea id="guiPythonUiBarAdjustmentInput" rows="3" placeholder='e.g. ui.adjustment(range=100, value=preferences.get_volume("music"))'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        get_style() Expression
+                        <input id="guiPythonUiBarStyleInput" type="text" placeholder='e.g. ("bar", "vbar")' />
+                      </label>
+
+                      <label>
+                        get_tooltip() Expression
+                        <input id="guiPythonUiBarTooltipInput" type="text" placeholder='e.g. _("Master volume")' />
+                      </label>
+
+                      <label>
+                        alt
+                        <input id="guiPythonUiBarAltInput" type="text" placeholder='e.g. _("Volume bar")' />
+                      </label>
+                    </div>
+
+                    <label>
+                      replaces(other) Body
+                      <textarea id="guiPythonUiBarReplacesBodyInput" rows="3" placeholder='Optional, e.g.&#10;return isinstance(other, VolumeBarValue) and other.channel == self.channel'></textarea>
+                    </label>
+
+                    <label>
+                      periodic(st) Body
+                      <textarea id="guiPythonUiBarPeriodicBodyInput" rows="3" placeholder="Optional, e.g. return None"></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiInputFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>InputValue Methods</h3>
+                        <p>Build a custom text binding for screen input widgets.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        default
+                        <select id="guiPythonUiInputDefaultInput">
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        editable
+                        <select id="guiPythonUiInputEditableInput">
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        returnable
+                        <select id="guiPythonUiInputReturnableInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <label>
+                      get_text() Expression
+                      <input id="guiPythonUiInputGetTextInput" type="text" placeholder='e.g. store.player_name or ""' />
+                    </label>
+
+                    <label>
+                      set_text(s) Body
+                      <textarea id="guiPythonUiInputSetTextBodyInput" rows="4" placeholder='e.g. store.player_name = s'></textarea>
+                    </label>
+
+                    <label>
+                      enter() Body
+                      <textarea id="guiPythonUiInputEnterBodyInput" rows="3" placeholder='Optional. Leave blank to use InputValue.enter(self).'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiDisplayableFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>Displayable Methods</h3>
+                        <p>Build a custom <code>renpy.Displayable</code> subclass for low-level rendering and event handling.</p>
+                      </div>
+                    </div>
+
+                    <label>
+                      __init__ Body
+                      <textarea id="guiPythonUiDisplayableInitBodyInput" rows="4" placeholder='Optional, e.g.&#10;self.child = renpy.displayable(child)&#10;self.alpha = 0.0'></textarea>
+                    </label>
+
+                    <label>
+                      render(width, height, st, at) Body
+                      <textarea id="guiPythonUiDisplayableRenderBodyInput" rows="6" placeholder='e.g.&#10;render = renpy.Render(width, height)&#10;child_render = renpy.render(self.child, width, height, st, at)&#10;render.blit(child_render, (0, 0))&#10;return render'></textarea>
+                    </label>
+
+                    <label>
+                      event(ev, x, y, st) Body
+                      <textarea id="guiPythonUiDisplayableEventBodyInput" rows="4" placeholder='Optional, e.g.&#10;if renpy.map_event(ev, "dismiss"):&#10;    return True&#10;return None'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        per_interact() Body
+                        <textarea id="guiPythonUiDisplayablePerInteractBodyInput" rows="3" placeholder='Optional, e.g.&#10;renpy.redraw(self, 0)'></textarea>
+                      </label>
+
+                      <label>
+                        visit() Body
+                        <textarea id="guiPythonUiDisplayableVisitBodyInput" rows="3" placeholder='Optional, e.g.&#10;return [self.child]'></textarea>
+                      </label>
+                    </div>
+
+                    <label>
+                      place(dest, x, y, width, height, surf, main=True) Body
+                      <textarea id="guiPythonUiDisplayablePlaceBodyInput" rows="4" placeholder='Optional, e.g.&#10;return renpy.Displayable.place(self, dest, x, y, width, height, surf, main=main)'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiStatementFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>Statement Registration</h3>
+                        <p>Build a <code>renpy.register_statement()</code> template with parser, lint, execution, and prediction hooks.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        Block Mode
+                        <select id="guiPythonUiStatementBlockInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                          <option value="possible">possible</option>
+                          <option value="script">script</option>
+                          <option value="script-possible">script-possible</option>
+                          <option value="atl">atl</option>
+                          <option value="atl-possible">atl-possible</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        init
+                        <select id="guiPythonUiStatementInitInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        translatable
+                        <select id="guiPythonUiStatementTranslatableInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        predict_all
+                        <select id="guiPythonUiStatementPredictAllInput">
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        init_priority
+                        <input id="guiPythonUiStatementInitPriorityInput" type="text" placeholder="e.g. 0" />
+                      </label>
+                    </div>
+
+                    <label>
+                      parse(lexer) Body
+                      <textarea id="guiPythonUiStatementParseBodyInput" rows="5" placeholder='e.g.&#10;who = lexer.simple_expression()&#10;what = lexer.rest()&#10;return (who, what)'></textarea>
+                    </label>
+
+                    <label>
+                      execute(parsed_object) Body
+                      <textarea id="guiPythonUiStatementExecuteBodyInput" rows="4" placeholder='e.g.&#10;who, what = parsed_object&#10;renpy.say(eval(who), what)'></textarea>
+                    </label>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        lint(parsed_object) Body
+                        <textarea id="guiPythonUiStatementLintBodyInput" rows="4" placeholder='Optional, e.g.&#10;check = renpy.check_text_tags(parsed_object[1])&#10;if check:&#10;    renpy.error(check)'></textarea>
+                      </label>
+
+                      <label>
+                        predict(parsed_object) Body
+                        <textarea id="guiPythonUiStatementPredictBodyInput" rows="4" placeholder='Optional, e.g.&#10;return []'></textarea>
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        next(parsed_object, *args) Body
+                        <textarea id="guiPythonUiStatementNextBodyInput" rows="4" placeholder='Optional, e.g.&#10;return None'></textarea>
+                      </label>
+
+                      <label>
+                        execute_init(parsed_object) Body
+                        <textarea id="guiPythonUiStatementExecuteInitBodyInput" rows="4" placeholder="Optional"></textarea>
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        label(parsed_object) Expression
+                        <input id="guiPythonUiStatementLabelInput" type="text" placeholder='Optional, e.g. "mystatement_label"' />
+                      </label>
+
+                      <label>
+                        warp(parsed_object) Expression
+                        <input id="guiPythonUiStatementWarpInput" type="text" placeholder="Optional, e.g. True" />
+                      </label>
+
+                      <label>
+                        post_label(parsed_object) Expression
+                        <input id="guiPythonUiStatementPostLabelInput" type="text" placeholder='Optional, e.g. "mystatement_return"' />
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        post_execute(parsed_object) Body
+                        <textarea id="guiPythonUiStatementPostExecuteBodyInput" rows="4" placeholder="Optional"></textarea>
+                      </label>
+
+                      <label>
+                        translation_strings(parsed_object) Body
+                        <textarea id="guiPythonUiStatementTranslationStringsBodyInput" rows="4" placeholder='Optional, e.g.&#10;return [parsed_object[1]]'></textarea>
+                      </label>
+
+                      <label>
+                        execute_default(parsed_object) Body
+                        <textarea id="guiPythonUiStatementExecuteDefaultBodyInput" rows="4" placeholder="Optional"></textarea>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div id="guiPythonUiRestartFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>restart_interaction Helper</h3>
+                        <p>Build a helper function for screen-scope or store updates that need an immediate refresh.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        Assignment Target
+                        <input id="guiPythonUiRestartTargetInput" type="text" placeholder="e.g. store.overlay_mode" />
+                      </label>
+
+                      <label>
+                        Assigned Expression
+                        <input id="guiPythonUiRestartValueInput" type="text" placeholder="e.g. value" />
+                      </label>
+                    </div>
+
+                    <label>
+                      Extra Body Before restart_interaction()
+                      <textarea id="guiPythonUiRestartBodyInput" rows="4" placeholder='Optional, e.g.&#10;store.overlay_dirty = True'></textarea>
+                    </label>
+                  </div>
+
+                  <div id="guiPythonUiDefineScreenFields" class="gui-style-panel hidden">
+                    <div class="gui-style-panel-header">
+                      <div>
+                        <h3>define_screen Registration</h3>
+                        <p>Build a Python-defined screen and register it through <code>renpy.define_screen()</code>.</p>
+                      </div>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        Screen Name
+                        <input id="guiPythonUiDefineScreenNameInput" type="text" placeholder="e.g. python_overlay" />
+                      </label>
+
+                      <label>
+                        modal
+                        <select id="guiPythonUiDefineModalInput">
+                          <option value="false">False</option>
+                          <option value="true">True</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        zorder
+                        <input id="guiPythonUiDefineZorderInput" type="number" step="1" placeholder="e.g. 0" />
+                      </label>
+
+                      <label>
+                        tag
+                        <input id="guiPythonUiDefineTagInput" type="text" placeholder='Optional, e.g. "menu"' />
+                      </label>
+
+                      <label>
+                        variant
+                        <input id="guiPythonUiDefineVariantInput" type="text" placeholder='Optional, e.g. "touch"' />
+                      </label>
+                    </div>
+
+                    <label>
+                      Function Body
+                      <textarea id="guiPythonUiDefineBodyInput" rows="6" placeholder='e.g.&#10;ui.window(style="say_window")&#10;ui.vbox()&#10;ui.text("Python screen placeholder")'></textarea>
+                    </label>
+                  </div>
+
+                  <label>
+                    Notes
+                    <textarea id="guiPythonUiNotesInput" rows="3" placeholder="Optional notes about where this helper is used."></textarea>
+                  </label>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeletePythonUiButton" class="danger-button" type="button">Delete Helper</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Python Output</h2>
+                    <p>Generated helper code plus usage hints for the currently selected template.</p>
+                  </div>
+                </div>
+
+                <div id="guiPythonUiUsageList" class="gui-diagnostics-list"></div>
+                <pre id="guiPythonUiCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="cursorsSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Cursors</h2>
+                    <p>Define hardware cursor styles, displayable cursors, and usage snippets.</p>
+                  </div>
+                </div>
+
+                <div id="guiCursorEmpty" class="panel-empty-state hidden">
+                  No cursor entries yet. Start with a hardware or displayable cursor.
+                </div>
+
+                <div id="guiCursorList" class="character-list gui-entity-list"></div>
+
+                <div class="gui-stack-actions">
+                  <button id="newHardwareCursorButton" class="primary gui-bottom-button" type="button">New Hardware Cursor</button>
+                  <button id="newDisplayableCursorButton" class="secondary gui-bottom-button" type="button">New Displayable Cursor</button>
+                  <button id="newCursorUsageButton" class="secondary gui-bottom-button" type="button">New Usage Snippet</button>
+                </div>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiCursorEmptyState" class="gui-empty-detail">
+                  Select a cursor entry to edit it.
+                </div>
+
+                <form id="guiCursorForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Kind
+                      <select id="guiCursorKindInput">
+                        <option value="hardware">Hardware Cursor</option>
+                        <option value="displayable">Displayable Cursor</option>
+                        <option value="usage">Usage Snippet</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Name
+                      <input id="guiCursorNameInput" type="text" placeholder="e.g. menu or talk" />
+                    </label>
+
+                    <label id="guiCursorStyleTargetField">
+                      Style Target
+                      <input id="guiCursorStyleTargetInput" type="text" placeholder="e.g. menu_button" />
+                    </label>
+
+                    <label id="guiCursorTargetCursorField">
+                      Cursor Name Used
+                      <input id="guiCursorTargetCursorInput" type="text" placeholder="e.g. menu" />
+                    </label>
+                  </div>
+
+                  <div class="gui-inline-fields">
+                    <label>
+                      Cursor Image / Displayable
+                      <input id="guiCursorImageInput" type="text" placeholder='e.g. "gui/cursor/menu_idle.png"' />
+                    </label>
+
+                    <label>
+                      Hotspot X
+                      <input id="guiCursorHotspotXInput" type="number" step="1" placeholder="e.g. 4" />
+                    </label>
+
+                    <label>
+                      Hotspot Y
+                      <input id="guiCursorHotspotYInput" type="number" step="1" placeholder="e.g. 4" />
+                    </label>
+                  </div>
+
+                  <label id="guiCursorFramesField">
+                    Frames / Raw Mapping
+                    <textarea id="guiCursorFramesInput" rows="3" placeholder='Optional raw frame list, e.g. [("gui/cursor_a.png", 4, 4), ("gui/cursor_b.png", 4, 4)]'></textarea>
+                  </label>
+
+                  <label>
+                    Note
+                    <textarea id="guiCursorNoteInput" rows="2" placeholder="Optional notes about this cursor entry."></textarea>
+                  </label>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteCursorButton" class="danger-button" type="button">Delete Cursor Entry</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Cursor Output</h2>
+                    <p>Aggregated cursor configuration and usage code.</p>
+                  </div>
+                </div>
+
+                <div id="guiCursorReferenceList" class="gui-diagnostics-list"></div>
+                <pre id="guiCursorCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="shadersSection" class="gui-section hidden">
+            <div class="gui-section-grid">
+              <aside class="gui-column gui-list-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Text Shaders</h2>
+                    <p>Manage default shader assignments, style-level shaders, callbacks, and registrations.</p>
+                  </div>
+                </div>
+
+                <div id="guiShaderEmpty" class="panel-empty-state hidden">
+                  No shader entries yet. Add a built-in or custom text shader setup.
+                </div>
+
+                <div id="guiShaderList" class="character-list gui-entity-list"></div>
+
+                <button id="newGuiShaderButton" class="primary gui-bottom-button" type="button">New Shader Entry</button>
+              </aside>
+
+              <section class="gui-column gui-detail-column">
+                <div id="guiShaderEmptyState" class="gui-empty-detail">
+                  Select a shader entry to edit it.
+                </div>
+
+                <form id="guiShaderForm" class="character-detail-form hidden">
+                  <div class="gui-style-basics">
+                    <label>
+                      Mode
+                      <select id="guiShaderModeInput">
+                        <option value="default">Default Shader</option>
+                        <option value="style">Style Shader</option>
+                        <option value="callback">Callback Mapping</option>
+                        <option value="custom">Custom Registration</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Name / Key
+                      <input id="guiShaderNameInput" type="text" placeholder="e.g. wave_default or title_glow" />
+                    </label>
+
+                    <label>
+                      Shader Spec
+                      <input id="guiShaderShaderSpecInput" type="text" placeholder='e.g. "wave:10" or "dissolve"' />
+                    </label>
+
+                    <label>
+                      Target
+                      <input id="guiShaderTargetNameInput" type="text" placeholder="e.g. menu_button_text or default" />
+                    </label>
+                  </div>
+
+                  <div class="gui-inline-fields">
+                    <label>
+                      Callback Key
+                      <input id="guiShaderCallbackKeyInput" type="text" placeholder='e.g. "default"' />
+                    </label>
+
+                    <label>
+                      Callback Function
+                      <input id="guiShaderCallbackFunctionInput" type="text" placeholder="e.g. get_default_textshader" />
+                    </label>
+                  </div>
+
+                  <label>
+                    Custom shaders= Expression / Raw Registration Data
+                    <textarea id="guiShaderCustomShadersInput" rows="4" placeholder='e.g. ("textshader.spin",) or raw kwargs lines'></textarea>
+                  </label>
+
+                  <div class="gui-inline-fields">
+                    <label>
+                      include_default
+                      <select id="guiShaderIncludeDefaultInput">
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      redraw
+                      <input id="guiShaderRedrawInput" type="text" placeholder="e.g. 0.02 or None" />
+                    </label>
+                  </div>
+
+                  <div class="inspector-actions">
+                    <button id="guiDeleteShaderButton" class="danger-button" type="button">Delete Shader Entry</button>
+                  </div>
+                </form>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Shader Output</h2>
+                    <p>Generated text shader code and usage notes.</p>
+                  </div>
+                </div>
+
+                <div id="guiShaderUsageList" class="gui-diagnostics-list"></div>
+                <pre id="guiShaderCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+
+          <section id="diagnosticsSection" class="gui-section hidden">
+            <div class="gui-section-grid gui-section-grid-diagnostics">
+              <section class="gui-column gui-detail-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Diagnostics</h2>
+                    <p>Static checks for structure, missing values, unresolved references, and likely GUI issues.</p>
+                  </div>
+                </div>
+
+                <div id="guiDiagnosticsOverview" class="gui-property-summary"></div>
+                <div id="guiDiagnosticsList" class="gui-diagnostics-list"></div>
+              </section>
+
+              <aside class="gui-column gui-preview-column">
+                <div class="gui-panel-header">
+                  <div>
+                    <h2>Suggested Output</h2>
+                    <p>Collected snippets that may need attention based on the current diagnostics.</p>
+                  </div>
+                </div>
+
+                <pre id="guiDiagnosticsCodePreview" class="code-preview"></pre>
+              </aside>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="./gui_editor.js"></script>
+  </body>
+</html>

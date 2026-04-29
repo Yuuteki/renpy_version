@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ren'Py Visual Editor</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside id="sidebar" class="sidebar is-open">
+        <div class="sidebar-scroll">
+          <section id="projectOverviewSection" class="sidebar-section sidebar-panel is-active">
+            <div class="section-header">
+              <h2>Visual Project</h2>
+              <p>Snapshot of the current visual workspace.</p>
+            </div>
+
+            <p class="section-label">Project Path</p>
+            <p id="projectPath" class="project-path">No project path provided.</p>
+
+            <p class="section-label secondary-label">Expected Files</p>
+            <p id="projectFiles" class="project-files"></p>
+
+            <div class="sidebar-actions">
+              <button id="saveDraftButton" class="secondary">Save Draft</button>
+              <button id="exportButton" class="primary">Export to .rpy</button>
+            </div>
+
+            <div id="visualProjectStats" class="visual-project-stats"></div>
+          </section>
+
+          <section id="labelGraphsSection" class="sidebar-section sidebar-panel">
+            <div id="labelListView" class="label-view">
+              <button id="newLabelButton" class="secondary" type="button">New Label Graph</button>
+              <div id="labelGraphList" class="label-graph-list"></div>
+            </div>
+
+            <div id="labelCodePreviewView" class="label-view hidden">
+              <div class="label-preview-header">
+                <button id="labelPreviewBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <p id="labelCodePreviewTitle" class="section-label"></p>
+              <form id="labelReplaySettingsForm" class="character-detail-form label-replay-settings hidden">
+                <p class="section-label secondary-label">Replay</p>
+
+                <label class="character-checkbox">
+                  <input id="labelReplayEnabledInput" type="checkbox" />
+                  <span>Enable Replay For This Label</span>
+                </label>
+
+                <label>
+                  Replay Button Text
+                  <input id="labelReplayTitleInput" type="text" placeholder="e.g. The Meaning of Life" />
+                </label>
+
+                <label>
+                  Locked Mode
+                  <select id="labelReplayLockedModeInput">
+                    <option value="auto">Auto Unlock By Progress</option>
+                    <option value="unlocked">Always Unlocked</option>
+                    <option value="locked">Always Locked</option>
+                  </select>
+                </label>
+
+                <label>
+                  Replay Scope
+                  <textarea id="labelReplayScopeInput" rows="3" placeholder='e.g. {"route_name": "alice"}'></textarea>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="labelReplayAutoEndInput" type="checkbox" />
+                  <span>Append <code>renpy.end_replay()</code> At The End Of Generated Code</span>
+                </label>
+
+                <p class="project-settings-note">
+                  Use replay on scene-style labels. If your label exits early with <code>jump</code> or <code>return</code>, you may still want a manual replay end step in script.
+                </p>
+
+                <p class="section-label secondary-label">Replay Action Preview</p>
+                <pre id="labelReplayActionPreview" class="code-preview"></pre>
+              </form>
+              <pre id="labelCodePreview" class="code-preview"></pre>
+            </div>
+          </section>
+
+          <section id="imagesSection" class="sidebar-section sidebar-panel">
+            <div id="imagesListView" class="characters-view">
+              <div id="imageDefinitionEmpty" class="panel-empty-state hidden">
+                No images yet. Create one to define an image resource.
+              </div>
+
+              <div id="imageDefinitionList" class="character-list"></div>
+
+              <button
+                id="newImageDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create image definition"
+                title="Create image definition"
+              >
+                New Image
+              </button>
+            </div>
+
+            <div id="imageDefinitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="imageDefinitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="imageDefinitionDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
+                <label>
+                  Image Name
+                  <input id="imageDefinitionNameInput" data-image-field="name" type="text" placeholder="e.g. bg_classroom" />
+                </label>
+
+                <label>
+                  Category
+                  <select id="imageDefinitionCategoryInput" data-image-field="category">
+                    <option value="background">Background</option>
+                    <option value="character">Character</option>
+                    <option value="others">Others</option>
+                  </select>
+                </label>
+
+                <label>
+                  Definition Type
+                  <select id="imageDefinitionTypeInput" data-image-field="definitionType">
+                    <option value="static">Static Image</option>
+                    <option value="layered">Layered Image</option>
+                    <option value="movie">Movie</option>
+                    <option value="solid">Solid</option>
+                    <option value="composite">Composite</option>
+                    <option value="placeholder">Placeholder</option>
+                  </select>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionIsSideImageInput" data-image-field="isSideImage" type="checkbox" />
+                  <span>Define As Side Image</span>
+                </label>
+
+                <p id="imageDefinitionSideImageHelp" class="project-settings-note hidden"></p>
+
+                <div id="imageDefinitionStaticFields" class="definition-fields">
+                  <label>
+                    Source Path
+                    <div class="field-with-action">
+                      <input id="imageDefinitionSourcePathInput" data-image-field="sourcePath" type="text" placeholder="e.g. images/bg/classroom.png" />
+                      <button id="imageDefinitionBrowseButton" class="secondary field-action-button" type="button">
+                        Browse
+                      </button>
+                    </div>
+                    <input id="imageDefinitionFileInput" type="file" accept="image/*" hidden />
+                  </label>
+
+                  <p class="section-label secondary-label">Position</p>
+
+                  <label>
+                    pos
+                    <input id="imageDefinitionPosInput" data-image-field="pos" type="text" placeholder="e.g. (960, 540)" />
+                  </label>
+
+                  <label>
+                    anchor
+                    <input id="imageDefinitionAnchorInput" data-image-field="anchor" type="text" placeholder="e.g. (0.5, 0.5)" />
+                  </label>
+
+                  <label>
+                    align
+                    <input id="imageDefinitionAlignInput" data-image-field="align" type="text" placeholder="e.g. (0.5, 1.0)" />
+                  </label>
+
+                  <label>
+                    alignaround
+                    <input id="imageDefinitionAlignAroundInput" data-image-field="alignaround" type="text" placeholder="e.g. (0.5, 0.5)" />
+                  </label>
+
+                  <label>
+                    xalign
+                    <input id="imageDefinitionXAlignInput" data-image-field="xalign" type="text" placeholder="e.g. 0.5" />
+                  </label>
+
+                  <label>
+                    yalign
+                    <input id="imageDefinitionYAlignInput" data-image-field="yalign" type="text" placeholder="e.g. 1.0" />
+                  </label>
+
+                <label>
+                  offset
+                  <input id="imageDefinitionOffsetInput" data-image-field="offset" type="text" placeholder="e.g. (0, -20)" />
+                </label>
+
+                <label>
+                  xoffset
+                  <input id="imageDefinitionXOffsetInput" data-image-field="xoffset" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  yoffset
+                  <input id="imageDefinitionYOffsetInput" data-image-field="yoffset" type="text" placeholder="e.g. -20" />
+                </label>
+
+                <label>
+                  xycenter
+                  <input id="imageDefinitionXYCenterInput" data-image-field="xycenter" type="text" placeholder="e.g. (960, 540)" />
+                </label>
+
+                <label>
+                  xcenter
+                  <input id="imageDefinitionXCenterInput" data-image-field="xcenter" type="text" placeholder="e.g. 960" />
+                </label>
+
+                <label>
+                  ycenter
+                  <input id="imageDefinitionYCenterInput" data-image-field="ycenter" type="text" placeholder="e.g. 540" />
+                </label>
+
+                <p class="section-label secondary-label">Polar</p>
+
+                <label>
+                  around
+                  <input id="imageDefinitionAroundInput" data-image-field="around" type="text" placeholder="e.g. (960, 540)" />
+                </label>
+
+                <label>
+                  angle
+                  <input id="imageDefinitionAngleInput" data-image-field="angle" type="text" placeholder="e.g. 45" />
+                </label>
+
+                <label>
+                  radius
+                  <input id="imageDefinitionRadiusInput" data-image-field="radius" type="text" placeholder="e.g. 240" />
+                </label>
+
+                <label>
+                  anchoraround
+                  <input id="imageDefinitionAnchorAroundInput" data-image-field="anchoraround" type="text" placeholder="e.g. (0.5, 0.5)" />
+                </label>
+
+                <label>
+                  anchorangle
+                  <input id="imageDefinitionAnchorAngleInput" data-image-field="anchorangle" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  anchorradius
+                  <input id="imageDefinitionAnchorRadiusInput" data-image-field="anchorradius" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <p class="section-label secondary-label">Scale And Size</p>
+
+                <label>
+                  zoom
+                  <input id="imageDefinitionZoomInput" data-image-field="zoom" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label>
+                  xzoom
+                  <input id="imageDefinitionXZoomInput" data-image-field="xzoom" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label>
+                  yzoom
+                  <input id="imageDefinitionYZoomInput" data-image-field="yzoom" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label>
+                  size
+                  <input id="imageDefinitionSizeInput" data-image-field="size" type="text" placeholder="e.g. (1920, 1080)" />
+                </label>
+
+                <label>
+                  xsize
+                  <input id="imageDefinitionXSizeInput" data-image-field="xsize" type="text" placeholder="e.g. 1920" />
+                </label>
+
+                <label>
+                  ysize
+                  <input id="imageDefinitionYSizeInput" data-image-field="ysize" type="text" placeholder="e.g. 1080" />
+                </label>
+
+                <label>
+                  xysize
+                  <input id="imageDefinitionXYSizeInput" data-image-field="xysize" type="text" placeholder="e.g. (1920, 1080)" />
+                </label>
+
+                <label>
+                  maxsize
+                  <input id="imageDefinitionMaxSizeInput" data-image-field="maxsize" type="text" placeholder="e.g. (1920, 1080)" />
+                </label>
+
+                <label>
+                  fit
+                  <input id="imageDefinitionFitInput" data-image-field="fit" type="text" placeholder="e.g. contain" />
+                </label>
+
+                <label>
+                  xtile
+                  <input id="imageDefinitionXTileInput" data-image-field="xtile" type="text" placeholder="e.g. 1" />
+                </label>
+
+                <label>
+                  ytile
+                  <input id="imageDefinitionYTileInput" data-image-field="ytile" type="text" placeholder="e.g. 1" />
+                </label>
+
+                <p class="section-label secondary-label">Rotation And Depth</p>
+
+                <label>
+                  rotate
+                  <input id="imageDefinitionRotateInput" data-image-field="rotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionRotatePadInput" data-image-field="rotate_pad" type="checkbox" />
+                  <span>rotate_pad</span>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionTransformAnchorInput" data-image-field="transform_anchor" type="checkbox" />
+                  <span>transform_anchor</span>
+                </label>
+
+                <label>
+                  orientation
+                  <input id="imageDefinitionOrientationInput" data-image-field="orientation" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  xrotate
+                  <input id="imageDefinitionXRotateInput" data-image-field="xrotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  yrotate
+                  <input id="imageDefinitionYRotateInput" data-image-field="yrotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  zrotate
+                  <input id="imageDefinitionZRotateInput" data-image-field="zrotate" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  zpos
+                  <input id="imageDefinitionZPosInput" data-image-field="zpos" type="text" placeholder="e.g. 0" />
+                </label>
+
+                <label>
+                  zzoom
+                  <input id="imageDefinitionZZoomInput" data-image-field="zzoom" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <p class="section-label secondary-label">Appearance</p>
+
+                <label>
+                  alpha
+                  <input id="imageDefinitionAlphaInput" data-image-field="alpha" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label>
+                  additive
+                  <input id="imageDefinitionAdditiveInput" data-image-field="additive" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  blur
+                  <input id="imageDefinitionBlurInput" data-image-field="blur" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionNearestInput" data-image-field="nearest" type="checkbox" />
+                  <span>nearest</span>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionSubpixelInput" data-image-field="subpixel" type="checkbox" />
+                  <span>subpixel</span>
+                </label>
+
+                <label>
+                  blend
+                  <input id="imageDefinitionBlendInput" data-image-field="blend" type="text" placeholder="e.g. additive" />
+                </label>
+
+                <div id="imageDefinitionMatrixColorBuilder" class="definition-fields matrixcolor-builder">
+                  <label>
+                    Matrix Color Preset
+                    <select id="imageDefinitionMatrixColorModeInput">
+                      <option value="none">None</option>
+                      <option value="identity">Identity / Reset</option>
+                      <option value="tint">Tint</option>
+                      <option value="saturation">Saturation</option>
+                      <option value="sepia">Sepia</option>
+                      <option value="invert">Invert</option>
+                      <option value="brightness">Brightness</option>
+                      <option value="hue">Hue</option>
+                      <option value="opacity">Opacity</option>
+                      <option value="colorize">Colorize</option>
+                      <option value="custom">Custom Expression</option>
+                    </select>
+                  </label>
+
+                  <p class="image-definition-help">
+                    Built-in presets write to the expression field below. Use Custom for multiplied matrices or a raw <code>Matrix([...])</code>.
+                  </p>
+
+                  <div id="imageDefinitionMatrixColorPresetFields" class="definition-fields">
+                    <label id="imageDefinitionMatrixColorTintField" class="hidden">
+                      Tint Color
+                      <input id="imageDefinitionMatrixColorTintInput" type="text" placeholder='e.g. #ffcccc' />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorSaturationField" class="hidden">
+                      Saturation Value
+                      <input id="imageDefinitionMatrixColorSaturationInput" type="text" placeholder="e.g. 0.0" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorSepiaField" class="hidden">
+                      Sepia Tint
+                      <input id="imageDefinitionMatrixColorSepiaInput" type="text" placeholder='e.g. #ffeec2' />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorInvertField" class="hidden">
+                      Invert Amount
+                      <input id="imageDefinitionMatrixColorInvertInput" type="text" placeholder="e.g. 1.0" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorBrightnessField" class="hidden">
+                      Brightness Value
+                      <input id="imageDefinitionMatrixColorBrightnessInput" type="text" placeholder="e.g. 0.15" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorHueField" class="hidden">
+                      Hue Degrees
+                      <input id="imageDefinitionMatrixColorHueInput" type="text" placeholder="e.g. 180" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorOpacityField" class="hidden">
+                      Opacity Value
+                      <input id="imageDefinitionMatrixColorOpacityInput" type="text" placeholder="e.g. 0.5" />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorizeBlackField" class="hidden">
+                      Black Maps To
+                      <input id="imageDefinitionMatrixColorizeBlackInput" type="text" placeholder='e.g. #220044' />
+                    </label>
+
+                    <label id="imageDefinitionMatrixColorizeWhiteField" class="hidden">
+                      White Maps To
+                      <input id="imageDefinitionMatrixColorizeWhiteInput" type="text" placeholder='e.g. #ffe8ff' />
+                    </label>
+                  </div>
+                </div>
+
+                <label>
+                  matrixcolor expression
+                  <input id="imageDefinitionMatrixColorInput" data-image-field="matrixcolor" type="text" placeholder='e.g. TintMatrix("#ffcccc") * SaturationMatrix(0.8)' />
+                </label>
+
+                <label>
+                  matrixtransform
+                  <input id="imageDefinitionMatrixTransformInput" data-image-field="matrixtransform" type="text" placeholder="e.g. RotateMatrix(0.0)" />
+                </label>
+
+                <label>
+                  matrixanchor
+                  <input id="imageDefinitionMatrixAnchorInput" data-image-field="matrixanchor" type="text" placeholder="e.g. (0.5, 0.5)" />
+                </label>
+
+                <p class="section-label secondary-label">Crop And Shader</p>
+
+                <label>
+                  crop
+                  <input id="imageDefinitionCropInput" data-image-field="crop" type="text" placeholder="e.g. (0, 0, 1920, 1080)" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionCropRelativeInput" data-image-field="crop_relative" type="checkbox" />
+                  <span>crop_relative</span>
+                </label>
+
+                <label>
+                  corner1
+                  <input id="imageDefinitionCorner1Input" data-image-field="corner1" type="text" placeholder="e.g. (0, 0)" />
+                </label>
+
+                <label>
+                  corner2
+                  <input id="imageDefinitionCorner2Input" data-image-field="corner2" type="text" placeholder="e.g. (1920, 1080)" />
+                </label>
+
+                <label>
+                  shader
+                  <input id="imageDefinitionShaderInput" data-image-field="shader" type="text" placeholder="e.g. renpy.texture" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionMeshInput" data-image-field="mesh" type="checkbox" />
+                  <span>mesh</span>
+                </label>
+
+                <label>
+                  mesh_pad
+                  <input id="imageDefinitionMeshPadInput" data-image-field="mesh_pad" type="text" placeholder="e.g. 8" />
+                </label>
+
+                <label>
+                  perspective
+                  <input id="imageDefinitionPerspectiveInput" data-image-field="perspective" type="text" placeholder="e.g. 1000" />
+                </label>
+
+                <p class="section-label secondary-label">Motion And Advanced</p>
+
+                <label>
+                  xpan
+                  <input id="imageDefinitionXPanInput" data-image-field="xpan" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  ypan
+                  <input id="imageDefinitionYPanInput" data-image-field="ypan" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  fps
+                  <input id="imageDefinitionFpsInput" data-image-field="fps" type="text" placeholder="e.g. 30" />
+                </label>
+
+                <label>
+                  point_to
+                  <input id="imageDefinitionPointToInput" data-image-field="point_to" type="text" placeholder="e.g. (960, 540)" />
+                </label>
+
+                <label>
+                  delay
+                  <input id="imageDefinitionDelayInput" data-image-field="delay" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="imageDefinitionEventsInput" data-image-field="events" type="checkbox" />
+                  <span>events</span>
+                </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionShowCancelsHideInput" data-image-field="show_cancels_hide" type="checkbox" />
+                    <span>show_cancels_hide</span>
+                  </label>
+                </div>
+
+                <div id="imageDefinitionMovieFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Movie</p>
+
+                  <label>
+                    Play Path
+                    <div class="field-with-action">
+                      <input id="imageDefinitionMoviePlayInput" data-image-field="moviePlay" type="text" placeholder="e.g. movies/opening.webm" />
+                      <button id="imageDefinitionMovieBrowseButton" class="secondary field-action-button" type="button">
+                        Browse
+                      </button>
+                    </div>
+                    <input id="imageDefinitionMovieFileInput" type="file" accept="video/*,.webm,.ogv,.ogg,.mpg,.mpeg,.avi,.mkv" hidden />
+                  </label>
+
+                  <label>
+                    size
+                    <input id="imageDefinitionMovieSizeInput" data-image-field="movieSize" type="text" placeholder="e.g. (1920, 1080)" />
+                  </label>
+
+                  <label>
+                    channel
+                    <input id="imageDefinitionMovieChannelInput" data-image-field="movieChannel" type="text" placeholder="e.g. movie" />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionMovieSideMaskInput" data-image-field="movieSideMask" type="checkbox" />
+                    <span>side_mask</span>
+                  </label>
+
+                  <label>
+                    mask
+                    <input id="imageDefinitionMovieMaskInput" data-image-field="movieMask" type="text" placeholder="e.g. movies/opening_mask.webm" />
+                  </label>
+
+                  <label>
+                    mask_channel
+                    <input id="imageDefinitionMovieMaskChannelInput" data-image-field="movieMaskChannel" type="text" placeholder="e.g. sprite_mask (blank = auto)" />
+                  </label>
+
+                  <label>
+                    start_image
+                    <input id="imageDefinitionMovieStartImageInput" data-image-field="movieStartImage" type="text" placeholder='e.g. "images/ui/loading.png" or loading_displayable' />
+                  </label>
+
+                  <label>
+                    image
+                    <input id="imageDefinitionMovieFallbackImageInput" data-image-field="movieFallbackImage" type="text" placeholder='e.g. "images/posters/opening.png" or poster_displayable' />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionMovieLoopInput" data-image-field="movieLoop" type="checkbox" />
+                    <span>loop</span>
+                  </label>
+
+                  <label>
+                    group
+                    <input id="imageDefinitionMovieGroupInput" data-image-field="movieGroup" type="text" placeholder='e.g. "opening_sequence"' />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionMovieKeepLastFrameInput" data-image-field="movieKeepLastFrame" type="checkbox" />
+                    <span>keep_last_frame</span>
+                  </label>
+                </div>
+
+                <div id="imageDefinitionSolidFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Solid</p>
+
+                  <label>
+                    Color
+                    <input id="imageDefinitionSolidColorInput" data-image-field="solidColor" type="text" placeholder='e.g. #111111 or "#ffffff"' />
+                  </label>
+                </div>
+
+                <div id="imageDefinitionCompositeFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Composite</p>
+
+                  <label>
+                    size
+                    <input id="imageDefinitionCompositeSizeInput" data-image-field="compositeSize" type="text" placeholder="e.g. (300, 600)" />
+                  </label>
+
+                  <div class="menu-choice-group">
+                    <div class="menu-choice-group-header">
+                      <strong>Layers</strong>
+                      <button id="imageDefinitionAddCompositeLayerButton" class="secondary menu-choice-add-button" type="button">New Layer</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      Layers are stacked from back to front. You can reference an imported image definition name or a file path.
+                    </p>
+
+                    <div id="imageDefinitionCompositeLayerList" class="menu-choice-list"></div>
+                    <datalist id="imageDefinitionCompositeDisplayableOptions"></datalist>
+                  </div>
+                </div>
+
+                <div id="imageDefinitionPlaceholderFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Placeholder</p>
+
+                  <label>
+                    Base
+                    <select id="imageDefinitionPlaceholderBaseInput" data-image-field="placeholderBase">
+                      <option value="auto">Auto</option>
+                      <option value="bg">Background</option>
+                      <option value="boy">Boy</option>
+                      <option value="girl">Girl</option>
+                    </select>
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionPlaceholderFullInput" data-image-field="placeholderFull" type="checkbox" />
+                    <span>full</span>
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionPlaceholderFlipInput" data-image-field="placeholderFlip" type="checkbox" />
+                    <span>flip</span>
+                  </label>
+
+                  <label>
+                    text
+                    <input id="imageDefinitionPlaceholderTextInput" data-image-field="placeholderText" type="text" placeholder="e.g. temporary_character" />
+                  </label>
+                </div>
+
+                <div id="imageDefinitionLayeredFields" class="definition-fields hidden">
+                  <p class="section-label secondary-label">Layered Image</p>
+
+                  <label>
+                    image_format
+                    <input id="imageDefinitionLayeredImageFormatInput" data-image-field="layeredImageFormat" type="text" placeholder='e.g. images/characters/eileen/{image}.png' />
+                  </label>
+
+                  <label>
+                    offer_screen
+                    <select id="imageDefinitionLayeredOfferScreenInput" data-image-field="layeredOfferScreen">
+                      <option value="default">Use Engine Default</option>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    at
+                    <input id="imageDefinitionLayeredAtInput" data-image-field="layeredAt" type="text" placeholder="e.g. character_stage_transform" />
+                  </label>
+
+                  <div class="menu-choice-group">
+                    <div class="menu-choice-group-header">
+                      <strong>Always Layers</strong>
+                      <button id="imageDefinitionAddLayeredAlwaysButton" class="secondary menu-choice-add-button" type="button">Add Always</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      Use always layers for base body, outline, or any sprite that should always be present in this layered image.
+                    </p>
+
+                    <div id="imageDefinitionLayeredAlwaysList" class="menu-choice-list"></div>
+                  </div>
+
+                  <div class="menu-choice-group">
+                    <div class="menu-choice-group-header">
+                      <strong>Groups</strong>
+                      <button id="imageDefinitionAddLayeredGroupButton" class="secondary menu-choice-add-button" type="button">Add Group</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      Groups are best for face, outfit, accessories, and similar attribute sets. Single groups are mutually exclusive. Multiple groups allow several active attributes at once.
+                    </p>
+
+                    <div id="imageDefinitionLayeredGroupList" class="menu-choice-list"></div>
+                  </div>
+
+                  <datalist id="imageDefinitionLayeredDisplayableOptions"></datalist>
+                </div>
+
+                <div id="imageDefinitionAnimationFields" class="definition-fields">
+                  <p class="section-label secondary-label">Animation / ATL</p>
+
+                  <label class="character-checkbox">
+                    <input id="imageDefinitionAtlEnabledInput" data-image-field="atlEnabled" type="checkbox" />
+                    <span>Enable ATL block</span>
+                  </label>
+
+                  <div id="imageDefinitionAtlEditor" class="menu-choice-group hidden">
+                    <div class="menu-choice-group-header">
+                      <strong>Timeline</strong>
+                      <button id="imageDefinitionAddAtlStepButton" class="secondary menu-choice-add-button" type="button">New Step</button>
+                    </div>
+
+                    <p class="image-definition-help">
+                      First version supports immediate property lines, pause, interpolation, contains, and repeat.
+                    </p>
+
+                    <div id="imageDefinitionAtlStepList" class="menu-choice-list"></div>
+                  </div>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="imageDefinitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="live2dSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="live2dListView" class="characters-view">
+              <div id="live2dDefinitionEmpty" class="panel-empty-state hidden">
+                No Live2D models yet. Create one to define a reusable Live2D resource.
+              </div>
+
+              <div id="live2dDefinitionList" class="character-list"></div>
+
+              <button
+                id="newLive2DDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create Live2D definition"
+                title="Create Live2D definition"
+              >
+                New Live2D
+              </button>
+            </div>
+
+            <div id="live2dDefinitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="live2dDefinitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="live2dDefinitionDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
+                <label>
+                  Live2D Name
+                  <input id="live2dDefinitionNameInput" data-live2d-field="name" type="text" placeholder="e.g. hiyori" />
+                </label>
+
+                <label>
+                  Model Path
+                  <div class="field-with-action">
+                    <input id="live2dDefinitionModelPathInput" data-live2d-field="modelPath" type="text" placeholder="e.g. Resources/Hiyori or Resources/Hiyori/Hiyori.model3.json" />
+                    <button id="live2dDefinitionBrowseButton" class="secondary field-action-button" type="button">
+                      Browse
+                    </button>
+                  </div>
+                  <input id="live2dDefinitionFileInput" type="file" accept=".json,.model3.json,.exp3.json" hidden />
+                </label>
+
+                <p class="project-settings-note">
+                  Live2D requires <code>define config.gl2 = True</code> and the native Cubism SDK. Ren'Py Web builds do not support Live2D playback.
+                </p>
+
+                <p class="section-label secondary-label">Display</p>
+
+                <label>
+                  zoom
+                  <input id="live2dDefinitionZoomInput" data-live2d-field="zoom" type="text" placeholder="e.g. 0.35" />
+                </label>
+
+                <label>
+                  top
+                  <input id="live2dDefinitionTopInput" data-live2d-field="top" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <label>
+                  base
+                  <input id="live2dDefinitionBaseInput" data-live2d-field="base" type="text" placeholder="e.g. 0.6" />
+                </label>
+
+                <label>
+                  height
+                  <input id="live2dDefinitionHeightInput" data-live2d-field="height" type="text" placeholder="e.g. 1.0" />
+                </label>
+
+                <p class="section-label secondary-label">Playback</p>
+
+                <label class="character-checkbox">
+                  <input id="live2dDefinitionLoopInput" data-live2d-field="loop" type="checkbox" />
+                  <span>loop last motion</span>
+                </label>
+
+                <label>
+                  fade
+                  <select id="live2dDefinitionFadeModeInput" data-live2d-field="fadeMode">
+                    <option value="default">Use _live2d_fade</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                  </select>
+                </label>
+
+                <label>
+                  seamless
+                  <input id="live2dDefinitionSeamlessInput" data-live2d-field="seamless" type="text" placeholder='e.g. True or ["idle"]' />
+                </label>
+
+                <label>
+                  default_fade
+                  <input id="live2dDefinitionDefaultFadeInput" data-live2d-field="defaultFade" type="text" placeholder="e.g. 0.0" />
+                </label>
+
+                <p class="section-label secondary-label">Catalog</p>
+
+                <label>
+                  Motions
+                  <textarea id="live2dDefinitionMotionsInput" data-live2d-field="motions" rows="4" placeholder="e.g. idle&#10;wave&#10;m01"></textarea>
+                </label>
+
+                <label>
+                  Expressions
+                  <textarea id="live2dDefinitionExpressionsInput" data-live2d-field="expressions" rows="4" placeholder="e.g. smile&#10;angry&#10;null"></textarea>
+                </label>
+
+                <label>
+                  Nonexclusive Attributes
+                  <textarea id="live2dDefinitionNonexclusiveInput" data-live2d-field="nonexclusive" rows="3" placeholder="e.g. wave&#10;blink"></textarea>
+                </label>
+
+                <label>
+                  Aliases
+                  <textarea id="live2dDefinitionAliasesInput" data-live2d-field="aliases" rows="4" placeholder="e.g. idle = m01&#10;smile = exp_00"></textarea>
+                </label>
+
+                <p class="project-settings-note">
+                  Motions, expressions, and aliases are stored here so the editor can reason about this model later. Ren'Py still reads the real animation data from the Live2D files.
+                </p>
+
+                <div class="inspector-actions">
+                  <button id="live2dDefinitionDeleteButton" class="danger-button" type="button">Delete Live2D</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="live2dDefinitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="audioSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="audioListView" class="characters-view">
+              <div id="audioDefinitionEmpty" class="panel-empty-state hidden">
+                No audio yet. Create one to define a reusable sound resource.
+              </div>
+
+              <div id="audioDefinitionList" class="character-list"></div>
+
+              <button
+                id="newAudioDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create audio definition"
+                title="Create audio definition"
+              >
+                New Audio
+              </button>
+            </div>
+
+            <div id="audioDefinitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="audioDefinitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="audioDefinitionDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
+                <label>
+                  Audio Name
+                  <input id="audioDefinitionNameInput" data-audio-field="name" type="text" placeholder="e.g. bgm_theme" />
+                </label>
+
+                <label>
+                  Channel
+                  <select id="audioDefinitionChannelInput" data-audio-field="channel">
+                    <option value="music">music</option>
+                    <option value="sound">sound</option>
+                    <option value="voice">voice</option>
+                  </select>
+                </label>
+
+                <label id="audioDefinitionVoiceOwnerField" class="hidden">
+                  Voice Owner
+                  <select id="audioDefinitionVoiceOwnerInput" data-audio-field="voiceCharacterId">
+                    <option value="">Narrator</option>
+                  </select>
+                </label>
+
+                <label>
+                  Source Path
+                  <div class="field-with-action">
+                    <input id="audioDefinitionSourcePathInput" data-audio-field="sourcePath" type="text" placeholder="e.g. audio/music/theme.ogg" />
+                    <button id="audioDefinitionBrowseButton" class="secondary field-action-button" type="button">
+                      Browse
+                    </button>
+                  </div>
+                  <input id="audioDefinitionFileInput" type="file" accept="audio/*,.ogg,.mp3,.wav,.opus,.m4a" hidden />
+                </label>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="audioDefinitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="charactersSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="charactersListView" class="characters-view">
+              <div id="characterListEmpty" class="panel-empty-state hidden">
+                No characters yet. Create one to get started.
+              </div>
+
+              <div id="characterList" class="character-list"></div>
+
+              <button
+                id="newCharacterButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create character"
+                title="Create character"
+              >
+                New Character
+              </button>
+            </div>
+
+            <div id="characterDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="characterBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="characterDetailForm" class="character-detail-form">
+                <p class="section-label">Basic</p>
+
+                <label>
+                  Variable Name
+                  <input id="characterIdInput" type="text" placeholder="e.g. eileen" />
+                </label>
+
+                <label>
+                  Display Name
+                  <input id="characterNameInput" type="text" placeholder="e.g. Eileen" />
+                </label>
+
+                <label>
+                  Character Type
+                  <select id="characterKindInput">
+                    <option value="adv">adv</option>
+                    <option value="nvl">nvl</option>
+                    <option value="narrator">narrator</option>
+                    <option value="centered">centered</option>
+                    <option value="vcentered">vcentered</option>
+                    <option value="name_only">name_only</option>
+                  </select>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="characterDynamicInput" type="checkbox" />
+                  <span>Dynamic Name</span>
+                </label>
+
+                <p class="section-label secondary-label">Resources</p>
+
+                <label>
+                  Linked Image Tag
+                  <input id="characterImageInput" list="imageTagSuggestionList" type="text" placeholder="e.g. eileen" />
+                </label>
+
+                <p class="project-settings-note">
+                  Used by <code>Character(image=...)</code>. Side images follow this tag and the current shown attributes.
+                </p>
+
+                <label>
+                  Voice Tag
+                  <input id="characterVoiceTagInput" type="text" placeholder="e.g. eileen" />
+                </label>
+
+                <p class="section-label secondary-label">Appearance</p>
+
+                <label>
+                  Name Color
+                  <input id="characterWhoColorInput" type="text" placeholder="e.g. #c8ffc8" />
+                </label>
+
+                <label>
+                  Name Style
+                  <input id="characterWhoStyleInput" type="text" placeholder="e.g. name_text" />
+                </label>
+
+                <label>
+                  Text Style
+                  <input id="characterWhatStyleInput" type="text" placeholder="e.g. dialogue_text" />
+                </label>
+
+                <label>
+                  Window Style
+                  <input id="characterWindowStyleInput" type="text" placeholder="e.g. say_window" />
+                </label>
+
+                <label>
+                  Window Background
+                  <input id="characterWindowBackgroundInput" type="text" placeholder="e.g. gui/textbox.png" />
+                </label>
+
+                <p class="section-label secondary-label">Prefixes And Suffixes</p>
+
+                <label>
+                  Name Prefix
+                  <input id="characterWhoPrefixInput" type="text" placeholder="e.g. [" />
+                </label>
+
+                <label>
+                  Name Suffix
+                  <input id="characterWhoSuffixInput" type="text" placeholder="e.g. ]" />
+                </label>
+
+                <label>
+                  Text Prefix
+                  <input id="characterWhatPrefixInput" type="text" placeholder="e.g. &quot;" />
+                </label>
+
+                <label>
+                  Text Suffix
+                  <input id="characterWhatSuffixInput" type="text" placeholder="e.g. &quot;" />
+                </label>
+
+                <p class="section-label secondary-label">Behavior</p>
+
+                <label>
+                  Condition
+                  <input id="characterConditionInput" type="text" placeholder="e.g. persistent.route_unlocked" />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="characterInteractInput" type="checkbox" />
+                  <span>Interact</span>
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="characterAdvanceInput" type="checkbox" />
+                  <span>Advance / Allow Skip</span>
+                </label>
+
+                <p class="section-label secondary-label">Click-To-Continue</p>
+
+                <label>
+                  CTC Expression
+                  <input id="characterCtcInput" type="text" placeholder="e.g. ctc_indicator" />
+                </label>
+
+                <label>
+                  CTC Pause Expression
+                  <input id="characterCtcPauseInput" type="text" placeholder="e.g. ctc_pause_indicator" />
+                </label>
+
+                <label>
+                  CTC Timed Pause Expression
+                  <input id="characterCtcTimedPauseInput" type="text" placeholder="e.g. ctc_timed_indicator" />
+                </label>
+
+                <label>
+                  CTC Position
+                  <select id="characterCtcPositionInput">
+                    <option value="">Default</option>
+                    <option value="nestled">nestled</option>
+                    <option value="fixed">fixed</option>
+                  </select>
+                </label>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="characterCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="variablesSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="variablesListView" class="characters-view">
+              <div id="variableListEmpty" class="panel-empty-state hidden">
+                No default variables yet. Create one to define game state.
+              </div>
+
+              <div id="variableList" class="character-list"></div>
+
+              <button
+                id="newVariableButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create variable"
+                title="Create variable"
+              >
+                New Variable
+              </button>
+            </div>
+
+            <div id="variableDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="variableBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="variableDetailForm" class="character-detail-form">
+                <p class="section-label">Default Statement</p>
+
+                <label>
+                  Statement Type
+                  <input id="variableTypeInput" type="text" value="default" readonly />
+                </label>
+
+                <label>
+                  Store Path
+                  <input id="variableStoreInput" type="text" placeholder="e.g. schedule" />
+                </label>
+
+                <label>
+                  Variable Name
+                  <input id="variableNameInput" type="text" placeholder="e.g. points" />
+                </label>
+
+                <label>
+                  Initial Value
+                  <textarea id="variableValueInput" rows="5" placeholder="e.g. 0"></textarea>
+                </label>
+
+                <div class="inspector-actions">
+                  <button id="variableDeleteButton" class="danger-button" type="button">Delete Variable</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="variableCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="achievementsSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="achievementsListView" class="characters-view">
+              <div id="achievementListEmpty" class="panel-empty-state hidden">
+                No achievements yet. Create one to register a Ren'Py achievement.
+              </div>
+
+              <div id="achievementList" class="character-list"></div>
+
+              <button
+                id="newAchievementButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create achievement"
+                title="Create achievement"
+              >
+                New Achievement
+              </button>
+            </div>
+
+            <div id="achievementDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="achievementBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="achievementDetailForm" class="character-detail-form">
+                <p class="section-label">Identity</p>
+
+                <label>
+                  Internal Name
+                  <input id="achievementNameInput" type="text" placeholder="e.g. true_end" />
+                </label>
+
+                <label>
+                  Display Title
+                  <input id="achievementTitleInput" type="text" placeholder="e.g. True End" />
+                </label>
+
+                <label>
+                  Description
+                  <textarea id="achievementDescriptionInput" rows="4" placeholder="e.g. Reach the true ending route."></textarea>
+                </label>
+
+                <label>
+                  Notes
+                  <textarea id="achievementNotesInput" rows="4" placeholder="Editor-side notes for when this achievement should unlock."></textarea>
+                </label>
+
+                <p class="section-label secondary-label">Registration</p>
+
+                <label>
+                  Steam Name Override
+                  <input id="achievementSteamNameInput" type="text" placeholder="Optional different Steam achievement id." />
+                </label>
+
+                <label class="character-checkbox">
+                  <input id="achievementProgressEnabledInput" type="checkbox" />
+                  <span>Progress-based Achievement</span>
+                </label>
+
+                <div id="achievementProgressFields" class="definition-fields hidden">
+                  <label>
+                    stat_max
+                    <input id="achievementStatMaxInput" type="text" placeholder="e.g. 10" />
+                  </label>
+
+                  <label>
+                    stat_modulo
+                    <input id="achievementStatModuloInput" type="text" placeholder="e.g. 1 or 5" />
+                  </label>
+                </div>
+
+                <p class="project-settings-note">
+                  Ren'Py stores achievements in persistent data by default. Use <code>stat_max</code> for progress achievements, and only fill Steam Name when the platform id should differ from the local name.
+                </p>
+
+                <div class="inspector-actions">
+                  <button id="achievementDeleteButton" class="danger-button" type="button">Delete Achievement</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="achievementCodePreview" class="code-preview"></pre>
+
+                <p class="section-label secondary-label">Runtime Helpers</p>
+                <pre id="achievementUsagePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="definitionsSection" class="sidebar-section sidebar-panel characters-section">
+            <div id="definitionsListView" class="characters-view">
+              <div id="definitionListEmpty" class="panel-empty-state hidden">
+                No definitions yet. Create one for define or init python setup.
+              </div>
+
+              <div id="definitionList" class="character-list"></div>
+
+              <button
+                id="newDefinitionButton"
+                class="characters-add-button"
+                type="button"
+                aria-label="Create definition"
+                title="Create definition"
+              >
+                New Definition
+              </button>
+            </div>
+
+            <div id="definitionDetailView" class="characters-view hidden">
+              <div class="character-detail-header">
+                <button id="definitionBackButton" class="character-back-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+              </div>
+
+              <form id="definitionDetailForm" class="character-detail-form">
+                <label>
+                  Definition Type
+                  <select id="definitionModeInput">
+                    <option value="define">define</option>
+                    <option value="init_python">init python</option>
+                  </select>
+                </label>
+
+                <div id="definitionDefineFields" class="definition-fields">
+                  <p class="section-label">Define</p>
+
+                  <label>
+                    Target
+                    <input id="definitionTargetInput" type="text" placeholder="e.g. config.tag_layer[&quot;eileen&quot;]" />
+                  </label>
+
+                  <label>
+                    Operator
+                    <select id="definitionOperatorInput">
+                      <option value="=">=</option>
+                      <option value="+=">+=</option>
+                      <option value="|=">|=</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    Priority
+                    <input id="definitionPriorityInput" type="text" placeholder="e.g. -1" />
+                  </label>
+
+                  <label>
+                    Value Expression
+                    <textarea id="definitionValueInput" rows="5" placeholder="e.g. [ &quot;images&quot;, &quot;dlc/images&quot; ]"></textarea>
+                  </label>
+                </div>
+
+                <div id="definitionInitPythonFields" class="definition-fields hidden">
+                  <p class="section-label">Init Python</p>
+
+                  <label>
+                    Priority
+                    <input id="definitionInitPriorityInput" type="text" placeholder="e.g. 10" />
+                  </label>
+
+                  <label class="character-checkbox">
+                    <input id="definitionInitHideInput" type="checkbox" />
+                    <span>Hide Store Variables</span>
+                  </label>
+
+                  <label>
+                    Store Path
+                    <input id="definitionInitStoreInput" type="text" placeholder="e.g. mystore" />
+                  </label>
+
+                  <label>
+                    Python Code
+                    <textarea id="definitionCodeInput" rows="9" placeholder="e.g. import random&#10;serial = random.randint(1, 99)"></textarea>
+                  </label>
+                </div>
+
+                <div class="inspector-actions">
+                  <button id="definitionDeleteButton" class="danger-button" type="button">Delete Definition</button>
+                </div>
+
+                <p class="section-label secondary-label">Generated Code</p>
+                <pre id="definitionCodePreview" class="code-preview"></pre>
+              </form>
+            </div>
+          </section>
+
+          <section id="visualProjectSection" class="sidebar-section sidebar-panel status-section">
+            <div class="section-header">
+              <h2>Settings</h2>
+              <p>Project-level settings, GUI editing entry, and current editor status.</p>
+            </div>
+
+            <p class="section-label secondary-label">GUI Editor</p>
+            <div id="guiEditorProjectSummary" class="visual-project-stats"></div>
+
+            <div class="sidebar-actions">
+              <button id="openGuiEditorButton" class="primary" type="button">Open GUI Editor</button>
+            </div>
+
+            <p class="section-label secondary-label">Voice Settings</p>
+            <form id="projectVoiceSettingsForm" class="character-detail-form">
+              <label>
+                Strategy
+                <select id="projectVoiceModeInput">
+                  <option value="manual">Manual Voice</option>
+                  <option value="auto">Auto Voice</option>
+                </select>
+              </label>
+
+              <label id="projectAutoVoiceTemplateField" class="hidden">
+                Auto Voice Template
+                <input id="projectAutoVoiceTemplateInput" type="text" placeholder="e.g. voice/{id}.ogg" />
+              </label>
+
+              <label class="character-checkbox">
+                <input id="projectVoiceMultilingualInput" type="checkbox" />
+                <span>Use tl/&lt;language&gt;/... voice folders</span>
+              </label>
+
+              <label class="character-checkbox">
+                <input id="projectDefaultDialogueVoiceInput" type="checkbox" />
+                <span>Default new dialogue blocks use voice</span>
+              </label>
+
+              <p class="project-settings-note">
+                Manual voice uses explicit <code>voice</code> statements on dialogue blocks. Auto voice relies on Ren'Py identifiers and <code>config.auto_voice</code>.
+              </p>
+
+              <p class="section-label secondary-label">Generated Voice Config</p>
+              <pre id="projectVoiceCodePreview" class="code-preview"></pre>
+            </form>
+
+            <p class="section-label secondary-label">Side Image Settings</p>
+            <form id="projectSideImageSettingsForm" class="character-detail-form">
+              <label>
+                Track Specific Image Tag
+                <input id="projectSideImageTagInput" list="imageTagSuggestionList" type="text" placeholder="e.g. eileen" />
+              </label>
+
+              <label class="character-checkbox">
+                <input id="projectSideImageOnlyNotShowingInput" type="checkbox" />
+                <span>Only show side image when the matching main sprite is not already on screen</span>
+              </label>
+
+              <label>
+                Prefix Tag
+                <input id="projectSideImagePrefixTagInput" type="text" placeholder="e.g. side" />
+              </label>
+
+              <label>
+                Null Displayable
+                <input id="projectSideImageNullInput" type="text" placeholder="e.g. Null(width=200, height=150)" />
+              </label>
+
+              <label>
+                Same Tag Transform
+                <input id="projectSideImageSameTransformInput" type="text" placeholder="e.g. same_transform" />
+              </label>
+
+              <label>
+                Change Transform
+                <input id="projectSideImageChangeTransformInput" type="text" placeholder="e.g. change_transform" />
+              </label>
+
+              <p class="project-settings-note">
+                These map to <code>config.side_image_*</code>. Your <code>say</code> screen still needs <code>SideImage()</code> to actually render the portrait.
+              </p>
+
+            <p class="section-label secondary-label">Generated Side Image Config</p>
+            <pre id="projectSideImageCodePreview" class="code-preview"></pre>
+          </form>
+
+          <p class="section-label secondary-label">Save / Rollback Settings</p>
+          <form id="projectSaveLoadSettingsForm" class="character-detail-form">
+            <label class="character-checkbox">
+              <input id="projectHasAutosaveInput" type="checkbox" />
+              <span>Enable autosave pages and background autosaves</span>
+            </label>
+
+            <div class="gui-inline-fields">
+              <label>
+                Autosave Frequency
+                <input id="projectAutosaveFrequencyInput" type="text" placeholder="e.g. 200" />
+              </label>
+
+              <label class="character-checkbox">
+                <input id="projectHasQuicksaveInput" type="checkbox" />
+                <span>Enable quick save / quick load</span>
+              </label>
+            </div>
+
+            <label class="character-checkbox">
+              <input id="projectRollbackEnabledInput" type="checkbox" />
+              <span>Enable rollback</span>
+            </label>
+
+            <div class="gui-inline-fields">
+              <label>
+                Rollback Length
+                <input id="projectRollbackLengthInput" type="text" placeholder="e.g. 128" />
+              </label>
+
+              <label>
+                Hard Rollback Limit
+                <input id="projectHardRollbackLimitInput" type="text" placeholder="e.g. 100" />
+              </label>
+            </div>
+
+            <label class="character-checkbox">
+              <input id="projectFixRollbackWithoutChoiceInput" type="checkbox" />
+              <span>Fixed rollback disables every choice button instead of leaving the already chosen one highlighted</span>
+            </label>
+
+            <p class="project-settings-note">
+              These map to <code>config.has_autosave</code>, <code>config.autosave_frequency</code>,
+              <code>config.has_quicksave</code>, <code>config.rollback_enabled</code>,
+              <code>config.rollback_length</code>, <code>config.hard_rollback_limit</code>, and
+              <code>config.fix_rollback_without_choice</code>.
+            </p>
+
+            <p class="project-settings-note">
+              The GUI save/load screens can expose auto and quick pages only when the matching toggles are enabled.
+              <code>fix_rollback_without_choice</code> only matters when you later use <code>renpy.fix_rollback()</code>.
+            </p>
+
+            <p class="section-label secondary-label">Generated Save / Rollback Config</p>
+            <pre id="projectSaveLoadCodePreview" class="code-preview"></pre>
+          </form>
+
+          <p class="section-label secondary-label">Keymap Settings</p>
+          <form id="projectKeymapSettingsForm" class="character-detail-form">
+            <p class="project-settings-note">
+              Customize common <code>config.keymap</code> events here. Ren'Py players usually expect the default bindings to stay familiar, so this editor only emits overrides for the events you actually change.
+            </p>
+
+              <div class="project-keymap-custom-row">
+                <label>
+                  Custom Event
+                  <input id="projectKeymapCustomEventNameInput" type="text" placeholder="e.g. quick_menu_toggle" />
+                </label>
+                <button id="projectKeymapAddCustomEventButton" class="secondary" type="button">Add Custom Event</button>
+              </div>
+
+              <div id="projectKeymapCategoryList" class="project-keymap-category-list"></div>
+
+              <p class="project-settings-note">
+                Keysym examples: <code>K_t</code>, <code>shift_K_F5</code>, <code>mousedown_1</code>, <code>repeat_K_LEFT</code>, <code>osctrl_K_RIGHT</code>.
+              </p>
+
+              <p class="section-label secondary-label">Generated Keymap Config</p>
+              <pre id="projectKeymapCodePreview" class="code-preview"></pre>
+            </form>
+
+            <p class="section-label secondary-label">Status</p>
+            <p id="statusText" class="status-text">Visual editor scaffold ready.</p>
+          </section>
+        </div>
+      </aside>
+
+      <div class="sidebar-controls">
+        <div id="sidebarCollapsedRail" class="sidebar-collapsed-rail" aria-label="Sidebar shortcuts">
+          <button
+            id="sidebarToggleButton"
+            class="sidebar-toggle-button"
+            type="button"
+            aria-label="Collapse sidebar"
+            aria-expanded="true"
+            title="Collapse sidebar"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 6 9 12l6 6"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="projectOverviewSection"
+            aria-label="Open project overview"
+            title="Project"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 8.5 12 4l8 4.5"></path>
+              <path d="M6.5 9.5V19h11V9.5"></path>
+              <path d="M10 19v-5h4v5"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="labelGraphsSection"
+            aria-label="Open label graphs"
+            title="Label Graphs"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="5" y="4" width="14" height="4" rx="1.5"></rect>
+              <rect x="5" y="10" width="14" height="4" rx="1.5"></rect>
+              <rect x="5" y="16" width="14" height="4" rx="1.5"></rect>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="imagesSection"
+            aria-label="Open image definitions"
+            title="Images"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+              <circle cx="9" cy="10" r="1.5"></circle>
+              <path d="M6.5 16 11 12l2.5 2.2L16 11.5 18 16"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="live2dSection"
+            aria-label="Open Live2D definitions"
+            title="Live2D"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 6.5c0-1.4 1.1-2.5 2.5-2.5h5C15.9 4 17 5.1 17 6.5V10c0 1.6-1.1 3-2.7 3.3l-1.3.2-1.3-.2C10.1 13 9 11.6 9 10V8.5"></path>
+              <path d="M5.5 19c1-3.3 3.6-5 6.5-5s5.5 1.7 6.5 5"></path>
+              <path d="M9 9h.01"></path>
+              <path d="M15 9h.01"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="audioSection"
+            aria-label="Open audio definitions"
+            title="Audio"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 10v4"></path>
+              <path d="M10 8v8"></path>
+              <path d="M14 6v12"></path>
+              <path d="M18 9v6"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="charactersSection"
+            aria-label="Open character definitions"
+            title="Characters"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="3"></circle>
+              <path d="M6.5 19c.8-3 3.1-4.5 5.5-4.5s4.7 1.5 5.5 4.5"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="variablesSection"
+            aria-label="Open variables"
+            title="Variables"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 6h10"></path>
+              <path d="M7 12h10"></path>
+              <path d="M7 18h10"></path>
+              <circle cx="5" cy="6" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+              <circle cx="5" cy="18" r="1"></circle>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="achievementsSection"
+            aria-label="Open achievements"
+            title="Achievements"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5h8v3a4 4 0 0 1-8 0Z"></path>
+              <path d="M7 5H4v2a3 3 0 0 0 3 3"></path>
+              <path d="M17 5h3v2a3 3 0 0 1-3 3"></path>
+              <path d="M10 14h4"></path>
+              <path d="M9 19h6"></path>
+              <path d="M12 11v8"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="definitionsSection"
+            aria-label="Open definitions"
+            title="Definitions"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 5 4 12l5 7"></path>
+              <path d="M15 5 20 12l-5 7"></path>
+              <path d="M11 19 13 5"></path>
+            </svg>
+          </button>
+
+          <button
+            class="collapsed-rail-button"
+            type="button"
+            data-sidebar-section="visualProjectSection"
+            aria-label="Open settings"
+            title="Settings"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+              <path d="M9 9h6"></path>
+              <path d="M9 13h6"></path>
+              <path d="M9 17h3"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <main class="canvas-stage">
+        <div id="canvas" class="canvas-surface">
+          <div class="grid-overlay"></div>
+          <canvas id="graphConnections" class="graph-connections" aria-hidden="true"></canvas>
+          <div id="graphNodes" class="graph-nodes"></div>
+        </div>
+      </main>
+
+      <section id="addBlockDock" class="add-block-dock is-offset-for-inspector">
+        <div id="addBlockMenu" class="add-block-menu">
+          <button class="node-card node-card-compact" data-node-type="image">
+            <strong>Image</strong>
+            <span>Scene / Show / Hide</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="animation">
+            <strong>Animation</strong>
+            <span>With Transition</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="audio">
+            <strong>Audio</strong>
+            <span>Play / Queue / Stop</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="dialogue">
+            <strong>Dialogue</strong>
+            <span>Line</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="input">
+            <strong>Input</strong>
+            <span><code>renpy.input()</code></span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="achievement">
+            <strong>Achievement</strong>
+            <span>Grant / Progress / Clear / Sync</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="screen">
+            <strong>Screen</strong>
+            <span>Show / Call / Hide</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="menu">
+            <strong>Choice</strong>
+            <span>Branch</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="condition">
+            <strong>Condition</strong>
+            <span>If / Elif / Else</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="flow">
+            <strong>Flow</strong>
+            <span>Jump / Call / Return</span>
+          </button>
+
+          <button class="node-card node-card-compact" data-node-type="python">
+            <strong>Python</strong>
+            <span>$ / python:</span>
+          </button>
+        </div>
+
+        <button
+          id="addBlockToggleButton"
+          class="add-block-toggle"
+          type="button"
+          aria-label="Add block"
+          aria-controls="addBlockMenu"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true">+</span>
+        </button>
+      </section>
+
+      <aside id="inspectorSidebar" class="inspector-sidebar is-open">
+        <section class="inspector-panel">
+          <div class="section-header">
+            <h2>Inspector</h2>
+            <p>Details for the selected node.</p>
+          </div>
+
+          <div id="inspectorEmpty" class="inspector-empty">
+            <p>Select a node to inspect its properties.</p>
+          </div>
+
+          <form id="startInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="startNodeTypeInput" type="text" readonly />
+            </label>
+          </form>
+
+          <form id="imageInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="imageNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="imageNodeModeInput">
+                <option value="show">Show</option>
+                <option value="scene">Scene</option>
+                <option value="hide">Hide</option>
+              </select>
+            </label>
+
+            <label>
+              <span id="imageNodeNameLabel">Image Name</span>
+              <select id="imageNodeNameInput">
+                <option value="">No imported images</option>
+              </select>
+            </label>
+
+            <div id="imageNodeLive2DFields" class="definition-fields matrixcolor-builder hidden">
+              <p class="section-label secondary-label">Live2D Attributes</p>
+              <p id="imageNodeLive2DHelp" class="image-definition-help"></p>
+
+              <label>
+                Motion
+                <select id="imageNodeLive2DMotionInput">
+                  <option value="">No explicit motion</option>
+                </select>
+              </label>
+
+              <label>
+                Expression
+                <select id="imageNodeLive2DExpressionInput">
+                  <option value="">Use default expression</option>
+                </select>
+              </label>
+
+              <div class="menu-choice-group">
+                <div class="menu-choice-group-header">
+                  <strong>Nonexclusive Attributes</strong>
+                </div>
+                <div id="imageNodeLive2DNonexclusiveList" class="menu-choice-list"></div>
+              </div>
+
+              <div class="menu-choice-group">
+                <div class="menu-choice-group-header">
+                  <strong>Remove Active Attributes</strong>
+                </div>
+                <div id="imageNodeLive2DRemovalList" class="menu-choice-list"></div>
+              </div>
+
+              <label class="character-checkbox">
+                <input id="imageNodeLive2DStillInput" type="checkbox" />
+                <span>Add <code>still</code> attribute</span>
+              </label>
+
+              <label>
+                Additional Attributes
+                <input id="imageNodeLive2DAdditionalInput" type="text" placeholder="e.g. smile_alias, costume_alt" />
+              </label>
+            </div>
+
+            <div id="imageNodeLayeredFields" class="definition-fields matrixcolor-builder hidden">
+              <p class="section-label secondary-label">Layered Attributes</p>
+              <p id="imageNodeLayeredHelp" class="image-definition-help"></p>
+              <div id="imageNodeLayeredGroupList" class="menu-choice-list"></div>
+            </div>
+
+            <label>
+              Layer
+              <input id="imageNodeLayerInput" type="text" placeholder="e.g. master" />
+            </label>
+
+            <label>
+              At Transform
+              <input id="imageNodeAtInput" type="text" list="imageNodeAtOptions" placeholder="e.g. left, center" />
+              <datalist id="imageNodeAtOptions"></datalist>
+              <div id="imageNodeAtPresetChips" class="preset-chip-row">
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="left">left</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="center">center</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="right">right</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="truecenter">truecenter</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="offscreenleft">offscreenleft</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="offscreenright">offscreenright</button>
+                <button class="secondary preset-chip-button" type="button" data-image-at-preset="reset">reset</button>
+              </div>
+            </label>
+
+            <label>
+              Alias
+              <input id="imageNodeAliasInput" type="text" placeholder="e.g. eileen2" />
+            </label>
+
+            <label>
+              Behind Tags
+              <input id="imageNodeBehindInput" type="text" placeholder="e.g. teacher, eileen" />
+            </label>
+
+            <label>
+              Z-Order
+              <input id="imageNodeZorderInput" type="number" placeholder="e.g. 0" />
+            </label>
+
+            <div class="inspector-actions">
+              <button id="imageDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="animationInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="animationNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Preset
+              <select id="animationNodeTransitionInput">
+                <option value="None">None</option>
+                <option value="dissolve">dissolve</option>
+                <option value="fade">fade</option>
+                <option value="pixellate">pixellate</option>
+                <option value="move">move</option>
+                <option value="ease">ease</option>
+                <option value="hpunch">hpunch</option>
+                <option value="vpunch">vpunch</option>
+                <option value="wiperight">wiperight</option>
+                <option value="wipeleft">wipeleft</option>
+                <option value="wipeup">wipeup</option>
+                <option value="wipedown">wipedown</option>
+                <option value="slideright">slideright</option>
+                <option value="slideleft">slideleft</option>
+                <option value="slideup">slideup</option>
+                <option value="slidedown">slidedown</option>
+                <option value="irisin">irisin</option>
+                <option value="irisout">irisout</option>
+              </select>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="animationDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="audioInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="audioNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="audioNodeActionInput">
+                <option value="play">Play</option>
+                <option value="queue">Queue</option>
+                <option value="stop">Stop</option>
+              </select>
+            </label>
+
+            <label id="audioNodeResourceField">
+              Audio Resource
+              <select id="audioNodeResourceInput">
+                <option value="">No imported audio</option>
+              </select>
+            </label>
+
+            <label>
+              Channel
+              <select id="audioNodeChannelInput">
+                <option value="music">music</option>
+                <option value="sound">sound</option>
+                <option value="voice">voice</option>
+              </select>
+            </label>
+
+            <label id="audioNodeLoopField" class="character-checkbox">
+              <input id="audioNodeLoopInput" type="checkbox" />
+              <span>Loop</span>
+            </label>
+
+            <label id="audioNodeFadeInField">
+              Fade In
+              <input id="audioNodeFadeInInput" type="text" placeholder="e.g. 0.5" />
+            </label>
+
+            <label id="audioNodeFadeOutField" class="hidden">
+              Fade Out
+              <input id="audioNodeFadeOutInput" type="text" placeholder="e.g. 0.5" />
+            </label>
+
+            <label id="audioNodeVolumeField">
+              Volume
+              <input id="audioNodeVolumeInput" type="text" placeholder="e.g. 0.8" />
+            </label>
+
+            <label id="audioNodeIfChangedField" class="character-checkbox">
+              <input id="audioNodeIfChangedInput" type="checkbox" />
+              <span>If Changed</span>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="audioDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="dialogueInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="dialogueNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Speaker
+              <select id="dialogueCharacterInput">
+                <option value="">Narrator</option>
+              </select>
+            </label>
+
+            <label class="character-checkbox">
+              <input id="dialogueVoiceEnabledInput" type="checkbox" />
+              <span>Voice</span>
+            </label>
+
+            <div id="dialogueVoiceLinesGroup" class="menu-choice-group hidden">
+              <div class="menu-choice-group-header">
+                <strong>Voice Lines</strong>
+                <button id="dialogueAddVoiceLineButton" class="secondary menu-choice-add-button" type="button">New</button>
+              </div>
+
+              <div id="dialogueVoiceLineList" class="menu-choice-list"></div>
+            </div>
+
+            <label id="dialogueContentField">
+              Content
+              <textarea id="dialogueNodeContentInput" rows="8" placeholder="Use one blank line to split dialogue blocks..."></textarea>
+            </label>
+
+            <details id="dialogueTextTools" class="dialogue-text-tools">
+              <summary class="dialogue-text-tools-summary">
+                <strong>Text Tools</strong>
+                <span>Insert tags, escapes, and pacing helpers.</span>
+              </summary>
+
+              <div class="dialogue-text-tools-body">
+                <div class="dialogue-text-tool-group">
+                  <span class="dialogue-text-tool-group-label">Insert</span>
+                  <div class="dialogue-text-tool-buttons">
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="interpolate">[var]</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="newline">\n</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="escapeBracket">[[</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="escapeBrace">{{</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="escapeRuby">【【</button>
+                  </div>
+                </div>
+
+                <div class="dialogue-text-tool-group">
+                  <span class="dialogue-text-tool-group-label">Style</span>
+                  <div class="dialogue-text-tool-buttons">
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="bold">Bold</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="italic">Italic</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="color">Color</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="size">Size</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="image">Image</button>
+                  </div>
+                </div>
+
+                <div class="dialogue-text-tool-group">
+                  <span class="dialogue-text-tool-group-label">Timing</span>
+                  <div class="dialogue-text-tool-buttons">
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="wait">{w}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="paragraph">{p}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="noWait">{nw}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="fast">{fast}</button>
+                    <button class="secondary dialogue-text-tool-button" type="button" data-dialogue-tool="done">{done}</button>
+                  </div>
+                </div>
+
+                <p class="dialogue-text-help">
+                  Supports Ren'Py interpolation, escape syntax, common text tags, and dialogue pacing tags.
+                </p>
+              </div>
+            </details>
+
+            <div class="inspector-actions">
+              <button id="dialogueDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="inputInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="inputNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Target Variable
+              <input id="inputNodeVariableInput" type="text" placeholder="e.g. player_name or persistent.nickname" />
+            </label>
+
+            <label>
+              Prompt
+              <textarea id="inputNodePromptInput" rows="4" placeholder="e.g. What should I call you?"></textarea>
+            </label>
+
+            <label>
+              Default Text
+              <input id="inputNodeDefaultInput" type="text" placeholder="e.g. Eileen" />
+            </label>
+
+            <div class="gui-inline-fields">
+              <label>
+                Allow Characters
+                <input id="inputNodeAllowInput" type="text" placeholder="Optional allowed character list." />
+              </label>
+
+              <label>
+                Exclude Characters
+                <input id="inputNodeExcludeInput" type="text" placeholder='e.g. {} or "\\n"' />
+              </label>
+            </div>
+
+            <div class="gui-inline-fields">
+              <label>
+                Max Length
+                <input id="inputNodeLengthInput" type="number" step="1" placeholder="e.g. 32" />
+              </label>
+
+              <label>
+                Pixel Width
+                <input id="inputNodePixelWidthInput" type="text" placeholder="e.g. 360" />
+              </label>
+
+              <label>
+                Screen Name
+                <input id="inputNodeScreenInput" type="text" placeholder="input" />
+              </label>
+            </div>
+
+            <div class="gui-inline-fields">
+              <label>
+                Mask Character
+                <input id="inputNodeMaskInput" type="text" placeholder='e.g. "*"' />
+              </label>
+
+              <label>
+                Empty Fallback
+                <input id="inputNodeFallbackInput" type="text" placeholder="e.g. Player" />
+              </label>
+            </div>
+
+            <label class="character-checkbox">
+              <input id="inputNodeTrimInput" type="checkbox" />
+              <span>Trim whitespace after input</span>
+            </label>
+
+            <label class="character-checkbox">
+              <input id="inputNodeCopyPasteInput" type="checkbox" />
+              <span>Allow copy / paste</span>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="inputDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="achievementInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="achievementNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="achievementNodeActionInput">
+                <option value="grant">Grant</option>
+                <option value="progress">Progress</option>
+                <option value="clear">Clear</option>
+                <option value="sync">Sync</option>
+              </select>
+            </label>
+
+            <label id="achievementNodeNameField">
+              Achievement
+              <select id="achievementNodeNameInput">
+                <option value="">No achievements</option>
+              </select>
+            </label>
+
+            <div id="achievementNodeProgressFields" class="definition-fields hidden">
+              <label>
+                Progress Mode
+                <select id="achievementNodeProgressModeInput">
+                  <option value="set">Set Current Progress</option>
+                  <option value="add">Add To Current Progress</option>
+                </select>
+              </label>
+
+              <label>
+                Value / Amount
+                <input id="achievementNodeProgressValueInput" type="text" placeholder="e.g. 1 or cg_count" />
+              </label>
+            </div>
+
+            <p id="achievementNodeSyncHelp" class="project-settings-note hidden">
+              Sync pushes local achievement state to available backends such as Steam.
+            </p>
+
+            <div class="inspector-actions">
+              <button id="achievementDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="menuInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="menuNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Prompt
+              <textarea id="menuNodePromptInput" rows="4" placeholder="e.g. What should I do?"></textarea>
+            </label>
+
+            <div class="menu-choice-group">
+              <div class="menu-choice-group-header">
+                <strong>Choices</strong>
+                <button id="menuAddChoiceButton" class="secondary menu-choice-add-button" type="button">Add Choice</button>
+              </div>
+
+              <div id="menuChoiceList" class="menu-choice-list"></div>
+            </div>
+
+            <div class="inspector-actions">
+              <button id="menuDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="conditionInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="conditionNodeTypeInput" type="text" readonly />
+            </label>
+
+            <div class="menu-choice-group">
+              <div class="menu-choice-group-header">
+                <strong>Clauses</strong>
+                <div class="menu-choice-group-actions">
+                  <button id="conditionAddClauseButton" class="secondary menu-choice-add-button" type="button">Add Elif</button>
+                  <button id="conditionToggleElseButton" class="secondary menu-choice-add-button" type="button">Add Else</button>
+                </div>
+              </div>
+
+              <div id="conditionClauseList" class="menu-choice-list"></div>
+            </div>
+
+            <div class="inspector-actions">
+              <button id="conditionDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="flowInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="flowNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="flowNodeModeInput">
+                <option value="jump">Jump</option>
+                <option value="call">Call</option>
+                <option value="return">Return</option>
+              </select>
+            </label>
+
+            <label id="flowNodeTargetField">
+              Target Label
+              <select id="flowNodeTargetInput">
+                <option value="">Select a label...</option>
+              </select>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="flowDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="screenInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="screenNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Action
+              <select id="screenNodeModeInput">
+                <option value="show">Show Screen</option>
+                <option value="call">Call Screen</option>
+                <option value="hide">Hide Screen</option>
+              </select>
+            </label>
+
+            <label>
+              Screen Name
+              <input id="screenNodeNameInput" type="text" list="screenNodeNameSuggestions" placeholder="e.g. inventory or preferences" />
+              <datalist id="screenNodeNameSuggestions"></datalist>
+            </label>
+
+            <label id="screenNodeArgumentsField">
+              Arguments
+              <textarea id="screenNodeArgumentsInput" rows="3" placeholder='e.g. title="Inventory", page=current_page'></textarea>
+            </label>
+
+            <label id="screenNodeResultVariableField" class="hidden">
+              Store Return In
+              <input id="screenNodeResultVariableInput" type="text" placeholder="e.g. selected_item or ui_result" />
+            </label>
+
+            <p id="screenNodeSpecialInfo" class="project-settings-note hidden">
+              This is a special screen. Ren'Py usually calls it automatically, so you often do not need a Screen Block for it.
+            </p>
+
+            <p id="screenNodeMissingInfo" class="project-settings-note hidden">
+              This screen is not defined in the GUI Editor right now. That's fine if it is a built-in or external screen.
+            </p>
+
+            <div class="inspector-actions">
+              <button id="screenDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="pythonInspectorForm" class="inspector-form hidden">
+            <label>
+              Node Type
+              <input id="pythonNodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Statement
+              <select id="pythonNodeModeInput">
+                <option value="line">$</option>
+                <option value="block">python:</option>
+              </select>
+            </label>
+
+            <label id="pythonNodeStoreField" class="hidden">
+              Store Path
+              <input id="pythonNodeStoreInput" type="text" placeholder="e.g. mystore" />
+            </label>
+
+            <label id="pythonNodeHideField" class="character-checkbox hidden">
+              <input id="pythonNodeHideInput" type="checkbox" />
+              <span>Hide Store Variables</span>
+            </label>
+
+            <label>
+              Code
+              <textarea id="pythonNodeCodeInput" rows="8" placeholder="e.g. points += 1"></textarea>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="pythonDeleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+
+          <form id="inspectorForm" class="inspector-form hidden">
+            <label>
+              Node Id
+              <input id="nodeIdInput" type="text" readonly />
+            </label>
+
+            <label>
+              Node Type
+              <input id="nodeTypeInput" type="text" readonly />
+            </label>
+
+            <label>
+              Title
+              <input id="nodeTitleInput" type="text" placeholder="e.g. Opening Dialogue" />
+            </label>
+
+            <label>
+              Content
+              <textarea id="nodeContentInput" rows="8" placeholder="Enter node content..."></textarea>
+            </label>
+
+            <div class="inspector-actions">
+              <button id="deleteNodeButton" class="danger-button" type="button">Delete Block</button>
+            </div>
+          </form>
+        </section>
+      </aside>
+
+      <div id="nodeContextMenu" class="node-context-menu" role="menu">
+        <button id="contextDeleteButton" class="node-context-menu-item danger-text" type="button" role="menuitem">
+          Delete Block
+        </button>
+      </div>
+
+      <div id="labelContextMenu" class="node-context-menu" role="menu">
+        <button id="contextRenameLabelButton" class="node-context-menu-item" type="button" role="menuitem">
+          Rename Label
+        </button>
+        <button id="contextDeleteLabelButton" class="node-context-menu-item danger-text" type="button" role="menuitem">
+          Delete Label
+        </button>
+      </div>
+
+      <div id="imageContextMenu" class="node-context-menu" role="menu">
+        <button
+          id="contextDeleteImageButton"
+          class="node-context-menu-item danger-text"
+          type="button"
+          role="menuitem"
+        >
+          Delete Image
+        </button>
+      </div>
+
+      <div id="audioContextMenu" class="node-context-menu" role="menu">
+        <button
+          id="contextDeleteAudioButton"
+          class="node-context-menu-item danger-text"
+          type="button"
+          role="menuitem"
+        >
+          Delete Audio
+        </button>
+      </div>
+
+      <div id="characterContextMenu" class="node-context-menu" role="menu">
+        <button
+          id="contextDeleteCharacterButton"
+          class="node-context-menu-item danger-text"
+          type="button"
+          role="menuitem"
+        >
+          Delete Character
+        </button>
+      </div>
+
+      <datalist id="imageTagSuggestionList"></datalist>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
