@@ -51,6 +51,17 @@ const labelReplayLockedModeInput = document.getElementById("labelReplayLockedMod
 const labelReplayScopeInput = document.getElementById("labelReplayScopeInput");
 const labelReplayAutoEndInput = document.getElementById("labelReplayAutoEndInput");
 const labelReplayActionPreviewEl = document.getElementById("labelReplayActionPreview");
+const labelExportSettingsFormEl = document.getElementById("labelExportSettingsForm");
+const labelExportModeInput = document.getElementById("labelExportModeInput");
+const labelExportPathInput = document.getElementById("labelExportPathInput");
+const labelExportLabelInput = document.getElementById("labelExportLabelInput");
+const labelExportMarkerInput = document.getElementById("labelExportMarkerInput");
+const labelExportStatusNoteEl = document.getElementById("labelExportStatusNote");
+const labelAdoptSelectFieldEl = document.getElementById("labelAdoptSelectField");
+const labelAdoptSelectEl = document.getElementById("labelAdoptSelect");
+const labelExportMarkerNoteEl = document.getElementById("labelExportMarkerNote");
+const labelAdoptButton = document.getElementById("labelAdoptButton");
+const labelClearExportBindingButton = document.getElementById("labelClearExportBindingButton");
 const labelCodePreviewEl = document.getElementById("labelCodePreview");
 const labelContextMenuEl = document.getElementById("labelContextMenu");
 const contextRenameLabelButton = document.getElementById("contextRenameLabelButton");
@@ -421,6 +432,15 @@ const defaultProjectMeta = {
   fixRollbackWithoutChoice: false,
   keymapOverrides: {},
 };
+
+const defaultExportMap = {
+  labels: {},
+};
+
+const generatedProjectSettingsPath = "game/visual_editor_generated/00_project_settings.rpy";
+const generatedDefinitionsPath = "game/visual_editor_generated/10_definitions.rpy";
+const generatedGuiPath = "game/visual_editor_generated/20_gui.rpy";
+const generatedLabelsPath = "game/generated_visual_editor.rpy";
 
 const projectKeymapEventCategories = [
   {
@@ -1126,6 +1146,7 @@ const defaultProjectState = {
   variables: [],
   achievements: [],
   definitions: [],
+  exportMap: structuredClone(defaultExportMap),
   gui: normalizeGuiState(null),
   activeGraphId: "label_start",
 };
@@ -1146,6 +1167,8 @@ let draggedLabelGraphId = null;
 let labelOrderChangedDuringDrag = false;
 let renamingGraphId = null;
 let labelCodePreviewGraphId = null;
+let bridgeScriptSymbols = null;
+let bridgeSymbolsLoading = false;
 let activeImageDefinitionId = null;
 let imageDefinitionDetailOpen = false;
 let imageCategorySectionState = {
@@ -1323,7 +1346,10 @@ async function callBridge(path, payload = null) {
   }
 
   if (!response.ok || data.ok === false) {
-    throw new Error(data.error || `Launcher bridge request failed with HTTP ${response.status}.`);
+    const bridgeError = new Error(data.error || `Launcher bridge request failed with HTTP ${response.status}.`);
+    bridgeError.status = response.status;
+    bridgeError.bridgeData = data;
+    throw bridgeError;
   }
 
   return data;
@@ -1399,6 +1425,51 @@ function normalizeProjectKeymapOverrides(rawOverrides) {
   return Object.fromEntries(
     Object.entries(rawOverrides).map(([eventId, entry]) => [eventId, normalizeProjectKeymapEntry(entry)]),
   );
+}
+
+function normalizeLabelExportBinding(binding, graphId) {
+  if (!binding || typeof binding !== "object" || Array.isArray(binding)) {
+    return null;
+  }
+
+  if (binding.mode !== "managed_label_body") {
+    return null;
+  }
+
+  const path = `${binding.path || ""}`.trim();
+
+  if (!path) {
+    return null;
+  }
+
+  const label = `${binding.label || ""}`.trim();
+  const markerId = `${binding.markerId || ""}`.trim()
+    || `visual-editor:${getSafeLabelName(label || graphId || "label")}`;
+
+  return {
+    mode: "managed_label_body",
+    path,
+    label,
+    markerId,
+  };
+}
+
+function normalizeExportMap(rawExportMap) {
+  if (!rawExportMap || typeof rawExportMap !== "object" || Array.isArray(rawExportMap)) {
+    return structuredClone(defaultExportMap);
+  }
+
+  const rawLabels = rawExportMap.labels && typeof rawExportMap.labels === "object" && !Array.isArray(rawExportMap.labels)
+    ? rawExportMap.labels
+    : {};
+
+  return {
+    labels: Object.fromEntries(
+      Object.entries(rawLabels)
+        .map(([graphId, binding]) => [graphId, normalizeLabelExportBinding(binding, graphId)])
+        .filter(([, binding]) => Boolean(binding)),
+    ),
+  };
 }
 
 function normalizeGuiState(rawGui) {
@@ -1499,6 +1570,7 @@ function normalizeState(rawState) {
     variables: normalizedVariables,
     achievements: normalizedAchievements,
     definitions: normalizedDefinitions,
+    exportMap: normalizeExportMap(rawState.exportMap),
     gui: normalizeGuiState(rawState.gui),
     activeGraphId,
   };
@@ -4413,7 +4485,7 @@ function getFlowNodeTarget(node) {
     return {
       kind: "graph",
       graphId: targetGraph.id,
-      label: (targetGraph.label || "").trim() || targetGraph.id,
+      label: getGraphExportLabel(targetGraph),
     };
   }
 
@@ -6051,13 +6123,13 @@ function renderProjectInfo() {
   if (!projectPath) {
     projectPathEl.textContent = "No project path was provided by the launcher.";
     projectFilesEl.textContent =
-      "Expected data file: <project>/visual_editor/project.json | Export target: <project>/game/generated_visual_editor.rpy";
+      "Expected files: <project>/visual_editor/project.json | <project>/game/generated_visual_editor.rpy | <project>/game/visual_editor_generated/*.rpy";
     return;
   }
 
   projectPathEl.textContent = projectPath;
   projectFilesEl.textContent =
-    `${projectPath}/visual_editor/project.json | ${projectPath}/game/generated_visual_editor.rpy`;
+    `${projectPath}/visual_editor/project.json | ${projectPath}/game/generated_visual_editor.rpy | ${projectPath}/game/visual_editor_generated/*.rpy`;
 }
 
 function reorderLabelGraphs(movedId, targetId, position) {
@@ -6496,8 +6568,14 @@ function formatLabelGraphCode(graph) {
     return "";
   }
 
-  const safeLabel = getSafeLabelName(graph.label);
-  const lines = [`label ${safeLabel}:`];
+  const safeLabel = getGraphExportLabelName(graph);
+  const lines = [`label ${safeLabel}:`, ...buildLabelGraphBodyLines(graph)];
+
+  return lines.join("\n");
+}
+
+function buildLabelGraphBodyLines(graph) {
+  const lines = [];
   const startNode = graph.nodes.find((node) => node.type === "start");
   const startEdge = startNode ? getPrimaryOutgoingEdge(graph, startNode.id) : null;
 
@@ -6512,7 +6590,11 @@ function formatLabelGraphCode(graph) {
     lines.push("    $ renpy.end_replay()");
   }
 
-  return lines.join("\n");
+  return lines;
+}
+
+function formatLabelGraphBodyCode(graph) {
+  return buildLabelGraphBodyLines(graph).join("\n");
 }
 
 function splitGuiRawLines(value) {
@@ -7143,9 +7225,9 @@ function formatAllGuiShaderCode(gui) {
 function getGuiReplayGraphs() {
   return state.graphs
     .filter((graph) => graph?.replay?.enabled)
-    .map((graph, index) => ({
-      label: getSafeLabelName(graph.label || `label_${index + 1}`),
-      title: `${graph.replay?.title || ""}`.trim() || getSafeLabelName(graph.label || `label_${index + 1}`),
+    .map((graph) => ({
+      label: getGraphExportLabelName(graph),
+      title: `${graph.replay?.title || ""}`.trim() || getGraphExportLabelName(graph),
       lockedMode: graph.replay?.lockedMode || "auto",
       scope: `${graph.replay?.scope || ""}`.trim(),
     }));
@@ -7336,17 +7418,46 @@ function buildGeneratedSection(title, code) {
   return trimmed ? `# --- ${title} ---\n${trimmed}` : "";
 }
 
-function formatGeneratedVisualEditorCode() {
-  state = normalizeState(state);
+function buildGeneratedArtifactCode(sections, emptyComment) {
+  const bodySections = sections.filter(Boolean);
 
-  const projectSettingsCode = [
+  return [
+    "# This file was generated by Ren'Py Visual Editor.",
+    "# Do not edit this file by hand unless you also update visual_editor/project.json.",
+    "",
+    ...(bodySections.length ? bodySections : [`# ${emptyComment}`]),
+    "",
+  ].join("\n");
+}
+
+function getGraphExportBinding(graph) {
+  if (!graph) {
+    return null;
+  }
+
+  return state.exportMap?.labels?.[graph.id] ?? null;
+}
+
+function getGraphExportLabel(graph) {
+  const binding = getGraphExportBinding(graph);
+  return `${binding?.label || graph?.label || graph?.id || "label"}`.trim() || `${graph?.id || "label"}`;
+}
+
+function getGraphExportLabelName(graph) {
+  return getSafeLabelName(getGraphExportLabel(graph));
+}
+
+function buildProjectSettingsExportCode() {
+  return [
     formatProjectVoiceCode(),
     formatProjectSideImageCode(),
     formatProjectSaveLoadCode(),
     formatProjectKeymapCode(),
   ].filter(Boolean).join("\n\n");
+}
 
-  const definitionCode = [
+function buildDefinitionsExportCode() {
+  return [
     ...state.definitions.map(formatDefinitionCode),
     ...state.variables.map(formatVariableCode),
     ...state.characters.map(formatCharacterCode),
@@ -7355,7 +7466,466 @@ function formatGeneratedVisualEditorCode() {
     ...state.audio.map(formatAudioDefinitionCode),
     ...state.achievements.map(formatAchievementCode),
   ].filter(Boolean).join("\n\n");
+}
 
+function createManagedFileArtifact(path, sections, emptyComment, symbols = []) {
+  return {
+    type: "managed_file",
+    path,
+    code: buildGeneratedArtifactCode(sections, emptyComment),
+    symbols,
+  };
+}
+
+function createManagedLabelBodyArtifact(graph, binding) {
+  const exportLabel = getGraphExportLabelName({
+    ...graph,
+    label: binding.label || graph.label,
+  });
+  const markerId = `${binding.markerId || ""}`.trim() || `visual-editor:${exportLabel}`;
+
+  return {
+    type: "managed_label_body",
+    path: binding.path,
+    label: exportLabel,
+    markerId,
+    code: formatLabelGraphBodyCode(graph),
+    symbols: [{ type: "label", name: exportLabel }],
+  };
+}
+
+function buildVisualEditorExportArtifacts() {
+  state = normalizeState(state);
+
+  const projectSettingsCode = buildProjectSettingsExportCode();
+  const definitionCode = buildDefinitionsExportCode();
+  const guiCode = formatGuiGeneratedCode(state.gui);
+  const unmanagedGraphs = [];
+  const artifacts = [
+    createManagedFileArtifact(
+      generatedProjectSettingsPath,
+      [buildGeneratedSection("Project Settings", projectSettingsCode)],
+      "No visual editor project settings were exported.",
+    ),
+    createManagedFileArtifact(
+      generatedDefinitionsPath,
+      [buildGeneratedSection("Definitions", definitionCode)],
+      "No visual editor definitions were exported.",
+    ),
+    createManagedFileArtifact(
+      generatedGuiPath,
+      [buildGeneratedSection("GUI", guiCode)],
+      "No visual editor GUI content was exported.",
+    ),
+  ];
+
+  state.graphs.forEach((graph) => {
+    const binding = getGraphExportBinding(graph);
+
+    if (binding?.mode === "managed_label_body" && binding.path) {
+      artifacts.push(createManagedLabelBodyArtifact(graph, binding));
+      return;
+    }
+
+    unmanagedGraphs.push(graph);
+  });
+
+  artifacts.push(createManagedFileArtifact(
+    generatedLabelsPath,
+    [buildGeneratedSection("Labels", unmanagedGraphs.map(formatLabelGraphCode).filter(Boolean).join("\n\n"))],
+    "No unmanaged visual editor labels were exported.",
+    unmanagedGraphs.map((graph) => ({
+      type: "label",
+      name: getGraphExportLabelName(graph),
+    })),
+  ));
+
+  return artifacts;
+}
+
+function indexBridgeSymbols(entries) {
+  return Object.fromEntries(
+    entries.reduce((map, entry) => {
+      const key = `${entry?.name || ""}`.trim();
+
+      if (!key) {
+        return map;
+      }
+
+      if (!map.has(key)) {
+        map.set(key, []);
+      }
+
+      map.get(key).push(entry);
+      return map;
+    }, new Map()),
+  );
+}
+
+function normalizeArtifactPath(path) {
+  return `${path || ""}`.trim().replace(/\\/g, "/");
+}
+
+function findVisualEditorExportConflicts(symbols, artifacts) {
+  const labelIndex = indexBridgeSymbols(Array.isArray(symbols?.labels) ? symbols.labels : []);
+  const conflicts = [];
+  const seen = new Set();
+
+  artifacts.forEach((artifact) => {
+    const artifactPath = normalizeArtifactPath(artifact.path);
+    const artifactSymbols = Array.isArray(artifact.symbols) ? artifact.symbols : [];
+
+    artifactSymbols.forEach((symbol) => {
+      if (symbol?.type !== "label") {
+        return;
+      }
+
+      const symbolName = `${symbol.name || ""}`.trim();
+
+      if (!symbolName) {
+        return;
+      }
+
+      const existing = labelIndex[symbolName] || [];
+
+      if (artifact.type === "managed_label_body") {
+        const matching = existing.filter((entry) => normalizeArtifactPath(entry.path) === artifactPath);
+        const conflicting = existing.filter((entry) => normalizeArtifactPath(entry.path) !== artifactPath);
+
+        if (matching.length === 1 && !conflicting.length) {
+          return;
+        }
+
+        const reference = (conflicting[0] || matching[0] || existing[0] || { path: artifactPath, line: 0 });
+        const key = `${artifact.type}:${symbolName}:${reference.path}:${reference.line || 0}`;
+
+        if (seen.has(key)) {
+          return;
+        }
+
+        seen.add(key);
+        conflicts.push({
+          type: "label",
+          name: symbolName,
+          path: reference.path,
+          line: reference.line || 0,
+          message: `Label "${symbolName}" already exists in ${reference.path}:${reference.line || 0}; please adopt or rename before exporting.`,
+        });
+        return;
+      }
+
+      if (!existing.length) {
+        return;
+      }
+
+      const reference = existing[0];
+      const key = `${artifact.type}:${symbolName}:${reference.path}:${reference.line || 0}`;
+
+      if (seen.has(key)) {
+        return;
+      }
+
+      seen.add(key);
+      conflicts.push({
+        type: "label",
+        name: symbolName,
+        path: reference.path,
+        line: reference.line || 0,
+        message: `Label "${symbolName}" already exists in ${reference.path}:${reference.line || 0}; please adopt or rename before exporting.`,
+      });
+    });
+  });
+
+  return conflicts;
+}
+
+function summarizeVisualEditorExportConflicts(conflicts) {
+  if (!conflicts.length) {
+    return "";
+  }
+
+  if (conflicts.length === 1) {
+    return conflicts[0].message;
+  }
+
+  return `${conflicts[0].message} ${conflicts.length - 1} additional conflict(s) found.`;
+}
+
+function getDefaultGraphMarkerId(graph) {
+  return `visual-editor:${getSafeLabelName(graph?.label || "label")}`;
+}
+
+async function refreshBridgeSymbols({ force = false } = {}) {
+  if (!hasBridge) {
+    bridgeScriptSymbols = null;
+    bridgeSymbolsLoading = false;
+    return null;
+  }
+
+  if (bridgeSymbolsLoading) {
+    return bridgeScriptSymbols;
+  }
+
+  if (bridgeScriptSymbols && !force) {
+    return bridgeScriptSymbols;
+  }
+
+  bridgeSymbolsLoading = true;
+
+  try {
+    const response = await callBridge("symbols");
+    bridgeScriptSymbols = response.symbols || { labels: [], screens: [], defines: [] };
+    return bridgeScriptSymbols;
+  } catch (error) {
+    console.error(error);
+    return bridgeScriptSymbols;
+  } finally {
+    bridgeSymbolsLoading = false;
+  }
+}
+
+function getExistingLabelMatches(graph) {
+  if (!graph) {
+    return [];
+  }
+
+  const safeLabel = getSafeLabelName(graph.label);
+  return Array.isArray(bridgeScriptSymbols?.labels)
+    ? bridgeScriptSymbols.labels.filter((entry) => entry?.name === safeLabel)
+    : [];
+}
+
+function getAvailableProjectLabelTargets() {
+  return Array.isArray(bridgeScriptSymbols?.labels)
+    ? [...bridgeScriptSymbols.labels].sort((left, right) => (
+      `${left.path || ""}:${left.line || 0}:${left.name || ""}`
+        .localeCompare(`${right.path || ""}:${right.line || 0}:${right.name || ""}`)
+    ))
+    : [];
+}
+
+function findGraphUsingManagedTarget(path, label, excludedGraphId = "") {
+  const normalizedPath = normalizeArtifactPath(path);
+  const normalizedLabel = getSafeLabelName(label);
+
+  return state.graphs.find((graph) => {
+    if (!graph || graph.id === excludedGraphId) {
+      return false;
+    }
+
+    const binding = getGraphExportBinding(graph);
+
+    return Boolean(
+      binding
+      && binding.mode === "managed_label_body"
+      && normalizeArtifactPath(binding.path) === normalizedPath
+      && getSafeLabelName(binding.label || "") === normalizedLabel
+    );
+  }) || null;
+}
+
+function populateLabelAdoptOptions(targets, graph) {
+  if (!labelAdoptSelectEl) {
+    return;
+  }
+
+  labelAdoptSelectEl.innerHTML = "";
+  const currentBinding = getGraphExportBinding(graph);
+  const preferredLabel = getGraphExportLabelName(graph);
+  let selectedValue = "";
+
+  targets.forEach((entry) => {
+    const boundGraph = findGraphUsingManagedTarget(entry.path, entry.name, graph?.id || "");
+    const option = document.createElement("option");
+    const value = JSON.stringify({
+      path: entry.path,
+      name: entry.name,
+      line: entry.line || 0,
+    });
+    option.value = value;
+    option.textContent = boundGraph
+      ? `${entry.name} - ${entry.path}:${entry.line || 0} (bound to ${boundGraph.label})`
+      : `${entry.name} - ${entry.path}:${entry.line || 0}`;
+    option.disabled = Boolean(boundGraph);
+    labelAdoptSelectEl.appendChild(option);
+
+    if (
+      !option.disabled
+      && currentBinding
+      && currentBinding.path === entry.path
+      && getSafeLabelName(currentBinding.label || "") === getSafeLabelName(entry.name)
+    ) {
+      selectedValue = value;
+    } else if (!selectedValue && !option.disabled && getSafeLabelName(entry.name) === preferredLabel) {
+      selectedValue = value;
+    } else if (!selectedValue && !option.disabled) {
+      selectedValue = value;
+    }
+  });
+
+  labelAdoptSelectEl.value = selectedValue;
+}
+
+function renderLabelExportSettings() {
+  if (!labelExportSettingsFormEl) {
+    return;
+  }
+
+  const graph = getGraphById(labelCodePreviewGraphId);
+  labelExportSettingsFormEl.classList.toggle("hidden", !graph);
+
+  if (!graph) {
+    labelExportModeInput.value = "";
+    labelExportPathInput.value = "";
+    labelExportLabelInput.value = "";
+    labelExportMarkerInput.value = "";
+    labelExportStatusNoteEl.textContent = "";
+    labelAdoptSelectFieldEl?.classList.add("hidden");
+    labelExportMarkerNoteEl?.classList.add("hidden");
+    labelAdoptButton?.classList.add("hidden");
+    labelClearExportBindingButton?.classList.add("hidden");
+    return;
+  }
+
+  const binding = getGraphExportBinding(graph);
+  const safeLabel = getSafeLabelName(graph.label);
+  const matches = getExistingLabelMatches(graph);
+  const allTargets = getAvailableProjectLabelTargets();
+  const markerId = binding?.markerId || getDefaultGraphMarkerId(graph);
+  const currentTargetPath = binding?.path || generatedLabelsPath;
+  const currentTargetLabel = binding?.label || safeLabel;
+
+  labelExportModeInput.value = binding?.mode === "managed_label_body" ? "Managed Existing Label" : "Generated File";
+  labelExportPathInput.value = currentTargetPath;
+  labelExportLabelInput.value = currentTargetLabel;
+  labelExportMarkerInput.value = binding?.mode === "managed_label_body" ? markerId : "Not used";
+
+  labelExportMarkerNoteEl.textContent = binding?.mode === "managed_label_body"
+    ? `Managed marker: ${markerId}`
+    : "Managed markers are only inserted after you adopt an existing project label.";
+  labelExportMarkerNoteEl.classList.remove("hidden");
+
+  if (!hasBridge) {
+    labelExportStatusNoteEl.textContent = "Open this editor from the Ren'Py launcher to adopt an existing label target.";
+    labelAdoptSelectFieldEl?.classList.add("hidden");
+    labelAdoptButton?.classList.add("hidden");
+    labelClearExportBindingButton?.classList.add("hidden");
+    return;
+  }
+
+  if (bridgeSymbolsLoading && !bridgeScriptSymbols) {
+    labelExportStatusNoteEl.textContent = "Scanning project scripts for matching labels...";
+    labelAdoptSelectFieldEl?.classList.add("hidden");
+    labelAdoptButton?.classList.add("hidden");
+    labelClearExportBindingButton?.classList.add("hidden");
+    return;
+  }
+
+  if (binding?.mode === "managed_label_body" && binding.path) {
+    labelExportStatusNoteEl.textContent = `This graph writes into ${binding.path} under label ${binding.label || safeLabel}. Exports now replace only that managed marker block.`;
+    if (allTargets.length) {
+      populateLabelAdoptOptions(allTargets, graph);
+      labelAdoptSelectFieldEl?.classList.remove("hidden");
+      labelAdoptButton.textContent = "Rebind To Selected Label";
+      labelAdoptButton?.classList.toggle("hidden", !labelAdoptSelectEl?.value);
+      if (!labelAdoptSelectEl?.value) {
+        labelExportStatusNoteEl.textContent += " All discovered targets are currently bound to other label graphs.";
+      }
+    } else {
+      labelAdoptSelectFieldEl?.classList.add("hidden");
+      labelAdoptButton?.classList.add("hidden");
+    }
+    labelClearExportBindingButton?.classList.remove("hidden");
+    return;
+  }
+
+  labelClearExportBindingButton?.classList.add("hidden");
+
+  if (allTargets.length) {
+    labelExportStatusNoteEl.textContent = matches.length
+      ? `Found ${matches.length} matching "${safeLabel}" label target(s). You can adopt any existing project label below to export this graph into an original script file with automatic backup and managed markers.`
+      : `No same-name "${safeLabel}" label was found, but you can still bind this graph to another existing project label below.`;
+    populateLabelAdoptOptions(allTargets, graph);
+    labelAdoptSelectFieldEl?.classList.remove("hidden");
+    labelAdoptButton.textContent = "Adopt Selected Label";
+    labelAdoptButton?.classList.toggle("hidden", !labelAdoptSelectEl?.value);
+    if (!labelAdoptSelectEl?.value) {
+      labelExportStatusNoteEl.textContent += " All discovered targets are currently bound to other label graphs.";
+    }
+    return;
+  }
+
+  labelExportStatusNoteEl.textContent = `No existing project labels were found. This graph will keep exporting to game/generated_visual_editor.rpy until you add a target script label later.`;
+  labelAdoptSelectFieldEl?.classList.add("hidden");
+  labelAdoptButton?.classList.add("hidden");
+}
+
+async function adoptExistingLabelForGraph() {
+  const graph = getGraphById(labelCodePreviewGraphId);
+
+  if (!graph || !hasBridge || !labelAdoptSelectEl?.value) {
+    return;
+  }
+
+  let selected = null;
+
+  try {
+    selected = JSON.parse(labelAdoptSelectEl.value);
+  } catch (error) {
+    console.error(error);
+    setStatus("Adopt failed: could not read the selected label target.");
+    return;
+  }
+
+  const existingBindingOwner = findGraphUsingManagedTarget(selected.path, selected.name, graph.id);
+
+  if (existingBindingOwner) {
+    setStatus(`Adopt failed: ${selected.name} in ${selected.path} is already bound to "${existingBindingOwner.label}".`);
+    return;
+  }
+
+  const markerId = getDefaultGraphMarkerId(graph);
+
+  try {
+    const response = await callBridge("adopt_label", {
+      path: selected.path,
+      label: selected.name,
+      markerId,
+    });
+
+    state.exportMap.labels[graph.id] = normalizeLabelExportBinding({
+      mode: "managed_label_body",
+      path: response.path,
+      label: selected.name,
+      markerId: response.markerId,
+    }, graph.id);
+    saveState(response.alreadyManaged
+      ? `Reused existing managed label ${selected.name} in ${response.path}.`
+      : `Adopted ${selected.name} in ${response.path}. Backup saved to ${response.backupPath}.`);
+    await refreshBridgeSymbols({ force: true });
+    renderLabelExportSettings();
+    syncLabelCodePreview();
+  } catch (error) {
+    console.error(error);
+    setStatus(`Adopt failed: ${error.message}`);
+  }
+}
+
+function clearGraphExportBinding(graphId) {
+  if (!state.exportMap?.labels?.[graphId]) {
+    return;
+  }
+
+  delete state.exportMap.labels[graphId];
+  saveState("This label will export back to game/generated_visual_editor.rpy.");
+  renderLabelExportSettings();
+}
+
+function formatGeneratedVisualEditorCode() {
+  state = normalizeState(state);
+
+  const projectSettingsCode = buildProjectSettingsExportCode();
+  const definitionCode = buildDefinitionsExportCode();
   const labelCode = state.graphs.map(formatLabelGraphCode).filter(Boolean).join("\n\n");
   const guiCode = formatGuiGeneratedCode(state.gui);
   const sections = [
@@ -7379,7 +7949,7 @@ function formatReplayActionForGraph(graph) {
     return "# Replay is disabled for this label.";
   }
 
-  const args = [formatRenpyQuotedString(getSafeLabelName(graph.label))];
+  const args = [formatRenpyQuotedString(getGraphExportLabelName(graph))];
   const replayScope = `${graph.replay.scope || ""}`.trim();
 
   if (replayScope) {
@@ -7430,12 +8000,14 @@ function syncLabelCodePreview() {
   if (!graph) {
     labelCodePreviewTitleEl.textContent = "";
     syncLabelReplaySettings();
+    renderLabelExportSettings();
     labelCodePreviewEl.textContent = "";
     return;
   }
 
   labelCodePreviewTitleEl.textContent = graph.label;
   syncLabelReplaySettings();
+  renderLabelExportSettings();
   labelCodePreviewEl.textContent = formatLabelGraphCode(graph);
 }
 
@@ -7454,6 +8026,14 @@ function openLabelCodePreview(graphId) {
   labelCodePreviewViewEl.classList.remove("hidden");
   syncLabelCodePreview();
   setStatus(`Opened code preview for "${graph.label}".`);
+
+  if (hasBridge) {
+    refreshBridgeSymbols({ force: true }).then(() => {
+      if (labelCodePreviewGraphId === graphId) {
+        renderLabelExportSettings();
+      }
+    });
+  }
 }
 
 function closeLabelCodePreview() {
@@ -7536,7 +8116,15 @@ function finishLabelRename(graphId, nextLabel, { cancel = false } = {}) {
           title: normalizedLabel,
         }, normalizedLabel);
       }
-      saveState(`Renamed label graph to "${graph.label}".`);
+      const detachedManagedTarget = Boolean(state.exportMap?.labels?.[graphId]);
+
+      if (detachedManagedTarget) {
+        delete state.exportMap.labels[graphId];
+      }
+
+      saveState(detachedManagedTarget
+        ? `Renamed label graph to "${graph.label}" and detached its managed label target.`
+        : `Renamed label graph to "${graph.label}".`);
     }
   }
 
@@ -11432,20 +12020,33 @@ async function exportGraph() {
   state = normalizeState(state);
   window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
 
-  const code = formatGeneratedVisualEditorCode();
+  const artifacts = buildVisualEditorExportArtifacts();
+  const legacyCode = formatGeneratedVisualEditorCode();
 
   if (!hasBridge) {
-    console.info(code);
+    console.info(legacyCode);
     setStatus("Generated .rpy text, but launcher bridge is not connected. Open from Ren'Py Launcher to write project files.");
     return;
   }
 
   try {
-    await callBridge("export", { state, code });
-    setStatus("Synced visual_editor/project.json and exported game/generated_visual_editor.rpy.");
+    const symbolResponse = await callBridge("symbols");
+    const conflicts = findVisualEditorExportConflicts(symbolResponse.symbols, artifacts);
+
+    if (conflicts.length) {
+      setStatus(`Export blocked: ${summarizeVisualEditorExportConflicts(conflicts)}`);
+      return;
+    }
+
+    await callBridge("export", { state, artifacts });
+    setStatus("Synced visual_editor/project.json and exported visual editor artifacts.");
   } catch (error) {
     console.error(error);
-    setStatus(`Export failed: ${error.message}`);
+    const bridgeConflicts = Array.isArray(error.bridgeData?.conflicts) ? error.bridgeData.conflicts : [];
+    const bridgeMessage = bridgeConflicts.length
+      ? summarizeVisualEditorExportConflicts(bridgeConflicts)
+      : error.message;
+    setStatus(`${bridgeConflicts.length ? "Export blocked" : "Export failed"}: ${bridgeMessage}`);
   }
 }
 
@@ -12709,6 +13310,17 @@ labelReplayScopeInput?.addEventListener("input", (event) => {
 });
 labelReplayAutoEndInput?.addEventListener("change", (event) => {
   updateLabelReplaySettings({ autoEnd: event.target.checked });
+});
+labelAdoptButton?.addEventListener("click", () => {
+  adoptExistingLabelForGraph();
+});
+labelClearExportBindingButton?.addEventListener("click", () => {
+  if (!labelCodePreviewGraphId) {
+    return;
+  }
+
+  clearGraphExportBinding(labelCodePreviewGraphId);
+  syncLabelCodePreview();
 });
 contextRenameLabelButton.addEventListener("click", () => {
   if (!contextMenuLabelGraphId) {

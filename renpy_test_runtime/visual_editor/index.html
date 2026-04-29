@@ -86,6 +86,44 @@
                 <p class="section-label secondary-label">Replay Action Preview</p>
                 <pre id="labelReplayActionPreview" class="code-preview"></pre>
               </form>
+              <form id="labelExportSettingsForm" class="character-detail-form label-export-settings hidden">
+                <p class="section-label secondary-label">Export Target</p>
+                <div class="label-export-grid">
+                  <label>
+                    Mode
+                    <input id="labelExportModeInput" type="text" readonly />
+                  </label>
+
+                  <label>
+                    Target File
+                    <input id="labelExportPathInput" type="text" readonly />
+                  </label>
+
+                  <label>
+                    Target Label
+                    <input id="labelExportLabelInput" type="text" readonly />
+                  </label>
+
+                  <label>
+                    Marker ID
+                    <input id="labelExportMarkerInput" type="text" readonly />
+                  </label>
+                </div>
+
+                <p id="labelExportStatusNote" class="project-settings-note"></p>
+
+                <label id="labelAdoptSelectField" class="hidden">
+                  Existing Project Label
+                  <select id="labelAdoptSelect"></select>
+                </label>
+
+                <p id="labelExportMarkerNote" class="project-settings-note hidden"></p>
+
+                <div class="inspector-actions">
+                  <button id="labelAdoptButton" class="secondary hidden" type="button">Adopt Existing Label</button>
+                  <button id="labelClearExportBindingButton" class="secondary hidden" type="button">Use Generated File</button>
+                </div>
+              </form>
               <pre id="labelCodePreview" class="code-preview"></pre>
             </div>
           </section>

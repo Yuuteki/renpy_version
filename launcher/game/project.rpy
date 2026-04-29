@@ -33,6 +33,7 @@ init python in project:
     import os.path
     import json
     import mimetypes
+    import shutil
     import subprocess
     import re
     import tempfile
@@ -1037,6 +1038,12 @@ init python in project:
     def get_visual_editor_export_path(p):
         return os.path.join(p.gamedir, "generated_visual_editor.rpy")
 
+    def get_visual_editor_generated_dir(p):
+        return os.path.join(p.gamedir, "visual_editor_generated")
+
+    def get_visual_editor_backup_dir(p):
+        return os.path.join(p.path, "visual_editor", "backups")
+
     def ensure_visual_editor_parent_dirs(p):
         visual_editor_dir = os.path.dirname(get_visual_editor_state_path(p))
 
@@ -1045,6 +1052,473 @@ init python in project:
 
         if not os.path.isdir(p.gamedir):
             os.makedirs(p.gamedir)
+
+        generated_dir = get_visual_editor_generated_dir(p)
+
+        if not os.path.isdir(generated_dir):
+            os.makedirs(generated_dir)
+
+        backup_dir = get_visual_editor_backup_dir(p)
+
+        if not os.path.isdir(backup_dir):
+            os.makedirs(backup_dir)
+
+    def normalize_visual_editor_relpath(path):
+        return os.path.normpath((path or "").replace("/", os.sep).replace("\\", os.sep))
+
+    def get_visual_editor_relative_path(p, path):
+        return os.path.relpath(path, p.path).replace("\\", "/")
+
+    def resolve_visual_editor_project_path(p, path):
+        if not path:
+            raise Exception("Visual editor artifact is missing a target path.")
+
+        normalized = normalize_visual_editor_relpath(path)
+
+        if os.path.isabs(normalized):
+            resolved = os.path.normpath(normalized)
+        else:
+            resolved = os.path.normpath(os.path.join(p.path, normalized))
+
+        project_root = os.path.normpath(p.path)
+
+        try:
+            if os.path.commonpath([project_root, resolved]) != project_root:
+                raise Exception()
+        except Exception:
+            raise Exception("Visual editor artifact paths must stay inside the project.")
+
+        return resolved
+
+    def is_visual_editor_generated_script_path(p, path):
+        normalized_path = os.path.normcase(os.path.normpath(path))
+        export_path = os.path.normcase(os.path.normpath(get_visual_editor_export_path(p)))
+        generated_dir = os.path.normcase(os.path.normpath(get_visual_editor_generated_dir(p)))
+
+        if normalized_path == export_path:
+            return True
+
+        try:
+            return os.path.commonpath([generated_dir, normalized_path]) == generated_dir
+        except Exception:
+            return False
+
+    def scan_visual_editor_script_symbols(p):
+        label_pattern = re.compile(r"^\s*label\s+([A-Za-z_][\w.]*)\s*(?:\([^)]*\))?\s*:")
+        screen_pattern = re.compile(r"^\s*screen\s+([A-Za-z_][\w.]*)\s*(?:\([^)]*\))?\s*:")
+        define_pattern = re.compile(r"^\s*define\s+([A-Za-z_][\w.]*)\s*=")
+
+        rv = {
+            "labels": [],
+            "screens": [],
+            "defines": [],
+        }
+
+        if not os.path.isdir(p.gamedir):
+            return rv
+
+        for root, _dirs, files in os.walk(p.gamedir):
+            for fn in sorted(files):
+                if not fn.lower().endswith(".rpy"):
+                    continue
+
+                full_path = os.path.join(root, fn)
+
+                if is_visual_editor_generated_script_path(p, full_path):
+                    continue
+
+                rel_path = get_visual_editor_relative_path(p, full_path)
+
+                with open(full_path, "r", encoding="utf-8") as f:
+                    for line_number, line in enumerate(f, start=1):
+                        if line.lstrip().startswith("#"):
+                            continue
+
+                        label_match = label_pattern.match(line)
+                        if label_match:
+                            rv["labels"].append({
+                                "name": label_match.group(1),
+                                "path": rel_path,
+                                "line": line_number,
+                            })
+                            continue
+
+                        screen_match = screen_pattern.match(line)
+                        if screen_match:
+                            rv["screens"].append({
+                                "name": screen_match.group(1),
+                                "path": rel_path,
+                                "line": line_number,
+                            })
+                            continue
+
+                        define_match = define_pattern.match(line)
+                        if define_match:
+                            rv["defines"].append({
+                                "name": define_match.group(1),
+                                "path": rel_path,
+                                "line": line_number,
+                            })
+
+        return rv
+
+    def get_visual_editor_artifact_symbols(artifact):
+        rv = [ ]
+
+        for symbol in artifact.get("symbols", [ ]):
+            symbol_type = symbol.get("type", "").strip()
+            symbol_name = symbol.get("name", "").strip()
+
+            if symbol_type and symbol_name:
+                rv.append({
+                    "type": symbol_type,
+                    "name": symbol_name,
+                })
+
+        if rv:
+            return rv
+
+        if artifact.get("type") == "managed_label_body":
+            label_name = artifact.get("label", "").strip()
+
+            if label_name:
+                rv.append({
+                    "type": "label",
+                    "name": label_name,
+                })
+
+        return rv
+
+    def get_visual_editor_symbol_index(entries):
+        rv = { }
+
+        for entry in entries:
+            rv.setdefault(entry["name"], [ ]).append(entry)
+
+        return rv
+
+    def summarize_visual_editor_conflicts(conflicts):
+        first = conflicts[0]
+        message = first.get("message", "Visual editor export conflict detected.")
+
+        if len(conflicts) > 1:
+            message += " {} additional conflict(s) found.".format(len(conflicts) - 1)
+
+        return message
+
+    def validate_visual_editor_export_artifacts(p, artifacts):
+        symbols = scan_visual_editor_script_symbols(p)
+        label_index = get_visual_editor_symbol_index(symbols["labels"])
+        conflicts = [ ]
+        seen = set()
+        managed_targets = { }
+
+        for artifact in artifacts:
+            artifact_type = artifact.get("type", "managed_file")
+            artifact_path = normalize_visual_editor_relpath(artifact.get("path", "")).replace("\\", "/")
+
+            for symbol in get_visual_editor_artifact_symbols(artifact):
+                if symbol["type"] != "label":
+                    continue
+
+                existing = label_index.get(symbol["name"], [ ])
+
+                if artifact_type == "managed_label_body":
+                    managed_target_key = "{}::{}".format(artifact_path, symbol["name"])
+                    previous_target = managed_targets.get(managed_target_key)
+
+                    if previous_target is not None:
+                        conflicts.append({
+                            "type": "label",
+                            "name": symbol["name"],
+                            "path": artifact_path,
+                            "line": 0,
+                            "artifactPath": artifact_path,
+                            "reason": "managed_label_duplicate_target",
+                            "message": "Label \"{}\" in {} is already managed by another visual editor graph. Please adopt or rename before exporting.".format(
+                                symbol["name"],
+                                artifact_path,
+                            ),
+                        })
+                        continue
+
+                    managed_targets[managed_target_key] = artifact
+                    had_conflict = False
+                    matching = [ entry for entry in existing if normalize_visual_editor_relpath(entry["path"]).replace("\\", "/") == artifact_path ]
+                    conflicting = [ entry for entry in existing if normalize_visual_editor_relpath(entry["path"]).replace("\\", "/") != artifact_path ]
+
+                    if len(matching) != 1 or conflicting:
+                        reference = (conflicting or matching or existing or [ { "path": artifact_path or "(unknown)", "line": 0 } ])[0]
+                        key = ("managed_label_body", symbol["name"], reference["path"], reference.get("line", 0))
+
+                        if key in seen:
+                            continue
+
+                        seen.add(key)
+                        conflicts.append({
+                            "type": "label",
+                            "name": symbol["name"],
+                            "path": reference["path"],
+                            "line": reference.get("line", 0),
+                            "artifactPath": artifact_path,
+                            "reason": "managed_label_target_mismatch",
+                            "message": "Label \"{}\" already exists in {}:{}; please adopt or rename before exporting.".format(
+                                symbol["name"],
+                                reference["path"],
+                                reference.get("line", 0),
+                            ),
+                        })
+                        had_conflict = True
+
+                    if had_conflict:
+                        continue
+
+                    try:
+                        target_path = resolve_visual_editor_project_path(p, artifact.get("path", ""))
+                    except Exception as e:
+                        conflicts.append({
+                            "type": "label",
+                            "name": symbol["name"],
+                            "path": artifact_path or "(unknown)",
+                            "line": 0,
+                            "artifactPath": artifact_path,
+                            "reason": "managed_label_path_invalid",
+                            "message": str(e),
+                        })
+                        continue
+
+                    if not os.path.isfile(target_path):
+                        conflicts.append({
+                            "type": "label",
+                            "name": symbol["name"],
+                            "path": artifact_path,
+                            "line": 0,
+                            "artifactPath": artifact_path,
+                            "reason": "managed_label_target_missing",
+                            "message": "Managed label target {} was not found. Please adopt or rename before exporting.".format(artifact_path),
+                        })
+                        continue
+
+                    with open(target_path, "r", encoding="utf-8") as f:
+                        target_text = f.read()
+
+                    marker_id = artifact.get("markerId", "").strip()
+
+                    if marker_id and (not has_visual_editor_managed_block(target_text, marker_id)):
+                        conflicts.append({
+                            "type": "label",
+                            "name": symbol["name"],
+                            "path": artifact_path,
+                            "line": 0,
+                            "artifactPath": artifact_path,
+                            "reason": "managed_label_marker_missing",
+                            "message": "Managed block markers for {} were not found in {}. Please adopt or rename before exporting.".format(
+                                marker_id,
+                                artifact_path,
+                            ),
+                        })
+                    continue
+
+                if not existing:
+                    continue
+
+                reference = existing[0]
+                key = ("managed_file", symbol["name"], reference["path"], reference.get("line", 0))
+
+                if key in seen:
+                    continue
+
+                seen.add(key)
+                conflicts.append({
+                    "type": "label",
+                    "name": symbol["name"],
+                    "path": reference["path"],
+                    "line": reference.get("line", 0),
+                    "artifactPath": artifact_path,
+                    "reason": "label_exists",
+                    "message": "Label \"{}\" already exists in {}:{}; please adopt or rename before exporting.".format(
+                        symbol["name"],
+                        reference["path"],
+                        reference.get("line", 0),
+                    ),
+                })
+
+        return symbols, conflicts
+
+    def get_visual_editor_managed_markers(marker_id):
+        return (
+            "# >>> {} begin".format(marker_id),
+            "# <<< {} end".format(marker_id),
+        )
+
+    def has_visual_editor_managed_block(text, marker_id):
+        begin_marker, end_marker = get_visual_editor_managed_markers(marker_id)
+        saw_begin = False
+
+        for line in text.splitlines():
+            stripped = line.strip()
+
+            if stripped == begin_marker:
+                saw_begin = True
+                continue
+
+            if saw_begin and stripped == end_marker:
+                return True
+
+        return False
+
+    def backup_visual_editor_project_file(p, target_path):
+        rel_path = get_visual_editor_relative_path(p, target_path)
+        backup_root = os.path.join(get_visual_editor_backup_dir(p), uuid.uuid4().hex)
+        backup_path = os.path.join(backup_root, normalize_visual_editor_relpath(rel_path))
+        backup_dir = os.path.dirname(backup_path)
+
+        if backup_dir and (not os.path.isdir(backup_dir)):
+            os.makedirs(backup_dir)
+
+        shutil.copy2(target_path, backup_path)
+
+        return backup_path
+
+    def adopt_visual_editor_label(p, path, label_name, marker_id):
+        if not label_name:
+            raise Exception("Adopt label request is missing a label name.")
+
+        if not marker_id:
+            raise Exception("Adopt label request is missing a markerId.")
+
+        target_path = resolve_visual_editor_project_path(p, path)
+
+        if not os.path.isfile(target_path):
+            raise Exception("Adopt label target {} was not found.".format(get_visual_editor_relative_path(p, target_path)))
+
+        with open(target_path, "r", encoding="utf-8") as f:
+            existing_text = f.read()
+
+        if has_visual_editor_managed_block(existing_text, marker_id):
+            return {
+                "path": get_visual_editor_relative_path(p, target_path),
+                "backupPath": None,
+                "markerId": marker_id,
+                "alreadyManaged": True,
+            }
+
+        lines = existing_text.splitlines(True)
+        label_pattern = re.compile(r"^label\s+{}\s*(?:\([^)]*\))?\s*:".format(re.escape(label_name)))
+        label_index = None
+
+        for index, line in enumerate(lines):
+            if label_pattern.match(line.strip()):
+                label_index = index
+                break
+
+        if label_index is None:
+            raise Exception("Label {} was not found in {}.".format(label_name, get_visual_editor_relative_path(p, target_path)))
+
+        body_start = label_index + 1
+        body_end = len(lines)
+
+        for index in range(body_start, len(lines)):
+            line = lines[index]
+            stripped = line.strip()
+
+            if not stripped:
+                continue
+
+            if line[:1] in (" ", "\t"):
+                continue
+
+            body_end = index
+            break
+
+        indent = "    "
+
+        for line in lines[body_start:body_end]:
+            stripped = line.strip()
+
+            if not stripped:
+                continue
+
+            match = re.match(r"^([ \t]+)", line)
+
+            if match:
+                indent = match.group(1)
+            break
+
+        begin_marker, end_marker = get_visual_editor_managed_markers(marker_id)
+        marker_lines = [
+            "{}{}\n".format(indent, begin_marker),
+            *lines[body_start:body_end],
+            "{}{}\n".format(indent, end_marker),
+        ]
+
+        backup_path = backup_visual_editor_project_file(p, target_path)
+        updated_lines = lines[:body_start] + marker_lines + lines[body_end:]
+
+        with open(target_path, "w", encoding="utf-8") as f:
+            f.write("".join(updated_lines).rstrip())
+            f.write("\n")
+
+        return {
+            "path": get_visual_editor_relative_path(p, target_path),
+            "backupPath": get_visual_editor_relative_path(p, backup_path),
+            "markerId": marker_id,
+            "alreadyManaged": False,
+        }
+
+    def replace_visual_editor_managed_block(text, marker_id, replacement):
+        begin_marker, end_marker = get_visual_editor_managed_markers(marker_id)
+        lines = text.splitlines(True)
+        begin_index = None
+        end_index = None
+
+        for index, line in enumerate(lines):
+            if line.strip() == begin_marker:
+                begin_index = index
+                continue
+
+            if (begin_index is not None) and (line.strip() == end_marker):
+                end_index = index
+                break
+
+        if (begin_index is None) or (end_index is None) or (end_index <= begin_index):
+            raise Exception("Managed block markers for {} were not found. Please adopt or rename before exporting.".format(marker_id))
+
+        body = (replacement or "").rstrip()
+        body_text = "{}\n".format(body) if body else ""
+
+        return "".join(lines[:begin_index + 1]) + body_text + "".join(lines[end_index:])
+
+    def write_visual_editor_artifact(p, artifact):
+        artifact_type = artifact.get("type", "managed_file")
+        target_path = resolve_visual_editor_project_path(p, artifact.get("path", ""))
+        target_dir = os.path.dirname(target_path)
+
+        if target_dir and (not os.path.isdir(target_dir)):
+            os.makedirs(target_dir)
+
+        if artifact_type == "managed_label_body":
+            marker_id = artifact.get("markerId", "").strip()
+
+            if not marker_id:
+                raise Exception("Managed label exports require a markerId.")
+
+            with open(target_path, "r", encoding="utf-8") as f:
+                existing_text = f.read()
+
+            updated_text = replace_visual_editor_managed_block(existing_text, marker_id, artifact.get("code", ""))
+
+            with open(target_path, "w", encoding="utf-8") as f:
+                f.write(updated_text.rstrip())
+                f.write("\n")
+
+            return target_path
+
+        with open(target_path, "w", encoding="utf-8") as f:
+            f.write((artifact.get("code", "") or "").rstrip())
+            f.write("\n")
+
+        return target_path
 
     class VisualEditorBridgeHandler(BaseHTTPRequestHandler):
         server_version = "RenPyVisualEditorBridge/1.0"
@@ -1153,6 +1627,17 @@ init python in project:
                 })
                 return
 
+            if route == "symbols":
+                if not self.is_authorized():
+                    self.send_json(403, { "ok": False, "error": "Invalid visual editor bridge token." })
+                    return
+
+                self.send_json(200, {
+                    "ok": True,
+                    "symbols": scan_visual_editor_script_symbols(self.server.visual_editor_project),
+                })
+                return
+
             if route == "editor" or route.startswith("editor/"):
                 file_path = self.get_editor_file_path(route)
 
@@ -1195,29 +1680,67 @@ init python in project:
                     })
                     return
 
+                if route == "adopt_label":
+                    result = adopt_visual_editor_label(
+                        p,
+                        payload.get("path", ""),
+                        payload.get("label", "").strip(),
+                        payload.get("markerId", "").strip(),
+                    )
+
+                    self.send_json(200, {
+                        "ok": True,
+                        "path": result["path"],
+                        "backupPath": result["backupPath"],
+                        "markerId": result["markerId"],
+                        "alreadyManaged": result["alreadyManaged"],
+                    })
+                    return
+
                 if route == "export":
                     state = payload.get("state", {})
-                    code = payload.get("code", "")
+                    artifacts = payload.get("artifacts")
 
-                    if not code:
-                        self.send_json(400, { "ok": False, "error": "Missing generated Ren'Py code." })
+                    if not isinstance(artifacts, list):
+                        code = payload.get("code", "")
+
+                        if not code:
+                            self.send_json(400, { "ok": False, "error": "Missing generated Ren'Py code." })
+                            return
+
+                        artifacts = [ {
+                            "type": "managed_file",
+                            "path": get_visual_editor_relative_path(p, get_visual_editor_export_path(p)),
+                            "code": code,
+                        } ]
+
+                    symbols, conflicts = validate_visual_editor_export_artifacts(p, artifacts)
+
+                    if conflicts:
+                        self.send_json(409, {
+                            "ok": False,
+                            "error": summarize_visual_editor_conflicts(conflicts),
+                            "conflicts": conflicts,
+                            "symbols": symbols,
+                        })
                         return
 
                     state_path = get_visual_editor_state_path(p)
-                    export_path = get_visual_editor_export_path(p)
 
                     with open(state_path, "w", encoding="utf-8") as f:
                         json.dump(state, f, ensure_ascii=False, indent=2)
                         f.write("\n")
 
-                    with open(export_path, "w", encoding="utf-8") as f:
-                        f.write(code.rstrip())
-                        f.write("\n")
+                    written_paths = [ ]
+
+                    for artifact in artifacts:
+                        written_paths.append(write_visual_editor_artifact(p, artifact))
 
                     self.send_json(200, {
                         "ok": True,
                         "statePath": state_path,
-                        "exportPath": export_path,
+                        "exportPath": get_visual_editor_export_path(p),
+                        "artifactPaths": written_paths,
                     })
                     return
 
