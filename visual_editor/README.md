@@ -13,12 +13,12 @@ Current responsibilities:
 
 Current behavior:
 
-- opens from the launcher through `visual_editor/index.html?project=<path>&bridge=<url>&token=<token>`
+- opens from the launcher through the local bridge server at `http://127.0.0.1:<port>/editor/index.html?project=<path>&bridge=<url>&token=<token>`
 - displays the selected Ren'Py project path
 - keeps a browser `localStorage` draft as a fallback
 - when opened from the launcher, loads and saves the canonical state at `<project>/visual_editor/project.json`
 - exports generated Ren'Py code to `<project>/game/generated_visual_editor.rpy`
-- provides a launcher-side sync path through the `Sync Visual Editor` button
+- uses a single `Visual Editor` launcher entry; project JSON sync happens automatically while `.rpy` export stays manual
 
 Project history and milestone releases:
 
