@@ -16,9 +16,9 @@
                 <h2 data-i18n="index.visual_project.heading">Visual Project</h2>
                 <p data-i18n="index.visual_project.desc">Snapshot of the current visual workspace.</p>
               </div>
-              <label class="language-control">
+              <label class="language-control" hidden>
                 <span data-i18n="ui.language.label">Language</span>
-                <select id="localeSelect" class="language-select">
+                <select id="localeSelectLegacy" class="language-select">
                   <option value="en" data-i18n="ui.language.english">English</option>
                   <option value="zh-CN" data-i18n="ui.language.zhCN">简体中文</option>
                 </select>
@@ -1445,6 +1445,14 @@
             <div class="sidebar-actions">
               <button id="openGuiEditorButton" class="primary" type="button" data-i18n="index.gui_editor.open">Open GUI Editor</button>
             </div>
+
+            <p class="section-label secondary-label" data-i18n="ui.language.label">Language</p>
+            <label class="language-control">
+              <select id="localeSelect" class="language-select">
+                <option value="en" data-i18n="ui.language.english">English</option>
+                <option value="zh-CN" data-i18n="ui.language.zhCN">Simplified Chinese</option>
+              </select>
+            </label>
 
             <p class="section-label secondary-label">Voice Settings</p>
             <form id="projectVoiceSettingsForm" class="character-detail-form">
