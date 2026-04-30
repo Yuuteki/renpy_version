@@ -78,6 +78,7 @@ const guiScreenTagInput = document.getElementById("guiScreenTagInput");
 const guiScreenModalInput = document.getElementById("guiScreenModalInput");
 const guiScreenZorderInput = document.getElementById("guiScreenZorderInput");
 const guiScreenVariantInput = document.getElementById("guiScreenVariantInput");
+const guiScreenHeadStatementsInput = document.getElementById("guiScreenHeadStatementsInput");
 const guiScreenNotesInput = document.getElementById("guiScreenNotesInput");
 const guiScreenSpecialInfoEl = document.getElementById("guiScreenSpecialInfo");
 const guiDeleteScreenButton = document.getElementById("guiDeleteScreenButton");
@@ -215,6 +216,7 @@ const guiGalleryCodePreviewEl = document.getElementById("guiGalleryCodePreview")
 const guiConfigEmptyEl = document.getElementById("guiConfigEmpty");
 const guiConfigEntryListEl = document.getElementById("guiConfigEntryList");
 const newConfigEntryButton = document.getElementById("newConfigEntryButton");
+const newGuiVariableEntryButton = document.getElementById("newGuiVariableEntryButton");
 const newGuiPreferenceEntryButton = document.getElementById("newGuiPreferenceEntryButton");
 const newPreferenceEntryButton = document.getElementById("newPreferenceEntryButton");
 const newStoreEntryButton = document.getElementById("newStoreEntryButton");
@@ -361,6 +363,7 @@ const defaultGuiState = {
   styles: [],
   screens: [],
   config: [],
+  guiVariables: [],
   guiPreferences: [],
   preferences: [],
   store: [],
@@ -488,6 +491,7 @@ const stylePropertyOrder = Object.values(stylePropertyGroups)
 
 const screenNodeMeta = {
   text: { label: "Text", supportsChildren: false, fields: { text: true } },
+  label: { label: "Label", supportsChildren: false, fields: { text: true } },
   textbutton: { label: "TextButton", supportsChildren: false, fields: { text: true, action: true } },
   button: { label: "Button", supportsChildren: true, fields: { text: true, action: true } },
   imagebutton: { label: "ImageButton", supportsChildren: false, fields: { displayable: true, hoverDisplayable: true, action: true } },
@@ -508,16 +512,19 @@ const screenNodeMeta = {
   if: { label: "If", supportsChildren: true, fields: { condition: true } },
   showif: { label: "ShowIf", supportsChildren: true, fields: { condition: true } },
   for: { label: "For", supportsChildren: true, fields: { variable: true, iterable: true } },
-  use: { label: "Use", supportsChildren: false, fields: { targetScreen: true, targetArgs: true } },
+  use: { label: "Use", supportsChildren: true, fields: { targetScreen: true, targetArgs: true } },
   default: { label: "Default", supportsChildren: false, fields: { defaultPair: true } },
   on: { label: "On", supportsChildren: true, fields: { event: true } },
   timer: { label: "Timer", supportsChildren: false, fields: { delay: true, repeats: true, action: true } },
   key: { label: "Key", supportsChildren: false, fields: { key: true, action: true } },
   transform: { label: "Transform", supportsChildren: true, fields: { transform: true } },
+  transclude: { label: "Transclude", supportsChildren: false, fields: {} },
+  raw: { label: "Raw", supportsChildren: true, fields: { text: true } },
 };
 
 const screenNodeTypeOrder = [
   "text",
+  "label",
   "textbutton",
   "button",
   "imagebutton",
@@ -544,6 +551,8 @@ const screenNodeTypeOrder = [
   "timer",
   "key",
   "transform",
+  "transclude",
+  "raw",
 ];
 
 const screenActionMeta = [
@@ -1158,6 +1167,28 @@ async function hydrateProjectStateFromBridge() {
       resetActiveSelectionsFromProject();
       render();
       setStatus("Loaded GUI state from visual_editor/project.json.");
+    } else if (response.importedState) {
+      projectState = ensureProjectState(response.importedState);
+      window.localStorage.setItem(storageKey, JSON.stringify(projectState, null, 2));
+      resetActiveSelectionsFromProject();
+      render();
+      await callBridge("state", { state: projectState });
+
+      const importSources = Array.isArray(response.importSummary?.sourcePaths) && response.importSummary.sourcePaths.length
+        ? response.importSummary.sourcePaths
+        : [`${response.importSummary?.sourcePath || "game/options.rpy"}`.trim()].filter(Boolean);
+      const importedCounts = [
+        response.importSummary?.styleCount || 0,
+        response.importSummary?.screenCount || 0,
+        response.importSummary?.configCount || 0,
+        response.importSummary?.guiVariableCount || 0,
+        response.importSummary?.guiPreferenceCount || 0,
+        response.importSummary?.preferenceCount || 0,
+        response.importSummary?.storeCount || 0,
+        response.importSummary?.definitionCount || 0,
+      ];
+      const importedTotal = importedCounts.reduce((sum, count) => sum + count, 0);
+      setStatus(`Imported ${importSources.join(" + ")} into visual_editor/project.json${importedTotal ? ` (${importedTotal} items).` : "."}`);
     } else {
       await callBridge("state", { state: projectState });
       setStatus("Created visual_editor/project.json from the current GUI state.");
@@ -1191,6 +1222,9 @@ function normalizeGuiState(rawGui) {
       : [],
     config: Array.isArray(rawGui.config)
       ? rawGui.config.map((entry, index) => normalizeGuiConfigEntry(entry, index, "config"))
+      : [],
+    guiVariables: Array.isArray(rawGui.guiVariables)
+      ? rawGui.guiVariables.map((entry, index) => normalizeGuiConfigEntry(entry, index, "guiVariables"))
       : [],
     guiPreferences: Array.isArray(rawGui.guiPreferences)
       ? rawGui.guiPreferences.map((entry, index) => normalizeGuiConfigEntry(entry, index, "guiPreferences"))
@@ -1271,6 +1305,7 @@ function normalizeGuiScreen(screen, index) {
     modal: screen?.modal === true || screen?.modal === "true",
     zorder: `${screen?.zorder ?? ""}`.trim(),
     variant: `${screen?.variant || ""}`.trim(),
+    headStatements: `${screen?.headStatements || ""}`.trim(),
     notes: `${screen?.notes || ""}`.trim(),
     nodes: Array.isArray(screen?.nodes)
       ? screen.nodes.map((node, nodeIndex) => normalizeGuiScreenNode(node, nodeIndex))
@@ -1538,6 +1573,7 @@ function normalizeGuiGallery(entry, index) {
 function getAllConfigEntries(guiState = projectState.gui) {
   return [
     ...guiState.config.map((entry) => ({ scope: "config", entry, key: `config:${entry.id}` })),
+    ...guiState.guiVariables.map((entry) => ({ scope: "guiVariables", entry, key: `guiVariables:${entry.id}` })),
     ...guiState.guiPreferences.map((entry) => ({ scope: "guiPreferences", entry, key: `guiPreferences:${entry.id}` })),
     ...guiState.preferences.map((entry) => ({ scope: "preferences", entry, key: `preferences:${entry.id}` })),
     ...guiState.store.map((entry) => ({ scope: "store", entry, key: `store:${entry.id}` })),
@@ -1555,6 +1591,17 @@ const configScopeMeta = {
     valueLabel: "Value",
     valuePlaceholder: 'e.g. "wave:10", True, 0.25, {"idle": [("gui/cursor.png", 4, 4)]}',
     info: "Emit a project-level `define config.*` statement.",
+  },
+  guiVariables: {
+    label: "GUI Variable",
+    nameLabel: "GUI Variable",
+    namePlaceholder: "e.g. accent_color or text_size",
+    auxLabel: "Store Path",
+    auxPlaceholder: "Not used for define gui.* entries",
+    auxVisible: false,
+    valueLabel: "Value",
+    valuePlaceholder: 'e.g. "#cc6600", 22, Borders(4, 4, 4, 4)',
+    info: "Emit a direct `define gui.*` statement from gui.rpy-style variables.",
   },
   guiPreferences: {
     label: "GUI Preference",
@@ -1667,6 +1714,7 @@ function createBlankGuiScreen() {
     modal: false,
     zorder: "",
     variant: "",
+    headStatements: "",
     notes: "",
     nodes: [],
   }, nextIndex - 1);
@@ -1679,7 +1727,13 @@ function createBlankScreenNode(type = "text") {
     id: createId("screen_node"),
     type: validType,
     title: label,
-    text: validType === "text" ? "_(\"Text\")" : "",
+    text: validType === "text"
+      ? "_(\"Text\")"
+      : (validType === "label"
+        ? "_(\"Label\")"
+        : (validType === "raw"
+          ? "$ value = None"
+          : "")),
     inputCopyPaste: true,
   }, 0);
 }
@@ -1687,6 +1741,15 @@ function createBlankScreenNode(type = "text") {
 function createBlankConfigEntry(scope = "config") {
   const baseArray = projectState.gui[scope] || [];
   const nextIndex = baseArray.length + 1;
+
+  if (scope === "guiVariables") {
+    return normalizeGuiConfigEntry({
+      id: createId(`${scope}_entry`),
+      name: `gui_var_${nextIndex}`,
+      value: "None",
+      description: "",
+    }, nextIndex - 1, scope);
+  }
 
   if (scope === "guiPreferences") {
     return normalizeGuiConfigEntry({
@@ -3236,6 +3299,7 @@ function renderScreenDetail() {
   guiScreenModalInput.value = activeScreen.modal ? "true" : "false";
   guiScreenZorderInput.value = activeScreen.zorder;
   guiScreenVariantInput.value = activeScreen.variant;
+  guiScreenHeadStatementsInput.value = activeScreen.headStatements;
   guiScreenNotesInput.value = activeScreen.notes;
   guiScreenSpecialInfoEl.classList.toggle("hidden", !isAutoManagedScreenName(activeScreen.name));
 
@@ -3332,6 +3396,9 @@ function formatGuiScreenNodeCode(node, indentLevel = 1) {
     case "text":
       header = `text ${formatScreenTextValue(node.text || "_(\"Text\")")}`;
       break;
+    case "label":
+      header = `label ${formatScreenTextValue(node.text || "_(\"Label\")")}`;
+      break;
     case "textbutton":
       header = `textbutton ${formatScreenTextValue(node.text || "_(\"Button\")")}`;
       break;
@@ -3406,6 +3473,14 @@ function formatGuiScreenNodeCode(node, indentLevel = 1) {
     case "transform":
       header = "transform:";
       break;
+    case "transclude":
+      header = "transclude";
+      forceBlock = false;
+      break;
+    case "raw":
+      header = `${node.text || ""}`.trim() || "pass";
+      forceBlock = false;
+      break;
     default:
       header = `text ${formatScreenTextValue(node.text || "_(\"Text\")")}`;
       break;
@@ -3413,14 +3488,20 @@ function formatGuiScreenNodeCode(node, indentLevel = 1) {
 
   const lines = [];
   const alreadyBlock = header.endsWith(":");
-  const needsBlock = alreadyBlock || forceBlock || propertyLines.length || childLines.length;
+  const needsBlock = node.type === "raw"
+    ? Boolean(propertyLines.length || childLines.length)
+    : (alreadyBlock || forceBlock || propertyLines.length || childLines.length);
 
   if (!needsBlock) {
     lines.push(indentLine(header, indentLevel));
     return lines.join("\n");
   }
 
-  lines.push(indentLine(alreadyBlock ? header : `${header}:`, indentLevel));
+  if (node.type === "raw") {
+    lines.push(indentLine(header, indentLevel));
+  } else {
+    lines.push(indentLine(alreadyBlock ? header : `${header}:`, indentLevel));
+  }
 
   if (!propertyLines.length && !childLines.length && node.type === "transform") {
     lines.push(indentLine("pass", indentLevel + 1));
@@ -3457,6 +3538,10 @@ function formatGuiScreenCode(screen) {
   if (screen.variant) {
     body.push(indentLine(`variant ${formatGeneralValue(screen.variant)}`, 1));
   }
+
+  splitRawLines(screen.headStatements).forEach((line) => {
+    body.push(indentLine(line, 1));
+  });
 
   if (screen.notes) {
     body.push(indentLine(`# ${screen.notes}`, 1));
@@ -3506,6 +3591,7 @@ function renderPreviewNode(node) {
 
   switch (node.type) {
     case "text":
+    case "label":
       return `<div class="gui-preview-text">${previewLabel}</div>`;
     case "textbutton":
     case "button":
@@ -3554,6 +3640,8 @@ function renderPreviewNode(node) {
     case "timer":
     case "key":
     case "transform":
+    case "transclude":
+    case "raw":
       return `
         <div class="gui-preview-logic">
           <strong>${escapeHtml(meta.label)}</strong>
@@ -4249,6 +4337,10 @@ function renderConfigList() {
 function formatConfigEntryCode(entry, scope) {
   if (scope === "config") {
     return `define config.${entry.name} = ${entry.value || "None"}`;
+  }
+
+  if (scope === "guiVariables") {
+    return `define gui.${entry.name} = ${entry.value || "None"}`;
   }
 
   if (scope === "guiPreferences") {
@@ -5824,6 +5916,7 @@ guiDeleteScreenButton.addEventListener("click", () => {
   guiScreenModalInput,
   guiScreenZorderInput,
   guiScreenVariantInput,
+  guiScreenHeadStatementsInput,
   guiScreenNotesInput,
 ].forEach((input) => {
   input.addEventListener("change", () => {
@@ -5839,6 +5932,7 @@ guiDeleteScreenButton.addEventListener("click", () => {
       modal: guiScreenModalInput.value === "true",
       zorder: guiScreenZorderInput.value.trim(),
       variant: guiScreenVariantInput.value.trim(),
+      headStatements: guiScreenHeadStatementsInput.value.trim(),
       notes: guiScreenNotesInput.value.trim(),
     });
   });
@@ -5984,6 +6078,14 @@ newConfigEntryButton.addEventListener("click", () => {
   activeConfigEntryKey = `config:${entry.id}`;
   render();
   saveProjectState(`Created config entry "${entry.name}".`);
+});
+
+newGuiVariableEntryButton.addEventListener("click", () => {
+  const entry = createBlankConfigEntry("guiVariables");
+  projectState.gui.guiVariables.push(entry);
+  activeConfigEntryKey = `guiVariables:${entry.id}`;
+  render();
+  saveProjectState(`Created GUI variable "${entry.name}".`);
 });
 
 newGuiPreferenceEntryButton.addEventListener("click", () => {

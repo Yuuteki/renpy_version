@@ -29,6 +29,7 @@ init python in project:
     import store.util as util
     import store.interface as interface
 
+    import ast
     import sys
     import os.path
     import json
@@ -1038,6 +1039,15 @@ init python in project:
     def get_visual_editor_export_path(p):
         return os.path.join(p.gamedir, "generated_visual_editor.rpy")
 
+    def get_visual_editor_options_path(p):
+        return os.path.join(p.gamedir, "options.rpy")
+
+    def get_visual_editor_gui_path(p):
+        return os.path.join(p.gamedir, "gui.rpy")
+
+    def get_visual_editor_screens_path(p):
+        return os.path.join(p.gamedir, "screens.rpy")
+
     def get_visual_editor_generated_dir(p):
         return os.path.join(p.gamedir, "visual_editor_generated")
 
@@ -1053,15 +1063,1634 @@ init python in project:
         if not os.path.isdir(p.gamedir):
             os.makedirs(p.gamedir)
 
-        generated_dir = get_visual_editor_generated_dir(p)
+    def get_visual_editor_imported_expression_info(expression):
+        expression = (expression or "").strip()
 
-        if not os.path.isdir(generated_dir):
-            os.makedirs(generated_dir)
+        try:
+            parsed = ast.parse(expression, mode="eval").body
+        except SyntaxError:
+            return {
+                "kind": "raw",
+                "value": expression,
+            }
 
-        backup_dir = get_visual_editor_backup_dir(p)
+        if isinstance(parsed, ast.Constant):
+            value = parsed.value
 
-        if not os.path.isdir(backup_dir):
-            os.makedirs(backup_dir)
+            if isinstance(value, bool):
+                return { "kind": "bool", "value": value }
+
+            if value is None:
+                return { "kind": "none", "value": None }
+
+            if isinstance(value, (int, float)):
+                return { "kind": "number", "value": value }
+
+            if isinstance(value, str):
+                return { "kind": "string", "value": value }
+
+        if isinstance(parsed, ast.UnaryOp) and isinstance(parsed.op, ast.USub) and isinstance(parsed.operand, ast.Constant):
+            value = parsed.operand.value
+
+            if isinstance(value, (int, float)):
+                return { "kind": "number", "value": -value }
+
+        if isinstance(parsed, ast.Call) and isinstance(parsed.func, ast.Name) and parsed.func.id == "_" and len(parsed.args) == 1 and not parsed.keywords:
+            if isinstance(parsed.args[0], ast.Constant) and isinstance(parsed.args[0].value, str):
+                return { "kind": "string", "value": parsed.args[0].value }
+
+        return {
+            "kind": "raw",
+            "value": expression,
+        }
+
+    def is_visual_editor_import_expression_incomplete(error):
+        message = "{}".format(error)
+
+        incomplete_markers = [
+            "unexpected EOF while parsing",
+            "EOF while scanning",
+            "unterminated string literal",
+            "unterminated triple-quoted string literal",
+            "was never closed",
+        ]
+
+        return any(marker in message for marker in incomplete_markers)
+
+    def collect_visual_editor_import_expression(lines, start_index, initial_expression):
+        expression_lines = [ (initial_expression or "").rstrip("\r\n") ]
+        index = start_index
+
+        while True:
+            expression = "\n".join(expression_lines).strip()
+
+            try:
+                ast.parse(expression or "None", mode="eval")
+                return expression, index
+            except SyntaxError as e:
+                if (index + 1 >= len(lines)) or (not is_visual_editor_import_expression_incomplete(e)):
+                    return expression, index
+
+            index += 1
+            expression_lines.append(lines[index].rstrip("\r\n"))
+
+    def append_visual_editor_import_config(gui_state, scope, name, value, store_path="", description=""):
+        gui_state.setdefault(scope, [ ]).append({
+            "name": name,
+            "storePath": store_path,
+            "value": (value or "").strip(),
+            "description": (description or "").strip(),
+        })
+
+    def append_visual_editor_import_definition(definitions, target, value, operator="=", priority=""):
+        definitions.append({
+            "mode": "define",
+            "target": target,
+            "operator": operator,
+            "priority": priority,
+            "value": (value or "").strip(),
+        })
+
+    def append_visual_editor_import_python_block(definitions, code, priority="", hide=False, store=""):
+        definitions.append({
+            "mode": "init_python",
+            "initPriority": priority,
+            "initHide": hide,
+            "initStore": store,
+            "code": (code or "").strip(),
+        })
+
+    def append_visual_editor_import_style(gui_state, name, parent="", variant="", properties_expression="", properties=None):
+        properties = properties or [ ]
+        category_hints = {
+            "button": set([ "child", "hover_sound", "activate_sound", "focus_mask", "keyboard_focus", "mouse" ]),
+            "window": set([ "background", "foreground", "padding", "size_group" ]),
+            "bar": set([ "bar_vertical", "bar_invert", "left_gutter", "right_gutter", "base_bar", "thumb", "thumb_offset" ]),
+            "box": set([ "spacing", "first_spacing", "box_wrap", "box_wrap_spacing", "box_reverse", "box_align", "box_justify" ]),
+            "grid": set([ "xspacing", "yspacing" ]),
+            "margin": set([ "margin", "xmargin", "ymargin", "left_margin", "right_margin", "top_margin", "bottom_margin" ]),
+            "text": set([ "color", "font", "size", "outlines", "line_spacing", "layout", "slow_cps", "textshader" ]),
+            "position": set([ "xpos", "ypos", "xalign", "yalign", "xfill", "yfill", "xminimum", "yminimum" ]),
+        }
+        style_name = (name or "").strip() or "gui_style"
+        lowered_name = style_name.lower()
+        property_keys = set([ prop.get("key", "") for prop in properties if prop.get("key") ])
+        category = "text"
+
+        if "button" in lowered_name:
+            category = "button"
+        elif any(key in category_hints["button"] for key in property_keys):
+            category = "button"
+        elif ("window" in lowered_name) or ("frame" in lowered_name):
+            category = "window"
+        elif any(key in category_hints["window"] for key in property_keys):
+            category = "window"
+        elif ("bar" in lowered_name) or ("slider" in lowered_name) or ("scrollbar" in lowered_name):
+            category = "bar"
+        elif any(key in category_hints["bar"] for key in property_keys):
+            category = "bar"
+        elif ("vbox" in lowered_name) or ("hbox" in lowered_name) or ("box" in lowered_name):
+            category = "box"
+        elif any(key in category_hints["box"] for key in property_keys):
+            category = "box"
+        elif "grid" in lowered_name:
+            category = "grid"
+        elif any(key in category_hints["grid"] for key in property_keys):
+            category = "grid"
+        elif any(key in category_hints["margin"] for key in property_keys):
+            category = "margin"
+        elif any(key in category_hints["text"] for key in property_keys):
+            category = "text"
+
+        gui_state.setdefault("styles", [ ]).append({
+            "name": style_name,
+            "parent": (parent or "").strip(),
+            "variant": (variant or "").strip(),
+            "category": category,
+            "propertiesExpression": (properties_expression or "").strip(),
+            "properties": properties,
+        })
+
+    def get_visual_editor_gui_style_prefix(token):
+        prefixes = [
+            ("selected_insensitive_", "selected_insensitive"),
+            ("selected_hover_", "selected_hover"),
+            ("selected_idle_", "selected_idle"),
+            ("insensitive_", "insensitive"),
+            ("selected_", "selected"),
+            ("hover_", "hover"),
+            ("idle_", "idle"),
+        ]
+
+        for code_prefix, prefix_id in prefixes:
+            if token.startswith(code_prefix):
+                return prefix_id, token[len(code_prefix):]
+
+        return "base", token
+
+    def infer_visual_editor_gui_style_property_type(key, value):
+        type_hints = {
+            "xpos": "position",
+            "ypos": "position",
+            "xalign": "float",
+            "yalign": "float",
+            "xfill": "bool",
+            "yfill": "bool",
+            "xminimum": "int",
+            "yminimum": "int",
+            "color": "color",
+            "font": "string",
+            "size": "int",
+            "outlines": "tuple",
+            "line_spacing": "int",
+            "layout": "string",
+            "slow_cps": "int",
+            "textshader": "string",
+            "background": "displayable",
+            "foreground": "displayable",
+            "padding": "tuple",
+            "size_group": "string",
+            "child": "displayable",
+            "hover_sound": "string",
+            "activate_sound": "string",
+            "focus_mask": "displayable",
+            "keyboard_focus": "bool",
+            "mouse": "string",
+            "bar_vertical": "bool",
+            "bar_invert": "bool",
+            "left_gutter": "int",
+            "right_gutter": "int",
+            "base_bar": "displayable",
+            "thumb": "displayable",
+            "thumb_offset": "tuple",
+            "spacing": "int",
+            "first_spacing": "int",
+            "box_wrap": "bool",
+            "box_wrap_spacing": "int",
+            "box_reverse": "bool",
+            "box_align": "float",
+            "box_justify": "string",
+            "xspacing": "int",
+            "yspacing": "int",
+            "margin": "tuple",
+            "xmargin": "int",
+            "ymargin": "int",
+            "left_margin": "int",
+            "right_margin": "int",
+            "top_margin": "int",
+            "bottom_margin": "int",
+        }
+
+        if key in type_hints:
+            return type_hints[key]
+
+        info = get_visual_editor_imported_expression_info(value)
+
+        if info["kind"] == "bool":
+            return "bool"
+
+        if info["kind"] == "number":
+            if isinstance(info["value"], int):
+                return "int"
+
+            return "float"
+
+        if info["kind"] == "string":
+            stripped_value = (value or "").strip()
+
+            if re.match(r"""^['"]#(?:[0-9a-fA-F]{3,8})['"]$""", stripped_value):
+                return "color"
+
+            return "string"
+
+        return "string"
+
+    def get_visual_editor_import_line_indent(line):
+        indent_match = re.match(r"^([ \t]*)", line or "")
+        return len(indent_match.group(1).expandtabs(4))
+
+    def trim_visual_editor_import_indent(line, indent_width):
+        text = "{}".format(line or "")
+        remaining = max(0, int(indent_width or 0))
+
+        while remaining and text:
+            if text[0] == " ":
+                text = text[1:]
+                remaining -= 1
+            elif text[0] == "\t":
+                text = text[1:]
+                remaining = max(0, remaining - 4)
+            else:
+                break
+
+        return text
+
+    def collect_visual_editor_import_indented_block_lines(lines, start_index, parent_indent):
+        block_lines = [ ]
+        next_index = start_index
+
+        while next_index < len(lines):
+            block_line = lines[next_index].rstrip("\r\n")
+
+            if block_line.strip() and (get_visual_editor_import_line_indent(block_line) <= parent_indent):
+                break
+
+            block_lines.append(block_line)
+            next_index += 1
+
+        return block_lines, next_index
+
+    def strip_visual_editor_import_block_lines(block_lines, base_indent=None):
+        source_lines = [ "{}".format(line or "").rstrip("\r\n") for line in (block_lines or [ ]) ]
+
+        if base_indent is None:
+            indent_candidates = [
+                get_visual_editor_import_line_indent(line)
+                for line in source_lines
+                if line.strip()
+            ]
+            base_indent = min(indent_candidates) if indent_candidates else 0
+
+        normalized_lines = [ ]
+
+        for line in source_lines:
+            if line.strip():
+                normalized_lines.append(trim_visual_editor_import_indent(line, base_indent))
+            else:
+                normalized_lines.append("")
+
+        return "\n".join(normalized_lines).strip("\n")
+
+    def strip_visual_editor_import_string_expression(expression):
+        info = get_visual_editor_imported_expression_info(expression)
+
+        if info["kind"] == "string":
+            return info["value"]
+
+        return (expression or "").strip()
+
+    def split_visual_editor_import_screen_expression(source):
+        text = "{}".format(source or "").strip()
+
+        if not text:
+            return "", ""
+
+        depth = 0
+        quote = None
+        escaped = False
+
+        for index, char in enumerate(text):
+            if quote:
+                if escaped:
+                    escaped = False
+                    continue
+
+                if char == "\\":
+                    escaped = True
+                    continue
+
+                if char == quote:
+                    quote = None
+
+                continue
+
+            if char in [ "'", '"' ]:
+                quote = char
+                continue
+
+            if char in [ "(", "[", "{" ]:
+                depth += 1
+                continue
+
+            if char in [ ")", "]", "}" ]:
+                depth = max(0, depth - 1)
+                continue
+
+            if (depth == 0) and char.isspace():
+                return text[:index].strip(), text[index:].strip()
+
+        return text, ""
+
+    def is_visual_editor_import_screen_statement_start(text):
+        stripped = "{}".format(text or "").strip()
+
+        if not stripped:
+            return False
+
+        return bool(re.match(
+            r"""^(?:textbutton|imagebutton|viewport|transclude|transform|showif|default|window|button|frame|vbox|hbox|fixed|vpgrid|grid|null|input|side|text|label|timer|bar|vbar|for\b|if\b|on\b|key\b|use\b|add\b|elif\b|else\b|python\b|pass\b|has\b|\$)""",
+            stripped,
+        ))
+
+    def try_import_visual_editor_project_meta(meta, target, expression):
+        info = get_visual_editor_imported_expression_info(expression)
+
+        if target == "config.auto_voice":
+            if info["kind"] == "string":
+                meta["voiceMode"] = "auto"
+                meta["autoVoiceTemplate"] = info["value"]
+                return True
+
+            if info["kind"] in [ "bool", "none" ] and (not info["value"]):
+                meta["voiceMode"] = "manual"
+                return True
+
+            return False
+
+        if target == "config.side_image_tag":
+            if info["kind"] == "string":
+                meta["sideImageTag"] = info["value"]
+                return True
+
+            return False
+
+        if target == "config.side_image_only_not_showing":
+            if info["kind"] == "bool":
+                meta["sideImageOnlyNotShowing"] = info["value"]
+                return True
+
+            return False
+
+        if target == "config.side_image_prefix_tag":
+            if info["kind"] == "string":
+                meta["sideImagePrefixTag"] = info["value"]
+                return True
+
+            return False
+
+        if target == "config.side_image_null":
+            meta["sideImageNull"] = (expression or "").strip()
+            return True
+
+        if target == "config.side_image_same_transform":
+            meta["sideImageSameTransform"] = (expression or "").strip()
+            return True
+
+        if target == "config.side_image_change_transform":
+            meta["sideImageChangeTransform"] = (expression or "").strip()
+            return True
+
+        if target == "config.has_autosave":
+            if info["kind"] == "bool":
+                meta["hasAutosave"] = info["value"]
+                return True
+
+            return False
+
+        if target == "config.autosave_frequency":
+            meta["autosaveFrequency"] = "{}".format(info["value"]).strip() if info["kind"] == "number" else (expression or "").strip()
+            return True
+
+        if target == "config.has_quicksave":
+            if info["kind"] == "bool":
+                meta["hasQuicksave"] = info["value"]
+                return True
+
+            return False
+
+        if target == "config.rollback_enabled":
+            if info["kind"] == "bool":
+                meta["rollbackEnabled"] = info["value"]
+                return True
+
+            return False
+
+        if target == "config.rollback_length":
+            meta["rollbackLength"] = "{}".format(info["value"]).strip() if info["kind"] == "number" else (expression or "").strip()
+            return True
+
+        if target == "config.hard_rollback_limit":
+            meta["hardRollbackLimit"] = "{}".format(info["value"]).strip() if info["kind"] == "number" else (expression or "").strip()
+            return True
+
+        if target == "config.fix_rollback_without_choice":
+            if info["kind"] == "bool":
+                meta["fixRollbackWithoutChoice"] = info["value"]
+                return True
+
+            return False
+
+        return False
+
+    def seed_visual_editor_import_meta(meta, target, expression):
+        if target != "config.name":
+            return
+
+        info = get_visual_editor_imported_expression_info(expression)
+
+        if info["kind"] == "string":
+            meta["name"] = info["value"]
+
+    def build_visual_editor_import_state_from_options(p):
+        options_path = get_visual_editor_options_path(p)
+
+        if not os.path.isfile(options_path):
+            return None
+
+        with open(options_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        imported_state = {
+            "meta": { },
+            "gui": {
+                "config": [ ],
+                "guiPreferences": [ ],
+                "preferences": [ ],
+                "store": [ ],
+            },
+            "definitions": [ ],
+        }
+
+        define_re = re.compile(r"^define(?:\s+(-?\d+))?\s+([A-Za-z_][\w\.]*)\s*(=|\+=|\|=)\s*(.+)$")
+        default_re = re.compile(r"^default\s+([A-Za-z_][\w\.]*(?:\.[A-Za-z_][\w\.]*)*)\s*=\s*(.+)$")
+        init_python_re = re.compile(r"^init(?:\s+(-?\d+))?\s+python(\s+hide)?(?:\s+in\s+([A-Za-z_][\w\.]*))?\s*:\s*$")
+
+        index = 0
+
+        while index < len(lines):
+            raw_line = lines[index].rstrip("\r\n")
+            stripped = raw_line.strip()
+
+            if (not stripped) or stripped.startswith("#"):
+                index += 1
+                continue
+
+            if get_visual_editor_import_line_indent(raw_line) > 0:
+                index += 1
+                continue
+
+            init_python_match = init_python_re.match(stripped)
+
+            if init_python_match:
+                block_lines = [ ]
+                next_index = index + 1
+
+                while next_index < len(lines):
+                    block_line = lines[next_index].rstrip("\r\n")
+
+                    if block_line.strip() and (block_line[:1] not in [ " ", "\t" ]):
+                        break
+
+                    block_lines.append(block_line)
+                    next_index += 1
+
+                if block_lines:
+                    minimum_indent = None
+
+                    for block_line in block_lines:
+                        if not block_line.strip():
+                            continue
+
+                        indent_match = re.match(r"^([ \t]+)", block_line)
+                        indent_width = len(indent_match.group(1)) if indent_match else 0
+
+                        if minimum_indent is None:
+                            minimum_indent = indent_width
+                        else:
+                            minimum_indent = min(minimum_indent, indent_width)
+
+                    if minimum_indent is None:
+                        minimum_indent = 0
+
+                    code_lines = [ ]
+
+                    for block_line in block_lines:
+                        if minimum_indent:
+                            code_lines.append(block_line[minimum_indent:])
+                        else:
+                            code_lines.append(block_line)
+
+                    code = "\n".join(code_lines).strip("\n")
+
+                    if code.strip():
+                        append_visual_editor_import_python_block(
+                            imported_state["definitions"],
+                            code,
+                            priority=init_python_match.group(1) or "",
+                            hide=bool(init_python_match.group(2)),
+                            store=init_python_match.group(3) or "",
+                        )
+
+                index = next_index
+                continue
+
+            define_match = define_re.match(stripped)
+
+            if define_match:
+                priority = define_match.group(1) or ""
+                target = define_match.group(2)
+                operator = define_match.group(3)
+                expression, next_index = collect_visual_editor_import_expression(lines, index, define_match.group(4))
+
+                seed_visual_editor_import_meta(imported_state["meta"], target, expression)
+
+                if target.startswith("config.") and (operator == "=") and try_import_visual_editor_project_meta(imported_state["meta"], target, expression):
+                    index = next_index + 1
+                    continue
+
+                if target.startswith("config."):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "config",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                append_visual_editor_import_definition(
+                    imported_state["definitions"],
+                    target,
+                    expression,
+                    operator=operator,
+                    priority=priority,
+                )
+                index = next_index + 1
+                continue
+
+            default_match = default_re.match(stripped)
+
+            if default_match:
+                target = default_match.group(1)
+                expression, next_index = collect_visual_editor_import_expression(lines, index, default_match.group(2))
+
+                if target.startswith("preferences."):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "preferences",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                if "." in target:
+                    store_path, name = target.rsplit(".", 1)
+                else:
+                    store_path = ""
+                    name = target
+
+                append_visual_editor_import_config(
+                    imported_state["gui"],
+                    "store",
+                    name,
+                    expression,
+                    store_path=store_path,
+                )
+                index = next_index + 1
+                continue
+
+            index += 1
+
+        imported_summary = {
+            "sourcePath": get_visual_editor_relative_path(p, options_path),
+            "configCount": len(imported_state["gui"]["config"]),
+            "guiPreferenceCount": len(imported_state["gui"]["guiPreferences"]),
+            "preferenceCount": len(imported_state["gui"]["preferences"]),
+            "storeCount": len(imported_state["gui"]["store"]),
+            "definitionCount": len(imported_state["definitions"]),
+        }
+
+        has_content = any([
+            bool(imported_state["meta"]),
+            imported_summary["configCount"],
+            imported_summary["guiPreferenceCount"],
+            imported_summary["preferenceCount"],
+            imported_summary["storeCount"],
+            imported_summary["definitionCount"],
+        ])
+
+        if not has_content:
+            return None
+
+        imported_state["meta"]["optionsImportSource"] = imported_summary["sourcePath"]
+
+        return {
+            "state": imported_state,
+            "summary": imported_summary,
+        }
+
+    def build_visual_editor_import_state_from_gui(p):
+        gui_path = get_visual_editor_gui_path(p)
+
+        if not os.path.isfile(gui_path):
+            return None
+
+        with open(gui_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        imported_state = {
+            "meta": { },
+            "gui": {
+                "styles": [ ],
+                "screens": [ ],
+                "config": [ ],
+                "guiVariables": [ ],
+                "guiPreferences": [ ],
+                "preferences": [ ],
+                "store": [ ],
+            },
+            "definitions": [ ],
+        }
+
+        define_re = re.compile(r"^define(?:\s+(-?\d+))?\s+([A-Za-z_][\w\.]*)\s*(=|\+=|\|=)\s*(.+)$")
+        default_re = re.compile(r"^default\s+([A-Za-z_][\w\.]*(?:\.[A-Za-z_][\w\.]*)*)\s*=\s*(.+)$")
+        init_python_re = re.compile(r"^init(?:\s+(-?\d+))?\s+python(\s+hide)?(?:\s+in\s+([A-Za-z_][\w\.]*))?\s*:\s*$")
+        style_re = re.compile(r"^style\s+([A-Za-z_][\w\.]*)\s*(?:is\s+([A-Za-z_][\w\.]*))?\s*:?\s*$")
+        style_variant_re = re.compile(r"^variant\s+(.+)$")
+        style_properties_re = re.compile(r"^properties\s+(.+)$")
+        style_property_re = re.compile(r"^([A-Za-z_][\w]*)\s+(.+)$")
+
+        index = 0
+
+        while index < len(lines):
+            raw_line = lines[index].rstrip("\r\n")
+            stripped = raw_line.strip()
+
+            if (not stripped) or stripped.startswith("#"):
+                index += 1
+                continue
+
+            if get_visual_editor_import_line_indent(raw_line) > 0:
+                index += 1
+                continue
+
+            init_python_match = init_python_re.match(stripped)
+
+            if init_python_match:
+                block_lines = [ ]
+                next_index = index + 1
+
+                while next_index < len(lines):
+                    block_line = lines[next_index].rstrip("\r\n")
+
+                    if block_line.strip() and (block_line[:1] not in [ " ", "\t" ]):
+                        break
+
+                    block_lines.append(block_line)
+                    next_index += 1
+
+                if block_lines:
+                    minimum_indent = None
+
+                    for block_line in block_lines:
+                        if not block_line.strip():
+                            continue
+
+                        indent_match = re.match(r"^([ \t]+)", block_line)
+                        indent_width = len(indent_match.group(1)) if indent_match else 0
+
+                        if minimum_indent is None:
+                            minimum_indent = indent_width
+                        else:
+                            minimum_indent = min(minimum_indent, indent_width)
+
+                    if minimum_indent is None:
+                        minimum_indent = 0
+
+                    code_lines = [ ]
+
+                    for block_line in block_lines:
+                        if minimum_indent:
+                            code_lines.append(block_line[minimum_indent:])
+                        else:
+                            code_lines.append(block_line)
+
+                    code = "\n".join(code_lines).strip("\n")
+
+                    if code.strip():
+                        append_visual_editor_import_python_block(
+                            imported_state["definitions"],
+                            code,
+                            priority=init_python_match.group(1) or "",
+                            hide=bool(init_python_match.group(2)),
+                            store=init_python_match.group(3) or "",
+                        )
+
+                index = next_index
+                continue
+
+            style_match = style_re.match(stripped)
+
+            if style_match:
+                style_name = style_match.group(1)
+                style_parent = style_match.group(2) or ""
+                style_variant = ""
+                style_properties_expression = ""
+                style_properties = [ ]
+                next_index = index + 1
+
+                if stripped.endswith(":"):
+                    block_lines = [ ]
+
+                    while next_index < len(lines):
+                        block_line = lines[next_index].rstrip("\r\n")
+
+                        if block_line.strip() and (block_line[:1] not in [ " ", "\t" ]):
+                            break
+
+                        block_lines.append(block_line)
+                        next_index += 1
+
+                    for block_line in block_lines:
+                        block_text = block_line.strip()
+
+                        if (not block_text) or block_text.startswith("#"):
+                            continue
+
+                        variant_match = style_variant_re.match(block_text)
+
+                        if variant_match:
+                            style_variant = variant_match.group(1).strip()
+                            continue
+
+                        properties_match = style_properties_re.match(block_text)
+
+                        if properties_match:
+                            style_properties_expression = properties_match.group(1).strip()
+                            continue
+
+                        property_match = style_property_re.match(block_text)
+
+                        if not property_match:
+                            continue
+
+                        prefix_id, property_key = get_visual_editor_gui_style_prefix(property_match.group(1))
+
+                        style_properties.append({
+                            "prefix": prefix_id,
+                            "key": property_key,
+                            "type": infer_visual_editor_gui_style_property_type(property_key, property_match.group(2)),
+                            "value": property_match.group(2).strip(),
+                        })
+
+                append_visual_editor_import_style(
+                    imported_state["gui"],
+                    style_name,
+                    parent=style_parent,
+                    variant=style_variant,
+                    properties_expression=style_properties_expression,
+                    properties=style_properties,
+                )
+                index = next_index
+                continue
+
+            define_match = define_re.match(stripped)
+
+            if define_match:
+                priority = define_match.group(1) or ""
+                target = define_match.group(2)
+                operator = define_match.group(3)
+                expression, next_index = collect_visual_editor_import_expression(lines, index, define_match.group(4))
+
+                if target.startswith("gui.") and (operator == "="):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "guiVariables",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                if target.startswith("config.") and (operator == "="):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "config",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                append_visual_editor_import_definition(
+                    imported_state["definitions"],
+                    target,
+                    expression,
+                    operator=operator,
+                    priority=priority,
+                )
+                index = next_index + 1
+                continue
+
+            default_match = default_re.match(stripped)
+
+            if default_match:
+                target = default_match.group(1)
+                expression, next_index = collect_visual_editor_import_expression(lines, index, default_match.group(2))
+
+                if target.startswith("preferences."):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "preferences",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                if "." in target:
+                    store_path, name = target.rsplit(".", 1)
+                else:
+                    store_path = ""
+                    name = target
+
+                append_visual_editor_import_config(
+                    imported_state["gui"],
+                    "store",
+                    name,
+                    expression,
+                    store_path=store_path,
+                )
+                index = next_index + 1
+                continue
+
+            index += 1
+
+        imported_summary = {
+            "sourcePath": get_visual_editor_relative_path(p, gui_path),
+            "styleCount": len(imported_state["gui"]["styles"]),
+            "configCount": len(imported_state["gui"]["config"]),
+            "guiVariableCount": len(imported_state["gui"]["guiVariables"]),
+            "guiPreferenceCount": len(imported_state["gui"]["guiPreferences"]),
+            "preferenceCount": len(imported_state["gui"]["preferences"]),
+            "storeCount": len(imported_state["gui"]["store"]),
+            "definitionCount": len(imported_state["definitions"]),
+        }
+
+        has_content = any([
+            imported_summary["styleCount"],
+            imported_summary["configCount"],
+            imported_summary["guiVariableCount"],
+            imported_summary["guiPreferenceCount"],
+            imported_summary["preferenceCount"],
+            imported_summary["storeCount"],
+            imported_summary["definitionCount"],
+        ])
+
+        if not has_content:
+            return None
+
+        imported_state["meta"]["guiImportSource"] = imported_summary["sourcePath"]
+
+        return {
+            "state": imported_state,
+            "summary": imported_summary,
+        }
+
+    def build_visual_editor_import_state_from_screens(p):
+        screens_path = get_visual_editor_screens_path(p)
+
+        if not os.path.isfile(screens_path):
+            return None
+
+        with open(screens_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        imported_state = {
+            "meta": { },
+            "gui": {
+                "styles": [ ],
+                "screens": [ ],
+                "config": [ ],
+                "guiVariables": [ ],
+                "guiPreferences": [ ],
+                "preferences": [ ],
+                "store": [ ],
+            },
+            "definitions": [ ],
+        }
+
+        define_re = re.compile(r"^define(?:\s+(-?\d+))?\s+([A-Za-z_][\w\.]*)\s*(=|\+=|\|=)\s*(.+)$")
+        default_re = re.compile(r"^default\s+([A-Za-z_][\w\.]*(?:\.[A-Za-z_][\w\.]*)*)\s*=\s*(.+)$")
+        init_python_re = re.compile(r"^init(?:\s+(-?\d+))?\s+python(\s+hide)?(?:\s+in\s+([A-Za-z_][\w\.]*))?\s*:\s*$")
+        style_re = re.compile(r"^style\s+([A-Za-z_][\w\.]*)\s*(?:is\s+([A-Za-z_][\w\.]*))?\s*:?\s*$")
+        style_variant_re = re.compile(r"^variant\s+(.+)$")
+        style_properties_re = re.compile(r"^properties\s+(.+)$")
+        style_property_re = re.compile(r"^([A-Za-z_][\w]*)\s+(.+)$")
+        screen_re = re.compile(r"^screen\s+([A-Za-z_][\w\.]*)\s*(?:\((.*)\))?\s*:\s*$")
+
+        def make_screen_node(node_type, title="", children=None, **fields):
+            node = {
+                "type": node_type,
+                "title": (title or node_type).strip() or node_type,
+                "children": children or [ ],
+            }
+
+            for key, value in fields.items():
+                if value is None:
+                    continue
+
+                if isinstance(value, str):
+                    if value.strip():
+                        node[key] = value.strip()
+                    continue
+
+                if isinstance(value, list):
+                    if value:
+                        node[key] = value
+                    continue
+
+                node[key] = value
+
+            return node
+
+        def shorten_screen_detail(detail, fallback):
+            text = "{}".format(detail or "").strip().replace("\n", " ")
+
+            if not text:
+                return fallback
+
+            if len(text) > 32:
+                text = text[:29] + "..."
+
+            return text
+
+        def append_node_properties(node, text):
+            normalized = "{}".format(text or "").strip("\n")
+
+            if not normalized.strip():
+                return
+
+            existing = "{}".format(node.get("propertiesExpression") or "").strip("\n")
+            node["propertiesExpression"] = ("\n".join([ existing, normalized ]) if existing else normalized).strip("\n")
+
+        def parse_inline_primary(rest):
+            return split_visual_editor_import_screen_expression(rest)
+
+        def parse_inline_pair(rest):
+            first, remainder = split_visual_editor_import_screen_expression(rest)
+
+            if not remainder:
+                return first, "", ""
+
+            second, trailing = split_visual_editor_import_screen_expression(remainder)
+            return first, second, trailing
+
+        def parse_screen_node_body(block_lines):
+            if not block_lines:
+                return "", [ ]
+
+            indent_candidates = [
+                get_visual_editor_import_line_indent(line)
+                for line in block_lines
+                if line.strip()
+            ]
+
+            if not indent_candidates:
+                return "", [ ]
+
+            base_indent = min(indent_candidates)
+            parent_property_groups = [ ]
+            children = [ ]
+            implicit_container = None
+            index = 0
+
+            while index < len(block_lines):
+                raw_line = block_lines[index]
+                stripped = raw_line.strip()
+
+                if (not stripped) or stripped.startswith("#"):
+                    index += 1
+                    continue
+
+                indent = get_visual_editor_import_line_indent(raw_line)
+
+                if indent < base_indent:
+                    index += 1
+                    continue
+
+                if (indent == base_indent) and stripped.startswith("has "):
+                    has_statement = stripped[4:].strip()
+                    nested_lines, next_index = collect_visual_editor_import_indented_block_lines(block_lines, index + 1, indent)
+                    container_node = parse_screen_statement(has_statement, nested_lines)
+
+                    if container_node is None:
+                        container_node = make_screen_node(
+                            "raw",
+                            "Raw",
+                            text=stripped,
+                        )
+
+                    target_children = implicit_container.setdefault("children", [ ]) if implicit_container is not None else children
+                    target_children.append(container_node)
+                    implicit_container = container_node
+                    index = next_index
+                    continue
+
+                if (indent == base_indent) and is_visual_editor_import_screen_statement_start(stripped):
+                    nested_lines, next_index = collect_visual_editor_import_indented_block_lines(block_lines, index + 1, indent)
+                    child_node = parse_screen_statement(stripped, nested_lines)
+
+                    if child_node is not None:
+                        target_children = implicit_container.setdefault("children", [ ]) if implicit_container is not None else children
+                        target_children.append(child_node)
+
+                    index = next_index
+                    continue
+
+                property_group_lines = [ raw_line ]
+                index += 1
+
+                while index < len(block_lines):
+                    next_line = block_lines[index]
+                    next_text = next_line.strip()
+                    next_indent = get_visual_editor_import_line_indent(next_line)
+
+                    if next_text and (next_indent == base_indent) and (next_text.startswith("has ") or is_visual_editor_import_screen_statement_start(next_text)):
+                        break
+
+                    property_group_lines.append(next_line)
+                    index += 1
+
+                property_text = strip_visual_editor_import_block_lines(property_group_lines, base_indent)
+
+                if not property_text:
+                    continue
+
+                if implicit_container is not None:
+                    append_node_properties(implicit_container, property_text)
+                else:
+                    parent_property_groups.append(property_text)
+
+            return "\n".join(parent_property_groups).strip(), children
+
+        def parse_screen_statement(raw_statement, block_lines):
+            stripped = "{}".format(raw_statement or "").strip()
+
+            if not stripped:
+                return None
+
+            statement = stripped[:-1].rstrip() if stripped.endswith(":") else stripped
+            node = None
+
+            if statement.startswith("textbutton "):
+                primary, remainder = parse_inline_primary(statement[len("textbutton "):].strip())
+                node = make_screen_node("textbutton", shorten_screen_detail(primary, "TextButton"), text=primary)
+                append_node_properties(node, remainder)
+            elif statement.startswith("imagebutton "):
+                image_rest = statement[len("imagebutton "):].strip()
+                idle_expression = ""
+                hover_expression = ""
+                remainder = image_rest
+
+                if image_rest.startswith("idle "):
+                    idle_expression, remainder = parse_inline_primary(image_rest[len("idle "):].strip())
+
+                    if remainder.startswith("hover "):
+                        hover_expression, remainder = parse_inline_primary(remainder[len("hover "):].strip())
+
+                node = make_screen_node(
+                    "imagebutton",
+                    shorten_screen_detail(idle_expression or hover_expression, "ImageButton"),
+                    displayable=idle_expression,
+                    hoverDisplayable=hover_expression,
+                )
+                append_node_properties(node, remainder)
+            elif statement.startswith("text "):
+                primary, remainder = parse_inline_primary(statement[len("text "):].strip())
+                node = make_screen_node("text", shorten_screen_detail(primary, "Text"), text=primary)
+                append_node_properties(node, remainder)
+            elif statement.startswith("label "):
+                primary, remainder = parse_inline_primary(statement[len("label "):].strip())
+                node = make_screen_node("label", shorten_screen_detail(primary, "Label"), text=primary)
+                append_node_properties(node, remainder)
+            elif statement == "button":
+                node = make_screen_node("button", "Button")
+            elif statement.startswith("button "):
+                node = make_screen_node("button", "Button")
+                append_node_properties(node, statement[len("button "):].strip())
+            elif statement in [ "frame", "window", "vbox", "hbox", "fixed", "viewport" ]:
+                node = make_screen_node(statement, statement.title())
+            elif statement.startswith("grid "):
+                columns, rows, remainder = parse_inline_pair(statement[len("grid "):].strip())
+                node = make_screen_node("grid", "Grid", gridColumns=columns, gridRows=rows)
+                append_node_properties(node, remainder)
+            elif statement == "grid":
+                node = make_screen_node("grid", "Grid")
+            elif statement.startswith("vpgrid "):
+                columns, rows, remainder = parse_inline_pair(statement[len("vpgrid "):].strip())
+                node = make_screen_node("vpgrid", "VPGrid", gridColumns=columns, gridRows=rows)
+                append_node_properties(node, remainder)
+            elif statement == "vpgrid":
+                node = make_screen_node("vpgrid", "VPGrid")
+            elif statement.startswith("side "):
+                primary, remainder = parse_inline_primary(statement[len("side "):].strip())
+                node = make_screen_node("side", "Side", sidePositions=strip_visual_editor_import_string_expression(primary))
+                append_node_properties(node, remainder)
+            elif statement == "null":
+                node = make_screen_node("null", "Null")
+            elif statement.startswith("null "):
+                node = make_screen_node("null", "Null")
+                append_node_properties(node, statement[len("null "):].strip())
+            elif statement in [ "bar", "vbar", "input" ]:
+                node = make_screen_node(statement, statement.upper() if statement == "vbar" else statement.title())
+            elif statement.startswith("bar "):
+                node = make_screen_node("bar", "Bar")
+                append_node_properties(node, statement[len("bar "):].strip())
+            elif statement.startswith("vbar "):
+                node = make_screen_node("vbar", "VBar")
+                append_node_properties(node, statement[len("vbar "):].strip())
+            elif statement.startswith("input "):
+                node = make_screen_node("input", "Input")
+                append_node_properties(node, statement[len("input "):].strip())
+            elif statement.startswith("add "):
+                primary, remainder = parse_inline_primary(statement[len("add "):].strip())
+                node = make_screen_node("add", shorten_screen_detail(primary, "Add"), displayable=primary)
+                append_node_properties(node, remainder)
+            elif statement.startswith("if "):
+                node = make_screen_node("if", shorten_screen_detail(statement[len("if "):].strip(), "If"), condition=statement[len("if "):].strip())
+            elif statement.startswith("showif "):
+                node = make_screen_node("showif", shorten_screen_detail(statement[len("showif "):].strip(), "ShowIf"), condition=statement[len("showif "):].strip())
+            elif statement.startswith("for "):
+                loop_text = statement[len("for "):].strip()
+                loop_match = re.match(r"^(.+?)\s+in\s+(.+)$", loop_text)
+
+                if loop_match:
+                    node = make_screen_node(
+                        "for",
+                        shorten_screen_detail(loop_text, "For"),
+                        variableName=loop_match.group(1).strip(),
+                        iterableExpression=loop_match.group(2).strip(),
+                    )
+                else:
+                    node = make_screen_node("raw", "Raw", text=stripped)
+            elif statement.startswith("use "):
+                use_target = statement[len("use "):].strip()
+                use_match = re.match(r"^([A-Za-z_][\w\.]*)\s*\((.*)\)$", use_target)
+
+                if use_match:
+                    node = make_screen_node(
+                        "use",
+                        shorten_screen_detail(use_target, "Use"),
+                        targetScreen=use_match.group(1).strip(),
+                        targetArguments=use_match.group(2).strip(),
+                    )
+                else:
+                    node = make_screen_node("use", shorten_screen_detail(use_target, "Use"), targetScreen=use_target)
+            elif statement.startswith("default "):
+                default_match = re.match(r"^default\s+([A-Za-z_][\w]*)\s*=\s*(.+)$", statement)
+
+                if default_match:
+                    node = make_screen_node(
+                        "default",
+                        shorten_screen_detail(default_match.group(1), "Default"),
+                        defaultName=default_match.group(1).strip(),
+                        defaultValue=default_match.group(2).strip(),
+                    )
+                else:
+                    node = make_screen_node("raw", "Raw", text=stripped)
+            elif statement.startswith("on "):
+                node = make_screen_node("on", shorten_screen_detail(statement[len("on "):].strip(), "On"), eventName=strip_visual_editor_import_string_expression(statement[len("on "):].strip()))
+            elif statement.startswith("timer "):
+                primary, remainder = parse_inline_primary(statement[len("timer "):].strip())
+                node = make_screen_node("timer", shorten_screen_detail(primary, "Timer"), delay=primary)
+                append_node_properties(node, remainder)
+            elif statement.startswith("key "):
+                primary, remainder = parse_inline_primary(statement[len("key "):].strip())
+                node = make_screen_node("key", shorten_screen_detail(primary, "Key"), keyName=strip_visual_editor_import_string_expression(primary))
+                append_node_properties(node, remainder)
+            elif statement == "transform":
+                node = make_screen_node("transform", "Transform")
+            elif statement == "transclude":
+                node = make_screen_node("transclude", "Transclude")
+            elif statement.startswith("elif ") or (statement == "else") or statement.startswith("$") or statement.startswith("python") or (statement == "pass"):
+                node = make_screen_node("raw", shorten_screen_detail(statement, "Raw"), text=stripped)
+            else:
+                node = make_screen_node("raw", shorten_screen_detail(statement, "Raw"), text=stripped)
+
+            if block_lines:
+                if statement.startswith("python"):
+                    append_node_properties(node, strip_visual_editor_import_block_lines(block_lines))
+                else:
+                    property_text, child_nodes = parse_screen_node_body(block_lines)
+                    append_node_properties(node, property_text)
+
+                    if child_nodes:
+                        node["children"] = child_nodes
+
+            return node
+
+        def parse_screen_body(block_lines):
+            screen_data = {
+                "tag": "",
+                "modal": False,
+                "zorder": "",
+                "variant": "",
+                "headStatements": "",
+                "nodes": [ ],
+            }
+
+            if not block_lines:
+                return screen_data
+
+            indent_candidates = [
+                get_visual_editor_import_line_indent(line)
+                for line in block_lines
+                if line.strip()
+            ]
+
+            if not indent_candidates:
+                return screen_data
+
+            base_indent = min(indent_candidates)
+            head_statement_groups = [ ]
+            implicit_container = None
+            saw_nodes = False
+            index = 0
+
+            while index < len(block_lines):
+                raw_line = block_lines[index]
+                stripped = raw_line.strip()
+
+                if (not stripped) or stripped.startswith("#"):
+                    index += 1
+                    continue
+
+                indent = get_visual_editor_import_line_indent(raw_line)
+
+                if indent != base_indent:
+                    index += 1
+                    continue
+
+                if stripped.startswith("tag "):
+                    screen_data["tag"] = strip_visual_editor_import_string_expression(stripped[len("tag "):].strip())
+                    index += 1
+                    continue
+
+                if stripped.startswith("modal "):
+                    screen_data["modal"] = stripped[len("modal "):].strip() == "True"
+                    index += 1
+                    continue
+
+                if stripped.startswith("zorder "):
+                    screen_data["zorder"] = stripped[len("zorder "):].strip()
+                    index += 1
+                    continue
+
+                if stripped.startswith("variant "):
+                    screen_data["variant"] = stripped[len("variant "):].strip()
+                    index += 1
+                    continue
+
+                if (not saw_nodes) and (not stripped.startswith("has ")) and (not is_visual_editor_import_screen_statement_start(stripped)):
+                    head_group_lines = [ raw_line ]
+                    index += 1
+
+                    while index < len(block_lines):
+                        next_line = block_lines[index]
+                        next_text = next_line.strip()
+                        next_indent = get_visual_editor_import_line_indent(next_line)
+
+                        if next_text and (next_indent == base_indent) and (next_text.startswith("tag ") or next_text.startswith("modal ") or next_text.startswith("zorder ") or next_text.startswith("variant ") or next_text.startswith("has ") or is_visual_editor_import_screen_statement_start(next_text)):
+                            break
+
+                        head_group_lines.append(next_line)
+                        index += 1
+
+                    head_text = strip_visual_editor_import_block_lines(head_group_lines, base_indent)
+
+                    if head_text:
+                        head_statement_groups.append(head_text)
+
+                    continue
+
+                nested_lines, next_index = collect_visual_editor_import_indented_block_lines(block_lines, index + 1, indent)
+
+                if stripped.startswith("has "):
+                    container_node = parse_screen_statement(stripped[4:].strip(), nested_lines)
+
+                    if container_node is not None:
+                        screen_data["nodes"].append(container_node)
+                        implicit_container = container_node
+                        saw_nodes = True
+
+                    index = next_index
+                    continue
+
+                node = parse_screen_statement(stripped, nested_lines)
+
+                if node is not None:
+                    target_nodes = implicit_container.setdefault("children", [ ]) if implicit_container is not None else screen_data["nodes"]
+                    target_nodes.append(node)
+                    saw_nodes = True
+
+                index = next_index
+
+            screen_data["headStatements"] = "\n".join(head_statement_groups).strip()
+            return screen_data
+
+        index = 0
+
+        while index < len(lines):
+            raw_line = lines[index].rstrip("\r\n")
+            stripped = raw_line.strip()
+
+            if (not stripped) or stripped.startswith("#"):
+                index += 1
+                continue
+
+            if get_visual_editor_import_line_indent(raw_line) > 0:
+                index += 1
+                continue
+
+            init_python_match = init_python_re.match(stripped)
+
+            if init_python_match:
+                block_lines, next_index = collect_visual_editor_import_indented_block_lines(lines, index + 1, 0)
+                code = strip_visual_editor_import_block_lines(block_lines)
+
+                if code.strip():
+                    append_visual_editor_import_python_block(
+                        imported_state["definitions"],
+                        code,
+                        priority=init_python_match.group(1) or "",
+                        hide=bool(init_python_match.group(2)),
+                        store=init_python_match.group(3) or "",
+                    )
+
+                index = next_index
+                continue
+
+            style_match = style_re.match(stripped)
+
+            if style_match:
+                style_name = style_match.group(1)
+                style_parent = style_match.group(2) or ""
+                style_variant = ""
+                style_properties_expression = ""
+                style_properties = [ ]
+                next_index = index + 1
+
+                if stripped.endswith(":"):
+                    block_lines, next_index = collect_visual_editor_import_indented_block_lines(lines, index + 1, 0)
+
+                    for block_line in block_lines:
+                        block_text = block_line.strip()
+
+                        if (not block_text) or block_text.startswith("#"):
+                            continue
+
+                        variant_match = style_variant_re.match(block_text)
+
+                        if variant_match:
+                            style_variant = variant_match.group(1).strip()
+                            continue
+
+                        properties_match = style_properties_re.match(block_text)
+
+                        if properties_match:
+                            style_properties_expression = properties_match.group(1).strip()
+                            continue
+
+                        property_match = style_property_re.match(block_text)
+
+                        if not property_match:
+                            continue
+
+                        prefix_id, property_key = get_visual_editor_gui_style_prefix(property_match.group(1))
+                        style_properties.append({
+                            "prefix": prefix_id,
+                            "key": property_key,
+                            "type": infer_visual_editor_gui_style_property_type(property_key, property_match.group(2)),
+                            "value": property_match.group(2).strip(),
+                        })
+
+                append_visual_editor_import_style(
+                    imported_state["gui"],
+                    style_name,
+                    parent=style_parent,
+                    variant=style_variant,
+                    properties_expression=style_properties_expression,
+                    properties=style_properties,
+                )
+                index = next_index
+                continue
+
+            screen_match = screen_re.match(stripped)
+
+            if screen_match:
+                screen_name = screen_match.group(1)
+                screen_parameters = (screen_match.group(2) or "").strip()
+                block_lines, next_index = collect_visual_editor_import_indented_block_lines(lines, index + 1, 0)
+                screen_data = parse_screen_body(block_lines)
+                imported_state["gui"]["screens"].append({
+                    "name": screen_name,
+                    "parameters": screen_parameters,
+                    "tag": screen_data["tag"],
+                    "modal": screen_data["modal"],
+                    "zorder": screen_data["zorder"],
+                    "variant": screen_data["variant"],
+                    "headStatements": screen_data["headStatements"],
+                    "nodes": screen_data["nodes"],
+                })
+                index = next_index
+                continue
+
+            define_match = define_re.match(stripped)
+
+            if define_match:
+                priority = define_match.group(1) or ""
+                target = define_match.group(2)
+                operator = define_match.group(3)
+                expression, next_index = collect_visual_editor_import_expression(lines, index, define_match.group(4))
+
+                if target.startswith("gui.") and (operator == "="):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "guiVariables",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                if target.startswith("config.") and (operator == "="):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "config",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                append_visual_editor_import_definition(
+                    imported_state["definitions"],
+                    target,
+                    expression,
+                    operator=operator,
+                    priority=priority,
+                )
+                index = next_index + 1
+                continue
+
+            default_match = default_re.match(stripped)
+
+            if default_match:
+                target = default_match.group(1)
+                expression, next_index = collect_visual_editor_import_expression(lines, index, default_match.group(2))
+
+                if target.startswith("preferences."):
+                    append_visual_editor_import_config(
+                        imported_state["gui"],
+                        "preferences",
+                        target.split(".", 1)[1],
+                        expression,
+                    )
+                    index = next_index + 1
+                    continue
+
+                if "." in target:
+                    store_path, name = target.rsplit(".", 1)
+                else:
+                    store_path = ""
+                    name = target
+
+                append_visual_editor_import_config(
+                    imported_state["gui"],
+                    "store",
+                    name,
+                    expression,
+                    store_path=store_path,
+                )
+                index = next_index + 1
+                continue
+
+            index += 1
+
+        imported_summary = {
+            "sourcePath": get_visual_editor_relative_path(p, screens_path),
+            "styleCount": len(imported_state["gui"]["styles"]),
+            "screenCount": len(imported_state["gui"]["screens"]),
+            "configCount": len(imported_state["gui"]["config"]),
+            "guiVariableCount": len(imported_state["gui"]["guiVariables"]),
+            "guiPreferenceCount": len(imported_state["gui"]["guiPreferences"]),
+            "preferenceCount": len(imported_state["gui"]["preferences"]),
+            "storeCount": len(imported_state["gui"]["store"]),
+            "definitionCount": len(imported_state["definitions"]),
+        }
+
+        has_content = any([
+            imported_summary["styleCount"],
+            imported_summary["screenCount"],
+            imported_summary["configCount"],
+            imported_summary["guiVariableCount"],
+            imported_summary["guiPreferenceCount"],
+            imported_summary["preferenceCount"],
+            imported_summary["storeCount"],
+            imported_summary["definitionCount"],
+        ])
+
+        if not has_content:
+            return None
+
+        imported_state["meta"]["screensImportSource"] = imported_summary["sourcePath"]
+
+        return {
+            "state": imported_state,
+            "summary": imported_summary,
+        }
+
+    def build_visual_editor_import_state(p):
+        results = [
+            build_visual_editor_import_state_from_options(p),
+            build_visual_editor_import_state_from_gui(p),
+            build_visual_editor_import_state_from_screens(p),
+        ]
+        results = [ result for result in results if result is not None ]
+
+        if not results:
+            return None
+
+        imported_state = {
+            "meta": { },
+            "gui": {
+                "styles": [ ],
+                "config": [ ],
+                "guiVariables": [ ],
+                "guiPreferences": [ ],
+                "preferences": [ ],
+                "store": [ ],
+            },
+            "definitions": [ ],
+        }
+        imported_summary = {
+            "sourcePath": "",
+            "sourcePaths": [ ],
+            "styleCount": 0,
+            "screenCount": 0,
+            "configCount": 0,
+            "guiVariableCount": 0,
+            "guiPreferenceCount": 0,
+            "preferenceCount": 0,
+            "storeCount": 0,
+            "definitionCount": 0,
+        }
+
+        for result in results:
+            imported_state["meta"].update(result["state"].get("meta", { }))
+            gui_state = result["state"].get("gui", { })
+
+            for gui_key in imported_state["gui"].keys():
+                imported_state["gui"][gui_key].extend(gui_state.get(gui_key, [ ]))
+
+            imported_state["definitions"].extend(result["state"].get("definitions", [ ]))
+
+            source_path = result["summary"].get("sourcePath", "")
+
+            if source_path and (source_path not in imported_summary["sourcePaths"]):
+                imported_summary["sourcePaths"].append(source_path)
+
+            for summary_key in [ "styleCount", "screenCount", "configCount", "guiVariableCount", "guiPreferenceCount", "preferenceCount", "storeCount", "definitionCount" ]:
+                imported_summary[summary_key] += int(result["summary"].get(summary_key, 0) or 0)
+
+        imported_summary["sourcePath"] = " + ".join(imported_summary["sourcePaths"])
+
+        return {
+            "state": imported_state,
+            "summary": imported_summary,
+        }
 
     def normalize_visual_editor_relpath(path):
         return os.path.normpath((path or "").replace("/", os.sep).replace("\\", os.sep))
@@ -1367,6 +2996,31 @@ init python in project:
 
         return False
 
+    def write_visual_editor_state_file(p, state):
+        state_path = get_visual_editor_state_path(p)
+
+        with open(state_path, "w", encoding="utf-8") as f:
+            json.dump(state, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+
+        return state_path
+
+    def write_visual_editor_export_file(p, code):
+        if not code:
+            raise Exception("Missing generated Ren'Py code.")
+
+        export_path = get_visual_editor_export_path(p)
+        generated_dir = get_visual_editor_generated_dir(p)
+
+        if os.path.isdir(generated_dir):
+            shutil.rmtree(generated_dir)
+
+        with open(export_path, "w", encoding="utf-8") as f:
+            f.write(code.rstrip())
+            f.write("\n")
+
+        return export_path
+
     def backup_visual_editor_project_file(p, target_path):
         rel_path = get_visual_editor_relative_path(p, target_path)
         backup_root = os.path.join(get_visual_editor_backup_dir(p), uuid.uuid4().hex)
@@ -1379,6 +3033,98 @@ init python in project:
         shutil.copy2(target_path, backup_path)
 
         return backup_path
+
+    def backup_visual_editor_project_files(p, target_paths, backup_prefix="takeover"):
+        existing_paths = [ path for path in target_paths if os.path.isfile(path) ]
+
+        if not existing_paths:
+            return None, [ ]
+
+        backup_root = os.path.join(get_visual_editor_backup_dir(p), "{}_{}".format(backup_prefix, uuid.uuid4().hex))
+        backed_up = [ ]
+
+        for target_path in existing_paths:
+            rel_path = get_visual_editor_relative_path(p, target_path)
+            backup_path = os.path.join(backup_root, normalize_visual_editor_relpath(rel_path))
+            backup_dir = os.path.dirname(backup_path)
+
+            if backup_dir and (not os.path.isdir(backup_dir)):
+                os.makedirs(backup_dir)
+
+            shutil.copy2(target_path, backup_path)
+            backed_up.append({
+                "path": rel_path,
+                "backupPath": get_visual_editor_relative_path(p, backup_path),
+            })
+
+        return backup_root, backed_up
+
+    def get_visual_editor_legacy_takeover_targets(p):
+        targets = [ ]
+
+        for role, source_path in [
+            ("options", get_visual_editor_options_path(p)),
+            ("gui", get_visual_editor_gui_path(p)),
+            ("screens", get_visual_editor_screens_path(p)),
+        ]:
+            compiled_path = "{}c".format(source_path)
+            targets.append({
+                "role": role,
+                "kind": "source",
+                "path": source_path,
+                "relativePath": get_visual_editor_relative_path(p, source_path),
+                "exists": os.path.isfile(source_path),
+            })
+            targets.append({
+                "role": role,
+                "kind": "compiled",
+                "path": compiled_path,
+                "relativePath": get_visual_editor_relative_path(p, compiled_path),
+                "exists": os.path.isfile(compiled_path),
+            })
+
+        return targets
+
+    def take_over_visual_editor_legacy_files(p, state, code):
+        takeover_targets = get_visual_editor_legacy_takeover_targets(p)
+        existing_targets = [ target for target in takeover_targets if target["exists"] ]
+        existing_paths = [ target["path"] for target in existing_targets ]
+        backup_root, backup_entries = backup_visual_editor_project_files(p, existing_paths)
+        export_path = write_visual_editor_export_file(p, code)
+
+        deleted_paths = [ ]
+
+        for target in existing_targets:
+            os.remove(target["path"])
+            deleted_paths.append(target["relativePath"])
+
+        meta = state.setdefault("meta", { })
+        previous_takeover = meta.get("legacyGuiTakeover", { })
+
+        if not isinstance(previous_takeover, dict):
+            previous_takeover = { }
+
+        takeover_meta = {
+            "takenOver": True,
+            "targetPaths": [ target["relativePath"] for target in takeover_targets if target["kind"] == "source" ],
+            "compiledTargetPaths": [ target["relativePath"] for target in takeover_targets if target["kind"] == "compiled" ],
+            "deletedPaths": deleted_paths,
+            "backupRoot": get_visual_editor_relative_path(p, backup_root) if backup_root else previous_takeover.get("backupRoot", ""),
+            "backupFiles": backup_entries or previous_takeover.get("backupFiles", [ ]),
+        }
+
+        meta["legacyGuiTakeover"] = takeover_meta
+        state_path = write_visual_editor_state_file(p, state)
+
+        return {
+            "state": state,
+            "statePath": state_path,
+            "exportPath": export_path,
+            "alreadyTakenOver": (not existing_targets) and bool(previous_takeover.get("takenOver")),
+            "deletedPaths": deleted_paths,
+            "backupRoot": takeover_meta["backupRoot"],
+            "backupFiles": takeover_meta["backupFiles"],
+        }
 
     def adopt_visual_editor_label(p, path, label_name, marker_id):
         if not label_name:
@@ -1607,9 +3353,13 @@ init python in project:
                 state_path = get_visual_editor_state_path(p)
 
                 if not os.path.exists(state_path):
+                    imported = build_visual_editor_import_state(p)
+
                     self.send_json(200, {
                         "ok": True,
                         "exists": False,
+                        "importedState": imported["state"] if imported else None,
+                        "importSummary": imported["summary"] if imported else None,
                         "statePath": state_path,
                         "exportPath": get_visual_editor_export_path(p),
                     })
@@ -1668,11 +3418,7 @@ init python in project:
 
                 if route == "state":
                     state = payload.get("state", payload)
-                    state_path = get_visual_editor_state_path(p)
-
-                    with open(state_path, "w", encoding="utf-8") as f:
-                        json.dump(state, f, ensure_ascii=False, indent=2)
-                        f.write("\n")
+                    state_path = write_visual_editor_state_file(p, state)
 
                     self.send_json(200, {
                         "ok": True,
@@ -1697,50 +3443,43 @@ init python in project:
                     })
                     return
 
-                if route == "export":
+                if route == "takeover_legacy_files":
                     state = payload.get("state", {})
-                    artifacts = payload.get("artifacts")
+                    code = payload.get("code", "")
 
-                    if not isinstance(artifacts, list):
-                        code = payload.get("code", "")
-
-                        if not code:
-                            self.send_json(400, { "ok": False, "error": "Missing generated Ren'Py code." })
-                            return
-
-                        artifacts = [ {
-                            "type": "managed_file",
-                            "path": get_visual_editor_relative_path(p, get_visual_editor_export_path(p)),
-                            "code": code,
-                        } ]
-
-                    symbols, conflicts = validate_visual_editor_export_artifacts(p, artifacts)
-
-                    if conflicts:
-                        self.send_json(409, {
-                            "ok": False,
-                            "error": summarize_visual_editor_conflicts(conflicts),
-                            "conflicts": conflicts,
-                            "symbols": symbols,
-                        })
+                    if not code:
+                        self.send_json(400, { "ok": False, "error": "Missing generated Ren'Py code for takeover export." })
                         return
 
-                    state_path = get_visual_editor_state_path(p)
+                    result = take_over_visual_editor_legacy_files(p, state, code)
 
-                    with open(state_path, "w", encoding="utf-8") as f:
-                        json.dump(state, f, ensure_ascii=False, indent=2)
-                        f.write("\n")
+                    self.send_json(200, {
+                        "ok": True,
+                        "state": result["state"],
+                        "statePath": result["statePath"],
+                        "exportPath": result["exportPath"],
+                        "alreadyTakenOver": result["alreadyTakenOver"],
+                        "deletedPaths": result["deletedPaths"],
+                        "backupRoot": result["backupRoot"],
+                        "backupFiles": result["backupFiles"],
+                    })
+                    return
 
-                    written_paths = [ ]
+                if route == "export":
+                    state = payload.get("state", {})
+                    code = payload.get("code", "")
 
-                    for artifact in artifacts:
-                        written_paths.append(write_visual_editor_artifact(p, artifact))
+                    if not code:
+                        self.send_json(400, { "ok": False, "error": "Missing generated Ren'Py code." })
+                        return
+
+                    state_path = write_visual_editor_state_file(p, state)
+                    export_path = write_visual_editor_export_file(p, code)
 
                     self.send_json(200, {
                         "ok": True,
                         "statePath": state_path,
-                        "exportPath": get_visual_editor_export_path(p),
-                        "artifactPaths": written_paths,
+                        "exportPath": export_path,
                     })
                     return
 

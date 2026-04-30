@@ -283,21 +283,6 @@ button.danger-button:hover {
   margin-bottom: 16px;
 }
 
-.label-export-settings {
-  margin-bottom: 16px;
-}
-
-.label-export-grid {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.label-export-settings .inspector-actions {
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
 .inspector-panel {
   height: 100%;
   padding: 18px;

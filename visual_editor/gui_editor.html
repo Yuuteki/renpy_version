@@ -323,6 +323,11 @@
                     </div>
 
                     <label>
+                      Head Statements
+                      <textarea id="guiScreenHeadStatementsInput" rows="3" placeholder='Extra screen-level lines such as style_prefix "menu" or predict False.'></textarea>
+                    </label>
+
+                    <label>
                       Notes
                       <textarea id="guiScreenNotesInput" rows="2" placeholder="Optional notes about this screen."></textarea>
                     </label>
@@ -973,6 +978,7 @@
 
                 <div class="gui-stack-actions">
                   <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button">New Config Entry</button>
+                  <button id="newGuiVariableEntryButton" class="secondary gui-bottom-button" type="button">New GUI Variable</button>
                   <button id="newGuiPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New GUI Preference</button>
                   <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New Preference Default</button>
                   <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button">New Store Default</button>
@@ -990,6 +996,7 @@
                       Scope
                       <select id="guiConfigScopeInput">
                         <option value="config">config</option>
+                        <option value="guiVariables">gui variables</option>
                         <option value="guiPreferences">gui preferences</option>
                         <option value="preferences">preferences</option>
                         <option value="store">store</option>

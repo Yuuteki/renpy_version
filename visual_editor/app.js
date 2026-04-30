@@ -400,6 +400,8 @@ const nodeContentInput = document.getElementById("nodeContentInput");
 
 const saveDraftButton = document.getElementById("saveDraftButton");
 const exportButton = document.getElementById("exportButton");
+const takeoverLegacyFilesButton = document.getElementById("takeoverLegacyFilesButton");
+const takeoverLegacyFilesNoteEl = document.getElementById("takeoverLegacyFilesNote");
 
 const storageKey = projectPath
   ? `renpy-visual-editor:${projectPath}`
@@ -1146,7 +1148,6 @@ const defaultProjectState = {
   variables: [],
   achievements: [],
   definitions: [],
-  exportMap: structuredClone(defaultExportMap),
   gui: normalizeGuiState(null),
   activeGraphId: "label_start",
 };
@@ -1388,6 +1389,29 @@ async function hydrateStateFromBridge() {
       setSidebarSection(activeSidebarSectionId);
       setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
       setStatus("Loaded project state from visual_editor/project.json.");
+    } else if (response.importedState) {
+      state = normalizeState(response.importedState);
+      window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+      render();
+      setSidebarSection(activeSidebarSectionId);
+      setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
+      await callBridge("state", { state });
+
+      const importSources = Array.isArray(response.importSummary?.sourcePaths) && response.importSummary.sourcePaths.length
+        ? response.importSummary.sourcePaths
+        : [`${response.importSummary?.sourcePath || "game/options.rpy"}`.trim()].filter(Boolean);
+      const importedCounts = [
+        response.importSummary?.styleCount || 0,
+        response.importSummary?.screenCount || 0,
+        response.importSummary?.configCount || 0,
+        response.importSummary?.guiVariableCount || 0,
+        response.importSummary?.guiPreferenceCount || 0,
+        response.importSummary?.preferenceCount || 0,
+        response.importSummary?.storeCount || 0,
+        response.importSummary?.definitionCount || 0,
+      ];
+      const importedTotal = importedCounts.reduce((sum, count) => sum + count, 0);
+      setStatus(`Imported ${importSources.join(" + ")} into visual_editor/project.json${importedTotal ? ` (${importedTotal} items).` : "."}`);
     } else {
       await callBridge("state", { state });
       setStatus("Created visual_editor/project.json from the current editor state.");
@@ -1478,6 +1502,7 @@ function normalizeGuiState(rawGui) {
       styles: [],
       screens: [],
       config: [],
+      guiVariables: [],
       guiPreferences: [],
       preferences: [],
       store: [],
@@ -1494,6 +1519,7 @@ function normalizeGuiState(rawGui) {
     styles: Array.isArray(rawGui.styles) ? rawGui.styles : [],
     screens: Array.isArray(rawGui.screens) ? rawGui.screens : [],
     config: Array.isArray(rawGui.config) ? rawGui.config : [],
+    guiVariables: Array.isArray(rawGui.guiVariables) ? rawGui.guiVariables : [],
     guiPreferences: Array.isArray(rawGui.guiPreferences) ? rawGui.guiPreferences : [],
     preferences: Array.isArray(rawGui.preferences) ? rawGui.preferences : [],
     store: Array.isArray(rawGui.store) ? rawGui.store : [],
@@ -1570,7 +1596,6 @@ function normalizeState(rawState) {
     variables: normalizedVariables,
     achievements: normalizedAchievements,
     definitions: normalizedDefinitions,
-    exportMap: normalizeExportMap(rawState.exportMap),
     gui: normalizeGuiState(rawState.gui),
     activeGraphId,
   };
@@ -4485,7 +4510,7 @@ function getFlowNodeTarget(node) {
     return {
       kind: "graph",
       graphId: targetGraph.id,
-      label: getGraphExportLabel(targetGraph),
+      label: targetGraph.label,
     };
   }
 
@@ -6120,16 +6145,49 @@ function renderViewport() {
 }
 
 function renderProjectInfo() {
+  const takeoverMeta = state?.meta?.legacyGuiTakeover && typeof state.meta.legacyGuiTakeover === "object"
+    ? state.meta.legacyGuiTakeover
+    : null;
+  const isLegacyGuiTakenOver = Boolean(takeoverMeta?.takenOver);
+
   if (!projectPath) {
     projectPathEl.textContent = "No project path was provided by the launcher.";
     projectFilesEl.textContent =
-      "Expected files: <project>/visual_editor/project.json | <project>/game/generated_visual_editor.rpy | <project>/game/visual_editor_generated/*.rpy";
+      "Expected files: <project>/visual_editor/project.json | <project>/game/generated_visual_editor.rpy";
+
+    if (takeoverLegacyFilesButton) {
+      takeoverLegacyFilesButton.hidden = true;
+      takeoverLegacyFilesButton.disabled = true;
+    }
+
+    if (takeoverLegacyFilesNoteEl) {
+      takeoverLegacyFilesNoteEl.textContent = "Open this editor from the Ren'Py launcher before taking over legacy GUI files.";
+    }
+
     return;
   }
 
   projectPathEl.textContent = projectPath;
   projectFilesEl.textContent =
-    `${projectPath}/visual_editor/project.json | ${projectPath}/game/generated_visual_editor.rpy | ${projectPath}/game/visual_editor_generated/*.rpy`;
+    `${projectPath}/visual_editor/project.json | ${projectPath}/game/generated_visual_editor.rpy`;
+
+  if (takeoverLegacyFilesButton) {
+    takeoverLegacyFilesButton.hidden = isLegacyGuiTakenOver;
+    takeoverLegacyFilesButton.disabled = isLegacyGuiTakenOver || !hasBridge;
+  }
+
+  if (takeoverLegacyFilesNoteEl) {
+    if (!hasBridge) {
+      takeoverLegacyFilesNoteEl.textContent = "Open this editor from the Ren'Py launcher to back up and remove legacy GUI files.";
+    } else if (takeoverMeta?.takenOver) {
+      const backupRoot = `${takeoverMeta.backupRoot || ""}`.trim();
+      takeoverLegacyFilesNoteEl.innerHTML = backupRoot
+        ? `Legacy GUI takeover is active. Original <code>options/gui/screens</code> files were backed up under <code>${escapeHtml(backupRoot)}</code>.`
+        : "Legacy GUI takeover is active. Original <code>options/gui/screens</code> files now belong to <code>visual_editor/project.json</code> + <code>generated_visual_editor.rpy</code>.";
+    } else {
+      takeoverLegacyFilesNoteEl.innerHTML = "This will back up and remove <code>game/options.rpy</code>, <code>game/gui.rpy</code>, <code>game/screens.rpy</code>, and matching <code>.rpyc</code> files, then refresh <code>generated_visual_editor.rpy</code>.";
+    }
+  }
 }
 
 function reorderLabelGraphs(movedId, targetId, position) {
@@ -6568,7 +6626,7 @@ function formatLabelGraphCode(graph) {
     return "";
   }
 
-  const safeLabel = getGraphExportLabelName(graph);
+  const safeLabel = getSafeLabelName(graph.label);
   const lines = [`label ${safeLabel}:`, ...buildLabelGraphBodyLines(graph)];
 
   return lines.join("\n");
@@ -6839,6 +6897,9 @@ function formatGuiScreenNodeCode(node, indentLevel = 1) {
     case "text":
       header = `text ${formatGuiScreenTextValue(node.text || "Text")}`;
       break;
+    case "label":
+      header = `label ${formatGuiScreenTextValue(node.text || "Label")}`;
+      break;
     case "textbutton":
       header = `textbutton ${formatGuiScreenTextValue(node.text || "Button")}`;
       break;
@@ -6910,19 +6971,29 @@ function formatGuiScreenNodeCode(node, indentLevel = 1) {
     case "transform":
       header = "transform:";
       break;
+    case "transclude":
+      header = "transclude";
+      forceBlock = false;
+      break;
+    case "raw":
+      header = `${node.text || ""}`.trim() || "pass";
+      forceBlock = false;
+      break;
     default:
       header = `text ${formatGuiScreenTextValue(node.text || node.title || "Text")}`;
       break;
   }
 
   const alreadyBlock = header.endsWith(":");
-  const needsBlock = alreadyBlock || forceBlock || propertyLines.length || childLines.length;
+  const needsBlock = node.type === "raw"
+    ? Boolean(propertyLines.length || childLines.length)
+    : (alreadyBlock || forceBlock || propertyLines.length || childLines.length);
 
   if (!needsBlock) {
     return indentGuiLine(header, indentLevel);
   }
 
-  const lines = [indentGuiLine(alreadyBlock ? header : `${header}:`, indentLevel)];
+  const lines = [indentGuiLine(node.type === "raw" ? header : (alreadyBlock ? header : `${header}:`), indentLevel)];
   lines.push(...propertyLines);
   lines.push(...childLines);
 
@@ -6956,6 +7027,10 @@ function formatGuiScreenCode(screen) {
     lines.push(indentGuiLine(`variant ${formatGuiGeneralValue(screen.variant)}`, 1));
   }
 
+  splitGuiRawLines(screen.headStatements).forEach((line) => {
+    lines.push(indentGuiLine(line, 1));
+  });
+
   if (`${screen.notes || ""}`.trim()) {
     lines.push(indentGuiLine(`# ${screen.notes.trim()}`, 1));
   }
@@ -6981,6 +7056,10 @@ function formatGuiConfigEntryCode(entry, scope) {
     return `define config.${entry.name} = ${entry.value || "None"}`;
   }
 
+  if (scope === "guiVariables") {
+    return `define gui.${entry.name} = ${entry.value || "None"}`;
+  }
+
   if (scope === "guiPreferences") {
     const preferenceName = `${entry.storePath || ""}`.trim() || entry.name;
     return `define gui.${entry.name} = gui.preference(${formatRenpyQuotedString(preferenceName)}, ${entry.value || "None"})`;
@@ -6998,6 +7077,7 @@ function formatAllGuiConfigCode(gui) {
   const lines = [];
   [
     ["config", gui.config],
+    ["guiVariables", gui.guiVariables],
     ["guiPreferences", gui.guiPreferences],
     ["preferences", gui.preferences],
     ["store", gui.store],
@@ -7226,8 +7306,8 @@ function getGuiReplayGraphs() {
   return state.graphs
     .filter((graph) => graph?.replay?.enabled)
     .map((graph) => ({
-      label: getGraphExportLabelName(graph),
-      title: `${graph.replay?.title || ""}`.trim() || getGraphExportLabelName(graph),
+      label: getSafeLabelName(graph.label),
+      title: `${graph.replay?.title || ""}`.trim() || getSafeLabelName(graph.label),
       lockedMode: graph.replay?.lockedMode || "auto",
       scope: `${graph.replay?.scope || ""}`.trim(),
     }));
@@ -7949,7 +8029,7 @@ function formatReplayActionForGraph(graph) {
     return "# Replay is disabled for this label.";
   }
 
-  const args = [formatRenpyQuotedString(getGraphExportLabelName(graph))];
+  const args = [formatRenpyQuotedString(getSafeLabelName(graph.label))];
   const replayScope = `${graph.replay.scope || ""}`.trim();
 
   if (replayScope) {
@@ -8000,14 +8080,12 @@ function syncLabelCodePreview() {
   if (!graph) {
     labelCodePreviewTitleEl.textContent = "";
     syncLabelReplaySettings();
-    renderLabelExportSettings();
     labelCodePreviewEl.textContent = "";
     return;
   }
 
   labelCodePreviewTitleEl.textContent = graph.label;
   syncLabelReplaySettings();
-  renderLabelExportSettings();
   labelCodePreviewEl.textContent = formatLabelGraphCode(graph);
 }
 
@@ -8026,14 +8104,6 @@ function openLabelCodePreview(graphId) {
   labelCodePreviewViewEl.classList.remove("hidden");
   syncLabelCodePreview();
   setStatus(`Opened code preview for "${graph.label}".`);
-
-  if (hasBridge) {
-    refreshBridgeSymbols({ force: true }).then(() => {
-      if (labelCodePreviewGraphId === graphId) {
-        renderLabelExportSettings();
-      }
-    });
-  }
 }
 
 function closeLabelCodePreview() {
@@ -8116,15 +8186,7 @@ function finishLabelRename(graphId, nextLabel, { cancel = false } = {}) {
           title: normalizedLabel,
         }, normalizedLabel);
       }
-      const detachedManagedTarget = Boolean(state.exportMap?.labels?.[graphId]);
-
-      if (detachedManagedTarget) {
-        delete state.exportMap.labels[graphId];
-      }
-
-      saveState(detachedManagedTarget
-        ? `Renamed label graph to "${graph.label}" and detached its managed label target.`
-        : `Renamed label graph to "${graph.label}".`);
+      saveState(`Renamed label graph to "${graph.label}".`);
     }
   }
 
@@ -11005,8 +11067,8 @@ function renderGuiEditorPanel() {
       value: String(guiState.screens.length),
     },
     {
-      title: "Config / GUI Prefs / Prefs / Store",
-      value: `${guiState.config.length} / ${guiState.guiPreferences.length} / ${guiState.preferences.length} / ${guiState.store.length}`,
+      title: "Config / GUI Vars / GUI Prefs / Prefs / Store",
+      value: `${guiState.config.length} / ${guiState.guiVariables.length} / ${guiState.guiPreferences.length} / ${guiState.preferences.length} / ${guiState.store.length}`,
     },
     {
       title: "Python UI / Cursors / Shaders",
@@ -12019,34 +12081,69 @@ async function exportGraph() {
   window.clearTimeout(bridgeSaveTimer);
   state = normalizeState(state);
   window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
-
-  const artifacts = buildVisualEditorExportArtifacts();
-  const legacyCode = formatGeneratedVisualEditorCode();
+  const code = formatGeneratedVisualEditorCode();
 
   if (!hasBridge) {
-    console.info(legacyCode);
+    console.info(code);
     setStatus("Generated .rpy text, but launcher bridge is not connected. Open from Ren'Py Launcher to write project files.");
     return;
   }
 
   try {
-    const symbolResponse = await callBridge("symbols");
-    const conflicts = findVisualEditorExportConflicts(symbolResponse.symbols, artifacts);
+    await callBridge("export", { state, code });
+    setStatus("Synced visual_editor/project.json and exported generated_visual_editor.rpy.");
+  } catch (error) {
+    console.error(error);
+    setStatus(`Export failed: ${error.message}`);
+  }
+}
 
-    if (conflicts.length) {
-      setStatus(`Export blocked: ${summarizeVisualEditorExportConflicts(conflicts)}`);
+async function takeoverLegacyFiles() {
+  window.clearTimeout(bridgeSaveTimer);
+  state = normalizeState(state);
+  window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+  const code = formatGeneratedVisualEditorCode();
+
+  if (!hasBridge) {
+    setStatus("Legacy takeover requires the launcher bridge. Open this editor from the Ren'Py Launcher.");
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Take over game/options.rpy, game/gui.rpy, and game/screens.rpy?\n\n"
+    + "This will back up and remove those .rpy files plus matching .rpyc files, "
+    + "then refresh generated_visual_editor.rpy from the current editor state.",
+  );
+
+  if (!confirmed) {
+    setStatus("Kept the existing legacy GUI files.");
+    return;
+  }
+
+  try {
+    const response = await callBridge("takeover_legacy_files", { state, code });
+    state = normalizeState(response.state || state);
+    window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+    render();
+
+    if (response.alreadyTakenOver) {
+      setStatus("Legacy GUI takeover was already active. Refreshed project.json and generated_visual_editor.rpy.");
       return;
     }
 
-    await callBridge("export", { state, artifacts });
-    setStatus("Synced visual_editor/project.json and exported visual editor artifacts.");
+    const deletedPaths = Array.isArray(response.deletedPaths) ? response.deletedPaths.filter(Boolean) : [];
+    const deletedSummary = deletedPaths.length
+      ? deletedPaths.join(", ")
+      : "No legacy GUI files were present to remove.";
+    const backupRoot = `${response.backupRoot || ""}`.trim();
+    setStatus(
+      backupRoot
+        ? `Backed up and removed ${deletedSummary}. Backup root: ${backupRoot}.`
+        : `Backed up and removed ${deletedSummary}.`,
+    );
   } catch (error) {
     console.error(error);
-    const bridgeConflicts = Array.isArray(error.bridgeData?.conflicts) ? error.bridgeData.conflicts : [];
-    const bridgeMessage = bridgeConflicts.length
-      ? summarizeVisualEditorExportConflicts(bridgeConflicts)
-      : error.message;
-    setStatus(`${bridgeConflicts.length ? "Export blocked" : "Export failed"}: ${bridgeMessage}`);
+    setStatus(`Legacy takeover failed: ${error.message}`);
   }
 }
 
@@ -13269,6 +13366,7 @@ saveDraftButton.addEventListener("click", () => {
 });
 
 exportButton.addEventListener("click", exportGraph);
+takeoverLegacyFilesButton?.addEventListener("click", takeoverLegacyFiles);
 addBlockToggleButton.addEventListener("click", () => {
   setContextMenuState(false);
   setLabelContextMenuState(false);

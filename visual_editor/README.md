@@ -17,9 +17,10 @@ Current behavior:
 - displays the selected Ren'Py project path
 - keeps a browser `localStorage` draft as a fallback
 - when opened from the launcher, loads and saves the canonical state at `<project>/visual_editor/project.json`
-- exports generated Ren'Py code to `<project>/game/generated_visual_editor.rpy` and split generated support files in `<project>/game/visual_editor_generated/`
+- on the first launcher open without a project JSON, imports recognized `game/options.rpy`, `game/gui.rpy`, and `game/screens.rpy` settings into the editor state before creating `<project>/visual_editor/project.json`
+- from the main Visual Editor, `Take Over Legacy GUI Files` backs up and removes `game/options.rpy`, `game/gui.rpy`, `game/screens.rpy`, and matching `.rpyc` files before refreshing `game/generated_visual_editor.rpy`
+- exports generated Ren'Py code to `<project>/game/generated_visual_editor.rpy`
 - uses a single `Visual Editor` launcher entry; project JSON sync happens automatically while `.rpy` export stays manual
-- scans existing project scripts for labels, screens, and defines before export, and blocks conflicting label exports until they are adopted or renamed
 
 Project history and milestone releases:
 
@@ -29,4 +30,4 @@ Persistence model:
 
 - `localStorage` is only the emergency browser draft.
 - `visual_editor/project.json` is the source of truth once the editor is opened from the launcher.
-- `game/generated_visual_editor.rpy` and `game/visual_editor_generated/*.rpy` are generated output and should not be hand-edited unless the JSON state is updated too.
+- `game/generated_visual_editor.rpy` is generated output and should not be hand-edited unless the JSON state is updated too.
