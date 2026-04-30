@@ -30,6 +30,7 @@ init python in project:
     import store.interface as interface
 
     import ast
+    import base64
     import sys
     import os.path
     import json
@@ -1038,6 +1039,9 @@ init python in project:
 
     def get_visual_editor_export_path(p):
         return os.path.join(p.gamedir, "generated_visual_editor.rpy")
+
+    def get_visual_editor_script_path(p):
+        return os.path.join(p.gamedir, "script.rpy")
 
     def get_visual_editor_options_path(p):
         return os.path.join(p.gamedir, "options.rpy")
@@ -2698,6 +2702,9 @@ init python in project:
     def get_visual_editor_relative_path(p, path):
         return os.path.relpath(path, p.path).replace("\\", "/")
 
+    def get_visual_editor_game_relative_path(p, path):
+        return os.path.relpath(path, p.gamedir).replace("\\", "/")
+
     def resolve_visual_editor_project_path(p, path):
         if not path:
             raise Exception("Visual editor artifact is missing a target path.")
@@ -2716,6 +2723,27 @@ init python in project:
                 raise Exception()
         except Exception:
             raise Exception("Visual editor artifact paths must stay inside the project.")
+
+        return resolved
+
+    def resolve_visual_editor_game_path(p, path):
+        if not path:
+            raise Exception("Visual editor asset path is missing.")
+
+        normalized = normalize_visual_editor_relpath(path)
+
+        if os.path.isabs(normalized):
+            resolved = os.path.normpath(normalized)
+        else:
+            resolved = os.path.normpath(os.path.join(p.gamedir, normalized))
+
+        game_root = os.path.normpath(p.gamedir)
+
+        try:
+            if os.path.commonpath([game_root, resolved]) != game_root:
+                raise Exception()
+        except Exception:
+            raise Exception("Visual editor asset paths must stay inside the game directory.")
 
         return resolved
 
@@ -2790,6 +2818,221 @@ init python in project:
                             })
 
         return rv
+
+    def find_visual_editor_existing_asset_paths(p, file_name):
+        basename = os.path.basename(file_name or "").strip()
+
+        if not basename or (not os.path.isdir(p.gamedir)):
+            return [ ]
+
+        matches = [ ]
+        basename_lower = basename.lower()
+        skipped_dirnames = { "cache", "saves" }
+
+        for root, dirnames, files in os.walk(p.gamedir):
+            dirnames[:] = [ dirname for dirname in dirnames if dirname.lower() not in skipped_dirnames ]
+
+            for fn in files:
+                if fn.lower() != basename_lower:
+                    continue
+
+                full_path = os.path.join(root, fn)
+
+                if full_path == get_visual_editor_export_path(p):
+                    continue
+
+                if full_path.startswith(get_visual_editor_generated_dir(p) + os.sep):
+                    continue
+
+                matches.append(get_visual_editor_game_relative_path(p, full_path))
+
+        return matches
+
+    def normalize_visual_editor_asset_reference_path(path):
+        raw = "{}".format(path or "").strip().replace("\\", "/")
+
+        if not raw:
+            return None
+
+        if (raw[0] in ("'", '"')) and (raw[-1:] == raw[0]):
+            raw = raw[1:-1].strip()
+
+        if (not raw) or any(token in raw for token in [ "(", ")", "{", "}", "[", "]", " " ]):
+            return None
+
+        if "." not in os.path.basename(raw):
+            return None
+
+        return raw
+
+    def resolve_visual_editor_asset_reference_path(p, path):
+        normalized = normalize_visual_editor_asset_reference_path(path)
+
+        if not normalized:
+            return None
+
+        if normalized.startswith("game/"):
+            resolved = os.path.normpath(os.path.join(p.path, normalize_visual_editor_relpath(normalized)))
+        else:
+            resolved = os.path.normpath(os.path.join(p.gamedir, normalize_visual_editor_relpath(normalized)))
+
+        project_root = os.path.normpath(p.path)
+
+        try:
+            if os.path.commonpath([project_root, resolved]) != project_root:
+                return None
+        except Exception:
+            return None
+
+        return resolved
+
+    def iter_visual_editor_asset_references(state):
+        for image in state.get("images", [ ]):
+            source_path = "{}".format(image.get("sourcePath", "")).strip()
+
+            if source_path:
+                yield {
+                    "kind": "image",
+                    "name": "{}".format(image.get("name", "")).strip() or "Unnamed Image",
+                    "path": source_path,
+                }
+
+            movie_path = "{}".format(image.get("moviePlay", "")).strip()
+
+            if movie_path:
+                yield {
+                    "kind": "movie",
+                    "name": "{}".format(image.get("name", "")).strip() or "Unnamed Movie",
+                    "path": movie_path,
+                }
+
+        for definition in state.get("live2d", [ ]):
+            model_path = "{}".format(definition.get("modelPath", "")).strip()
+
+            if model_path:
+                yield {
+                    "kind": "live2d",
+                    "name": "{}".format(definition.get("name", "")).strip() or "Unnamed Live2D",
+                    "path": model_path,
+                }
+
+        for audio in state.get("audio", [ ]):
+            source_path = "{}".format(audio.get("sourcePath", "")).strip()
+
+            if source_path:
+                yield {
+                    "kind": "audio",
+                    "name": "{}".format(audio.get("name", "")).strip() or "Unnamed Audio",
+                    "path": source_path,
+                }
+
+    def build_visual_editor_health_snapshot(p, state):
+        state_meta = state.get("meta", { }) if isinstance(state, dict) else { }
+        state_path = get_visual_editor_state_path(p)
+        export_path = get_visual_editor_export_path(p)
+        legacy_gui_targets = get_visual_editor_legacy_takeover_targets(p)
+        legacy_script_targets = get_visual_editor_legacy_script_targets(p)
+        gui_state = state.get("gui", { }) if isinstance(state, dict) else { }
+        screen_names = set()
+
+        if isinstance(gui_state, dict):
+            for screen in gui_state.get("screens", [ ]):
+                if not isinstance(screen, dict):
+                    continue
+
+                screen_name = "{}".format(screen.get("name", "")).strip()
+
+                if screen_name:
+                    screen_names.add(screen_name)
+
+        missing_assets = [ ]
+
+        for reference in iter_visual_editor_asset_references(state if isinstance(state, dict) else { }):
+            resolved_path = resolve_visual_editor_asset_reference_path(p, reference["path"])
+
+            if (resolved_path is None) or (not os.path.isfile(resolved_path)):
+                missing_assets.append(reference)
+
+        return {
+            "stateFile": {
+                "path": get_visual_editor_relative_path(p, state_path),
+                "exists": os.path.isfile(state_path),
+                "modifiedAt": int(os.path.getmtime(state_path) * 1000) if os.path.isfile(state_path) else None,
+            },
+            "exportFile": {
+                "path": get_visual_editor_relative_path(p, export_path),
+                "exists": os.path.isfile(export_path),
+                "modifiedAt": int(os.path.getmtime(export_path) * 1000) if os.path.isfile(export_path) else None,
+            },
+            "legacyGuiFiles": legacy_gui_targets,
+            "legacyScriptFiles": legacy_script_targets,
+            "takeover": {
+                "guiTakenOver": bool(isinstance(state_meta.get("legacyGuiTakeover"), dict) and state_meta.get("legacyGuiTakeover", { }).get("takenOver")),
+                "scriptTakenOver": bool(isinstance(state_meta.get("legacyScriptTakeover"), dict) and state_meta.get("legacyScriptTakeover", { }).get("takenOver")),
+            },
+            "confirmScreen": {
+                "mode": "project" if ("confirm" in screen_names or "yesno_prompt" in screen_names) else "fallback",
+                "hasProjectScreen": ("confirm" in screen_names) or ("yesno_prompt" in screen_names),
+            },
+            "missingAssets": missing_assets,
+        }
+
+    def import_visual_editor_asset_file(p, relative_path, file_name, content_b64, match_existing=False, allow_overwrite=False):
+        basename = os.path.basename(file_name or "").strip()
+
+        if not basename:
+            raise Exception("Imported asset is missing a file name.")
+
+        if match_existing:
+            existing_paths = find_visual_editor_existing_asset_paths(p, basename)
+
+            if len(existing_paths) == 1:
+                return {
+                    "path": existing_paths[0],
+                    "imported": False,
+                    "matchedExisting": True,
+                    "overwrote": False,
+                }
+
+            if len(existing_paths) > 1:
+                raise ValueError(json.dumps({
+                    "error": "Multiple project files already use this resource name.",
+                    "conflictType": "ambiguous_existing_asset",
+                    "matches": existing_paths,
+                }))
+
+        if not content_b64:
+            raise Exception("Imported asset is missing file content.")
+
+        try:
+            decoded = base64.b64decode(content_b64)
+        except Exception:
+            raise Exception("Imported asset content is not valid base64.")
+
+        target_path = resolve_visual_editor_game_path(p, relative_path)
+        target_dir = os.path.dirname(target_path)
+
+        if target_dir and (not os.path.isdir(target_dir)):
+            os.makedirs(target_dir)
+
+        overwrote = os.path.isfile(target_path)
+
+        if overwrote and (not allow_overwrite):
+            raise ValueError(json.dumps({
+                "error": "The destination asset path already exists.",
+                "conflictType": "overwrite_asset",
+                "path": get_visual_editor_game_relative_path(p, target_path),
+            }))
+
+        with open(target_path, "wb") as f:
+            f.write(decoded)
+
+        return {
+            "path": get_visual_editor_game_relative_path(p, target_path),
+            "imported": True,
+            "matchedExisting": False,
+            "overwrote": overwrote,
+        }
 
     def get_visual_editor_artifact_symbols(artifact):
         rv = [ ]
@@ -3084,6 +3327,57 @@ init python in project:
             })
 
         return targets
+
+    def get_visual_editor_legacy_script_targets(p):
+        script_path = get_visual_editor_script_path(p)
+        compiled_path = "{}c".format(script_path)
+
+        return [
+            {
+                "kind": "source",
+                "path": script_path,
+                "relativePath": get_visual_editor_relative_path(p, script_path),
+                "exists": os.path.isfile(script_path),
+            },
+            {
+                "kind": "compiled",
+                "path": compiled_path,
+                "relativePath": get_visual_editor_relative_path(p, compiled_path),
+                "exists": os.path.isfile(compiled_path),
+            },
+        ]
+
+    def sync_visual_editor_legacy_script_takeover(p, state):
+        script_targets = get_visual_editor_legacy_script_targets(p)
+        existing_targets = [ target for target in script_targets if target["exists"] ]
+        deleted_paths = [ ]
+
+        for target in existing_targets:
+            os.remove(target["path"])
+            deleted_paths.append(target["relativePath"])
+
+        meta = state.setdefault("meta", { })
+        previous_takeover = meta.get("legacyScriptTakeover", { })
+
+        if not isinstance(previous_takeover, dict):
+            previous_takeover = { }
+
+        takeover_meta = {
+            "confirmed": True,
+            "takenOver": True,
+            "targetPaths": [ target["relativePath"] for target in script_targets ],
+            "deletedPaths": deleted_paths or previous_takeover.get("deletedPaths", [ ]),
+        }
+
+        meta["legacyScriptTakeover"] = takeover_meta
+        state_path = write_visual_editor_state_file(p, state)
+
+        return {
+            "state": state,
+            "statePath": state_path,
+            "deletedPaths": deleted_paths,
+            "alreadyClean": (not existing_targets),
+        }
 
     def take_over_visual_editor_legacy_files(p, state, code):
         takeover_targets = get_visual_editor_legacy_takeover_targets(p)
@@ -3465,6 +3759,48 @@ init python in project:
                     })
                     return
 
+                if route == "cleanup_legacy_script_files":
+                    state = payload.get("state", {})
+                    result = sync_visual_editor_legacy_script_takeover(p, state)
+
+                    self.send_json(200, {
+                        "ok": True,
+                        "state": result["state"],
+                        "statePath": result["statePath"],
+                        "deletedPaths": result["deletedPaths"],
+                        "alreadyClean": result["alreadyClean"],
+                    })
+                    return
+
+                if route == "health":
+                    state = payload.get("state", {})
+                    health = build_visual_editor_health_snapshot(p, state)
+
+                    self.send_json(200, {
+                        "ok": True,
+                        "health": health,
+                    })
+                    return
+
+                if route == "import_asset_file":
+                    result = import_visual_editor_asset_file(
+                        p,
+                        payload.get("path", "").strip(),
+                        payload.get("fileName", "").strip(),
+                        payload.get("contentBase64", ""),
+                        payload.get("matchExisting", False),
+                        payload.get("allowOverwrite", False),
+                    )
+
+                    self.send_json(200, {
+                        "ok": True,
+                        "path": result["path"],
+                        "imported": result["imported"],
+                        "matchedExisting": result["matchedExisting"],
+                        "overwrote": result["overwrote"],
+                    })
+                    return
+
                 if route == "export":
                     state = payload.get("state", {})
                     code = payload.get("code", "")
@@ -3484,6 +3820,14 @@ init python in project:
                     return
 
                 self.send_json(404, { "ok": False, "error": "Unknown visual editor bridge route." })
+            except ValueError as e:
+                try:
+                    payload = json.loads(str(e))
+                except Exception:
+                    payload = { "error": str(e) }
+
+                payload["ok"] = False
+                self.send_json(409, payload)
             except Exception as e:
                 self.send_json(500, { "ok": False, "error": str(e) })
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="html.gui.title">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,15 +11,23 @@
     <div class="gui-shell">
       <header class="gui-topbar">
         <div class="gui-topbar-copy">
-          <p class="gui-eyebrow">Ren'Py Visual Editor</p>
-          <h1>GUI Editor</h1>
+          <p class="gui-eyebrow" data-i18n="gui.eyebrow">Ren'Py Visual Editor</p>
+          <h1 data-i18n="gui.heading">GUI Editor</h1>
           <p id="guiProjectPath" class="project-path">No project path provided.</p>
-          <p id="guiStatusText" class="gui-status-text">GUI editor ready.</p>
+          <p id="guiStatusText" class="gui-status-text" data-i18n="gui.status.ready">GUI editor ready.</p>
+          <div id="guiSyncPills" class="gui-sync-pills"></div>
         </div>
 
         <div class="gui-topbar-actions">
-          <button id="guiBackButton" class="secondary" type="button">Back to Visual Editor</button>
-          <button id="guiSaveButton" class="primary" type="button">Save GUI Draft</button>
+          <label class="language-control gui-language-control">
+            <span data-i18n="ui.language.label">Language</span>
+            <select id="guiLocaleSelect" class="language-select">
+              <option value="en" data-i18n="ui.language.english">English</option>
+              <option value="zh-CN" data-i18n="ui.language.zhCN">Simplified Chinese</option>
+            </select>
+          </label>
+          <button id="guiBackButton" class="secondary" type="button" data-i18n="gui.button.back">Back to Visual Editor</button>
+          <button id="guiSaveButton" class="primary" type="button" data-i18n="gui.button.save">Save GUI Draft</button>
         </div>
       </header>
 
@@ -27,40 +35,40 @@
         <aside class="gui-nav-panel">
           <div class="gui-nav-stack">
             <button class="gui-nav-button is-active" type="button" data-gui-section="stylesSection">
-              <span>Styles</span>
+              <span data-i18n="gui.nav.styles">Styles</span>
               <strong id="stylesNavCount">0</strong>
             </button>
             <button class="gui-nav-button" type="button" data-gui-section="screensSection">
-              <span>Screens</span>
+              <span data-i18n="gui.nav.screens">Screens</span>
               <strong id="screensNavCount">0</strong>
             </button>
             <button class="gui-nav-button" type="button" data-gui-section="extrasSection">
-              <span>Extras</span>
+              <span data-i18n="gui.nav.extras">Extras</span>
               <strong id="extrasNavCount">0</strong>
             </button>
             <button class="gui-nav-button" type="button" data-gui-section="configSection">
-              <span>Config</span>
+              <span data-i18n="gui.nav.config">Config</span>
               <strong id="configNavCount">0</strong>
             </button>
             <button class="gui-nav-button" type="button" data-gui-section="pythonUiSection">
-              <span>Python UI</span>
+              <span data-i18n="gui.nav.python">Python UI</span>
               <strong id="pythonUiNavCount">0</strong>
             </button>
             <button class="gui-nav-button" type="button" data-gui-section="cursorsSection">
-              <span>Cursors</span>
+              <span data-i18n="gui.nav.cursors">Cursors</span>
               <strong id="cursorsNavCount">0</strong>
             </button>
             <button class="gui-nav-button" type="button" data-gui-section="shadersSection">
-              <span>Shaders</span>
+              <span data-i18n="gui.nav.shaders">Shaders</span>
               <strong id="shadersNavCount">0</strong>
             </button>
             <button class="gui-nav-button" type="button" data-gui-section="diagnosticsSection">
-              <span>Diagnostics</span>
+              <span data-i18n="gui.nav.diagnostics">Diagnostics</span>
               <strong id="diagnosticsNavCount">0</strong>
             </button>
           </div>
 
-          <div class="gui-nav-note">
+          <div class="gui-nav-note" data-i18n="gui.nav.note">
             This editor now covers styles, screen structure, screen actions and values, GUI config, cursor systems,
             text shaders, Python UI helper templates, replay menus, music rooms, galleries, preview, and diagnostics.
           </div>
@@ -1710,7 +1718,7 @@
               <section class="gui-column gui-detail-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Diagnostics</h2>
+                    <h2 data-i18n="gui.diagnostics.heading">Diagnostics</h2>
                     <p>Static checks for structure, missing values, unresolved references, and likely GUI issues.</p>
                   </div>
                 </div>
@@ -1722,8 +1730,8 @@
               <aside class="gui-column gui-preview-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Suggested Output</h2>
-                    <p>Collected snippets that may need attention based on the current diagnostics.</p>
+                    <h2 data-i18n="gui.output.heading">Suggested Output</h2>
+                    <p data-i18n="gui.output.desc">Collected snippets that may need attention based on the current diagnostics.</p>
                   </div>
                 </div>
 
@@ -1735,6 +1743,7 @@
       </div>
     </div>
 
+    <script src="./i18n.js"></script>
     <script src="./gui_editor.js"></script>
   </body>
 </html>

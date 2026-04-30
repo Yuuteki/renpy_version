@@ -15,13 +15,33 @@ function getLaunchParams() {
 }
 
 const params = getLaunchParams();
+const i18n = window.visualEditorI18n || {
+  t(key, vars = {}) {
+    return `${key}`.replace(/\{(\w+)\}/g, (_match, name) => (
+      Object.prototype.hasOwnProperty.call(vars, name) ? `${vars[name]}` : `{${name}}`
+    ));
+  },
+  getLocale() {
+    return "en";
+  },
+  setLocale() {},
+  applyTranslations() {},
+};
+const t = (key, vars = {}) => i18n.t(key, vars);
 const projectPath = params.get("project") || "";
 const bridgeUrl = params.get("bridge") || "";
 const bridgeToken = params.get("token") || "";
 const hasBridge = Boolean(bridgeUrl && bridgeToken);
+const launchSidebarSectionId = params.get("section") || "";
+const launchGuiSectionId = params.get("guiSection") || "";
+const returnedFromGuiEditor = params.get("returnedFrom") === "gui";
+const guiSectionStorageKey = projectPath
+  ? `renpy-visual-editor:gui-section:${projectPath}`
+  : "renpy-visual-editor:gui-section:default";
 
 const projectPathEl = document.getElementById("projectPath");
 const projectFilesEl = document.getElementById("projectFiles");
+const localeSelect = document.getElementById("localeSelect");
 const canvasEl = document.getElementById("canvas");
 const gridOverlayEl = canvasEl.querySelector(".grid-overlay");
 const graphConnectionsEl = document.getElementById("graphConnections");
@@ -236,7 +256,12 @@ const definitionCodeInput = document.getElementById("definitionCodeInput");
 const definitionDeleteButton = document.getElementById("definitionDeleteButton");
 const definitionCodePreviewEl = document.getElementById("definitionCodePreview");
 const visualProjectStatsEl = document.getElementById("visualProjectStats");
+const projectHealthSummaryEl = document.getElementById("projectHealthSummary");
+const projectHealthTimestampEl = document.getElementById("projectHealthTimestamp");
+const projectHealthPillsEl = document.getElementById("projectHealthPills");
+const projectHealthChecklistEl = document.getElementById("projectHealthChecklist");
 const guiEditorProjectSummaryEl = document.getElementById("guiEditorProjectSummary");
+const guiEditorStatusNoteEl = document.getElementById("guiEditorStatusNote");
 const openGuiEditorButton = document.getElementById("openGuiEditorButton");
 const projectVoiceSettingsFormEl = document.getElementById("projectVoiceSettingsForm");
 const projectVoiceModeInput = document.getElementById("projectVoiceModeInput");
@@ -1152,6 +1177,17 @@ const defaultProjectState = {
   activeGraphId: "label_start",
 };
 
+const guiSectionLabelById = {
+  stylesSection: "gui.nav.styles",
+  screensSection: "gui.nav.screens",
+  extrasSection: "gui.nav.extras",
+  configSection: "gui.nav.config",
+  pythonUiSection: "gui.nav.python",
+  cursorsSection: "gui.nav.cursors",
+  shadersSection: "gui.nav.shaders",
+  diagnosticsSection: "gui.nav.diagnostics",
+};
+
 let state = normalizeState(loadState());
 let sidebarOpen = true;
 let activeSidebarSectionId = "projectOverviewSection";
@@ -1197,6 +1233,26 @@ let activeAchievementId = null;
 let achievementDetailOpen = false;
 let activeDefinitionId = null;
 let definitionDetailOpen = false;
+let projectHealthState = {
+  loading: false,
+  data: null,
+  error: "",
+  lastUpdatedAt: 0,
+};
+let projectHealthRefreshTimer = null;
+let projectJsonSyncMeta = {
+  level: hasBridge ? "warn" : "bad",
+  text: hasBridge ? t("sync.project_json.initial_wait") : t("sync.bridge.disconnected"),
+};
+let exportSyncMeta = {
+  level: "warn",
+  text: t("sync.export.initial_wait"),
+};
+let assetImportMeta = {
+  level: "warn",
+  text: t("sync.assets.initial_wait"),
+};
+let pendingLaunchStatusText = "";
 let projectKeymapCategoryState = {
   dialogue: true,
   navigation: false,
@@ -1356,6 +1412,254 @@ async function callBridge(path, payload = null) {
   return data;
 }
 
+function getGuiSectionLabel(sectionId) {
+  const key = guiSectionLabelById[sectionId];
+  return key ? t(key) : t("index.gui_editor.label");
+}
+
+function getStoredGuiSectionId() {
+  const raw = window.localStorage.getItem(guiSectionStorageKey) || "";
+  return Object.prototype.hasOwnProperty.call(guiSectionLabelById, raw) ? raw : "";
+}
+
+function storeGuiSectionId(sectionId) {
+  if (Object.prototype.hasOwnProperty.call(guiSectionLabelById, sectionId)) {
+    window.localStorage.setItem(guiSectionStorageKey, sectionId);
+  }
+}
+
+function renderLocaleOptions(selectEl) {
+  if (!selectEl) {
+    return;
+  }
+
+  const locales = [
+    { value: "en", label: t("ui.language.english") },
+    { value: "zh-CN", label: t("ui.language.zhCN") },
+  ];
+
+  selectEl.innerHTML = locales.map((locale) => (
+    `<option value="${escapeHtml(locale.value)}">${escapeHtml(locale.label)}</option>`
+  )).join("");
+}
+
+function syncLocaleControl() {
+  if (localeSelect) {
+    renderLocaleOptions(localeSelect);
+    localeSelect.value = i18n.getLocale();
+  }
+}
+
+function applyCurrentLocale() {
+  i18n.applyTranslations(document);
+  syncLocaleControl();
+}
+
+function formatTimestamp(timestamp) {
+  if (!timestamp) {
+    return t("common.not_written_yet");
+  }
+
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(timestamp));
+  } catch (error) {
+    return new Date(timestamp).toLocaleString();
+  }
+}
+
+function setProjectJsonSyncMeta(level, text) {
+  projectJsonSyncMeta = { level, text };
+}
+
+function setExportSyncMeta(level, text) {
+  exportSyncMeta = { level, text };
+}
+
+function setAssetImportMeta(level, text) {
+  assetImportMeta = { level, text };
+}
+
+function hasLocalConfirmScreen() {
+  return normalizeGuiState(state.gui).screens.some((screen) => {
+    const name = `${screen?.name || ""}`.trim();
+    return name === "confirm" || name === "yesno_prompt";
+  });
+}
+
+function summarizeHealthPaths(paths, emptyText) {
+  if (!Array.isArray(paths) || !paths.length) {
+    return emptyText;
+  }
+
+  const [first, second, third, ...rest] = paths;
+  const visible = [first, second, third].filter(Boolean);
+  return `${visible.join(", ")}${rest.length ? t("health.paths.more", { count: rest.length }) : ""}`;
+}
+
+function buildLocalProjectHealth() {
+  const health = projectHealthState.data;
+  const legacyGuiExisting = Array.isArray(health?.legacyGuiFiles)
+    ? health.legacyGuiFiles.filter((entry) => entry.exists).map((entry) => entry.relativePath)
+    : [];
+  const legacyScriptExisting = Array.isArray(health?.legacyScriptFiles)
+    ? health.legacyScriptFiles.filter((entry) => entry.exists).map((entry) => entry.relativePath)
+    : [];
+  const missingAssets = Array.isArray(health?.missingAssets) ? health.missingAssets : [];
+  const confirmMode = health?.confirmScreen?.mode || (hasLocalConfirmScreen() ? "project" : "fallback");
+  const pills = [
+    {
+      label: hasBridge ? t("health.bridge.connected") : t("health.bridge.offline"),
+      level: hasBridge ? "good" : "bad",
+    },
+    {
+      label: t("health.pill.project_json", { text: projectJsonSyncMeta.text }),
+      level: projectJsonSyncMeta.level,
+    },
+    {
+      label: t("health.pill.export", { text: exportSyncMeta.text }),
+      level: exportSyncMeta.level,
+    },
+    {
+      label: t("health.pill.assets", { text: assetImportMeta.text }),
+      level: assetImportMeta.level,
+    },
+  ];
+  const checklist = [
+    {
+      title: t("health.item.legacy_script.title"),
+      level: legacyScriptExisting.length ? "warn" : "good",
+      detail: legacyScriptExisting.length
+        ? t("health.item.legacy_script.remaining", { paths: summarizeHealthPaths(legacyScriptExisting, "") })
+        : t("health.item.legacy_script.ok"),
+    },
+    {
+      title: t("health.item.legacy_gui.title"),
+      level: legacyGuiExisting.length ? "warn" : "good",
+      detail: legacyGuiExisting.length
+        ? t("health.item.legacy_gui.remaining", { paths: summarizeHealthPaths(legacyGuiExisting, "") })
+        : t("health.item.legacy_gui.ok"),
+    },
+    {
+      title: t("health.item.confirm.title"),
+      level: confirmMode === "project" ? "good" : "warn",
+      detail: confirmMode === "project"
+        ? t("health.item.confirm.project")
+        : t("health.item.confirm.fallback"),
+    },
+    {
+      title: t("health.item.assets.title"),
+      level: missingAssets.length ? "bad" : "good",
+      detail: missingAssets.length
+        ? t("health.item.assets.missing", {
+          count: missingAssets.length,
+          paths: summarizeHealthPaths(missingAssets.map((entry) => `${entry.kind}:${entry.path}`), ""),
+        })
+        : t("health.item.assets.ok"),
+    },
+  ];
+  let summary = t("health.summary.ready");
+
+  if (projectHealthState.error) {
+    summary = t("health.summary.error", { message: projectHealthState.error });
+  } else if (hasBridge && !projectHealthState.data && projectHealthState.loading) {
+    summary = t("health.summary.scan_running");
+  } else if (hasBridge && !projectHealthState.data) {
+    summary = t("health.summary.scan_waiting");
+  } else if (!hasBridge) {
+    summary = t("health.summary.bridge_offline");
+  } else if (missingAssets.length) {
+    summary = t("health.summary.assets_missing", { count: missingAssets.length });
+  } else if (legacyGuiExisting.length || legacyScriptExisting.length) {
+    summary = t("health.summary.legacy_remaining");
+  }
+
+  return {
+    summary,
+    pills,
+    checklist,
+    timestamp: projectHealthState.lastUpdatedAt || health?.stateFile?.modifiedAt || 0,
+  };
+}
+
+function renderProjectHealth() {
+  if (!projectHealthSummaryEl || !projectHealthPillsEl || !projectHealthChecklistEl || !projectHealthTimestampEl) {
+    return;
+  }
+
+  const localHealth = buildLocalProjectHealth();
+  projectHealthSummaryEl.textContent = localHealth.summary;
+  projectHealthTimestampEl.textContent = projectHealthState.loading
+    ? t("health.timestamp.refreshing")
+    : (localHealth.timestamp
+      ? t("health.timestamp.updated", { time: formatTimestamp(localHealth.timestamp) })
+      : t("health.timestamp.waiting"));
+  projectHealthPillsEl.innerHTML = localHealth.pills.map((pill) => `
+    <span class="project-health-pill is-${escapeHtml(pill.level)}">${escapeHtml(pill.label)}</span>
+  `).join("");
+  projectHealthChecklistEl.innerHTML = localHealth.checklist.map((item) => `
+    <div class="project-health-item is-${escapeHtml(item.level)}">
+      <strong>${escapeHtml(item.title)}</strong>
+      <span>${escapeHtml(item.detail)}</span>
+    </div>
+  `).join("");
+}
+
+async function refreshProjectHealth() {
+  if (!hasBridge) {
+    projectHealthState = {
+      loading: false,
+      data: null,
+      error: "",
+      lastUpdatedAt: Date.now(),
+    };
+    renderProjectHealth();
+    renderGuiEditorPanel();
+    return;
+  }
+
+  projectHealthState.loading = true;
+  renderProjectHealth();
+
+  try {
+    const response = await callBridge("health", { state });
+    projectHealthState = {
+      loading: false,
+      data: response.health || null,
+      error: "",
+      lastUpdatedAt: Date.now(),
+    };
+  } catch (error) {
+    console.error(error);
+    projectHealthState = {
+      loading: false,
+      data: projectHealthState.data,
+      error: error.message,
+      lastUpdatedAt: Date.now(),
+    };
+  }
+
+  renderProjectHealth();
+  renderGuiEditorPanel();
+}
+
+function queueProjectHealthRefresh({ immediate = false } = {}) {
+  window.clearTimeout(projectHealthRefreshTimer);
+
+  if (immediate) {
+    void refreshProjectHealth();
+    return;
+  }
+
+  projectHealthRefreshTimer = window.setTimeout(() => {
+    void refreshProjectHealth();
+  }, 500);
+}
+
 let bridgeSaveTimer = null;
 
 function queueBridgeStateSave() {
@@ -1364,18 +1668,27 @@ function queueBridgeStateSave() {
   }
 
   window.clearTimeout(bridgeSaveTimer);
+  setProjectJsonSyncMeta("warn", t("sync.project_json.queued"));
   bridgeSaveTimer = window.setTimeout(async () => {
     try {
       await callBridge("state", { state });
+      setProjectJsonSyncMeta("good", t("sync.project_json.good"));
+      queueProjectHealthRefresh();
     } catch (error) {
       console.error(error);
-      setStatus(`Project JSON sync failed: ${error.message}`);
+      setProjectJsonSyncMeta("bad", t("sync.project_json.failed", { message: error.message }));
+      setStatus(t("sync.project_json.failed", { message: error.message }));
     }
   }, 350);
 }
 
 async function hydrateStateFromBridge() {
   if (!hasBridge) {
+    if (pendingLaunchStatusText) {
+      setStatus(pendingLaunchStatusText);
+      pendingLaunchStatusText = "";
+    }
+    queueProjectHealthRefresh({ immediate: true });
     return;
   }
 
@@ -1388,7 +1701,9 @@ async function hydrateStateFromBridge() {
       render();
       setSidebarSection(activeSidebarSectionId);
       setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
-      setStatus("Loaded project state from visual_editor/project.json.");
+      setProjectJsonSyncMeta("good", t("sync.project_json.loaded"));
+      setStatus(pendingLaunchStatusText || t("status.loaded_project_state"));
+      pendingLaunchStatusText = "";
     } else if (response.importedState) {
       state = normalizeState(response.importedState);
       window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
@@ -1396,6 +1711,7 @@ async function hydrateStateFromBridge() {
       setSidebarSection(activeSidebarSectionId);
       setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
       await callBridge("state", { state });
+      setProjectJsonSyncMeta("good", t("sync.project_json.imported"));
 
       const importSources = Array.isArray(response.importSummary?.sourcePaths) && response.importSummary.sourcePaths.length
         ? response.importSummary.sourcePaths
@@ -1411,14 +1727,23 @@ async function hydrateStateFromBridge() {
         response.importSummary?.definitionCount || 0,
       ];
       const importedTotal = importedCounts.reduce((sum, count) => sum + count, 0);
-      setStatus(`Imported ${importSources.join(" + ")} into visual_editor/project.json${importedTotal ? ` (${importedTotal} items).` : "."}`);
+      setStatus(pendingLaunchStatusText || t("status.imported_project_state", {
+        sources: importSources.join(" + "),
+        suffix: importedTotal ? ` (${importedTotal} items).` : ".",
+      }));
+      pendingLaunchStatusText = "";
     } else {
       await callBridge("state", { state });
-      setStatus("Created visual_editor/project.json from the current editor state.");
+      setProjectJsonSyncMeta("good", t("sync.project_json.created"));
+      setStatus(pendingLaunchStatusText || t("status.created_project_state"));
+      pendingLaunchStatusText = "";
     }
   } catch (error) {
     console.error(error);
-    setStatus(`Launcher bridge unavailable: ${error.message}`);
+    setProjectJsonSyncMeta("bad", t("status.bridge_unavailable", { message: error.message }));
+    setStatus(t("status.bridge_unavailable", { message: error.message }));
+  } finally {
+    queueProjectHealthRefresh({ immediate: true });
   }
 }
 
@@ -2376,6 +2701,7 @@ function normalizeDefinition(definition, index) {
 function saveState(message) {
   window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
   queueBridgeStateSave();
+  queueProjectHealthRefresh();
 
   if (message) {
     setStatus(message);
@@ -2383,7 +2709,7 @@ function saveState(message) {
 }
 
 function setStatus(message) {
-  statusTextEl.textContent = message;
+  statusTextEl.textContent = i18n.translateText ? i18n.translateText(message) : message;
 }
 
 function setSidebarState(nextOpen) {
@@ -2396,7 +2722,10 @@ function setSidebarState(nextOpen) {
 }
 
 function setSidebarSection(sectionId) {
-  activeSidebarSectionId = sectionId;
+  const nextSectionId = sidebarPanelEls.some((panel) => panel.id === sectionId)
+    ? sectionId
+    : "projectOverviewSection";
+  activeSidebarSectionId = nextSectionId;
 
   sidebarPanelEls.forEach((panel) => {
     panel.classList.toggle("is-active", panel.id === activeSidebarSectionId);
@@ -5113,6 +5442,157 @@ function buildLive2DModelPathFromSelection(fileName, currentValue = "") {
   return `Resources/${fileName}`;
 }
 
+function shouldMatchExistingProjectAsset(currentValue = "") {
+  return !`${currentValue}`.trim().replaceAll("\\", "/").includes("/");
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(`${reader.result || ""}`);
+    reader.onerror = () => reject(new Error(`Unable to read "${file?.name || "selected file"}".`));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function encodeFileAsBase64(file) {
+  const dataUrl = await readFileAsDataUrl(file);
+  const commaIndex = dataUrl.indexOf(",");
+
+  if (commaIndex === -1) {
+    throw new Error(`Unable to encode "${file?.name || "selected file"}" for project import.`);
+  }
+
+  return dataUrl.slice(commaIndex + 1);
+}
+
+async function importSelectedAssetFile(file, suggestedPath, currentValue = "") {
+  const normalizedSuggestedPath = `${suggestedPath || ""}`.trim().replaceAll("\\", "/");
+
+  if (!hasBridge) {
+    return {
+      path: normalizedSuggestedPath,
+      imported: false,
+      matchedExisting: false,
+      overwrote: false,
+      localOnly: true,
+    };
+  }
+
+  const contentBase64 = await encodeFileAsBase64(file);
+  let matchExisting = shouldMatchExistingProjectAsset(currentValue);
+  let allowOverwrite = false;
+
+  while (true) {
+    try {
+      return await callBridge("import_asset_file", {
+        path: normalizedSuggestedPath,
+        fileName: file.name,
+        contentBase64,
+        matchExisting,
+        allowOverwrite,
+      });
+    } catch (error) {
+      const bridgeData = error?.bridgeData || {};
+
+      if (error?.status === 409 && bridgeData?.conflictType === "ambiguous_existing_asset") {
+        const matches = Array.isArray(bridgeData.matches) ? bridgeData.matches.filter(Boolean) : [];
+        const confirmed = window.confirm(
+          t("asset.conflict.multiple", {
+            file: file.name,
+            matches: matches.join("\n"),
+            path: normalizedSuggestedPath,
+          }),
+        );
+
+        if (!confirmed) {
+          return {
+            canceled: true,
+            conflictType: "ambiguous_existing_asset",
+          };
+        }
+
+        matchExisting = false;
+        continue;
+      }
+
+      if (error?.status === 409 && bridgeData?.conflictType === "overwrite_asset") {
+        const targetPath = `${bridgeData.path || normalizedSuggestedPath}`.trim();
+        const confirmed = window.confirm(
+          t("asset.conflict.overwrite", { path: targetPath }),
+        );
+
+        if (!confirmed) {
+          return {
+            canceled: true,
+            conflictType: "overwrite_asset",
+            path: targetPath,
+          };
+        }
+
+        allowOverwrite = true;
+        matchExisting = false;
+        continue;
+      }
+
+      throw error;
+    }
+  }
+}
+
+function formatImportedAssetStatus(resourceLabel, fileName, result) {
+  const resolvedPath = `${result?.path || ""}`.trim();
+
+  if (result?.canceled) {
+    if (result.conflictType === "ambiguous_existing_asset") {
+      return t("asset.status.keep_multiple", { resource: resourceLabel, file: fileName });
+    }
+
+    if (result.conflictType === "overwrite_asset") {
+      return t("asset.status.keep_existing", { resource: resourceLabel, path: resolvedPath || "target file" });
+    }
+
+    return t("asset.status.keep_current", { resource: resourceLabel });
+  }
+
+  if (result?.matchedExisting && resolvedPath) {
+    return t("asset.status.match", { resource: resourceLabel, path: resolvedPath, file: fileName });
+  }
+
+  if (result?.imported && resolvedPath) {
+    return result.overwrote
+      ? t("asset.status.updated", { resource: resourceLabel, path: resolvedPath, file: fileName })
+      : t("asset.status.imported", { resource: resourceLabel, path: resolvedPath, file: fileName });
+  }
+
+  if (result?.localOnly && resolvedPath) {
+    return t("asset.status.local_only", { resource: resourceLabel, file: fileName });
+  }
+
+  if (resolvedPath) {
+    return t("asset.status.set", { resource: resourceLabel, path: resolvedPath });
+  }
+
+  return t("asset.status.selected", { resource: resourceLabel, file: fileName });
+}
+
+function getAssetImportLevel(result) {
+  if (result?.canceled) {
+    return "warn";
+  }
+
+  if (result?.localOnly) {
+    return "warn";
+  }
+
+  if (result?.matchedExisting || result?.imported) {
+    return "good";
+  }
+
+  return "warn";
+}
+
 function getImageDefinitionType(image) {
   return Object.prototype.hasOwnProperty.call(imageDefinitionTypeMeta, image?.definitionType)
     ? image.definitionType
@@ -6151,9 +6631,8 @@ function renderProjectInfo() {
   const isLegacyGuiTakenOver = Boolean(takeoverMeta?.takenOver);
 
   if (!projectPath) {
-    projectPathEl.textContent = "No project path was provided by the launcher.";
-    projectFilesEl.textContent =
-      "Expected files: <project>/visual_editor/project.json | <project>/game/generated_visual_editor.rpy";
+    projectPathEl.textContent = t("index.project_path.launcher_missing");
+    projectFilesEl.textContent = t("index.project_files.expected");
 
     if (takeoverLegacyFilesButton) {
       takeoverLegacyFilesButton.hidden = true;
@@ -6161,9 +6640,10 @@ function renderProjectInfo() {
     }
 
     if (takeoverLegacyFilesNoteEl) {
-      takeoverLegacyFilesNoteEl.textContent = "Open this editor from the Ren'Py launcher before taking over legacy GUI files.";
+      takeoverLegacyFilesNoteEl.textContent = t("index.takeover.note.open_from_launcher");
     }
 
+    renderProjectHealth();
     return;
   }
 
@@ -6178,16 +6658,18 @@ function renderProjectInfo() {
 
   if (takeoverLegacyFilesNoteEl) {
     if (!hasBridge) {
-      takeoverLegacyFilesNoteEl.textContent = "Open this editor from the Ren'Py launcher to back up and remove legacy GUI files.";
+      takeoverLegacyFilesNoteEl.textContent = t("index.takeover.note.bridge_required");
     } else if (takeoverMeta?.takenOver) {
       const backupRoot = `${takeoverMeta.backupRoot || ""}`.trim();
       takeoverLegacyFilesNoteEl.innerHTML = backupRoot
-        ? `Legacy GUI takeover is active. Original <code>options/gui/screens</code> files were backed up under <code>${escapeHtml(backupRoot)}</code>.`
-        : "Legacy GUI takeover is active. Original <code>options/gui/screens</code> files now belong to <code>visual_editor/project.json</code> + <code>generated_visual_editor.rpy</code>.";
+        ? t("index.takeover.note.active_with_backup_html", { backupRoot: escapeHtml(backupRoot) })
+        : t("index.takeover.note.active_default_html");
     } else {
-      takeoverLegacyFilesNoteEl.innerHTML = "This will back up and remove <code>game/options.rpy</code>, <code>game/gui.rpy</code>, <code>game/screens.rpy</code>, and matching <code>.rpyc</code> files, then refresh <code>generated_visual_editor.rpy</code>.";
+      takeoverLegacyFilesNoteEl.innerHTML = t("index.takeover.default_html");
     }
   }
+
+  renderProjectHealth();
 }
 
 function reorderLabelGraphs(movedId, targetId, position) {
@@ -7477,10 +7959,49 @@ function formatGuiGalleryCode(gallery) {
   return lines.join("\n");
 }
 
+function hasGuiScreenNamed(gui, name) {
+  return (Array.isArray(gui?.screens) ? gui.screens : []).some((screen) => `${screen?.name || ""}`.trim() === name);
+}
+
+function formatFallbackConfirmScreenCode() {
+  return [
+    "screen confirm(message, yes_action, no_action):",
+    indentGuiLine("modal True", 1),
+    indentGuiLine("zorder 200", 1),
+    "",
+    indentGuiLine("frame:", 1),
+    indentGuiLine("xalign 0.5", 2),
+    indentGuiLine("yalign 0.5", 2),
+    indentGuiLine("xpadding 40", 2),
+    indentGuiLine("ypadding 30", 2),
+    indentGuiLine("vbox:", 2),
+    indentGuiLine("spacing 24", 3),
+    indentGuiLine("label _(message):", 3),
+    indentGuiLine("xalign 0.5", 4),
+    indentGuiLine("hbox:", 3),
+    indentGuiLine("xalign 0.5", 4),
+    indentGuiLine("spacing 40", 4),
+    indentGuiLine('textbutton _("Yes") action yes_action', 4),
+    indentGuiLine('textbutton _("No") action no_action', 4),
+    "",
+    indentGuiLine('key "game_menu" action no_action', 1),
+  ].join("\n");
+}
+
 function formatGuiGeneratedCode(gui = state.gui) {
+  const hasConfirmScreen = hasGuiScreenNamed(gui, "confirm");
+  const hasYesNoPromptScreen = hasGuiScreenNamed(gui, "yesno_prompt");
+  const screenSections = [];
+
+  if (!hasConfirmScreen && !hasYesNoPromptScreen) {
+    screenSections.push(formatFallbackConfirmScreenCode());
+  }
+
+  screenSections.push((Array.isArray(gui.screens) ? gui.screens : []).map(formatGuiScreenCode).filter(Boolean).join("\n\n"));
+
   const sections = [
     (Array.isArray(gui.styles) ? gui.styles : []).map(formatGuiStyleCode).filter(Boolean).join("\n\n"),
-    (Array.isArray(gui.screens) ? gui.screens : []).map(formatGuiScreenCode).filter(Boolean).join("\n\n"),
+    screenSections.filter(Boolean).join("\n\n"),
     formatAllGuiConfigCode(gui),
     formatAllGuiPythonUiCode(gui),
     formatAllGuiCursorCode(gui),
@@ -11057,13 +11578,14 @@ function renderGuiEditorPanel() {
 
   const guiState = normalizeGuiState(state.gui);
   const replayLabelCount = state.graphs.filter((graph) => graph?.replay?.enabled).length;
+  const rememberedGuiSectionId = launchGuiSectionId || getStoredGuiSectionId();
   const stats = [
     {
-      title: "Styles",
+      title: t("gui.nav.styles"),
       value: String(guiState.styles.length),
     },
     {
-      title: "Screens",
+      title: t("gui.nav.screens"),
       value: String(guiState.screens.length),
     },
     {
@@ -11078,6 +11600,10 @@ function renderGuiEditorPanel() {
       title: "Replay / Music / Gallery",
       value: `${replayLabelCount} / ${guiState.musicRooms.length} / ${guiState.galleries.length}`,
     },
+    {
+      title: t("health.gui.last_section"),
+      value: getGuiSectionLabel(rememberedGuiSectionId || "stylesSection"),
+    },
   ];
 
   guiEditorProjectSummaryEl.innerHTML = stats.map((stat) => `
@@ -11086,6 +11612,16 @@ function renderGuiEditorPanel() {
       <span>${escapeHtml(stat.value)}</span>
     </div>
   `).join("");
+
+  if (guiEditorStatusNoteEl) {
+    const confirmMode = projectHealthState.data?.confirmScreen?.mode || (hasLocalConfirmScreen() ? "project" : "fallback");
+    guiEditorStatusNoteEl.textContent = hasBridge
+      ? t("health.gui.note.connected", {
+        section: getGuiSectionLabel(rememberedGuiSectionId || "stylesSection"),
+        mode: confirmMode === "project" ? t("health.confirm.mode.project") : t("health.confirm.mode.fallback"),
+      })
+      : t("health.gui.note.disconnected");
+  }
 }
 
 function renderGraph() {
@@ -11503,6 +12039,7 @@ function render() {
   renderGraph();
   renderInspector();
   renderViewport();
+  applyCurrentLocale();
 }
 
 function updateSelectedNode(patch) {
@@ -12077,6 +12614,98 @@ function resetGraph() {
   render();
 }
 
+function formatDeletedPathSummary(paths) {
+  if (!Array.isArray(paths)) {
+    return "";
+  }
+
+  return paths
+    .map((path) => `${path ?? ""}`.trim())
+    .filter(Boolean)
+    .join(", ");
+}
+
+function getLegacyScriptTakeoverMeta() {
+  const takeoverMeta = state?.meta?.legacyScriptTakeover;
+  return takeoverMeta && typeof takeoverMeta === "object" ? takeoverMeta : null;
+}
+
+async function syncLegacyScriptTakeover() {
+  if (!hasBridge) {
+    return {
+      canceled: false,
+      deletedPaths: [],
+      alreadyClean: true,
+    };
+  }
+
+  const takeoverMeta = getLegacyScriptTakeoverMeta();
+
+  if (!takeoverMeta?.confirmed) {
+    const confirmed = window.confirm(
+      t("status.script_takeover_confirm"),
+    );
+
+    if (!confirmed) {
+      return {
+        canceled: true,
+        deletedPaths: [],
+        alreadyClean: false,
+      };
+    }
+  }
+
+  const response = await callBridge("cleanup_legacy_script_files", { state });
+  state = normalizeState(response.state || state);
+  window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+  setProjectJsonSyncMeta("good", t("sync.project_json.script_cleanup"));
+  queueProjectHealthRefresh({ immediate: true });
+  render();
+
+  return {
+    canceled: false,
+    deletedPaths: Array.isArray(response.deletedPaths) ? response.deletedPaths.filter(Boolean) : [],
+    alreadyClean: response.alreadyClean === true,
+  };
+}
+
+async function saveDraftToBridge() {
+  window.clearTimeout(bridgeSaveTimer);
+  state = normalizeState(state);
+  window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+
+  if (!hasBridge) {
+    setProjectJsonSyncMeta("warn", t("sync.project_json.local_only"));
+    setStatus(t("status.saved_local_draft"));
+    return;
+  }
+
+  try {
+    const scriptCleanup = await syncLegacyScriptTakeover();
+
+    if (scriptCleanup.canceled) {
+      await callBridge("state", { state });
+      setProjectJsonSyncMeta("good", t("sync.project_json.kept_scripts"));
+      queueProjectHealthRefresh({ immediate: true });
+      setStatus(t("status.synced_kept_scripts"));
+      return;
+    }
+
+    const deletedSummary = formatDeletedPathSummary(scriptCleanup.deletedPaths);
+    setProjectJsonSyncMeta("good", t("sync.project_json.good"));
+    queueProjectHealthRefresh({ immediate: true });
+    setStatus(
+      deletedSummary
+        ? t("status.synced_removed", { paths: deletedSummary })
+        : t("status.synced_simple"),
+    );
+  } catch (error) {
+    console.error(error);
+    setProjectJsonSyncMeta("bad", t("sync.project_json.failed", { message: error.message }));
+    setStatus(t("sync.project_json.failed", { message: error.message }));
+  }
+}
+
 async function exportGraph() {
   window.clearTimeout(bridgeSaveTimer);
   state = normalizeState(state);
@@ -12085,16 +12714,34 @@ async function exportGraph() {
 
   if (!hasBridge) {
     console.info(code);
-    setStatus("Generated .rpy text, but launcher bridge is not connected. Open from Ren'Py Launcher to write project files.");
+    setExportSyncMeta("warn", t("sync.export.local_only"));
+    setStatus(t("status.export_bridge_required"));
     return;
   }
 
   try {
+    const scriptCleanup = await syncLegacyScriptTakeover();
+
+    if (scriptCleanup.canceled) {
+      setExportSyncMeta("warn", t("sync.export.canceled"));
+      setStatus(t("status.export_canceled_kept_scripts"));
+      return;
+    }
+
     await callBridge("export", { state, code });
-    setStatus("Synced visual_editor/project.json and exported generated_visual_editor.rpy.");
+    const deletedSummary = formatDeletedPathSummary(scriptCleanup.deletedPaths);
+    setProjectJsonSyncMeta("good", t("sync.project_json.good"));
+    setExportSyncMeta("good", t("sync.export.good"));
+    queueProjectHealthRefresh({ immediate: true });
+    setStatus(
+      deletedSummary
+        ? t("status.export_success_removed", { paths: deletedSummary })
+        : t("status.export_success_simple"),
+    );
   } catch (error) {
     console.error(error);
-    setStatus(`Export failed: ${error.message}`);
+    setExportSyncMeta("bad", t("sync.export.failed", { message: error.message }));
+    setStatus(t("sync.export.failed", { message: error.message }));
   }
 }
 
@@ -12105,18 +12752,16 @@ async function takeoverLegacyFiles() {
   const code = formatGeneratedVisualEditorCode();
 
   if (!hasBridge) {
-    setStatus("Legacy takeover requires the launcher bridge. Open this editor from the Ren'Py Launcher.");
+    setStatus(t("status.takeover_bridge_required"));
     return;
   }
 
   const confirmed = window.confirm(
-    "Take over game/options.rpy, game/gui.rpy, and game/screens.rpy?\n\n"
-    + "This will back up and remove those .rpy files plus matching .rpyc files, "
-    + "then refresh generated_visual_editor.rpy from the current editor state.",
+    t("status.takeover_confirm"),
   );
 
   if (!confirmed) {
-    setStatus("Kept the existing legacy GUI files.");
+    setStatus(t("status.takeover_kept_existing"));
     return;
   }
 
@@ -12124,26 +12769,30 @@ async function takeoverLegacyFiles() {
     const response = await callBridge("takeover_legacy_files", { state, code });
     state = normalizeState(response.state || state);
     window.localStorage.setItem(storageKey, JSON.stringify(state, null, 2));
+    setProjectJsonSyncMeta("good", t("sync.project_json.gui_takeover"));
+    setExportSyncMeta("good", t("sync.export.gui_takeover"));
+    queueProjectHealthRefresh({ immediate: true });
     render();
 
     if (response.alreadyTakenOver) {
-      setStatus("Legacy GUI takeover was already active. Refreshed project.json and generated_visual_editor.rpy.");
+      setStatus(t("status.takeover_already_active"));
       return;
     }
 
     const deletedPaths = Array.isArray(response.deletedPaths) ? response.deletedPaths.filter(Boolean) : [];
     const deletedSummary = deletedPaths.length
       ? deletedPaths.join(", ")
-      : "No legacy GUI files were present to remove.";
+      : t("status.takeover_deleted_none");
     const backupRoot = `${response.backupRoot || ""}`.trim();
     setStatus(
       backupRoot
-        ? `Backed up and removed ${deletedSummary}. Backup root: ${backupRoot}.`
-        : `Backed up and removed ${deletedSummary}.`,
+        ? t("status.takeover_success_with_backup", { paths: deletedSummary, backupRoot })
+        : t("status.takeover_success", { paths: deletedSummary }),
     );
   } catch (error) {
     console.error(error);
-    setStatus(`Legacy takeover failed: ${error.message}`);
+    setExportSyncMeta("bad", t("status.takeover_failed", { message: error.message }));
+    setStatus(t("status.takeover_failed", { message: error.message }));
   }
 }
 
@@ -13359,11 +14008,7 @@ pythonNodeCodeInput.addEventListener("input", (event) => {
   });
 });
 
-saveDraftButton.addEventListener("click", () => {
-  saveState(hasBridge
-    ? "Saved graph draft and queued project.json sync."
-    : "Saved graph draft to local browser storage.");
-});
+saveDraftButton.addEventListener("click", saveDraftToBridge);
 
 exportButton.addEventListener("click", exportGraph);
 takeoverLegacyFilesButton?.addEventListener("click", takeoverLegacyFiles);
@@ -13489,14 +14134,14 @@ imageDefinitionDetailFormEl.addEventListener("change", handleImageDefinitionFiel
 });
 imageDefinitionBrowseButton.addEventListener("click", () => {
   if (!getActiveImageDefinition()) {
-    setStatus("Create or select an image definition before browsing for a file.");
+    setStatus(t("asset.prompt.image_select_first"));
     return;
   }
 
   imageDefinitionFileInput.value = "";
   imageDefinitionFileInput.click();
 });
-imageDefinitionFileInput.addEventListener("change", (event) => {
+imageDefinitionFileInput.addEventListener("change", async (event) => {
   const image = getActiveImageDefinition();
   const file = event.target.files?.[0];
 
@@ -13504,25 +14149,40 @@ imageDefinitionFileInput.addEventListener("change", (event) => {
     return;
   }
 
-  const nextSourcePath = buildImageSourcePathFromSelection(
-    file.name,
-    image.category,
-    image.sourcePath,
-  );
+  try {
+    const suggestedPath = buildImageSourcePathFromSelection(
+      file.name,
+      image.category,
+      image.sourcePath,
+    );
+    const result = await importSelectedAssetFile(file, suggestedPath, image.sourcePath);
+    const statusMessage = formatImportedAssetStatus(t("asset.resource.image"), file.name, result);
+    setAssetImportMeta(getAssetImportLevel(result), statusMessage);
 
-  updateActiveImageDefinition({ sourcePath: nextSourcePath });
-  setStatus(`Selected "${file.name}" for image source. Adjust the path if needed.`);
+    if (result?.canceled) {
+      setStatus(statusMessage);
+      return;
+    }
+
+    updateActiveImageDefinition({ sourcePath: result.path || suggestedPath });
+    queueProjectHealthRefresh({ immediate: true });
+    setStatus(statusMessage);
+  } catch (error) {
+    console.error(error);
+    setAssetImportMeta("bad", t("asset.error.image", { message: error.message }));
+    setStatus(t("asset.error.image", { message: error.message }));
+  }
 });
 imageDefinitionMovieBrowseButton.addEventListener("click", () => {
   if (!getActiveImageDefinition()) {
-    setStatus("Create or select an image definition before browsing for a movie file.");
+    setStatus(t("asset.prompt.movie_select_first"));
     return;
   }
 
   imageDefinitionMovieFileInput.value = "";
   imageDefinitionMovieFileInput.click();
 });
-imageDefinitionMovieFileInput.addEventListener("change", (event) => {
+imageDefinitionMovieFileInput.addEventListener("change", async (event) => {
   const image = getActiveImageDefinition();
   const file = event.target.files?.[0];
 
@@ -13530,13 +14190,28 @@ imageDefinitionMovieFileInput.addEventListener("change", (event) => {
     return;
   }
 
-  const nextMoviePath = buildMovieSourcePathFromSelection(
-    file.name,
-    image.moviePlay,
-  );
+  try {
+    const suggestedPath = buildMovieSourcePathFromSelection(
+      file.name,
+      image.moviePlay,
+    );
+    const result = await importSelectedAssetFile(file, suggestedPath, image.moviePlay);
+    const statusMessage = formatImportedAssetStatus(t("asset.resource.movie"), file.name, result);
+    setAssetImportMeta(getAssetImportLevel(result), statusMessage);
 
-  updateActiveImageDefinition({ moviePlay: nextMoviePath });
-  setStatus(`Selected "${file.name}" for movie playback. Adjust the path if needed.`);
+    if (result?.canceled) {
+      setStatus(statusMessage);
+      return;
+    }
+
+    updateActiveImageDefinition({ moviePlay: result.path || suggestedPath });
+    queueProjectHealthRefresh({ immediate: true });
+    setStatus(statusMessage);
+  } catch (error) {
+    console.error(error);
+    setAssetImportMeta("bad", t("asset.error.movie", { message: error.message }));
+    setStatus(t("asset.error.movie", { message: error.message }));
+  }
 });
 newLive2DDefinitionButton.addEventListener("click", () => {
   const newDefinition = createBlankLive2DDefinition();
@@ -13555,14 +14230,14 @@ live2dDefinitionDetailFormEl.addEventListener("input", handleLive2DDefinitionFie
 live2dDefinitionDetailFormEl.addEventListener("change", handleLive2DDefinitionFieldChange);
 live2dDefinitionBrowseButton.addEventListener("click", () => {
   if (!getActiveLive2DDefinition()) {
-    setStatus("Create or select a Live2D definition before browsing for a model file.");
+    setStatus(t("asset.prompt.live2d_select_first"));
     return;
   }
 
   live2dDefinitionFileInput.value = "";
   live2dDefinitionFileInput.click();
 });
-live2dDefinitionFileInput.addEventListener("change", (event) => {
+live2dDefinitionFileInput.addEventListener("change", async (event) => {
   const definition = getActiveLive2DDefinition();
   const file = event.target.files?.[0];
 
@@ -13570,13 +14245,28 @@ live2dDefinitionFileInput.addEventListener("change", (event) => {
     return;
   }
 
-  const nextModelPath = buildLive2DModelPathFromSelection(
-    file.name,
-    definition.modelPath,
-  );
+  try {
+    const suggestedPath = buildLive2DModelPathFromSelection(
+      file.name,
+      definition.modelPath,
+    );
+    const result = await importSelectedAssetFile(file, suggestedPath, definition.modelPath);
+    const statusMessage = formatImportedAssetStatus(t("asset.resource.live2d"), file.name, result);
+    setAssetImportMeta(getAssetImportLevel(result), statusMessage);
 
-  updateActiveLive2DDefinition({ modelPath: nextModelPath });
-  setStatus(`Selected "${file.name}" for Live2D model path. Adjust the path if needed.`);
+    if (result?.canceled) {
+      setStatus(statusMessage);
+      return;
+    }
+
+    updateActiveLive2DDefinition({ modelPath: result.path || suggestedPath });
+    queueProjectHealthRefresh({ immediate: true });
+    setStatus(statusMessage);
+  } catch (error) {
+    console.error(error);
+    setAssetImportMeta("bad", t("asset.error.live2d", { message: error.message }));
+    setStatus(t("asset.error.live2d", { message: error.message }));
+  }
 });
 live2dDefinitionDeleteButton.addEventListener("click", () => {
   const definition = getActiveLive2DDefinition();
@@ -13878,14 +14568,14 @@ audioDefinitionDetailFormEl.addEventListener("input", handleAudioDefinitionField
 audioDefinitionDetailFormEl.addEventListener("change", handleAudioDefinitionFieldChange);
 audioDefinitionBrowseButton.addEventListener("click", () => {
   if (!getActiveAudioDefinition()) {
-    setStatus("Create or select an audio definition before browsing for a file.");
+    setStatus(t("asset.prompt.audio_select_first"));
     return;
   }
 
   audioDefinitionFileInput.value = "";
   audioDefinitionFileInput.click();
 });
-audioDefinitionFileInput.addEventListener("change", (event) => {
+audioDefinitionFileInput.addEventListener("change", async (event) => {
   const audioDefinition = getActiveAudioDefinition();
   const file = event.target.files?.[0];
 
@@ -13893,14 +14583,29 @@ audioDefinitionFileInput.addEventListener("change", (event) => {
     return;
   }
 
-  const nextSourcePath = buildAudioSourcePathFromSelection(
-    file.name,
-    audioDefinition.channel,
-    audioDefinition.sourcePath,
-  );
+  try {
+    const suggestedPath = buildAudioSourcePathFromSelection(
+      file.name,
+      audioDefinition.channel,
+      audioDefinition.sourcePath,
+    );
+    const result = await importSelectedAssetFile(file, suggestedPath, audioDefinition.sourcePath);
+    const statusMessage = formatImportedAssetStatus(t("asset.resource.audio"), file.name, result);
+    setAssetImportMeta(getAssetImportLevel(result), statusMessage);
 
-  updateActiveAudioDefinition({ sourcePath: nextSourcePath });
-  setStatus(`Selected "${file.name}" for audio source. Adjust the path if needed.`);
+    if (result?.canceled) {
+      setStatus(statusMessage);
+      return;
+    }
+
+    updateActiveAudioDefinition({ sourcePath: result.path || suggestedPath });
+    queueProjectHealthRefresh({ immediate: true });
+    setStatus(statusMessage);
+  } catch (error) {
+    console.error(error);
+    setAssetImportMeta("bad", t("asset.error.audio", { message: error.message }));
+    setStatus(t("asset.error.audio", { message: error.message }));
+  }
 });
 newCharacterButton.addEventListener("click", () => {
   const newCharacter = createBlankCharacter();
@@ -14377,6 +15082,7 @@ sidebarCollapsedRailEl.querySelectorAll(".collapsed-rail-button").forEach((butto
 });
 openGuiEditorButton?.addEventListener("click", () => {
   const nextParams = new URLSearchParams();
+  const rememberedGuiSectionId = launchGuiSectionId || getStoredGuiSectionId() || "stylesSection";
 
   if (projectPath) {
     nextParams.set("project", projectPath);
@@ -14386,6 +15092,9 @@ openGuiEditorButton?.addEventListener("click", () => {
     nextParams.set("bridge", bridgeUrl);
     nextParams.set("token", bridgeToken);
   }
+
+  nextParams.set("section", activeSidebarSectionId);
+  nextParams.set("guiSection", rememberedGuiSectionId);
 
   const query = nextParams.toString() ? `?${nextParams.toString()}` : "";
   window.location.href = `./gui_editor.html${query}`;
@@ -14657,10 +15366,38 @@ function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+if (launchSidebarSectionId) {
+  activeSidebarSectionId = launchSidebarSectionId;
+}
+
+if (launchGuiSectionId) {
+  storeGuiSectionId(launchGuiSectionId);
+}
+
+if (returnedFromGuiEditor) {
+  const lastGuiSectionId = launchGuiSectionId || getStoredGuiSectionId() || "stylesSection";
+  pendingLaunchStatusText = t("status.returned_from_gui", {
+    section: getGuiSectionLabel(lastGuiSectionId),
+  });
+}
+
+if (localeSelect) {
+  syncLocaleControl();
+  localeSelect.addEventListener("change", (event) => {
+    i18n.setLocale(event.target.value);
+  });
+}
+
+window.addEventListener("visual-editor-locale-changed", () => {
+  render();
+});
+
+applyCurrentLocale();
 render();
 setSidebarSection(activeSidebarSectionId);
 setSidebarState(true);
 setInspectorState(Boolean(getActiveGraph()?.selectedNodeId));
 setAddBlockState(false);
-setStatus("Visual editor scaffold ready. Drag empty space to move the canvas, and use the mouse wheel to zoom.");
+renderProjectHealth();
+setStatus(pendingLaunchStatusText || t("status.visual_editor_ready"));
 hydrateStateFromBridge();

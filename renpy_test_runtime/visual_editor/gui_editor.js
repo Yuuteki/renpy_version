@@ -15,16 +15,36 @@ function getLaunchParams() {
 }
 
 const params = getLaunchParams();
+const i18n = window.visualEditorI18n || {
+  t(key, vars = {}) {
+    return `${key}`.replace(/\{(\w+)\}/g, (_match, name) => (
+      Object.prototype.hasOwnProperty.call(vars, name) ? `${vars[name]}` : `{${name}}`
+    ));
+  },
+  getLocale() {
+    return "en";
+  },
+  setLocale() {},
+  applyTranslations() {},
+};
+const t = (key, vars = {}) => i18n.t(key, vars);
 const projectPath = params.get("project") || "";
 const bridgeUrl = params.get("bridge") || "";
 const bridgeToken = params.get("token") || "";
 const hasBridge = Boolean(bridgeUrl && bridgeToken);
+const launchMainSectionId = params.get("section") || "projectOverviewSection";
+const launchGuiSectionId = params.get("guiSection") || "";
 const storageKey = projectPath
   ? `renpy-visual-editor:${projectPath}`
   : "renpy-visual-editor:default";
+const guiSectionStorageKey = projectPath
+  ? `renpy-visual-editor:gui-section:${projectPath}`
+  : "renpy-visual-editor:gui-section:default";
 
 const guiProjectPathEl = document.getElementById("guiProjectPath");
 const guiStatusTextEl = document.getElementById("guiStatusText");
+const guiSyncPillsEl = document.getElementById("guiSyncPills");
+const guiLocaleSelect = document.getElementById("guiLocaleSelect");
 const guiBackButton = document.getElementById("guiBackButton");
 const guiSaveButton = document.getElementById("guiSaveButton");
 const guiNavButtonEls = Array.from(document.querySelectorAll(".gui-nav-button"));
@@ -37,6 +57,29 @@ const pythonUiNavCountEl = document.getElementById("pythonUiNavCount");
 const cursorsNavCountEl = document.getElementById("cursorsNavCount");
 const shadersNavCountEl = document.getElementById("shadersNavCount");
 const diagnosticsNavCountEl = document.getElementById("diagnosticsNavCount");
+
+const guiSectionLabelById = {
+  stylesSection: "gui.nav.styles",
+  screensSection: "gui.nav.screens",
+  extrasSection: "gui.nav.extras",
+  configSection: "gui.nav.config",
+  pythonUiSection: "gui.nav.python",
+  cursorsSection: "gui.nav.cursors",
+  shadersSection: "gui.nav.shaders",
+  diagnosticsSection: "gui.nav.diagnostics",
+};
+
+const mainSectionLabelById = {
+  projectOverviewSection: "section.main.project",
+  labelGraphsSection: "section.main.label_graphs",
+  imagesSection: "section.main.images",
+  live2dSection: "section.main.live2d",
+  audioSection: "section.main.audio",
+  charactersSection: "section.main.characters",
+  variablesSection: "section.main.variables",
+  definitionsSection: "section.main.definitions",
+  visualProjectSection: "section.main.settings",
+};
 
 const guiStyleEmptyEl = document.getElementById("guiStyleEmpty");
 const guiStyleListEl = document.getElementById("guiStyleList");
@@ -1058,6 +1101,17 @@ function createScreenTemplate(templateId) {
 
 let projectState = ensureProjectState(loadProjectState());
 let activeSectionId = "stylesSection";
+let guiHealthState = {
+  loading: false,
+  data: null,
+  error: "",
+  lastUpdatedAt: 0,
+};
+let guiHealthRefreshTimer = null;
+let guiProjectSyncMeta = {
+  level: hasBridge ? "warn" : "bad",
+  text: hasBridge ? t("sync.project_json.initial_wait_gui") : t("sync.bridge.disconnected"),
+};
 let activeStyleId = projectState.gui.styles[0]?.id ?? null;
 let activeStylePrefixId = "base";
 let activeScreenId = projectState.gui.screens[0]?.id ?? null;
@@ -1122,6 +1176,124 @@ async function callBridge(path, payload = null) {
   return data;
 }
 
+function getStoredGuiSectionId() {
+  const raw = window.localStorage.getItem(guiSectionStorageKey) || "";
+  return guiSectionLabelById[raw] ? raw : "";
+}
+
+function getGuiSectionLabel(sectionId) {
+  const key = guiSectionLabelById[sectionId];
+  return key ? t(key) : t("gui.heading");
+}
+
+function getMainSectionLabel(sectionId) {
+  const key = mainSectionLabelById[sectionId];
+  return key ? t(key) : t("index.visual_project.heading");
+}
+
+function storeGuiSectionId(sectionId) {
+  if (guiSectionLabelById[sectionId]) {
+    window.localStorage.setItem(guiSectionStorageKey, sectionId);
+  }
+}
+
+function renderLocaleOptions(selectEl) {
+  if (!selectEl) {
+    return;
+  }
+
+  const locales = [
+    { value: "en", label: t("ui.language.english") },
+    { value: "zh-CN", label: t("ui.language.zhCN") },
+  ];
+
+  selectEl.innerHTML = locales.map((locale) => (
+    `<option value="${escapeHtml(locale.value)}">${escapeHtml(locale.label)}</option>`
+  )).join("");
+}
+
+function syncLocaleControl() {
+  if (guiLocaleSelect) {
+    renderLocaleOptions(guiLocaleSelect);
+    guiLocaleSelect.value = i18n.getLocale();
+  }
+}
+
+function applyCurrentLocale() {
+  i18n.applyTranslations(document);
+  syncLocaleControl();
+}
+
+function formatTimestamp(timestamp) {
+  if (!timestamp) {
+    return t("common.not_written_yet");
+  }
+
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(timestamp));
+  } catch (error) {
+    return new Date(timestamp).toLocaleString();
+  }
+}
+
+function setGuiProjectSyncMeta(level, text) {
+  guiProjectSyncMeta = { level, text };
+}
+
+async function refreshGuiHealth() {
+  if (!hasBridge) {
+    guiHealthState = {
+      loading: false,
+      data: null,
+      error: "",
+      lastUpdatedAt: Date.now(),
+    };
+    renderTopbar();
+    return;
+  }
+
+  guiHealthState.loading = true;
+  renderTopbar();
+
+  try {
+    const response = await callBridge("health", { state: projectState });
+    guiHealthState = {
+      loading: false,
+      data: response.health || null,
+      error: "",
+      lastUpdatedAt: Date.now(),
+    };
+  } catch (error) {
+    console.error(error);
+    guiHealthState = {
+      loading: false,
+      data: guiHealthState.data,
+      error: error.message,
+      lastUpdatedAt: Date.now(),
+    };
+  }
+
+  renderTopbar();
+}
+
+function queueGuiHealthRefresh({ immediate = false } = {}) {
+  window.clearTimeout(guiHealthRefreshTimer);
+
+  if (immediate) {
+    void refreshGuiHealth();
+    return;
+  }
+
+  guiHealthRefreshTimer = window.setTimeout(() => {
+    void refreshGuiHealth();
+  }, 500);
+}
+
 let bridgeSaveTimer = null;
 
 function queueBridgeProjectSave() {
@@ -1130,11 +1302,15 @@ function queueBridgeProjectSave() {
   }
 
   window.clearTimeout(bridgeSaveTimer);
+  setGuiProjectSyncMeta("warn", t("sync.gui.manual_save"));
   bridgeSaveTimer = window.setTimeout(async () => {
     try {
       await callBridge("state", { state: projectState });
+      setGuiProjectSyncMeta("good", t("sync.gui.good"));
+      queueGuiHealthRefresh();
     } catch (error) {
       console.error(error);
+      setGuiProjectSyncMeta("bad", t("sync.project_json.failed", { message: error.message }));
       setStatus(`Project JSON sync failed: ${error.message}`);
     }
   }, 350);
@@ -1155,6 +1331,7 @@ function resetActiveSelectionsFromProject() {
 
 async function hydrateProjectStateFromBridge() {
   if (!hasBridge) {
+    queueGuiHealthRefresh({ immediate: true });
     return;
   }
 
@@ -1166,13 +1343,15 @@ async function hydrateProjectStateFromBridge() {
       window.localStorage.setItem(storageKey, JSON.stringify(projectState, null, 2));
       resetActiveSelectionsFromProject();
       render();
-      setStatus("Loaded GUI state from visual_editor/project.json.");
+      setGuiProjectSyncMeta("good", t("sync.project_json.loaded"));
+      setStatus(t("gui.status.loaded"));
     } else if (response.importedState) {
       projectState = ensureProjectState(response.importedState);
       window.localStorage.setItem(storageKey, JSON.stringify(projectState, null, 2));
       resetActiveSelectionsFromProject();
       render();
       await callBridge("state", { state: projectState });
+      setGuiProjectSyncMeta("good", t("sync.project_json.imported"));
 
       const importSources = Array.isArray(response.importSummary?.sourcePaths) && response.importSummary.sourcePaths.length
         ? response.importSummary.sourcePaths
@@ -1188,14 +1367,21 @@ async function hydrateProjectStateFromBridge() {
         response.importSummary?.definitionCount || 0,
       ];
       const importedTotal = importedCounts.reduce((sum, count) => sum + count, 0);
-      setStatus(`Imported ${importSources.join(" + ")} into visual_editor/project.json${importedTotal ? ` (${importedTotal} items).` : "."}`);
+      setStatus(t("gui.status.imported", {
+        sources: importSources.join(" + "),
+        suffix: importedTotal ? ` (${importedTotal} items).` : ".",
+      }));
     } else {
       await callBridge("state", { state: projectState });
-      setStatus("Created visual_editor/project.json from the current GUI state.");
+      setGuiProjectSyncMeta("good", t("sync.project_json.created"));
+      setStatus(t("gui.status.created"));
     }
   } catch (error) {
     console.error(error);
-    setStatus(`Launcher bridge unavailable: ${error.message}`);
+    setGuiProjectSyncMeta("bad", t("gui.status.bridge_unavailable", { message: error.message }));
+    setStatus(t("gui.status.bridge_unavailable", { message: error.message }));
+  } finally {
+    queueGuiHealthRefresh({ immediate: true });
   }
 }
 
@@ -2015,16 +2201,17 @@ function getActiveGallery() {
   return projectState.gui.galleries.find((entry) => entry.id === activeGalleryId) ?? null;
 }
 
-function saveProjectState(message = "Saved GUI draft.") {
+function saveProjectState(message = t("gui.status.saved_local")) {
   projectState.gui = normalizeGuiState(projectState.gui);
   window.localStorage.setItem(storageKey, JSON.stringify(projectState, null, 2));
   queueBridgeProjectSave();
+  queueGuiHealthRefresh();
   setStatus(message);
 }
 
 function setStatus(message) {
   if (guiStatusTextEl) {
-    guiStatusTextEl.textContent = message;
+    guiStatusTextEl.textContent = i18n.translateText ? i18n.translateText(message) : message;
   }
 }
 
@@ -5693,7 +5880,51 @@ function renderDiagnostics() {
 }
 
 function renderTopbar() {
-  guiProjectPathEl.textContent = projectPath || "No project path provided.";
+  guiProjectPathEl.textContent = projectPath || t("gui.project_path.missing");
+
+  if (!guiSyncPillsEl) {
+    return;
+  }
+
+  const missingAssets = Array.isArray(guiHealthState.data?.missingAssets) ? guiHealthState.data.missingAssets.length : 0;
+  const confirmMode = guiHealthState.data?.confirmScreen?.mode || "fallback";
+  const lastMainSection = getMainSectionLabel(launchMainSectionId);
+  const pills = [
+    {
+      label: hasBridge ? t("health.bridge.connected") : t("health.bridge.offline"),
+      level: hasBridge ? "good" : "bad",
+    },
+    {
+      label: guiProjectSyncMeta.text,
+      level: guiProjectSyncMeta.level,
+    },
+    {
+      label: confirmMode === "project" ? t("gui.topbar.confirm.project") : t("gui.topbar.confirm.fallback"),
+      level: confirmMode === "project" ? "good" : "warn",
+    },
+    {
+      label: missingAssets ? t("gui.topbar.assets.missing", { count: missingAssets }) : t("gui.topbar.assets.ok"),
+      level: missingAssets ? "bad" : "good",
+    },
+    {
+      label: t("gui.topbar.return_target", { section: lastMainSection }),
+      level: "good",
+    },
+    {
+      label: guiHealthState.loading
+        ? t("gui.topbar.refreshing")
+        : (guiHealthState.error
+          ? t("gui.topbar.warning", { message: guiHealthState.error })
+          : (guiHealthState.lastUpdatedAt
+            ? t("gui.topbar.checked", { time: formatTimestamp(guiHealthState.lastUpdatedAt) })
+            : t("gui.topbar.waiting"))),
+      level: guiHealthState.error ? "warn" : "good",
+    },
+  ];
+
+  guiSyncPillsEl.innerHTML = pills.map((pill) => `
+    <span class="gui-sync-pill is-${escapeHtml(pill.level)}">${escapeHtml(pill.label)}</span>
+  `).join("");
 }
 
 function renderNav() {
@@ -5739,6 +5970,7 @@ function render() {
   renderShaderList();
   renderShaderDetail();
   renderDiagnostics();
+  applyCurrentLocale();
 }
 
 function createEntityCardSelectionHandler(event, attributeName, setter) {
@@ -5752,6 +5984,12 @@ function createEntityCardSelectionHandler(event, attributeName, setter) {
   return card;
 }
 
+const initialGuiSectionId = guiSectionLabelById[launchGuiSectionId]
+  ? launchGuiSectionId
+  : (getStoredGuiSectionId() || "stylesSection");
+activeSectionId = initialGuiSectionId;
+storeGuiSectionId(initialGuiSectionId);
+
 renderScreenTemplateOptions();
 renderScreenNodeTypeOptions();
 renderActionValueOptions();
@@ -5759,8 +5997,9 @@ renderActionValueOptions();
 guiNavButtonEls.forEach((button) => {
   button.addEventListener("click", () => {
     activeSectionId = button.dataset.guiSection;
+    storeGuiSectionId(activeSectionId);
     render();
-    setStatus(`Opened ${button.textContent.trim()} section.`);
+    setStatus(t("gui.status.section_opened", { section: getGuiSectionLabel(activeSectionId) }));
   });
 });
 
@@ -5776,14 +6015,19 @@ guiBackButton.addEventListener("click", () => {
     nextParams.set("token", bridgeToken);
   }
 
+  nextParams.set("section", launchMainSectionId);
+  nextParams.set("guiSection", activeSectionId);
+  nextParams.set("returnedFrom", "gui");
+
   const query = nextParams.toString() ? `?${nextParams.toString()}` : "";
   window.location.href = `./index.html${query}`;
 });
 
 guiSaveButton.addEventListener("click", () => {
+  setGuiProjectSyncMeta(hasBridge ? "warn" : "warn", hasBridge ? t("sync.gui.manual_save") : t("sync.project_json.local_only"));
   saveProjectState(hasBridge
-    ? "Saved GUI draft and queued project.json sync."
-    : "Saved GUI draft.");
+    ? t("gui.status.saved")
+    : t("gui.status.saved_local"));
 });
 
 newGuiStyleButton.addEventListener("click", () => {
@@ -6629,6 +6873,18 @@ guiDeleteGalleryButton.addEventListener("click", () => {
   deleteActiveGallery();
 });
 
+if (guiLocaleSelect) {
+  syncLocaleControl();
+  guiLocaleSelect.addEventListener("change", (event) => {
+    i18n.setLocale(event.target.value);
+  });
+}
+
+window.addEventListener("visual-editor-locale-changed", () => {
+  render();
+});
+
+applyCurrentLocale();
 render();
-setStatus("GUI editor ready. Styles, screens, config, Python UI helpers, replay menus, music rooms, galleries, cursors, shaders, and diagnostics are now available.");
+setStatus(t("gui.status.ready"));
 hydrateProjectStateFromBridge();

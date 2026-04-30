@@ -35,6 +35,44 @@
   font-size: 13px;
 }
 
+.gui-sync-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gui-sync-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.gui-sync-pill::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.gui-sync-pill.is-good::before {
+  background: #61d39b;
+}
+
+.gui-sync-pill.is-warn::before {
+  background: #f0b35f;
+}
+
+.gui-sync-pill.is-bad::before {
+  background: #f08a8a;
+}
+
 .gui-eyebrow {
   margin: 0;
   font-size: 12px;

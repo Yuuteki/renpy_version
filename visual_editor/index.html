@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="html.index.title">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,29 +12,51 @@
         <div class="sidebar-scroll">
           <section id="projectOverviewSection" class="sidebar-section sidebar-panel is-active">
             <div class="section-header">
-              <h2>Visual Project</h2>
-              <p>Snapshot of the current visual workspace.</p>
+              <div>
+                <h2 data-i18n="index.visual_project.heading">Visual Project</h2>
+                <p data-i18n="index.visual_project.desc">Snapshot of the current visual workspace.</p>
+              </div>
+              <label class="language-control">
+                <span data-i18n="ui.language.label">Language</span>
+                <select id="localeSelect" class="language-select">
+                  <option value="en" data-i18n="ui.language.english">English</option>
+                  <option value="zh-CN" data-i18n="ui.language.zhCN">简体中文</option>
+                </select>
+              </label>
             </div>
 
-            <p class="section-label">Project Path</p>
+            <p class="section-label" data-i18n="index.project_path.label">Project Path</p>
             <p id="projectPath" class="project-path">No project path provided.</p>
 
-            <p class="section-label secondary-label">Expected Files</p>
+            <p class="section-label secondary-label" data-i18n="index.expected_files.label">Expected Files</p>
             <p id="projectFiles" class="project-files"></p>
 
             <div class="sidebar-actions">
-              <button id="saveDraftButton" class="secondary">Save Draft</button>
-              <button id="exportButton" class="primary">Export to .rpy</button>
-              <button id="takeoverLegacyFilesButton" class="danger-button" type="button">Take Over Legacy GUI Files</button>
+              <button id="saveDraftButton" class="secondary" data-i18n="index.button.save_draft">Save Draft</button>
+              <button id="exportButton" class="primary" data-i18n="index.button.export">Export to .rpy</button>
+              <button id="takeoverLegacyFilesButton" class="danger-button" type="button" data-i18n="index.button.takeover">Take Over Legacy GUI Files</button>
             </div>
 
-            <p id="takeoverLegacyFilesNote" class="project-settings-note">
+            <p id="takeoverLegacyFilesNote" class="project-settings-note" data-i18n-html="index.takeover.default_html">
               This will back up and remove <code>game/options.rpy</code>, <code>game/gui.rpy</code>,
               <code>game/screens.rpy</code>, and matching <code>.rpyc</code> files, then refresh
               <code>generated_visual_editor.rpy</code>.
             </p>
 
             <div id="visualProjectStats" class="visual-project-stats"></div>
+
+            <div class="project-health-panel">
+              <div class="project-health-header">
+                <div>
+                  <p class="section-label secondary-label" data-i18n="index.health.label">Project Health</p>
+                  <p id="projectHealthSummary" class="project-health-summary" data-i18n="index.health.summary_default">Checking editor sync, legacy file cleanup, and core asset coverage.</p>
+                </div>
+                <span id="projectHealthTimestamp" class="project-health-timestamp" data-i18n="index.health.waiting">Waiting for project scan</span>
+              </div>
+
+              <div id="projectHealthPills" class="project-health-pills"></div>
+              <div id="projectHealthChecklist" class="project-health-checklist"></div>
+            </div>
           </section>
 
           <section id="labelGraphsSection" class="sidebar-section sidebar-panel">
@@ -1410,15 +1432,18 @@
 
           <section id="visualProjectSection" class="sidebar-section sidebar-panel status-section">
             <div class="section-header">
-              <h2>Settings</h2>
-              <p>Project-level settings, GUI editing entry, and current editor status.</p>
+              <h2 data-i18n="index.settings.heading">Settings</h2>
+              <p data-i18n="index.settings.desc">Project-level settings, GUI editing entry, and current editor status.</p>
             </div>
 
-            <p class="section-label secondary-label">GUI Editor</p>
+            <p class="section-label secondary-label" data-i18n="index.gui_editor.label">GUI Editor</p>
             <div id="guiEditorProjectSummary" class="visual-project-stats"></div>
+            <p id="guiEditorStatusNote" class="project-settings-note" data-i18n="index.gui_editor.note">
+              Open the GUI Editor to continue styles, screens, config, cursor, shader, and diagnostics work with the same project state.
+            </p>
 
             <div class="sidebar-actions">
-              <button id="openGuiEditorButton" class="primary" type="button">Open GUI Editor</button>
+              <button id="openGuiEditorButton" class="primary" type="button" data-i18n="index.gui_editor.open">Open GUI Editor</button>
             </div>
 
             <p class="section-label secondary-label">Voice Settings</p>
@@ -2488,6 +2513,7 @@
       <datalist id="imageTagSuggestionList"></datalist>
     </div>
 
+    <script src="./i18n.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
