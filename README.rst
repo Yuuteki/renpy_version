@@ -11,29 +11,6 @@ Ren'Py Visual Editor Fork
 项目中持续验证生成代码、导入兼容性和边界情况。
 
 
-当前状态
-========
-
-当前里程碑：``0.4.14``，详见 '[CHANGELOG.md]<CHANGELOG.md>'。
-
-已经完成的主链路：
-
-* 在 Ren'Py launcher 的项目页中打开 ``Visual Editor``。
-* 通过 launcher 本地 bridge 服务托管编辑器页面，而不是直接依赖 ``file://``。
-* 将编辑器状态保存到项目内的 ``visual_editor/project.json``。
-* 将生成脚本导出到项目内的 ``game/generated_visual_editor.rpy``。
-* 在首次打开时尝试从已有 ``game/options.rpy``、``game/gui.rpy``、
-  ``game/screens.rpy`` 导入可识别设置。
-* 支持备份并接管旧 GUI 文件，减少旧 ``options/gui/screens`` 与新生成文件互相覆盖。
-* 已在 Windows 测试运行环境中跑通 launcher 与编辑器的基本集成。
-
-仍需继续验证的部分：
-
-* 复杂真实项目中的导入完整性。
-* 生成的 ``.rpy`` 在更多 Ren'Py 项目中的 lint / run 结果。
-* 各类 block 的边界参数、空值、冲突命名和旧工程迁移行为。
-* GUI Editor 的大规模 screen / style 编辑体验。
-
 
 核心功能
 ========
