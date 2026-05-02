@@ -14,7 +14,7 @@ Ren'Py Visual Editor Fork
 当前状态
 ========
 
-当前里程碑：``0.4.14``，详见 ``CHANGELOG.md``。
+当前里程碑：``0.4.14``，详见 [CHANGELOG.md](CHANGELOG.md)。
 
 已经完成的主链路：
 
