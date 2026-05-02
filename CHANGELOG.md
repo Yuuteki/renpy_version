@@ -2,6 +2,24 @@
 
 本文件记录这个 Ren'Py 可视化编辑分支的重要更新。
 
+## [0.4.14] - 2026-05-02
+
+### Added
+
+- 新增 `visual_editor/i18n.js` 国际化层，开始将主编辑器与 GUI 编辑器的界面文案、状态提示和诊断信息集中管理，支持后续稳定汉化。
+- 新增 `renpy_test_runtime/` 测试运行环境镜像，用于在 Windows 上直接验证 launcher 集成、前端加载、保存和导出链路。
+- 为 launcher bridge 新增静态编辑器托管能力，`Visual Editor` 现在通过 `http://127.0.0.1:<port>/editor/index.html` 打开，不再依赖浏览器直接读取 `file://` 页面。
+- 为 bridge 新增项目脚本扫描、健康检查、资源导入、旧 GUI 文件接管和旧脚本清理接口，覆盖 `symbols`、`health`、`import_asset_file`、`takeover_legacy_files`、`cleanup_legacy_script_files` 等工作流。
+- 新增从已有 `game/options.rpy`、`game/gui.rpy`、`game/screens.rpy` 导入可识别设置的能力，首次创建 `visual_editor/project.json` 时可以带入部分旧项目配置。
+
+### Changed
+
+- launcher 项目页回到单一 `Visual Editor` 入口，`project.json` 保存改为编辑器内自动同步，`.rpy` 导出仍由编辑器内手动触发。
+- `visual_editor/README.md` 更新为新的本地 HTTP bridge 启动方式，并补充旧 GUI 文件接管、自动导入和生成文件职责说明。
+- 主编辑器增加项目健康状态提示，用于提醒 bridge 连接、`project.json` 同步、旧脚本残留和旧 GUI 文件残留等风险。
+- GUI 接管流程会备份并移除 `options.rpy`、`gui.rpy`、`screens.rpy` 及匹配的 `.rpyc` 文件，然后刷新 `generated_visual_editor.rpy`，降低新旧 GUI 定义互相覆盖的概率。
+- GUI Editor 左侧导航栏改为可滚动且计数徽标固定宽度，避免汉化后长文本与数量徽标互相重合。
+
 ## [0.4.13] - 2026-04-26
 
 ### Added
