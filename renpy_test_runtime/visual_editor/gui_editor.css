@@ -90,7 +90,7 @@
 .gui-layout {
   min-height: 0;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: minmax(220px, 248px) minmax(0, 1fr);
   gap: 18px;
 }
 
@@ -107,12 +107,16 @@
 
 .gui-nav-panel {
   padding: 18px;
+  overflow: hidden;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 18px;
 }
 
 .gui-nav-stack {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 2px;
   display: grid;
   gap: 10px;
   align-content: start;
@@ -123,6 +127,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
   width: 100%;
   padding: 14px 16px;
   border-radius: 18px;
@@ -131,7 +136,20 @@
   color: var(--text);
 }
 
+.gui-nav-button span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .gui-nav-button strong {
+  flex: 0 0 auto;
+  min-width: 28px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  text-align: center;
   font-size: 12px;
   font-weight: 600;
   color: var(--muted);

@@ -11,6 +11,7 @@
 - 为 launcher bridge 新增静态编辑器托管能力，`Visual Editor` 现在通过 `http://127.0.0.1:<port>/editor/index.html` 打开，不再依赖浏览器直接读取 `file://` 页面。
 - 为 bridge 新增项目脚本扫描、健康检查、资源导入、旧 GUI 文件接管和旧脚本清理接口，覆盖 `symbols`、`health`、`import_asset_file`、`takeover_legacy_files`、`cleanup_legacy_script_files` 等工作流。
 - 新增从已有 `game/options.rpy`、`game/gui.rpy`、`game/screens.rpy` 导入可识别设置的能力，首次创建 `visual_editor/project.json` 时可以带入部分旧项目配置。
+- 新增 `scripts/sync_visual_editor_runtime.py`，用于将根目录源码同步到 `renpy_test_runtime`，避免测试运行环境和源码真身继续分叉。
 
 ### Changed
 
@@ -19,6 +20,11 @@
 - 主编辑器增加项目健康状态提示，用于提醒 bridge 连接、`project.json` 同步、旧脚本残留和旧 GUI 文件残留等风险。
 - GUI 接管流程会备份并移除 `options.rpy`、`gui.rpy`、`screens.rpy` 及匹配的 `.rpyc` 文件，然后刷新 `generated_visual_editor.rpy`，降低新旧 GUI 定义互相覆盖的概率。
 - GUI Editor 左侧导航栏改为可滚动且计数徽标固定宽度，避免汉化后长文本与数量徽标互相重合。
+- 合并 `visual_editor/app.js` 与 `renpy_test_runtime/visual_editor/app.js` 的分叉，明确以后以根目录源码为唯一维护入口。
+- 修复主编辑器左侧栏收起后，图像等快捷入口的标题和辅助标签被英文硬编码覆盖的问题。
+- 修复图像与音频列表折叠/局部刷新后，分类标题和资源摘要回退为英文的问题。
+- 修复主编辑器表单下拉框同时显示原生箭头和自定义箭头的问题。
+- 修复图像位置字段汉化标记写法错误导致页面结构异常的问题。
 
 ## [0.4.13] - 2026-04-26
 

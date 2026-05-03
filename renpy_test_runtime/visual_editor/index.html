@@ -199,22 +199,22 @@
                   <p class="section-label secondary-label">Position</p>
 
                   <label>
-                    pos
+                    <span data-i18n="image-pos">Position</span>
                     <input id="imageDefinitionPosInput" data-image-field="pos" type="text" placeholder="e.g. (960, 540)" />
                   </label>
 
                   <label>
-                    anchor
+                    <span data-i18n="image-anchor">Anchor</span>
                     <input id="imageDefinitionAnchorInput" data-image-field="anchor" type="text" placeholder="e.g. (0.5, 0.5)" />
                   </label>
 
                   <label>
-                    align
+                    <span data-i18n="image-align">Align</span>
                     <input id="imageDefinitionAlignInput" data-image-field="align" type="text" placeholder="e.g. (0.5, 1.0)" />
                   </label>
 
                   <label>
-                    alignaround
+                    <span data-i18n="image-alignaround">Align Around</span>
                     <input id="imageDefinitionAlignAroundInput" data-image-field="alignaround" type="text" placeholder="e.g. (0.5, 0.5)" />
                   </label>
 
@@ -1615,7 +1615,12 @@
       </aside>
 
       <div class="sidebar-controls">
-        <div id="sidebarCollapsedRail" class="sidebar-collapsed-rail" aria-label="Sidebar shortcuts">
+        <div
+          id="sidebarCollapsedRail"
+          class="sidebar-collapsed-rail"
+          aria-label="Sidebar shortcuts"
+          data-i18n-aria-label="sidebar.shortcuts"
+        >
           <button
             id="sidebarToggleButton"
             class="sidebar-toggle-button"
@@ -1635,6 +1640,8 @@
             data-sidebar-section="projectOverviewSection"
             aria-label="Open project overview"
             title="Project"
+            data-i18n-aria-label="sidebar.open_project"
+            data-i18n-title="section.main.project"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 8.5 12 4l8 4.5"></path>
@@ -1649,6 +1656,8 @@
             data-sidebar-section="labelGraphsSection"
             aria-label="Open label graphs"
             title="Label Graphs"
+            data-i18n-aria-label="sidebar.open_label_graphs"
+            data-i18n-title="section.main.label_graphs"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="5" y="4" width="14" height="4" rx="1.5"></rect>
@@ -1663,6 +1672,8 @@
             data-sidebar-section="imagesSection"
             aria-label="Open image definitions"
             title="Images"
+            data-i18n-aria-label="sidebar.open_images"
+            data-i18n-title="section.main.images"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="4" y="5" width="16" height="14" rx="2"></rect>
@@ -1677,6 +1688,8 @@
             data-sidebar-section="live2dSection"
             aria-label="Open Live2D definitions"
             title="Live2D"
+            data-i18n-aria-label="sidebar.open_live2d"
+            data-i18n-title="section.main.live2d"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M7 6.5c0-1.4 1.1-2.5 2.5-2.5h5C15.9 4 17 5.1 17 6.5V10c0 1.6-1.1 3-2.7 3.3l-1.3.2-1.3-.2C10.1 13 9 11.6 9 10V8.5"></path>
@@ -1692,6 +1705,8 @@
             data-sidebar-section="audioSection"
             aria-label="Open audio definitions"
             title="Audio"
+            data-i18n-aria-label="sidebar.open_audio"
+            data-i18n-title="section.main.audio"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 10v4"></path>
@@ -1707,6 +1722,8 @@
             data-sidebar-section="charactersSection"
             aria-label="Open character definitions"
             title="Characters"
+            data-i18n-aria-label="sidebar.open_characters"
+            data-i18n-title="section.main.characters"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="8" r="3"></circle>
@@ -1720,6 +1737,8 @@
             data-sidebar-section="variablesSection"
             aria-label="Open variables"
             title="Variables"
+            data-i18n-aria-label="sidebar.open_variables"
+            data-i18n-title="section.main.variables"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M7 6h10"></path>
@@ -1737,6 +1756,8 @@
             data-sidebar-section="achievementsSection"
             aria-label="Open achievements"
             title="Achievements"
+            data-i18n-aria-label="sidebar.open_achievements"
+            data-i18n-title="section.main.achievements"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8 5h8v3a4 4 0 0 1-8 0Z"></path>
@@ -1754,6 +1775,8 @@
             data-sidebar-section="definitionsSection"
             aria-label="Open definitions"
             title="Definitions"
+            data-i18n-aria-label="sidebar.open_definitions"
+            data-i18n-title="section.main.definitions"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M9 5 4 12l5 7"></path>
@@ -1768,6 +1791,8 @@
             data-sidebar-section="visualProjectSection"
             aria-label="Open settings"
             title="Settings"
+            data-i18n-aria-label="sidebar.open_settings"
+            data-i18n-title="section.main.settings"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="5" y="5" width="14" height="14" rx="2"></rect>

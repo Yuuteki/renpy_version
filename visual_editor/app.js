@@ -26,8 +26,12 @@ const i18n = window.visualEditorI18n || {
   },
   setLocale() {},
   applyTranslations() {},
+  translateText(value) {
+    return value;
+  },
 };
 const t = (key, vars = {}) => i18n.t(key, vars);
+const tt = (value) => i18n.translateText ? i18n.translateText(value) : value;
 const projectPath = params.get("project") || "";
 const bridgeUrl = params.get("bridge") || "";
 const bridgeToken = params.get("token") || "";
@@ -2712,13 +2716,18 @@ function setStatus(message) {
   statusTextEl.textContent = i18n.translateText ? i18n.translateText(message) : message;
 }
 
+function setSidebarToggleLabel() {
+  const label = t(sidebarOpen ? "sidebar.collapse" : "sidebar.expand");
+  sidebarToggleButton.setAttribute("aria-label", label);
+  sidebarToggleButton.title = label;
+}
+
 function setSidebarState(nextOpen) {
   sidebarOpen = nextOpen;
   sidebarEl.classList.toggle("is-open", sidebarOpen);
   sidebarToggleButton.classList.toggle("is-collapsed", !sidebarOpen);
   sidebarToggleButton.setAttribute("aria-expanded", String(sidebarOpen));
-  sidebarToggleButton.setAttribute("aria-label", sidebarOpen ? "Collapse sidebar" : "Expand sidebar");
-  sidebarToggleButton.title = sidebarOpen ? "Collapse sidebar" : "Expand sidebar";
+  setSidebarToggleLabel();
 }
 
 function setSidebarSection(sectionId) {
@@ -4201,7 +4210,7 @@ function buildImageNodeResourceOptions(selectEl, node, { mode = "show" } = {}) {
   state.images.forEach((image) => {
     const option = document.createElement("option");
     option.value = image.id;
-    option.textContent = `${image.name} · ${getImageDefinitionTypeLabel(image)} · ${imageCategoryMeta[image.category]?.label || "Others"}`;
+    option.textContent = `${image.name} · ${getImageDefinitionTypeLabel(image)} · ${tt(imageCategoryMeta[image.category]?.label || "Others")}`;
     selectEl.appendChild(option);
   });
 
@@ -5600,7 +5609,7 @@ function getImageDefinitionType(image) {
 }
 
 function getImageDefinitionTypeLabel(image) {
-  return imageDefinitionTypeMeta[getImageDefinitionType(image)]?.label || imageDefinitionTypeMeta.static.label;
+  return tt(imageDefinitionTypeMeta[getImageDefinitionType(image)]?.label || imageDefinitionTypeMeta.static.label);
 }
 
 function getVisualResourceKind(resource) {
@@ -5870,25 +5879,25 @@ function parseSimpleMatrixColorExpression(expression) {
 
 function getImageDefinitionSummary(image) {
   const definitionType = getImageDefinitionType(image);
-  const sideImagePrefix = image?.isSideImage ? "Side Image · " : "";
+  const sideImagePrefix = image?.isSideImage ? `${tt("Side Image")} · ` : "";
 
   if (definitionType === "layered") {
     const alwaysCount = normalizeLayeredAlwaysLayers(image.layeredAlwaysLayers).length;
     const groupCount = normalizeLayeredGroups(image.layeredGroups).length;
-    return `Layered · ${groupCount} ${groupCount === 1 ? "group" : "groups"} · ${alwaysCount} always`;
+    return `${tt("Layered")} · ${groupCount} ${tt(groupCount === 1 ? "group" : "groups")} · ${alwaysCount} ${tt("always")}`;
   }
 
   if (definitionType === "movie") {
-    return `${sideImagePrefix}Movie · ${image.moviePlay || "No play path yet"}`;
+    return `${sideImagePrefix}${tt("Movie")} · ${image.moviePlay || tt("No play path yet")}`;
   }
 
   if (definitionType === "solid") {
-    return `${sideImagePrefix}Solid · ${image.solidColor || imageDefinitionFieldDefaults.solidColor}`;
+    return `${sideImagePrefix}${tt("Solid")} · ${image.solidColor || imageDefinitionFieldDefaults.solidColor}`;
   }
 
   if (definitionType === "composite") {
     const layerCount = normalizeCompositeLayers(image.compositeLayers).length;
-    return `${sideImagePrefix}Composite · ${layerCount} ${layerCount === 1 ? "layer" : "layers"}`;
+    return `${sideImagePrefix}${tt("Composite")} · ${layerCount} ${tt(layerCount === 1 ? "layer" : "layers")}`;
   }
 
   if (definitionType === "placeholder") {
@@ -5899,10 +5908,10 @@ function getImageDefinitionSummary(image) {
       girl: "Girl",
     };
 
-    return `${sideImagePrefix}Placeholder · ${baseLabelMap[image.placeholderBase] || "Auto"}`;
+    return `${sideImagePrefix}${tt("Placeholder")} · ${tt(baseLabelMap[image.placeholderBase] || "Auto")}`;
   }
 
-  return `${sideImagePrefix}Static · ${image.sourcePath || "No source path yet"}`;
+  return `${sideImagePrefix}${tt("Static")} · ${image.sourcePath || tt("No source path yet")}`;
 }
 
 function formatMovieDisplayableValue(value) {
@@ -10110,7 +10119,7 @@ function renderImagesPanel() {
         <svg class="image-category-toggle-caret" viewBox="0 0 16 16" aria-hidden="true">
           <path d="M3 6.5 8 11l5-4.5"></path>
         </svg>
-        <span class="image-category-toggle-label">${escapeHtml(categoryInfo.label)}</span>
+        <span class="image-category-toggle-label">${escapeHtml(tt(categoryInfo.label))}</span>
       </span>
       <span class="image-category-toggle-count">${categoryImages.length}</span>
     `;
@@ -10126,7 +10135,7 @@ function renderImagesPanel() {
     if (!categoryImages.length) {
       const emptyEl = document.createElement("p");
       emptyEl.className = "image-category-empty";
-      emptyEl.textContent = categoryInfo.empty;
+      emptyEl.textContent = tt(categoryInfo.empty);
       itemsEl.appendChild(emptyEl);
     }
 
@@ -10419,7 +10428,7 @@ function renderAudioPanel() {
         <svg class="image-category-toggle-caret" viewBox="0 0 16 16" aria-hidden="true">
           <path d="M3 6.5 8 11l5-4.5"></path>
         </svg>
-        <span class="image-category-toggle-label">${escapeHtml(channelInfo.label)}</span>
+        <span class="image-category-toggle-label">${escapeHtml(tt(channelInfo.label))}</span>
       </span>
       <span class="image-category-toggle-count">${channelAudioDefinitions.length}</span>
     `;
@@ -10435,7 +10444,7 @@ function renderAudioPanel() {
     if (!channelAudioDefinitions.length) {
       const emptyEl = document.createElement("p");
       emptyEl.className = "image-category-empty";
-      emptyEl.textContent = channelInfo.empty;
+      emptyEl.textContent = tt(channelInfo.empty);
       itemsEl.appendChild(emptyEl);
     }
 
@@ -11498,67 +11507,67 @@ function renderVisualProjectStats() {
   );
   const stats = [
     {
-      title: "Current Label",
+      title: t("Current Label"),
       value: graph?.label || "None",
     },
     {
-      title: "Total Label Graphs",
+      title: t("Total Label Graphs"),
       value: String(state.graphs.length),
     },
     {
-      title: "Replay Labels",
+      title: t("Replay Labels"),
       value: String(state.graphs.filter((currentGraph) => currentGraph.replay?.enabled).length),
     },
     {
-      title: "Blocks In Current Graph",
+      title: t("Blocks In Current Graph"),
       value: String(graph?.nodes.length || 0),
     },
     {
-      title: "Audio Definitions",
+      title: t("Audio Definitions"),
       value: String(state.audio.length),
     },
     {
-      title: "Side Image Definitions",
+      title: t("Side Image Definitions"),
       value: String(state.images.filter((image) => image.isSideImage).length),
     },
     {
-      title: "Live2D Definitions",
+      title: t("Live2D Definitions"),
       value: String(state.live2d.length),
     },
     {
-      title: "Default Variables",
+      title: t("Default Variables"),
       value: String(state.variables.length),
     },
     {
-      title: "Achievements",
+      title: t("Achievements"),
       value: String(state.achievements.length),
     },
     {
-      title: "Definitions",
+      title: t("Definitions"),
       value: String(state.definitions.length),
     },
     {
-      title: "Voice Strategy",
+      title: t("Voice Strategy"),
       value: getProjectVoiceMode() === "auto" ? "Auto Voice" : "Manual Voice",
     },
     {
-      title: "Save Features",
+      title: t("Save Features"),
       value: `${getProjectHasAutosave() ? "Auto" : "No Auto"} · ${getProjectHasQuicksave() ? "Quick" : "No Quick"}`,
     },
     {
-      title: "Rollback",
+      title: t("Rollback"),
       value: getProjectRollbackEnabled() ? `On · ${getProjectRollbackLength()} steps` : "Disabled",
     },
     {
-      title: "Linked Image Tags",
+      title: t("Linked Image Tags"),
       value: String(state.characters.filter((character) => `${character.image || ""}`.trim()).length),
     },
     {
-      title: "Voiced Dialogues",
+      title: t("Voiced Dialogues"),
       value: String(voicedDialogueCount),
     },
     {
-      title: "Canvas Zoom",
+      title: t("Canvas Zoom"),
       value: formatZoom(graph?.viewport.scale ?? defaultViewport.scale),
     },
   ];
@@ -15390,6 +15399,7 @@ if (localeSelect) {
 
 window.addEventListener("visual-editor-locale-changed", () => {
   render();
+  setSidebarToggleLabel();
 });
 
 applyCurrentLocale();

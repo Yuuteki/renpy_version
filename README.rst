@@ -108,6 +108,18 @@ bridge 当前负责：
 4. 修改少量内容并导出。
 5. 运行项目或执行 lint，确认生成脚本可用。
 
+如果修改了根目录中的 ``visual_editor`` 或 launcher 集成文件，先同步测试运行环境：
+
+::
+
+    python3 scripts/sync_visual_editor_runtime.py
+
+也可以只检查是否分叉：
+
+::
+
+    python3 scripts/sync_visual_editor_runtime.py --check
+
 源码方式：macOS / Linux
 ----------------------
 
@@ -156,6 +168,7 @@ bridge 当前负责：
 * ``launcher/game/project.rpy`` - launcher 项目逻辑与 Visual Editor bridge。
 * ``launcher/game/front_page.rpy`` - launcher 项目页入口按钮。
 * ``renpy_test_runtime/`` - Windows 测试运行环境镜像。
+* ``scripts/sync_visual_editor_runtime.py`` - 将根目录源码同步到 ``renpy_test_runtime`` 的工具。
 * ``Request_HTML/`` - 开发过程中参考的 Ren'Py 文档整理材料。
 * ``CHANGELOG.md`` - 本分支的功能更新日志。
 
@@ -177,6 +190,8 @@ Ren'Py 原始源码相关目录：
 
 * 优先做 launcher / editor / export pipeline 的增量工具，不轻易侵入 Ren'Py parser
   和 runtime。
+* 根目录 ``visual_editor`` 与 ``launcher/game`` 是源码真身，``renpy_test_runtime`` 只作为
+  可运行测试副本。
 * 项目状态以 ``visual_editor/project.json`` 为核心，生成文件可重复导出。
 * 对旧项目文件进行接管或删除前必须备份。
 * 保留上游 Ren'Py 的版权、许可证和归属说明。

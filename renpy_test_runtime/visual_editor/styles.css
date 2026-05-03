@@ -1277,6 +1277,9 @@ button.danger-button:hover {
 
 .character-detail-form select,
 .inspector-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   padding-right: 40px;
   cursor: pointer;
   background-image:
@@ -1287,6 +1290,11 @@ button.danger-button:hover {
     calc(100% - 12px) calc(50% - 2px);
   background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
+}
+
+.character-detail-form select::-ms-expand,
+.inspector-form select::-ms-expand {
+  display: none;
 }
 
 .character-detail-form input[readonly],
