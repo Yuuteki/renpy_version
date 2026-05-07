@@ -105,11 +105,24 @@
 
                 <label class="character-checkbox">
                   <input id="labelReplayAutoEndInput" type="checkbox" />
-                  <span>Append <code>renpy.end_replay()</code> At The End Of Generated Code</span>
+                  <span data-i18n="image-replay-auto-end">Append <code>renpy.end_replay()</code> At The End Of Generated Code</span>
                 </label>
 
                 <p class="project-settings-note">
-                  Use replay on scene-style labels. If your label exits early with <code>jump</code> or <code>return</code>, you may still want a manual replay end step in script.
+                  <span data-i18n="project-settings-replay-note-1">
+                    在场景式标签中使用回放。
+                  </span>
+                  <span data-i18n="project-settings-replay-note-2">
+                    如果你的标签会通过
+                  </span>
+                  <code>jump</code>
+                  <span data-i18n="project-settings-replay-note-3">
+                    或
+                  </span>
+                  <code>return</code>
+                  <span data-i18n="project-settings-replay-note-4">
+                    提前退出，你可能仍然需要在脚本中手动添加结束回放的步骤。
+                  </span>
                 </p>
 
                 <p class="section-label secondary-label">Replay Action Preview</p>
@@ -365,273 +378,274 @@
                 </label>
 
                 <label>
-                  orientation
+                  <span data-i18n="image-orientation">Orientation</span>
                   <input id="imageDefinitionOrientationInput" data-image-field="orientation" type="text" placeholder="e.g. 0.0" />
                 </label>
 
                 <label>
-                  xrotate
+                  <span data-i18n="image-xrotate">X Rotate</span>
                   <input id="imageDefinitionXRotateInput" data-image-field="xrotate" type="text" placeholder="e.g. 0" />
                 </label>
 
                 <label>
-                  yrotate
+                  <span data-i18n="image-yrotate">Y Rotate</span>
                   <input id="imageDefinitionYRotateInput" data-image-field="yrotate" type="text" placeholder="e.g. 0" />
                 </label>
 
                 <label>
-                  zrotate
+                  <span data-i18n="image-zrotate">Z Rotate</span>
                   <input id="imageDefinitionZRotateInput" data-image-field="zrotate" type="text" placeholder="e.g. 0" />
                 </label>
 
                 <label>
-                  zpos
+                  <span data-i18n="image-zpos">Z Position</span>
                   <input id="imageDefinitionZPosInput" data-image-field="zpos" type="text" placeholder="e.g. 0" />
                 </label>
 
                 <label>
-                  zzoom
+                  <span data-i18n="image-zzoom">Z Zoom</span>
                   <input id="imageDefinitionZZoomInput" data-image-field="zzoom" type="text" placeholder="e.g. 1.0" />
                 </label>
 
-                <p class="section-label secondary-label">Appearance</p>
+                <p class="section-label secondary-label" data-i18n="image-appearance">Appearance</p>
 
                 <label>
-                  alpha
+                  <span data-i18n="image-alpha">Alpha</span>
                   <input id="imageDefinitionAlphaInput" data-image-field="alpha" type="text" placeholder="e.g. 1.0" />
                 </label>
 
                 <label>
-                  additive
+                  <span data-i18n="image-additive">Additive</span>
                   <input id="imageDefinitionAdditiveInput" data-image-field="additive" type="text" placeholder="e.g. 0.0" />
                 </label>
 
                 <label>
-                  blur
+                  <span data-i18n="image-blur">Blur</span>
                   <input id="imageDefinitionBlurInput" data-image-field="blur" type="text" placeholder="e.g. 0.0" />
                 </label>
 
                 <label class="character-checkbox">
                   <input id="imageDefinitionNearestInput" data-image-field="nearest" type="checkbox" />
-                  <span>nearest</span>
+                  <span data-i18n="image-nearest">nearest</span>
                 </label>
 
                 <label class="character-checkbox">
                   <input id="imageDefinitionSubpixelInput" data-image-field="subpixel" type="checkbox" />
-                  <span>subpixel</span>
+                  <span data-i18n="image-subpixel">subpixel</span>
                 </label>
 
                 <label>
-                  blend
+                  <span data-i18n="image-blend">Blend</span>
                   <input id="imageDefinitionBlendInput" data-image-field="blend" type="text" placeholder="e.g. additive" />
                 </label>
 
                 <div id="imageDefinitionMatrixColorBuilder" class="definition-fields matrixcolor-builder">
                   <label>
-                    Matrix Color Preset
+                    <span data-i18n="image-matrixcolor">Matrix Color Preset</span>
                     <select id="imageDefinitionMatrixColorModeInput">
-                      <option value="none">None</option>
-                      <option value="identity">Identity / Reset</option>
-                      <option value="tint">Tint</option>
-                      <option value="saturation">Saturation</option>
-                      <option value="sepia">Sepia</option>
-                      <option value="invert">Invert</option>
-                      <option value="brightness">Brightness</option>
-                      <option value="hue">Hue</option>
-                      <option value="opacity">Opacity</option>
-                      <option value="colorize">Colorize</option>
-                      <option value="custom">Custom Expression</option>
+                      <option value="none" data-i18n="image-matrixcolor-none">None</option>
+                      <option value="identity" data-i18n="image-matrixcolor-identity_reset">Identity / Reset</option>
+                      <option value="tint" data-i18n="image-matrixcolor-tint">Tint</option>
+                      <option value="saturation" data-i18n="image-matrixcolor-saturation">Saturation</option>
+                      <option value="sepia" data-i18n="image-matrixcolor-sepia">Sepia</option>
+                      <option value="invert" data-i18n="image-matrixcolor-invert">Invert</option>
+                      <option value="brightness" data-i18n="image-matrixcolor-brightness">Brightness</option>
+                      <option value="hue" data-i18n="image-matrixcolor-hue">Hue</option>
+                      <option value="opacity" data-i18n="image-matrixcolor-opacity">Opacity</option>
+                      <option value="colorize" data-i18n="image-matrixcolor-colorize">Colorize</option>
+                      <option value="custom" data-i18n="image-matrixcolor-custom">Custom Expression</option>
                     </select>
                   </label>
 
-                  <p class="image-definition-help">
+                  <p class="image-definition-help" data-i18n="image-matrixcolor-help">
                     Built-in presets write to the expression field below. Use Custom for multiplied matrices or a raw <code>Matrix([...])</code>.
                   </p>
 
                   <div id="imageDefinitionMatrixColorPresetFields" class="definition-fields">
                     <label id="imageDefinitionMatrixColorTintField" class="hidden">
-                      Tint Color
+                      <span data-i18n="image-matrixcolor-tint">Tint Color</span>
                       <input id="imageDefinitionMatrixColorTintInput" type="text" placeholder='e.g. #ffcccc' />
                     </label>
 
                     <label id="imageDefinitionMatrixColorSaturationField" class="hidden">
-                      Saturation Value
+                      <span data-i18n="image-matrixcolor-saturation">Saturation Value</span>
                       <input id="imageDefinitionMatrixColorSaturationInput" type="text" placeholder="e.g. 0.0" />
                     </label>
 
                     <label id="imageDefinitionMatrixColorSepiaField" class="hidden">
-                      Sepia Tint
+                      <span data-i18n="image-matrixcolor-sepia">Sepia Tint</span>
                       <input id="imageDefinitionMatrixColorSepiaInput" type="text" placeholder='e.g. #ffeec2' />
                     </label>
 
                     <label id="imageDefinitionMatrixColorInvertField" class="hidden">
-                      Invert Amount
+                      <span data-i18n="image-matrixcolor-invert">Invert Amount</span>
                       <input id="imageDefinitionMatrixColorInvertInput" type="text" placeholder="e.g. 1.0" />
                     </label>
 
                     <label id="imageDefinitionMatrixColorBrightnessField" class="hidden">
-                      Brightness Value
+                      <span data-i18n="image-matrixcolor-brightness">Brightness Value</span>
                       <input id="imageDefinitionMatrixColorBrightnessInput" type="text" placeholder="e.g. 0.15" />
                     </label>
 
                     <label id="imageDefinitionMatrixColorHueField" class="hidden">
-                      Hue Degrees
+                      <span data-i18n="image-matrixcolor-hue">Hue Degrees</span>
                       <input id="imageDefinitionMatrixColorHueInput" type="text" placeholder="e.g. 180" />
                     </label>
 
                     <label id="imageDefinitionMatrixColorOpacityField" class="hidden">
-                      Opacity Value
+                      <span data-i18n="image-matrixcolor-opacity">Opacity Value</span>
                       <input id="imageDefinitionMatrixColorOpacityInput" type="text" placeholder="e.g. 0.5" />
                     </label>
 
                     <label id="imageDefinitionMatrixColorizeBlackField" class="hidden">
-                      Black Maps To
+                      <span data-i18n="image-matrixcolor-colorize">Colorize</span>
+                      <span data-i18n="image-matrixcolor-black-maps-to">Black Maps To</span>
                       <input id="imageDefinitionMatrixColorizeBlackInput" type="text" placeholder='e.g. #220044' />
                     </label>
 
                     <label id="imageDefinitionMatrixColorizeWhiteField" class="hidden">
-                      White Maps To
+                      <span data-i18n="image-matrixcolor-white-maps-to">White Maps To</span>
                       <input id="imageDefinitionMatrixColorizeWhiteInput" type="text" placeholder='e.g. #ffe8ff' />
                     </label>
                   </div>
                 </div>
 
                 <label>
-                  matrixcolor expression
+                  <span data-i18n="image-matrixcolor-matrix-color-expression">Matrix Color Expression</span>
                   <input id="imageDefinitionMatrixColorInput" data-image-field="matrixcolor" type="text" placeholder='e.g. TintMatrix("#ffcccc") * SaturationMatrix(0.8)' />
                 </label>
 
                 <label>
-                  matrixtransform
+                  <span data-i18n="image-matrixtransform">Matrix Transform</span>
                   <input id="imageDefinitionMatrixTransformInput" data-image-field="matrixtransform" type="text" placeholder="e.g. RotateMatrix(0.0)" />
                 </label>
 
                 <label>
-                  matrixanchor
+                  <span data-i18n="image-matrixanchor">Matrix Anchor</span>
                   <input id="imageDefinitionMatrixAnchorInput" data-image-field="matrixanchor" type="text" placeholder="e.g. (0.5, 0.5)" />
                 </label>
 
-                <p class="section-label secondary-label">Crop And Shader</p>
+                <p class="section-label secondary-label" data-i18n="image-crop-and-shader">Crop And Shader</p>
 
                 <label>
-                  crop
+                  <span data-i18n="image-crop">Crop</span>
                   <input id="imageDefinitionCropInput" data-image-field="crop" type="text" placeholder="e.g. (0, 0, 1920, 1080)" />
                 </label>
 
                 <label class="character-checkbox">
                   <input id="imageDefinitionCropRelativeInput" data-image-field="crop_relative" type="checkbox" />
-                  <span>crop_relative</span>
+                  <span data-i18n="image-crop-relative">Crop Relative</span>
                 </label>
 
                 <label>
-                  corner1
+                  <span data-i18n="image-corner1">Corner 1</span>
                   <input id="imageDefinitionCorner1Input" data-image-field="corner1" type="text" placeholder="e.g. (0, 0)" />
                 </label>
 
                 <label>
-                  corner2
+                  <span data-i18n="image-corner2">Corner 2</span>
                   <input id="imageDefinitionCorner2Input" data-image-field="corner2" type="text" placeholder="e.g. (1920, 1080)" />
                 </label>
 
                 <label>
-                  shader
+                  <span data-i18n="image-shader">Shader</span>
                   <input id="imageDefinitionShaderInput" data-image-field="shader" type="text" placeholder="e.g. renpy.texture" />
                 </label>
 
                 <label class="character-checkbox">
                   <input id="imageDefinitionMeshInput" data-image-field="mesh" type="checkbox" />
-                  <span>mesh</span>
+                  <span data-i18n="image-mesh">Mesh</span>
                 </label>
 
                 <label>
-                  mesh_pad
+                  <span data-i18n="image-mesh-pad">Mesh Pad</span>
                   <input id="imageDefinitionMeshPadInput" data-image-field="mesh_pad" type="text" placeholder="e.g. 8" />
                 </label>
 
                 <label>
-                  perspective
+                  <span data-i18n="image-perspective">Perspective</span>
                   <input id="imageDefinitionPerspectiveInput" data-image-field="perspective" type="text" placeholder="e.g. 1000" />
                 </label>
 
-                <p class="section-label secondary-label">Motion And Advanced</p>
+                <p class="section-label secondary-label" data-i18n="image-motion-and-advanced">Motion And Advanced</p>
 
                 <label>
-                  xpan
+                  <span data-i18n="image-xpan">X Pan</span>
                   <input id="imageDefinitionXPanInput" data-image-field="xpan" type="text" placeholder="e.g. 0.0" />
                 </label>
 
                 <label>
-                  ypan
+                  <span data-i18n="image-ypan">Y Pan</span>
                   <input id="imageDefinitionYPanInput" data-image-field="ypan" type="text" placeholder="e.g. 0.0" />
                 </label>
 
                 <label>
-                  fps
+                  <span data-i18n="image-fps">FPS</span>
                   <input id="imageDefinitionFpsInput" data-image-field="fps" type="text" placeholder="e.g. 30" />
                 </label>
 
                 <label>
-                  point_to
+                  <span data-i18n="image-point-to">Point To</span>
                   <input id="imageDefinitionPointToInput" data-image-field="point_to" type="text" placeholder="e.g. (960, 540)" />
                 </label>
 
                 <label>
-                  delay
+                  <span data-i18n="image-delay">Delay</span>
                   <input id="imageDefinitionDelayInput" data-image-field="delay" type="text" placeholder="e.g. 1.0" />
                 </label>
 
                 <label class="character-checkbox">
                   <input id="imageDefinitionEventsInput" data-image-field="events" type="checkbox" />
-                  <span>events</span>
+                  <span data-i18n="image-events">Events</span>
                 </label>
 
                   <label class="character-checkbox">
                     <input id="imageDefinitionShowCancelsHideInput" data-image-field="show_cancels_hide" type="checkbox" />
-                    <span>show_cancels_hide</span>
+                    <span data-i18n="image-show-cancels-hide">Show Cancels Hide</span>
                   </label>
                 </div>
 
                 <div id="imageDefinitionMovieFields" class="definition-fields hidden">
-                  <p class="section-label secondary-label">Movie</p>
+                  <p class="section-label secondary-label" data-i18n="image-movie">Movie</p>
 
                   <label>
-                    Play Path
+                    <span data-i18n="image-play-path">Play Path</span>
                     <div class="field-with-action">
                       <input id="imageDefinitionMoviePlayInput" data-image-field="moviePlay" type="text" placeholder="e.g. movies/opening.webm" />
                       <button id="imageDefinitionMovieBrowseButton" class="secondary field-action-button" type="button">
-                        Browse
+                        <span data-i18n="image-browse">Browse</span>
                       </button>
                     </div>
                     <input id="imageDefinitionMovieFileInput" type="file" accept="video/*,.webm,.ogv,.ogg,.mpg,.mpeg,.avi,.mkv" hidden />
                   </label>
 
                   <label>
-                    size
+                    <span data-i18n="image-size">Size</span>
                     <input id="imageDefinitionMovieSizeInput" data-image-field="movieSize" type="text" placeholder="e.g. (1920, 1080)" />
                   </label>
 
                   <label>
-                    channel
+                    <span data-i18n="image-channel">Channel</span>
                     <input id="imageDefinitionMovieChannelInput" data-image-field="movieChannel" type="text" placeholder="e.g. movie" />
                   </label>
 
                   <label class="character-checkbox">
                     <input id="imageDefinitionMovieSideMaskInput" data-image-field="movieSideMask" type="checkbox" />
-                    <span>side_mask</span>
+                    <span data-i18n="image-side-mask">Side Mask</span>
                   </label>
 
                   <label>
-                    mask
+                    <span data-i18n="image-mask">Mask</span>
                     <input id="imageDefinitionMovieMaskInput" data-image-field="movieMask" type="text" placeholder="e.g. movies/opening_mask.webm" />
                   </label>
 
                   <label>
-                    mask_channel
+                    <span data-i18n="image-mask-channel">Mask Channel</span>
                     <input id="imageDefinitionMovieMaskChannelInput" data-image-field="movieMaskChannel" type="text" placeholder="e.g. sprite_mask (blank = auto)" />
                   </label>
 
                   <label>
-                    start_image
+                    <span data-i18n="image-start-image">Start Image</span>
                     <input id="imageDefinitionMovieStartImageInput" data-image-field="movieStartImage" type="text" placeholder='e.g. "images/ui/loading.png" or loading_displayable' />
                   </label>
 
@@ -769,20 +783,20 @@
                 </div>
 
                 <div id="imageDefinitionAnimationFields" class="definition-fields">
-                  <p class="section-label secondary-label">Animation / ATL</p>
+                  <p class="section-label secondary-label" data-i18n="image-animation-atl">Animation / ATL</p>
 
                   <label class="character-checkbox">
                     <input id="imageDefinitionAtlEnabledInput" data-image-field="atlEnabled" type="checkbox" />
-                    <span>Enable ATL block</span>
+                    <span data-i18n="image-atl-enabled">Enable ATL block</span>
                   </label>
 
                   <div id="imageDefinitionAtlEditor" class="menu-choice-group hidden">
                     <div class="menu-choice-group-header">
-                      <strong>Timeline</strong>
+                      <strong data-i18n="image-timeline">Timeline</strong>
                       <button id="imageDefinitionAddAtlStepButton" class="secondary menu-choice-add-button" type="button">New Step</button>
                     </div>
 
-                    <p class="image-definition-help">
+                    <p class="image-definition-help" data-i18n="image-atl-help">
                       First version supports immediate property lines, pause, interpolation, contains, and repeat.
                     </p>
 
@@ -790,7 +804,7 @@
                   </div>
                 </div>
 
-                <p class="section-label secondary-label">Generated Code</p>
+                <p class="section-label secondary-label" data-i18n="image-generated-code">Generated Code</p>
                 <pre id="imageDefinitionCodePreview" class="code-preview"></pre>
               </form>
             </div>
@@ -798,7 +812,7 @@
 
           <section id="live2dSection" class="sidebar-section sidebar-panel characters-section">
             <div id="live2dListView" class="characters-view">
-              <div id="live2dDefinitionEmpty" class="panel-empty-state hidden">
+              <div id="live2dDefinitionEmpty" class="panel-empty-state hidden" data-i18n="live2d-empty">
                 No Live2D models yet. Create one to define a reusable Live2D resource.
               </div>
 
@@ -811,7 +825,7 @@
                 aria-label="Create Live2D definition"
                 title="Create Live2D definition"
               >
-                New Live2D
+                <span data-i18n="live2d-definition-new">New Live2D</span>
               </button>
             </div>
 
@@ -821,112 +835,118 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M15 6 9 12l6 6"></path>
                   </svg>
-                  <span>Back</span>
+                  <span data-i18n="back">Back</span>
                 </button>
               </div>
 
               <form id="live2dDefinitionDetailForm" class="character-detail-form">
-                <p class="section-label">Basic</p>
+                <p class="section-label" data-i18n="live2d-definition-basic">Basic</p>
 
                 <label>
-                  Live2D Name
+                  <span data-i18n="live2d-definition-name">Live2D Name</span>
                   <input id="live2dDefinitionNameInput" data-live2d-field="name" type="text" placeholder="e.g. hiyori" />
                 </label>
 
                 <label>
-                  Model Path
+                  <span data-i18n="live2d-definition-model-path">Model Path</span>
                   <div class="field-with-action">
                     <input id="live2dDefinitionModelPathInput" data-live2d-field="modelPath" type="text" placeholder="e.g. Resources/Hiyori or Resources/Hiyori/Hiyori.model3.json" />
                     <button id="live2dDefinitionBrowseButton" class="secondary field-action-button" type="button">
-                      Browse
+                      <span data-i18n="live2d-definition-browse">Browse</span>
                     </button>
                   </div>
                   <input id="live2dDefinitionFileInput" type="file" accept=".json,.model3.json,.exp3.json" hidden />
                 </label>
 
                 <p class="project-settings-note">
-                  Live2D requires <code>define config.gl2 = True</code> and the native Cubism SDK. Ren'Py Web builds do not support Live2D playback.
+                  <span data-i18n="project-settings-live2d-note-1">
+                    Live2D requires
+                  </span>
+                  <code>define config.gl2 = True</code>
+                  <span data-i18n="project-settings-live2d-note-2">
+                    and the native Cubism SDK. Ren'Py Web builds do not support Live2D playback.
+                  </span>
                 </p>
 
-                <p class="section-label secondary-label">Display</p>
+                <p class="section-label secondary-label" data-i18n="live2d-definition-display">Display</p>
 
                 <label>
-                  zoom
+                  <span data-i18n="live2d-definition-zoom">zoom</span>
                   <input id="live2dDefinitionZoomInput" data-live2d-field="zoom" type="text" placeholder="e.g. 0.35" />
                 </label>
 
                 <label>
-                  top
+                  <span data-i18n="live2d-definition-top">top</span>
                   <input id="live2dDefinitionTopInput" data-live2d-field="top" type="text" placeholder="e.g. 0.0" />
                 </label>
 
                 <label>
-                  base
+                  <span data-i18n="live2d-definition-base">base</span>
                   <input id="live2dDefinitionBaseInput" data-live2d-field="base" type="text" placeholder="e.g. 0.6" />
                 </label>
 
                 <label>
-                  height
+                  <span data-i18n="live2d-definition-height">height</span>
                   <input id="live2dDefinitionHeightInput" data-live2d-field="height" type="text" placeholder="e.g. 1.0" />
                 </label>
 
-                <p class="section-label secondary-label">Playback</p>
+                <p class="section-label secondary-label" data-i18n="live2d-definition-playback">Playback</p>
 
                 <label class="character-checkbox">
                   <input id="live2dDefinitionLoopInput" data-live2d-field="loop" type="checkbox" />
-                  <span>loop last motion</span>
+                  <span data-i18n="live2d-definition-loop">loop last motion</span>
                 </label>
 
                 <label>
-                  fade
+                  <span data-i18n="live2d-definition-fade">fade</span>
                   <select id="live2dDefinitionFadeModeInput" data-live2d-field="fadeMode">
-                    <option value="default">Use _live2d_fade</option>
-                    <option value="true">True</option>
-                    <option value="false">False</option>
+                    <option value="default" data-i18n="live2d-definition-fade-default">Use _live2d_fade</option>
+                    <option value="true" data-i18n="live2d-definition-fade-true">True</option>
+                    <option value="false" data-i18n="live2d-definition-fade-false">False</option>
                   </select>
                 </label>
 
                 <label>
-                  seamless
+                  <span data-i18n="live2d-definition-seamless">seamless</span>
                   <input id="live2dDefinitionSeamlessInput" data-live2d-field="seamless" type="text" placeholder='e.g. True or ["idle"]' />
                 </label>
 
                 <label>
-                  default_fade
+                  <span data-i18n="live2d-definition-default-fade">default_fade</span>
                   <input id="live2dDefinitionDefaultFadeInput" data-live2d-field="defaultFade" type="text" placeholder="e.g. 0.0" />
                 </label>
 
-                <p class="section-label secondary-label">Catalog</p>
+                <p class="section-label secondary-label" data-i18n="live2d-definition-catalog">Catalog</p>
 
                 <label>
-                  Motions
+                  <span data-i18n="live2d-definition-motions">Motions</span>
                   <textarea id="live2dDefinitionMotionsInput" data-live2d-field="motions" rows="4" placeholder="e.g. idle&#10;wave&#10;m01"></textarea>
                 </label>
 
                 <label>
-                  Expressions
+                  <span data-i18n="live2d-definition-expressions">Expressions</span>
                   <textarea id="live2dDefinitionExpressionsInput" data-live2d-field="expressions" rows="4" placeholder="e.g. smile&#10;angry&#10;null"></textarea>
                 </label>
 
                 <label>
-                  Nonexclusive Attributes
+                  <span data-i18n="live2d-definition-nonexclusive">Nonexclusive Attributes</span>
                   <textarea id="live2dDefinitionNonexclusiveInput" data-live2d-field="nonexclusive" rows="3" placeholder="e.g. wave&#10;blink"></textarea>
                 </label>
 
                 <label>
-                  Aliases
+                  <span data-i18n="live2d-definition-aliases">Aliases</span>
                   <textarea id="live2dDefinitionAliasesInput" data-live2d-field="aliases" rows="4" placeholder="e.g. idle = m01&#10;smile = exp_00"></textarea>
                 </label>
 
-                <p class="project-settings-note">
+                <p class="project-settings-note" data-i18n="live2d-definition-catalog-note">
                   Motions, expressions, and aliases are stored here so the editor can reason about this model later. Ren'Py still reads the real animation data from the Live2D files.
                 </p>
 
                 <div class="inspector-actions">
-                  <button id="live2dDefinitionDeleteButton" class="danger-button" type="button">Delete Live2D</button>
+                  <button id="live2dDefinitionDeleteButton" class="danger-button" type="button" data-i18n="live2d-definition-delete">Delete Live2D</button>
                 </div>
 
-                <p class="section-label secondary-label">Generated Code</p>
+                <p class="section-label secondary-label" data-i18n="live2d-definition-generated-code">Generated Code</p>
                 <pre id="live2dDefinitionCodePreview" class="code-preview"></pre>
               </form>
             </div>
@@ -947,7 +967,7 @@
                 aria-label="Create audio definition"
                 title="Create audio definition"
               >
-                New Audio
+                <span data-i18n="new-audio">New Audio</span>
               </button>
             </div>
 
@@ -965,38 +985,38 @@
                 <p class="section-label">Basic</p>
 
                 <label>
-                  Audio Name
+                  <span data-i18n="audio-definition-name">Audio Name</span>
                   <input id="audioDefinitionNameInput" data-audio-field="name" type="text" placeholder="e.g. bgm_theme" />
                 </label>
 
                 <label>
-                  Channel
+                  <span data-i18n="audio-definition-channel">Channel</span>
                   <select id="audioDefinitionChannelInput" data-audio-field="channel">
-                    <option value="music">music</option>
-                    <option value="sound">sound</option>
-                    <option value="voice">voice</option>
+                    <option value="music" data-i18n="audio-definition-channel-music">music</option>
+                    <option value="sound" data-i18n="audio-definition-channel-sound">sound</option>
+                    <option value="voice" data-i18n="audio-definition-channel-voice">voice</option>
                   </select>
                 </label>
 
                 <label id="audioDefinitionVoiceOwnerField" class="hidden">
-                  Voice Owner
+                  <span data-i18n="audio-definition-voice-owner">Voice Owner</span>
                   <select id="audioDefinitionVoiceOwnerInput" data-audio-field="voiceCharacterId">
-                    <option value="">Narrator</option>
+                    <option value="" data-i18n="audio-definition-voice-owner-narrator">Narrator</option>
                   </select>
                 </label>
 
                 <label>
-                  Source Path
+                  <span data-i18n="audio-definition-source-path">Source Path</span>
                   <div class="field-with-action">
                     <input id="audioDefinitionSourcePathInput" data-audio-field="sourcePath" type="text" placeholder="e.g. audio/music/theme.ogg" />
                     <button id="audioDefinitionBrowseButton" class="secondary field-action-button" type="button">
-                      Browse
+                      <span data-i18n="audio-definition-browse">Browse</span>
                     </button>
                   </div>
                   <input id="audioDefinitionFileInput" type="file" accept="audio/*,.ogg,.mp3,.wav,.opus,.m4a" hidden />
                 </label>
 
-                <p class="section-label secondary-label">Generated Code</p>
+                <p class="section-label secondary-label" data-i18n="audio-definition-generated-code">Generated Code</p>
                 <pre id="audioDefinitionCodePreview" class="code-preview"></pre>
               </form>
             </div>
@@ -1004,7 +1024,7 @@
 
           <section id="charactersSection" class="sidebar-section sidebar-panel characters-section">
             <div id="charactersListView" class="characters-view">
-              <div id="characterListEmpty" class="panel-empty-state hidden">
+              <div id="characterListEmpty" class="panel-empty-state hidden" data-i18n="characters-empty">
                 No characters yet. Create one to get started.
               </div>
 
@@ -1017,7 +1037,7 @@
                 aria-label="Create character"
                 title="Create character"
               >
-                New Character
+                <span data-i18n="new-character">New Character</span>
               </button>
             </div>
 
@@ -1035,17 +1055,17 @@
                 <p class="section-label">Basic</p>
 
                 <label>
-                  Variable Name
+                  <span data-i18n="character-variable-name">Variable Name</span>
                   <input id="characterIdInput" type="text" placeholder="e.g. eileen" />
                 </label>
 
                 <label>
-                  Display Name
+                  <span data-i18n="character-display-name">Display Name</span>
                   <input id="characterNameInput" type="text" placeholder="e.g. Eileen" />
                 </label>
 
                 <label>
-                  Character Type
+                  <span data-i18n="character-type">Character Type</span>
                   <select id="characterKindInput">
                     <option value="adv">adv</option>
                     <option value="nvl">nvl</option>
