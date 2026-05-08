@@ -1067,29 +1067,32 @@
                 <label>
                   <span data-i18n="character-type">Character Type</span>
                   <select id="characterKindInput">
-                    <option value="adv">adv</option>
-                    <option value="nvl">nvl</option>
-                    <option value="narrator">narrator</option>
-                    <option value="centered">centered</option>
-                    <option value="vcentered">vcentered</option>
-                    <option value="name_only">name_only</option>
+                    <option value="adv" data-i18n="character-type-adv">adv</option>
+                    <option value="nvl" data-i18n="character-type-nvl">nvl</option>
+                    <option value="narrator" data-i18n="character-type-narrator">narrator</option>
+                    <option value="centered" data-i18n="character-type-centered">centered</option>
+                    <option value="vcentered" data-i18n="character-type-vcentered">vcentered</option>
+                    <option value="name_only" data-i18n="character-type-name_only">name_only</option>
                   </select>
                 </label>
 
                 <label class="character-checkbox">
                   <input id="characterDynamicInput" type="checkbox" />
-                  <span>Dynamic Name</span>
+                  <span data-i18n="character-dynamic-name">Dynamic Name</span>
                 </label>
 
-                <p class="section-label secondary-label">Resources</p>
+                <p class="section-label secondary-label" data-i18n="character-resources">Resources</p>
 
                 <label>
-                  Linked Image Tag
+                  <span data-i18n="character-linked-image-tag">Linked Image Tag</span>
                   <input id="characterImageInput" list="imageTagSuggestionList" type="text" placeholder="e.g. eileen" />
                 </label>
 
                 <p class="project-settings-note">
-                  Used by <code>Character(image=...)</code>. Side images follow this tag and the current shown attributes.
+                  <span data-i18n="character-linked-image-tag-note-1">Used by </span>
+                  <code>Character(image=...)</code>
+                  <span data-i18n="character-linked-image-tag-note-2">. Side images follow this tag and the current shown
+                    attributes.</span>
                 </p>
 
                 <label>

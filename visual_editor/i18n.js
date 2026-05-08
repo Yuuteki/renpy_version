@@ -589,7 +589,19 @@
       "new-character": "新建角色",
       "character-variable-name": "角色变量名",
       "character-display-name": "角色显示名称",
-      
+      "character-type": "角色类型",
+      "character-type-adv": "ADV 普通对话",
+      "character-type-nvl": "NVL 页面式对话",
+      "character-type-narrator": "旁白",
+      "character-type-centered": "居中文本",
+      "character-type-vcentered": "垂直居中文本",
+      "character-type-name_only": "仅名称",
+      "character-dynamic-name": "动态名称",
+      "character-resources": "资源",
+      "character-linked-image-tag": "关联图像标签",
+      "character-linked-image-tag-note-1": "供 ",
+      "character-linked-image-tag-note-2": " 使用。侧边图像会根据此标签和当前显示的图像属性进行匹配。"
+
     },
   };
 
