@@ -535,10 +535,24 @@ button.danger-button:hover {
 .characters-view#audioListView,
 .characters-view#charactersListView,
 .characters-view#variablesListView,
+.characters-view#achievementsListView,
 .characters-view#definitionsListView {
   position: relative;
   gap: 12px;
-  padding-bottom: 76px;
+  overflow: hidden;
+}
+
+.characters-view#imagesListView > .character-list,
+.characters-view#live2dListView > .character-list,
+.characters-view#audioListView > .character-list,
+.characters-view#charactersListView > .character-list,
+.characters-view#variablesListView > .character-list,
+.characters-view#achievementsListView > .character-list,
+.characters-view#definitionsListView > .character-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 4px 86px 0;
 }
 
 .definition-fields {

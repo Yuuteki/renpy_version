@@ -220,6 +220,10 @@
       "image-anchor": "Anchor",
       "image-align": "Align",
       "image-alignaround": "Align Around",
+      "placeholder.image-pos": "e.g. (960, 540)",
+      "placeholder.image-anchor": "e.g. (0.5, 0.5)",
+      "placeholder.image-align": "e.g. (0.5, 1.0)",
+      "placeholder.image-alignaround": "e.g. (0.5, 0.5)",
     },
     "zh-CN": {
       "html.index.title": "Ren'Py 可视化编辑器",
@@ -261,7 +265,7 @@
       "gui.button.back": "返回可视化编辑器",
       "gui.button.save": "保存 GUI 草稿",
       "gui.nav.styles": "样式",
-      "gui.nav.screens": "Screens",
+      "gui.nav.screens": "界面",
       "gui.nav.extras": "扩展",
       "gui.nav.config": "配置",
       "gui.nav.python": "Python UI",
@@ -438,6 +442,10 @@
       "image-anchor": "锚点",
       "image-align": "对齐",
       "image-alignaround": "环绕对齐",
+      "placeholder.image-pos": "例如 (960, 540)",
+      "placeholder.image-anchor": "例如 (0.5, 0.5)",
+      "placeholder.image-align": "例如 (0.5, 1.0)",
+      "placeholder.image-alignaround": "例如 (0.5, 0.5)",
       "image-xalign": "水平对齐",
       "image-yalign": "垂直对齐",
       "image-offset": "偏移",
@@ -589,7 +597,331 @@
       "new-character": "新建角色",
       "character-variable-name": "角色变量名",
       "character-display-name": "角色显示名称",
-      
+      "character-type": "角色类型",
+      "character-type-adv": "ADV 普通对话",
+      "character-type-nvl": "NVL 页面式对话",
+      "character-type-narrator": "旁白",
+      "character-type-centered": "居中文本",
+      "character-type-vcentered": "垂直居中文本",
+      "character-type-name_only": "仅名称",
+      "character-dynamic-name": "动态名称",
+      "character-resources": "资源",
+      "character-linked-image-tag": "关联图像标签",
+      "character-linked-image-tag-note-1": "供 ",
+      "character-linked-image-tag-note-2": " 使用。侧边图像会根据此标签和当前显示的图像属性进行匹配。",
+      "character_voice_tag": "关联语音标签",
+      "character-appearance": "外观",
+      "character-who-color": "名字颜色",
+      "character-who-style": "名字样式",
+      "character-what-style": "文本样式",
+      "character-window-style": "对话框样式",
+      "character-window-background": "对话框背景",
+      "character-prefixes-suffixes": "前缀和后缀",
+      "character-who-prefix": "名字前缀",
+      "character-who-suffix": "名字后缀",
+      "character-what-prefix": "文本前缀",
+      "character-what-suffix": "文本后缀",
+      "character-behavior": "行为",
+      "character-condition": "条件",
+      "character-interact": "交互",
+      "character_advance/allow_skip": "允许跳过",
+      "character-click-to-continue": "点击继续",
+      "character-ctc-expression": "点击继续表达式",
+      "character-ctc-pause-expression": "点击继续暂停表达式",
+      "character-ctc-timed-pause-expression": "点击继续定时暂停表达式",
+      "character-ctc-position": "点击继续位置",
+      "character-ctc-position-default": "默认",
+      "character-ctc-position-nestled": "依附在文本末尾",
+      "character-ctc-position-fixed": "固定在对话框内",
+      "character-generated-code": "生成的代码",
+      "variable-no-variable": "还没有变量。创建一个来定义可重用的变量资源。",
+      "new-variable": "新建变量",
+      "variable-default-statement": "默认值语句",
+      "variable-statement-type": "语句类型",
+      "variable-store-path": "存储路径",
+      "variable-name": "变量名称",
+      "variable-initial-value": "初始值",
+      "variable-delete": "删除变量定义",
+      "variable-generated-code": "生成的代码",
+      "achievement-no-achievements": "还没有成就。创建一个来定义可重用的成就资源。",
+      "new-achievement": "新建成就",
+      "achievement-identity": "成就标识",
+      "achievement-name": "成就名称",
+      "achievement-title": "成就标题",
+      "achievement-description": "成就描述",
+      "achievement-notes": "成就备注",
+      "achievement-registration": "注册语句",
+      "achievement-steam-name": "Steam 成就名称",
+      "achievement-progress": "进度",
+      "achievement-stat-max": "最大值",
+      "achievement-stat-modulo": "模数",
+      "achievement-persistent-note-1": "Ren'Py 默认会将成就存储在持久化数据中。进度类成就请使用 ",
+      "achievement-persistent-note-2": "；仅当平台 ID 需要与本地名称不同时，才填写 Steam 名称。",
+      "achievement-delete": "删除成就定义",
+      "achievement-generated-code": "生成的代码",
+      "achievement-runtime-helpers": "运行时助手",
+      "definition-no-definitions": "还没有定义。创建一个来定义可重用的资源。",
+      "new-definition": "新建定义",
+      "definition-type": "定义类型",
+      "definition-type-define": "普通定义",
+      "definition-type-init-python": "Python 初始化",
+      "definition-target": "定义目标",
+      "definition-operator": "操作符",
+      "definition-priority": "优先级",
+      "definition-value": "值",
+      "definition-type-init-python": "Python 初始化",
+      "definition-init-hide": "在生成的代码中隐藏",
+      "definition-store-path": "存储路径",
+      "definition-python-code": "Python 代码",
+      "definition-delete": "删除定义",
+      "definition-generated-code": "生成的代码",
+      "setting-voice-tag": "全局语音标签",
+      "setting-voice-strategy": "全局语音策略",
+      "setting-voice-manual": "手动",
+      "setting-voice-auto": "自动",
+      "setting-voice-template": "自动语音模板",
+      "project-voice-multilingual-prefix": "使用以下路径下的语音文件夹：",
+      "project-default-dialogue-voice": "新建对话块时默认启用语音",
+      "project-voice-mode-note-1": "手动语音会在对话块中使用显式的 ",
+      "project-voice-mode-note-2": " 语句。自动语音则依赖 Ren'Py 标识符和 ",
+      "project-voice-mode-note-3": "。",
+      "project-generated-voice-config": "生成的语音配置",
+      "project-side-image-settings": "立绘设置",
+      "project-side-image-tag": "跟踪指定图像标签",
+      "project-side-image-only-not-showing": "仅当匹配的主立绘未显示在画面中时，才显示侧边图像",
+      "project-side-image-prefix-tag": "前缀标签",
+      "project-side-image-null-displayable": "空可视组件",
+      "project-side-image-same-transform": "同标签变换",
+      "project-side-image-change-transform": "变更变换",
+      "project-side-image-config-note-1": "这些设置会映射到 ",
+      "project-side-image-config-note-2": "。你的 ",
+      "project-side-image-config-note-3": " 界面仍然需要使用 ",
+      "project-side-image-config-note-4": " 才能实际渲染头像。",
+      "project-generated-side-image-config": "生成的立绘配置",
+      "project-save-load-settings": "存档 / 回退设置",
+      "project-has-autosave": "启用自动存档页面和后台自动存档",
+      "project-autosave-frequency": "自动存档频率（以秒为单位）",
+      "project-has-quicksave": "启用快速存档/读档",
+      "project-rollback-enabled": "启用回退",
+      "project-rollback-length": "回退长度（以动作为单位）",
+      "project-hard-rollback-limit": "硬回退限制（以动作为单位）",
+      "project-fix-rollback-without-choice": "固定回滚时禁用所有选项按钮，而不是保留已选选项的高亮状态",
+      "project-save-config-note-1": "这些设置会映射到 ",
+      "project-save-config-note-2": "、",
+      "project-save-config-note-3": "、",
+      "project-save-config-note-4": "、",
+      "project-save-config-note-5": "、",
+      "project-save-config-note-6": "、",
+      "project-save-config-note-7": " 和 ",
+      "project-save-config-note-8": "。",
+      "project-save-gui-note-1": "只有启用对应开关后，GUI 的存档/读档界面才会显示自动存档页和快速存档页。",
+      "project-save-gui-note-2": " 仅在你之后使用 ",
+      "project-save-gui-note-3": " 时才会生效。",
+      "project-generated-save-rollback-config": "生成的存档 / 回退配置",
+      "project-keymap-settings": "按键设置",
+      "project-keymap-note-1": "在这里自定义常用的 ",
+      "project-keymap-note-2": " 事件。Ren'Py 玩家通常希望默认按键绑定保持熟悉，因此本编辑器只会为你实际修改过的事件生成覆盖配置。",
+      "project-keymap-custom-event": "自定义事件",
+      "project-keymap-add-custom-event": "添加自定义事件",
+      "project-keymap-keysym-note-1": "按键符号示例：",
+      "project-keymap-keysym-note-2": "、",
+      "project-keymap-keysym-note-3": "、",
+      "project-keymap-keysym-note-4": "、",
+      "project-keymap-keysym-note-5": "、",
+      "project-keymap-keysym-note-6": "。",
+      "project-generated-keymap-config": "生成的按键配置",
+      "project-status": "项目状态",
+      "project-status-text": "可视化编辑器基础框架已准备就绪。",
+      "node.image": "图像",
+      "node.image-description": "清屏 / 显示 / 隐藏",
+
+      "node.animation": "动画",
+      "node.animation-description": "使用转场",
+
+      "node.audio": "音频",
+      "node.audio-description": "播放 / 排队 / 停止",
+
+      "node.dialogue": "对话",
+      "node.dialogue-description": "台词",
+
+      "node.input": "输入",
+      "node.input-description": "renpy.input()",
+
+      "node.achievement": "成就",
+      "node.achievement-description": "授予 / 进度 / 清除 / 同步",
+
+      "node.screen": "界面",
+      "node.screen-description": "显示 / 调用 / 隐藏",
+
+      "node.menu": "选项",
+      "node.menu-description": "分支",
+
+      "node.condition": "条件",
+      "node.condition-description": "If / Elif / Else",
+
+      "node.flow": "流程",
+      "node.flow-description": "跳转 / 调用 / 返回",
+
+      "node.python": "Python",
+      "node.python-description": "$ / python:",
+      "inspector.title": "属性面板",
+      "inspector.description": "显示当前选中节点的详细信息。",
+      "inspector.empty": "选择一个节点以查看其属性。",
+      "inspector.node-type": "节点类型",
+      "inspector.node-action": "节点动作",
+      "inspector.node-action": "节点动作",
+      "inspector.node-action-show": "显示",
+      "inspector.node-action-scene": "清屏",
+      "inspector.node-action-hide": "隐藏",
+      "inspector.image-name": "图像名称",
+      "inspector.no-imported-images": "没有导入的图像。",
+      "inspector.live2d-attributes": "Live2D 属性",
+      "inspector.live2d-motion": "动作",
+      "inspector.live2d-no-explicit-motion": "没有显式指定的动作。",
+      "inspector.live2d-expression": "表情",
+      "inspector.live2d-no-explicit-expression": "没有显式指定的表情。",
+      "inspector.live2d-expression-default": "使用默认表情",
+      "inspector.live2d-nonexclusive-attributes": "非独占属性",
+      "inspector.live2d-removal-attributes": "移除属性",
+      "image-node-live2d-still-prefix": "添加 ",
+      "image-node-live2d-still-suffix": " 属性",
+      "inspector.live2d-additional-attributes": "附加属性",
+      "inspector.layered-attributes": "分层属性",
+      "inspector.layer": "层",
+      "inspector.at-transform": "应用变换",
+      "inspector.at-transform-left": "左侧",
+      "inspector.at-transform-center": "居中",
+      "inspector.at-transform-right": "右侧",
+      "inspector.at-transform-truecenter": "正中央",
+      "inspector.at-transform-offscreenleft": "屏幕左外",
+      "inspector.at-transform-offscreenright": "屏幕右外",
+      "inspector.at-transform-reset": "重置",
+      "inspector.alias": "别名",
+      "inspector.behind-tags": "置于标签之后",
+      "inspector.z-order": "Z 轴顺序",
+      "inspector.node-type": "节点类型",
+      "inspector.delete-block": "删除块",
+      "inspector.preset": "预设",
+      "inspector.preset-none": "无",
+      "inspector.preset-dissolve": "溶解",
+      "inspector.preset-fade": "淡入淡出",
+      "inspector.preset-pixellate": "像素化",
+      "inspector.preset-move": "移动",
+      "inspector.preset-ease": "缓动",
+      "inspector.preset-hpunch": "水平震动",
+      "inspector.preset-vpunch": "垂直震动",
+      "inspector.preset-wiperight": "向右擦除",
+      "inspector.preset-wipeleft": "向左擦除",
+      "inspector.preset-wipeup": "向上擦除",
+      "inspector.preset-wipedown": "向下擦除",
+      "inspector.preset-slideright": "向右滑入",
+      "inspector.preset-slideleft": "向左滑入",
+      "inspector.preset-slideup": "向上滑入",
+      "inspector.preset-slidedown": "向下滑入",
+      "inspector.preset-irisin": "虹膜收束",
+      "inspector.preset-irisout": "虹膜展开",
+      "inspector.node-action": "动作",
+      "inspector.node-action-play": "播放",
+      "inspector.node-action-queue": "排队播放",
+      "inspector.node-action-stop": "停止",
+      "inspector.audio-resource": "音频资源",
+      "inspector.no-imported-audio": "没有导入的音频。",
+      "inspector.audio-channel": "音频通道",
+      "inspector.audio-channel-music": "音乐",
+      "inspector.audio-channel-sound": "音效",
+      "inspector.audio-channel-voice": "语音",
+      "inspector.audio-loop": "循环播放",
+      "inspector.audio-fade-in": "淡入时间",
+      "inspector.audio-fade-out": "淡出时间",
+      "inspector.audio-volume": "音量",
+      "inspector.audio-if-changed": "仅在变化时执行",
+      "inspector.speaker": "说话人",
+      "inspector.speaker-narrator": "旁白",
+      "inspector.dialogue-voice": "语音",
+      "inspector.dialogue-voice-lines": "语音台词",
+      "inspector.dialogue-add-voice-line": "新增",
+
+      "inspector.dialogue-content": "内容",
+      "inspector.dialogue-content-placeholder": "使用一个空行来拆分对话块……",
+      "inspector.dialogue-text-tools": "文本工具",
+      "inspector.dialogue-text-tools-description": "插入文本标签、转义字符和节奏控制辅助项。",
+      "inspector.dialogue-text-tool-insert": "插入",
+      "inspector.dialogue-text-tool-style": "样式",
+      "inspector.dialogue-text-tool-bold": "粗体",
+      "inspector.dialogue-text-tool-italic": "斜体",
+      "inspector.dialogue-text-tool-color": "颜色",
+      "inspector.dialogue-text-tool-size": "字号",
+      "inspector.dialogue-text-tool-image": "图像",
+      "inspector.dialogue-text-tool-timing": "节奏",
+      "inspector.dialogue-text-tools-help": "支持 Ren'Py 插值、转义语法、常用文本标签，以及用于控制对话节奏的标签。",
+      "inspector.target-variable": "目标变量",
+      "inspector.prompt": "提示文本",
+      "inspector.default-text": "默认文本",
+      "inspector.allow-characters": "允许字符",
+      "inspector.exclude-characters": "排除字符",
+      "inspector.max-length": "最大长度",
+      "inspector.pixel-width": "像素宽度",
+      "inspector.screen-name": "界面名称",
+      "inspector.mask-character": "遮罩字符",
+      "inspector.empty-fallback": "空值备用文本",
+      "inspector.trim-whitespace": "输入后去除首尾空白",
+      "inspector.allow-copy-paste": "允许复制 / 粘贴",
+      "inspector.achievement-action": "成就动作",
+      "inspector.node-action-grant": "授予",
+      "inspector.node-action-progress": "更新进度",
+      "inspector.node-action-clear": "清除",
+      "inspector.node-action-sync": "同步",
+
+      "inspector.achievement-name": "成就",
+      "inspector.achievement-none": "无成就",
+
+      "inspector.achievement-progress-mode": "进度模式",
+      "inspector.achievement-progress-set": "设置当前进度",
+      "inspector.achievement-progress-add": "增加当前进度",
+      "inspector.achievement-progress-value": "数值 / 增量",
+
+      "inspector.achievement-sync-help": "同步会将本地成就状态推送到可用的后端，例如 Steam。",
+
+      "inspector.prompt": "提示",
+      "inspector.menu-choices": "选项",
+      "inspector.menu-add-choice": "添加选项",
+      "inspector.condition-clauses": "条件子句",
+      "inspector.condition-add-elif": "添加 Elif",
+      "inspector.condition-add-else": "添加 Else",
+      "inspector.flow-action": "流程动作",
+      "inspector.flow-jump": "跳转",
+      "inspector.flow-call": "调用",
+      "inspector.flow-return": "返回",
+      "inspector.flow-target": "目标标签",
+      "inspector.flow-select-label": "选择标签...",
+      "inspector.screen-action": "界面动作",
+      "inspector.screen-show": "显示界面",
+      "inspector.screen-call": "调用界面",
+      "inspector.screen-hide": "隐藏界面",
+      "inspector.screen-name": "界面名称",
+      "inspector.screen-arguments": "参数",
+      "inspector.screen-result-variable": "返回值保存到",
+      "inspector.screen-special-info": "这是一个特殊界面。Ren'Py 通常会自动调用它，所以你通常不需要为它添加界面块。",
+      "inspector.screen-missing-info": "当前 GUI 编辑器中没有定义这个界面。如果它是内置界面或外部界面，这是正常的。",
+      "inspector.python-statement": "Python 语句",
+      "inspector.python-store-path": "存储路径",
+      "inspector.python-hide-store": "在生成的代码中隐藏",
+      "inspector.python-code": "Python 代码",
+      "inspector.node-id": "节点 ID",
+      "inspector.node-type": "节点类型",
+      "inspector.node-title": "标题",
+      "inspector.node-content": "内容",
+      "inspector.rename-label": "重命名场景",
+      "inspector.delete-label": "删除场景",
+      "inspector.delete-image": "删除图像",
+      "inspector.delete-audio": "删除音频",
+      "inspector.delete-character": "删除角色",
+
+
+      "gui.styles-title": "样式",
+      "gui.styles-description-1": "用于 GUI 组件的可复用 ",
+      "gui.styles-description-2": " 定义。",
+      "gui.styles-empty": "还没有样式。创建一个样式来开始构建 GUI 外观规则。",
     },
   };
 
@@ -818,6 +1150,27 @@
 
   const originalTextByNode = new WeakMap();
   const originalAttributesByElement = new WeakMap();
+  const translatedAttributeConfigs = [
+    {
+      selector: "[data-i18n-placeholder]",
+      attr: "placeholder",
+      datasetKey: "i18nPlaceholder",
+    },
+    {
+      selector: "[data-i18n-title]",
+      attr: "title",
+      datasetKey: "i18nTitle",
+    },
+    {
+      selector: "[data-i18n-aria-label]",
+      attr: "aria-label",
+      datasetKey: "i18nAriaLabel",
+    },
+  ];
+  const translatedAttributeDatasetKeys = translatedAttributeConfigs.reduce((acc, config) => {
+    acc[config.attr] = config.datasetKey;
+    return acc;
+  }, {});
 
   function interpolate(template, vars) {
     return `${template}`.replace(/\{(\w+)\}/g, (_match, key) => (
@@ -954,11 +1307,6 @@
       textNode = walker.nextNode();
     }
 
-    const managedAttributeKeys = {
-      placeholder: "i18nPlaceholder",
-      title: "i18nTitle",
-      "aria-label": "i18nAriaLabel",
-    };
     const elements = [scope, ...scope.querySelectorAll?.("*") || []];
     elements.forEach((el) => {
       ["placeholder", "title", "aria-label"].forEach((attr) => {
@@ -966,7 +1314,7 @@
           return;
         }
 
-        if (el.dataset?.[managedAttributeKeys[attr]]) {
+        if (el.dataset?.[translatedAttributeDatasetKeys[attr]]) {
           return;
         }
 
@@ -984,6 +1332,34 @@
     });
   }
 
+  function getMatchingElements(root, selector) {
+    const elements = [];
+
+    if (root.matches?.(selector)) {
+      elements.push(root);
+    }
+
+    root.querySelectorAll?.(selector).forEach((el) => {
+      elements.push(el);
+    });
+
+    return elements;
+  }
+
+  function applyTranslatedAttributes(root) {
+    translatedAttributeConfigs.forEach((config) => {
+      getMatchingElements(root, config.selector).forEach((el) => {
+        const key = el.dataset?.[config.datasetKey];
+
+        if (!key) {
+          return;
+        }
+
+        el.setAttribute(config.attr, t(key));
+      });
+    });
+  }
+
   function applyTranslations(root = document) {
     if (!root || !root.querySelectorAll) {
       return;
@@ -997,17 +1373,7 @@
       el.innerHTML = t(el.dataset.i18nHtml);
     });
 
-    root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-      el.setAttribute("placeholder", t(el.dataset.i18nPlaceholder));
-    });
-
-    root.querySelectorAll("[data-i18n-title]").forEach((el) => {
-      el.setAttribute("title", t(el.dataset.i18nTitle));
-    });
-
-    root.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
-      el.setAttribute("aria-label", t(el.dataset.i18nAriaLabel));
-    });
+    applyTranslatedAttributes(root);
 
     if (document?.documentElement) {
       document.documentElement.lang = activeLocale;

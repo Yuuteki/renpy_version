@@ -40,6 +40,9 @@ const storageKey = projectPath
 const guiSectionStorageKey = projectPath
   ? `renpy-visual-editor:gui-section:${projectPath}`
   : "renpy-visual-editor:gui-section:default";
+const guiNavNoteDismissedKey = projectPath
+  ? `renpy-visual-editor:gui-nav-note-dismissed:${projectPath}`
+  : "renpy-visual-editor:gui-nav-note-dismissed:default";
 
 const guiProjectPathEl = document.getElementById("guiProjectPath");
 const guiStatusTextEl = document.getElementById("guiStatusText");
@@ -47,6 +50,8 @@ const guiSyncPillsEl = document.getElementById("guiSyncPills");
 const guiLocaleSelect = document.getElementById("guiLocaleSelect");
 const guiBackButton = document.getElementById("guiBackButton");
 const guiSaveButton = document.getElementById("guiSaveButton");
+const guiNavNoteEl = document.getElementById("guiNavNote");
+const guiNavNoteDismissButton = document.getElementById("guiNavNoteDismissButton");
 const guiNavButtonEls = Array.from(document.querySelectorAll(".gui-nav-button"));
 const guiSectionEls = Array.from(document.querySelectorAll(".gui-section"));
 const stylesNavCountEl = document.getElementById("stylesNavCount");
@@ -1195,6 +1200,18 @@ function storeGuiSectionId(sectionId) {
   if (guiSectionLabelById[sectionId]) {
     window.localStorage.setItem(guiSectionStorageKey, sectionId);
   }
+}
+
+function isGuiNavNoteDismissed() {
+  return window.localStorage.getItem(guiNavNoteDismissedKey) === "true";
+}
+
+function syncGuiNavNoteVisibility() {
+  if (!guiNavNoteEl) {
+    return;
+  }
+
+  guiNavNoteEl.classList.toggle("hidden", isGuiNavNoteDismissed());
 }
 
 function renderLocaleOptions(selectEl) {
@@ -6880,11 +6897,19 @@ if (guiLocaleSelect) {
   });
 }
 
+if (guiNavNoteDismissButton) {
+  guiNavNoteDismissButton.addEventListener("click", () => {
+    window.localStorage.setItem(guiNavNoteDismissedKey, "true");
+    syncGuiNavNoteVisibility();
+  });
+}
+
 window.addEventListener("visual-editor-locale-changed", () => {
   render();
 });
 
 applyCurrentLocale();
+syncGuiNavNoteVisibility();
 render();
 setStatus(t("gui.status.ready"));
 hydrateProjectStateFromBridge();

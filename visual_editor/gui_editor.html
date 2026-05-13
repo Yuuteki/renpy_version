@@ -68,9 +68,22 @@
             </button>
           </div>
 
-          <div class="gui-nav-note" data-i18n="gui.nav.note">
-            This editor now covers styles, screen structure, screen actions and values, GUI config, cursor systems,
-            text shaders, Python UI helper templates, replay menus, music rooms, galleries, preview, and diagnostics.
+          <div id="guiNavNote" class="gui-nav-note">
+            <p data-i18n="gui.nav.note">
+              This editor now covers styles, screen structure, screen actions and values, GUI config, cursor systems,
+              text shaders, Python UI helper templates, replay menus, music rooms, galleries, preview, and diagnostics.
+            </p>
+            <button
+              id="guiNavNoteDismissButton"
+              class="gui-nav-note-dismiss"
+              type="button"
+              aria-label="Hide this tip"
+              title="Hide this tip"
+              data-i18n-aria-label="gui.nav.note.dismiss"
+              data-i18n-title="gui.nav.note.dismiss"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
           </div>
         </aside>
 
@@ -80,15 +93,18 @@
               <aside class="gui-column gui-list-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Styles</h2>
-                    <p>Reusable <code>style</code> definitions for GUI components.</p>
+                    <h2 data-i18n="gui.styles-title">Styles</h2>
+                    <p>
+                      <span data-i18n="gui.styles-description-1">Reusable </span>
+                      <code>style</code>
+                      <span data-i18n="gui.styles-description-2"> definitions for GUI components.</span>
+                    </p>
                   </div>
                 </div>
 
-                <div id="guiStyleEmpty" class="panel-empty-state hidden">
+                <div id="guiStyleEmpty" class="panel-empty-state hidden" data-i18n="gui.styles-empty">
                   No styles yet. Create one to start building GUI appearance rules.
                 </div>
-
                 <div id="guiStyleList" class="character-list gui-style-list"></div>
 
                 <button id="newGuiStyleButton" class="primary gui-bottom-button" type="button">New Style</button>
