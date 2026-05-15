@@ -32,6 +32,11 @@
 - 完成 GUI Editor `Styles` 区块汉化，覆盖样式列表、详情表单、状态前缀、属性帮助、placeholder、样式操作状态和删除确认。
 - 完成 GUI Editor `Screens` 区块汉化，覆盖 screen 列表、模板选择、节点树、节点详情、action/value/input 表单、预览占位、诊断提示和 screen/node 操作状态。
 - 完成 GUI Editor `Extras` 区块汉化，覆盖 Replay、Music Rooms、Galleries 的表单、列表摘要、嵌套条目、placeholder、删除确认、保存状态和相关诊断提示。
+- 完成 GUI Editor `Config & Defaults` 区块汉化，覆盖配置列表、五类 scope 的动态表单标签和 placeholder、输出说明、创建/更新/删除状态、删除确认和配置诊断提示。
+- 完成 GUI Editor `Python UI` 区块汉化，覆盖 helper 模板列表、动态类型表单、Action/BarValue/InputValue/Displayable/Statement/restart/define_screen 面板、使用提示、placeholder、操作状态、删除确认和诊断提示。
+- 完成 GUI Editor `Cursors` 区块汉化，覆盖硬件鼠标光标、可视组件鼠标光标、使用片段表单、引用列表、placeholder、操作状态、删除确认和鼠标光标相关诊断提示。
+- 完成 GUI Editor `Shaders` 区块汉化，覆盖默认文本着色器、样式着色器、callback 映射、自定义注册表单、使用提示、placeholder、操作状态、删除确认和文本着色器诊断提示。
+- 完成 GUI Editor `Diagnostics / Suggested Output` 收尾汉化，覆盖诊断说明、统计徽标、空状态、建议输出占位，以及 style/screen 节点相关诊断提示。
 
 ## [0.4.13] - 2026-04-26
 

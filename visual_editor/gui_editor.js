@@ -1857,6 +1857,32 @@ function getConfigScopeMeta(scope) {
   return configScopeMeta[scope] || configScopeMeta.config;
 }
 
+function getConfigScopeTranslation(scope, field) {
+  const key = `gui.config-scope.${scope}.${field}`;
+  const translated = t(key);
+
+  if (translated !== key) {
+    return translated;
+  }
+
+  const meta = getConfigScopeMeta(scope);
+  const fallbackByField = {
+    label: meta.label,
+    nameLabel: meta.nameLabel,
+    namePlaceholder: meta.namePlaceholder,
+    auxLabel: meta.auxLabel,
+    auxPlaceholder: meta.auxPlaceholder,
+    valueLabel: meta.valueLabel,
+    valuePlaceholder: meta.valuePlaceholder,
+    info: meta.info,
+  };
+  return fallbackByField[field] || "";
+}
+
+function getConfigScopeLabel(scope) {
+  return getConfigScopeTranslation(scope, "label");
+}
+
 function getGuiPreferenceName(entry) {
   return `${entry?.storePath || entry?.name || ""}`.trim();
 }
@@ -2781,7 +2807,10 @@ function updateConfigEntry(patch) {
 
   Object.assign(context.entry, patch);
   render();
-  saveProjectState(`Updated ${context.scope} entry "${context.entry.name}".`);
+  saveProjectState(t("gui.status.config_entry_updated", {
+    scope: getConfigScopeLabel(context.scope),
+    name: context.entry.name,
+  }));
 }
 
 function maybeMoveConfigEntryToNewScope(nextScope) {
@@ -2807,7 +2836,10 @@ function deleteActiveConfigEntry() {
   projectState.gui[context.scope] = projectState.gui[context.scope].filter((entry) => entry.id !== context.entry.id);
   activeConfigEntryKey = getAllConfigEntries(projectState.gui)[0]?.key ?? null;
   render();
-  saveProjectState(`Deleted ${context.scope} entry "${context.entry.name}".`);
+  saveProjectState(t("gui.status.config_entry_deleted", {
+    scope: getConfigScopeLabel(context.scope),
+    name: context.entry.name,
+  }));
 }
 
 function updateActivePythonUiEntry(patch) {
@@ -2819,7 +2851,7 @@ function updateActivePythonUiEntry(patch) {
 
   Object.assign(entry, patch);
   render();
-  saveProjectState(`Updated Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_updated", { name: entry.name }));
 }
 
 function deleteActivePythonUiEntry() {
@@ -2832,7 +2864,7 @@ function deleteActivePythonUiEntry() {
   projectState.gui.pythonUiHelpers = projectState.gui.pythonUiHelpers.filter((item) => item.id !== entry.id);
   activePythonUiId = projectState.gui.pythonUiHelpers[0]?.id ?? null;
   render();
-  saveProjectState(`Deleted Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_deleted", { name: entry.name }));
 }
 
 function updateActiveCursor(patch) {
@@ -2844,7 +2876,7 @@ function updateActiveCursor(patch) {
 
   Object.assign(activeCursor, patch);
   render();
-  saveProjectState(`Updated cursor entry "${activeCursor.name}".`);
+  saveProjectState(t("gui.status.cursor_updated", { name: activeCursor.name }));
 }
 
 function deleteActiveCursor() {
@@ -2857,7 +2889,7 @@ function deleteActiveCursor() {
   projectState.gui.cursors = projectState.gui.cursors.filter((entry) => entry.id !== activeCursor.id);
   activeCursorId = projectState.gui.cursors[0]?.id ?? null;
   render();
-  saveProjectState(`Deleted cursor entry "${activeCursor.name}".`);
+  saveProjectState(t("gui.status.cursor_deleted", { name: activeCursor.name }));
 }
 
 function updateActiveShader(patch) {
@@ -2869,7 +2901,7 @@ function updateActiveShader(patch) {
 
   Object.assign(activeShader, patch);
   render();
-  saveProjectState(`Updated shader entry "${activeShader.name}".`);
+  saveProjectState(t("gui.status.shader_updated", { name: activeShader.name }));
 }
 
 function deleteActiveShader() {
@@ -2882,7 +2914,7 @@ function deleteActiveShader() {
   projectState.gui.textShaders = projectState.gui.textShaders.filter((entry) => entry.id !== activeShader.id);
   activeShaderId = projectState.gui.textShaders[0]?.id ?? null;
   render();
-  saveProjectState(`Deleted shader entry "${activeShader.name}".`);
+  saveProjectState(t("gui.status.shader_deleted", { name: activeShader.name }));
 }
 
 function updateReplayMenu(patch) {
@@ -4630,7 +4662,9 @@ function renderConfigList() {
   guiConfigEntryListEl.innerHTML = allEntries.map(({ scope, entry, key }) => `
     <div class="gui-entity-card ${key === activeConfigEntryKey ? "is-active" : ""}" data-config-entry-key="${escapeHtml(key)}">
       <strong>${escapeHtml(entry.name)}</strong>
-      <span>${escapeHtml(`${getConfigScopeMeta(scope).label}${entry.storePath ? ` · ${entry.storePath}` : ""}`)}</span>
+      <span>${escapeHtml(entry.storePath
+        ? t("gui.config-card-summary-path", { scope: getConfigScopeLabel(scope), path: entry.storePath })
+        : getConfigScopeLabel(scope))}</span>
     </div>
   `).join("");
 }
@@ -4674,13 +4708,16 @@ function renderConfigDetail() {
   guiConfigStorePathInput.value = context.entry.storePath;
   guiConfigValueInput.value = context.entry.value;
   guiConfigDescriptionInput.value = context.entry.description;
-  guiConfigNameLabelEl.textContent = scopeMeta.nameLabel;
-  guiConfigNameInput.placeholder = scopeMeta.namePlaceholder;
-  guiConfigStorePathLabelEl.textContent = scopeMeta.auxLabel;
-  guiConfigStorePathInput.placeholder = scopeMeta.auxPlaceholder;
-  guiConfigValueLabelEl.textContent = scopeMeta.valueLabel;
-  guiConfigValueInput.placeholder = scopeMeta.valuePlaceholder;
-  guiConfigScopeInfoEl.textContent = scopeMeta.info;
+  guiConfigNameLabelEl.textContent = getConfigScopeTranslation(context.scope, "nameLabel");
+  guiConfigNameInput.dataset.i18nPlaceholder = `gui.config-scope.${context.scope}.namePlaceholder`;
+  guiConfigNameInput.placeholder = getConfigScopeTranslation(context.scope, "namePlaceholder");
+  guiConfigStorePathLabelEl.textContent = getConfigScopeTranslation(context.scope, "auxLabel");
+  guiConfigStorePathInput.dataset.i18nPlaceholder = `gui.config-scope.${context.scope}.auxPlaceholder`;
+  guiConfigStorePathInput.placeholder = getConfigScopeTranslation(context.scope, "auxPlaceholder");
+  guiConfigValueLabelEl.textContent = getConfigScopeTranslation(context.scope, "valueLabel");
+  guiConfigValueInput.dataset.i18nPlaceholder = `gui.config-scope.${context.scope}.valuePlaceholder`;
+  guiConfigValueInput.placeholder = getConfigScopeTranslation(context.scope, "valuePlaceholder");
+  guiConfigScopeInfoEl.textContent = getConfigScopeTranslation(context.scope, "info");
   guiConfigScopeInfoEl.classList.toggle("hidden", !scopeMeta.info);
   guiConfigStorePathInput.closest("label").classList.toggle("hidden", !scopeMeta.auxVisible);
   guiConfigCodePreviewEl.textContent = formatAllConfigCode();
@@ -4702,6 +4739,30 @@ function getPythonUiKindMeta(kind) {
   return pythonUiKindMeta[kind] || pythonUiKindMeta.action;
 }
 
+function getPythonUiKindTranslation(kind, field) {
+  const key = `gui.python-kind.${kind}.${field}`;
+  const translated = t(key);
+
+  if (translated !== key) {
+    return translated;
+  }
+
+  const meta = getPythonUiKindMeta(kind);
+  const fallbackByField = {
+    label: meta.label,
+    nameLabel: meta.nameLabel,
+    namePlaceholder: meta.namePlaceholder,
+    parametersLabel: meta.parametersLabel,
+    parametersPlaceholder: meta.parametersPlaceholder,
+    info: meta.info,
+  };
+  return fallbackByField[field] || "";
+}
+
+function getPythonUiKindLabel(kind) {
+  return getPythonUiKindTranslation(kind, "label");
+}
+
 function parseLeadingParameterName(parameterList) {
   const trimmed = `${parameterList || ""}`.trim();
 
@@ -4718,7 +4779,7 @@ function isValidPythonIdentifier(value) {
 }
 
 function formatPythonUiHelperName(entry) {
-  return entry?.name || getPythonUiKindMeta(entry?.kind).namePlaceholder;
+  return entry?.name || getPythonUiKindTranslation(entry?.kind || "action", "namePlaceholder");
 }
 
 function formatPythonUiStatementBlockValue(value) {
@@ -4755,7 +4816,7 @@ function getPythonUiUsageEntries(entry) {
   if (entry.usage) {
     return [
       {
-        title: "Custom Usage",
+        title: t("gui.python-usage-custom-title"),
         detail: entry.usage,
       },
     ];
@@ -4765,82 +4826,82 @@ function getPythonUiUsageEntries(entry) {
     case "action":
       return [
         {
-          title: "Where to use it",
-          detail: `In Screens, pick an interactive node and set Action -> Raw Expression to ${formatPythonUiHelperName(entry)}(...).`,
+          title: t("gui.python-usage-where"),
+          detail: t("gui.python-usage-action-where", { name: formatPythonUiHelperName(entry) }),
         },
         {
-          title: "Good fit",
-          detail: "Buttons that need custom selected/sensitive logic, tooltips, or Python-side side effects.",
+          title: t("gui.python-usage-good-fit"),
+          detail: t("gui.python-usage-action-fit"),
         },
       ];
     case "barvalue":
       return [
         {
-          title: "Where to use it",
-          detail: `In bar or vbar nodes, set Value -> Raw Expression to ${formatPythonUiHelperName(entry)}(...).`,
+          title: t("gui.python-usage-where"),
+          detail: t("gui.python-usage-barvalue-where", { name: formatPythonUiHelperName(entry) }),
         },
         {
-          title: "Good fit",
-          detail: "Custom sliders, volume widgets, meters, and advanced adjustment-driven controls.",
+          title: t("gui.python-usage-good-fit"),
+          detail: t("gui.python-usage-barvalue-fit"),
         },
       ];
     case "inputvalue":
       return [
         {
-          title: "Where to use it",
-          detail: `In input nodes, set InputValue -> Raw Expression to ${formatPythonUiHelperName(entry)}(...).`,
+          title: t("gui.python-usage-where"),
+          detail: t("gui.python-usage-inputvalue-where", { name: formatPythonUiHelperName(entry) }),
         },
         {
-          title: "Good fit",
-          detail: "When input text should read from and write to a custom Python source.",
+          title: t("gui.python-usage-good-fit"),
+          detail: t("gui.python-usage-inputvalue-fit"),
         },
         {
-          title: "Inherited helpers",
-          detail: "Enable(), Disable(), and Toggle() still come from InputValue unless you replace them yourself.",
+          title: t("gui.python-usage-inherited"),
+          detail: t("gui.python-usage-inputvalue-inherited"),
         },
       ];
     case "displayable":
       return [
         {
-          title: "Where to use it",
-          detail: `Use add ${formatPythonUiHelperName(entry)}(...) inside a screen, or show expression ${formatPythonUiHelperName(entry)}(...) from script.`,
+          title: t("gui.python-usage-where"),
+          detail: t("gui.python-usage-displayable-where", { name: formatPythonUiHelperName(entry) }),
         },
         {
-          title: "Good fit",
-          detail: "Custom rendering, interactive mini UI pieces, particle-like overlays, or widgets that need direct render/event control.",
+          title: t("gui.python-usage-good-fit"),
+          detail: t("gui.python-usage-displayable-fit"),
         },
       ];
     case "statement":
       return [
         {
-          title: "Where to use it",
-          detail: `After registration, write ${entry.parameters || "your_keyword"} ... directly in a .rpy script file just like a normal Ren'Py statement.`,
+          title: t("gui.python-usage-where"),
+          detail: t("gui.python-usage-statement-where", { keyword: entry.parameters || "your_keyword" }),
         },
         {
-          title: "Good fit",
-          detail: "Project-specific DSLs, shorthand script syntax, or reusable statement families with their own parser and lint hooks.",
+          title: t("gui.python-usage-good-fit"),
+          detail: t("gui.python-usage-statement-fit"),
         },
       ];
     case "restart_helper":
       return [
         {
-          title: "Where to use it",
-          detail: `Call it from Function(${formatPythonUiHelperName(entry)}, ...) in a screen action, or from another Python helper.`,
+          title: t("gui.python-usage-where"),
+          detail: t("gui.python-usage-restart-where", { name: formatPythonUiHelperName(entry) }),
         },
         {
-          title: "Good fit",
-          detail: "Variable updates that need renpy.restart_interaction() before the screen visually refreshes.",
+          title: t("gui.python-usage-good-fit"),
+          detail: t("gui.python-usage-restart-fit"),
         },
       ];
     case "define_screen":
       return [
         {
-          title: "Where to use it",
-          detail: `After registration, call it like a normal screen with show/call screen ${entry.defineScreenName || "python_screen"}.`,
+          title: t("gui.python-usage-where"),
+          detail: t("gui.python-usage-define-screen-where", { screen: entry.defineScreenName || "python_screen" }),
         },
         {
-          title: "Good fit",
-          detail: "Very low-level UI cases that do not map cleanly to regular screen language nodes.",
+          title: t("gui.python-usage-good-fit"),
+          detail: t("gui.python-usage-define-screen-fit"),
         },
       ];
     default:
@@ -5083,7 +5144,7 @@ function renderPythonUiList() {
   guiPythonUiListEl.innerHTML = projectState.gui.pythonUiHelpers.map((entry) => `
     <div class="gui-entity-card ${entry.id === activePythonUiId ? "is-active" : ""}" data-python-ui-id="${escapeHtml(entry.id)}">
       <strong>${escapeHtml(entry.name)}</strong>
-      <span>${escapeHtml(getPythonUiKindMeta(entry.kind).label)}</span>
+      <span>${escapeHtml(getPythonUiKindLabel(entry.kind))}</span>
     </div>
   `).join("");
 }
@@ -5096,21 +5157,22 @@ function renderPythonUiDetail() {
   guiPythonUiFormEl.classList.toggle("hidden", !hasEntry);
 
   if (!entry) {
-    guiPythonUiUsageListEl.innerHTML = `<div class="gui-inline-empty">No helper usage notes yet.</div>`;
+    guiPythonUiUsageListEl.innerHTML = `<div class="gui-inline-empty">${escapeHtml(t("gui.python-no-usage-notes"))}</div>`;
     guiPythonUiCodePreviewEl.textContent = formatAllPythonUiCode();
     return;
   }
 
-  const kindMeta = getPythonUiKindMeta(entry.kind);
   guiPythonUiKindInput.value = entry.kind;
-  guiPythonUiNameLabelEl.textContent = kindMeta.nameLabel;
-  guiPythonUiNameInput.placeholder = kindMeta.namePlaceholder;
+  guiPythonUiNameLabelEl.textContent = getPythonUiKindTranslation(entry.kind, "nameLabel");
+  guiPythonUiNameInput.dataset.i18nPlaceholder = `gui.python-kind.${entry.kind}.namePlaceholder`;
+  guiPythonUiNameInput.placeholder = getPythonUiKindTranslation(entry.kind, "namePlaceholder");
   guiPythonUiNameInput.value = entry.name;
-  guiPythonUiParametersLabelEl.textContent = kindMeta.parametersLabel;
-  guiPythonUiParametersInput.placeholder = kindMeta.parametersPlaceholder;
+  guiPythonUiParametersLabelEl.textContent = getPythonUiKindTranslation(entry.kind, "parametersLabel");
+  guiPythonUiParametersInput.dataset.i18nPlaceholder = `gui.python-kind.${entry.kind}.parametersPlaceholder`;
+  guiPythonUiParametersInput.placeholder = getPythonUiKindTranslation(entry.kind, "parametersPlaceholder");
   guiPythonUiParametersInput.value = entry.parameters;
   guiPythonUiUsageInput.value = entry.usage;
-  guiPythonUiKindInfoEl.textContent = kindMeta.info;
+  guiPythonUiKindInfoEl.textContent = getPythonUiKindTranslation(entry.kind, "info");
   guiPythonUiNotesInput.value = entry.notes;
 
   guiPythonUiActionFieldsEl.classList.toggle("hidden", entry.kind !== "action");
@@ -5186,7 +5248,7 @@ function renderPythonUiDetail() {
         <span>${escapeHtml(item.detail)}</span>
       </div>
     `).join("")
-    : `<div class="gui-inline-empty">No helper usage notes yet.</div>`;
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.python-no-usage-notes"))}</div>`;
 
   guiPythonUiCodePreviewEl.textContent = formatAllPythonUiCode();
 }
@@ -5204,7 +5266,7 @@ function renderCursorList() {
   guiCursorListEl.innerHTML = projectState.gui.cursors.map((entry) => `
     <div class="gui-entity-card ${entry.id === activeCursorId ? "is-active" : ""}" data-cursor-id="${escapeHtml(entry.id)}">
       <strong>${escapeHtml(entry.name)}</strong>
-      <span>${escapeHtml(entry.kind)}</span>
+      <span>${escapeHtml(getCursorKindLabel(entry.kind))}</span>
     </div>
   `).join("");
 }
@@ -5216,6 +5278,17 @@ function getDefinedCursorNames() {
       .map((entry) => entry.name)
       .filter(Boolean),
   );
+}
+
+function getCursorKindLabel(kind) {
+  const keyByKind = {
+    hardware: "gui.cursor-kind.hardware",
+    displayable: "gui.cursor-kind.displayable",
+    usage: "gui.cursor-kind.usage",
+  };
+  const key = keyByKind[kind] || keyByKind.hardware;
+  const translated = t(key);
+  return translated === key ? kind : translated;
 }
 
 function renderCursorDetail() {
@@ -5298,8 +5371,12 @@ function renderCursorReferenceList() {
       .forEach((property) => {
         references.push({
           ok: cursorNames.has(property.value) || property.value === "default",
-          title: `${style.name} uses cursor "${property.value}"`,
-          detail: property.prefix === "base" ? "Base style cursor reference." : `Prefix ${property.prefix}.`,
+          title: t("gui.cursor-reference-style-title", { style: style.name, cursor: property.value }),
+          detail: property.prefix === "base"
+            ? t("gui.cursor-reference-base-detail")
+            : t("gui.cursor-reference-prefix-detail", {
+              prefix: getStylePrefixLabel(stylePrefixMeta.find((prefix) => prefix.id === property.prefix)) || property.prefix,
+            }),
         });
       });
   });
@@ -5309,13 +5386,16 @@ function renderCursorReferenceList() {
     .forEach((entry) => {
       references.push({
         ok: cursorNames.has(entry.targetCursor),
-        title: `${entry.styleTarget || "style"} -> "${entry.targetCursor || entry.name}"`,
-        detail: "Usage snippet emitted as a style mouse property.",
+        title: t("gui.cursor-reference-usage-title", {
+          style: entry.styleTarget || "style",
+          cursor: entry.targetCursor || entry.name,
+        }),
+        detail: t("gui.cursor-reference-usage-detail"),
       });
     });
 
   if (!references.length) {
-    guiCursorReferenceListEl.innerHTML = `<div class="gui-inline-empty">No cursor references yet.</div>`;
+    guiCursorReferenceListEl.innerHTML = `<div class="gui-inline-empty">${escapeHtml(t("gui.cursor-no-references"))}</div>`;
     return;
   }
 
@@ -5325,6 +5405,18 @@ function renderCursorReferenceList() {
       <span>${escapeHtml(reference.detail)}</span>
     </div>
   `).join("");
+}
+
+function getShaderModeLabel(mode) {
+  const keyByMode = {
+    default: "gui.shader-mode.default",
+    style: "gui.shader-mode.style",
+    callback: "gui.shader-mode.callback",
+    custom: "gui.shader-mode.custom",
+  };
+  const key = keyByMode[mode] || keyByMode.default;
+  const translated = t(key);
+  return translated === key ? mode : translated;
 }
 
 function renderShaderList() {
@@ -5340,7 +5432,7 @@ function renderShaderList() {
   guiShaderListEl.innerHTML = projectState.gui.textShaders.map((entry) => `
     <div class="gui-entity-card ${entry.id === activeShaderId ? "is-active" : ""}" data-shader-id="${escapeHtml(entry.id)}">
       <strong>${escapeHtml(entry.name)}</strong>
-      <span>${escapeHtml(entry.mode)}</span>
+      <span>${escapeHtml(getShaderModeLabel(entry.mode))}</span>
     </div>
   `).join("");
 }
@@ -5421,22 +5513,28 @@ function renderShaderUsageList() {
 
     switch (entry.mode) {
       case "default":
-        detail = "Assigns the default text shader via config.default_textshader.";
+        detail = t("gui.shader-usage-default-detail");
         break;
       case "style":
-        detail = `Targets style ${entry.targetName || "default"}.`;
+        detail = t("gui.shader-usage-style-detail", { target: entry.targetName || "default" });
         break;
       case "callback":
-        detail = `Maps callback key ${entry.callbackKey || "default"} to ${entry.callbackFunction || "callback"}.`;
+        detail = t("gui.shader-usage-callback-detail", {
+          key: entry.callbackKey || "default",
+          functionName: entry.callbackFunction || "callback",
+        });
         break;
       case "custom":
-        detail = "Registers a custom text shader.";
+        detail = t("gui.shader-usage-custom-detail");
         break;
       default:
         detail = "";
     }
 
-    return { title: `${entry.name} · ${entry.mode}`, detail };
+    return {
+      title: t("gui.shader-usage-title", { name: entry.name, mode: getShaderModeLabel(entry.mode) }),
+      detail,
+    };
   });
 
   guiShaderUsageListEl.innerHTML = entries.length
@@ -5446,7 +5544,7 @@ function renderShaderUsageList() {
         <span>${escapeHtml(entry.detail)}</span>
       </div>
     `).join("")
-    : `<div class="gui-inline-empty">No shader usage notes yet.</div>`;
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.shader-no-usage-notes"))}</div>`;
 }
 
 function computeDiagnostics() {
@@ -5458,8 +5556,8 @@ function computeDiagnostics() {
     if (!style.properties.length && !style.propertiesExpression) {
       diagnostics.push({
         severity: "info",
-        title: `Style "${style.name}" is empty`,
-        detail: "Empty styles are valid, but they usually mean the style is still a placeholder.",
+        title: t("gui.diagnostics.style_empty_title", { name: style.name }),
+        detail: t("gui.diagnostics.style_empty_detail"),
         snippet: formatGuiStyleCode(style),
       });
     }
@@ -5470,8 +5568,8 @@ function computeDiagnostics() {
         if (!cursorNames.has(property.value) && property.value !== "default") {
           diagnostics.push({
             severity: "warning",
-            title: `Style "${style.name}" references missing cursor "${property.value}"`,
-            detail: "The mouse property points to a cursor name that is not defined in the cursor editor.",
+            title: t("gui.diagnostics.style_missing_cursor_title", { style: style.name, cursor: property.value }),
+            detail: t("gui.diagnostics.style_missing_cursor_detail"),
             snippet: formatGuiStyleCode(style),
           });
         }
@@ -5489,8 +5587,8 @@ function computeDiagnostics() {
     if (!screen.nodes.length) {
       diagnostics.push({
         severity: "error",
-        title: `Screen "${screen.name}" has no nodes`,
-        detail: "A screen without nodes will render nothing and often indicates an unfinished editor draft.",
+        title: t("gui.diagnostics.screen_no_nodes_title", { name: screen.name }),
+        detail: t("gui.diagnostics.screen_no_nodes_detail"),
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -5498,8 +5596,8 @@ function computeDiagnostics() {
     if (specialMenuScreens.has(screen.name) && !screen.tag) {
       diagnostics.push({
         severity: "warning",
-        title: `Screen "${screen.name}" is missing a menu tag`,
-        detail: "Special menu screens usually carry tag \"menu\" so menu transitions and replacements behave consistently.",
+        title: t("gui.diagnostics.screen_missing_menu_tag_title", { name: screen.name }),
+        detail: t("gui.diagnostics.screen_missing_menu_tag_detail"),
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -5507,8 +5605,8 @@ function computeDiagnostics() {
     if (nodeCount > 24) {
       diagnostics.push({
         severity: "info",
-        title: `Screen "${screen.name}" is getting large`,
-        detail: "Consider extracting repeated groups into a separate screen and using the use statement for better maintenance.",
+        title: t("gui.diagnostics.screen_large_title", { name: screen.name }),
+        detail: t("gui.diagnostics.screen_large_detail"),
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -5526,8 +5624,8 @@ function computeDiagnostics() {
     if (isSpecialInputScreen && !/\bprompt\b/.test(screen.parameters)) {
       diagnostics.push({
         severity: "error",
-        title: `${screen.name} is missing the prompt parameter`,
-        detail: "The special input screen should usually be declared as screen input(prompt): so renpy.input() can pass prompt text into it.",
+        title: t("gui.diagnostics.input_screen_missing_prompt_title", { name: screen.name }),
+        detail: t("gui.diagnostics.input_screen_missing_prompt_detail"),
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -5535,8 +5633,8 @@ function computeDiagnostics() {
     if (isSpecialInputScreen && !specialInputNodes.length) {
       diagnostics.push({
         severity: "error",
-        title: `${screen.name} has no input node with id "input"`,
-        detail: "The special input screen must contain an input displayable whose id is set to input.",
+        title: t("gui.diagnostics.input_screen_no_input_node_title", { name: screen.name }),
+        detail: t("gui.diagnostics.input_screen_no_input_node_detail"),
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -5544,8 +5642,8 @@ function computeDiagnostics() {
     if (isSpecialInputScreen && specialInputNodes.length > 1) {
       diagnostics.push({
         severity: "warning",
-        title: `${screen.name} defines multiple input id nodes`,
-        detail: "renpy.input() expects one primary input widget with id \"input\". Multiple matches can make the screen harder to reason about.",
+        title: t("gui.diagnostics.input_screen_multiple_input_nodes_title", { name: screen.name }),
+        detail: t("gui.diagnostics.input_screen_multiple_input_nodes_detail"),
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -5553,8 +5651,8 @@ function computeDiagnostics() {
     if (screen.name === "say" && !saySideImageNodes.length) {
       diagnostics.push({
         severity: "info",
-        title: "say screen is missing SideImage()",
-        detail: "If you want dialogue avatars, add an `add SideImage()` node somewhere inside the say screen layout.",
+        title: t("gui.diagnostics.say_missing_sideimage_title"),
+        detail: t("gui.diagnostics.say_missing_sideimage_detail"),
         snippet: formatGuiScreenCode(screen),
       });
     }
@@ -5565,8 +5663,8 @@ function computeDiagnostics() {
       if (!meta.supportsChildren && node.children.length) {
         diagnostics.push({
           severity: "warning",
-          title: `${screen.name} · ${node.title} has hidden child nodes`,
-          detail: `${getScreenNodeLabel(node.type)} does not normally render child nodes, so these children should be moved or the node type should be changed.`,
+          title: t("gui.diagnostics.node_hidden_children_title", { screen: screen.name, node: node.title }),
+          detail: t("gui.diagnostics.node_hidden_children_detail", { type: getScreenNodeLabel(node.type) }),
           snippet: formatGuiScreenCode(screen),
         });
       }
@@ -5576,8 +5674,8 @@ function computeDiagnostics() {
         if (!actionExpression) {
           diagnostics.push({
             severity: "warning",
-            title: `${screen.name} · ${node.title} has no action`,
-            detail: "Interactive nodes usually need an action to be useful.",
+            title: t("gui.diagnostics.node_no_action_title", { screen: screen.name, node: node.title }),
+            detail: t("gui.diagnostics.node_no_action_detail"),
             snippet: formatGuiScreenCode(screen),
           });
         }
@@ -5588,15 +5686,19 @@ function computeDiagnostics() {
           if (!preferenceName) {
             diagnostics.push({
               severity: "warning",
-              title: `${screen.name} · ${node.title} is missing a GUI preference name`,
-              detail: "gui.SetPreference and gui.TogglePreference should usually start with the GUI preference key as their first argument.",
+              title: t("gui.diagnostics.node_missing_gui_preference_title", { screen: screen.name, node: node.title }),
+              detail: t("gui.diagnostics.node_missing_gui_preference_detail"),
               snippet: formatGuiScreenCode(screen),
             });
           } else if (!getDefinedGuiPreferenceNames().has(preferenceName)) {
             diagnostics.push({
               severity: "warning",
-              title: `${screen.name} · ${node.title} references missing GUI preference "${preferenceName}"`,
-              detail: "Define the preference in Config & Defaults first, or the action will write to a key your GUI variables are not using.",
+              title: t("gui.diagnostics.node_missing_gui_preference_reference_title", {
+                screen: screen.name,
+                node: node.title,
+                preference: preferenceName,
+              }),
+              detail: t("gui.diagnostics.node_missing_gui_preference_reference_detail"),
               snippet: formatGuiScreenCode(screen),
             });
           }
@@ -5605,8 +5707,8 @@ function computeDiagnostics() {
         if (node.actionKind === "GuiRebuild") {
           diagnostics.push({
             severity: "info",
-            title: `${screen.name} · ${node.title} triggers gui.rebuild`,
-            detail: "gui.rebuild is intentionally exposed here, but the Ren'Py docs warn that it is slow. Prefer using it sparingly and not in rapid-fire interactions.",
+            title: t("gui.diagnostics.node_gui_rebuild_title", { screen: screen.name, node: node.title }),
+            detail: t("gui.diagnostics.node_gui_rebuild_detail"),
             snippet: formatGuiScreenCode(screen),
           });
         }
@@ -5617,8 +5719,8 @@ function computeDiagnostics() {
         if (!valueExpression) {
           diagnostics.push({
             severity: "warning",
-            title: `${screen.name} · ${node.title} has no value`,
-            detail: "Value-driven widgets like bars and inputs usually need a value expression.",
+            title: t("gui.diagnostics.node_no_value_title", { screen: screen.name, node: node.title }),
+            detail: t("gui.diagnostics.node_no_value_detail"),
             snippet: formatGuiScreenCode(screen),
           });
         }
@@ -5631,8 +5733,8 @@ function computeDiagnostics() {
         if (!valueExpression && !isSpecialInputNode) {
           diagnostics.push({
             severity: "warning",
-            title: `${screen.name} · ${node.title} has no InputValue`,
-            detail: "Standalone input widgets usually bind an InputValue helper. The common exception is the special input screen used by renpy.input().",
+            title: t("gui.diagnostics.node_no_inputvalue_title", { screen: screen.name, node: node.title }),
+            detail: t("gui.diagnostics.node_no_inputvalue_detail"),
             snippet: formatGuiScreenCode(screen),
           });
         }
@@ -5647,8 +5749,8 @@ function computeDiagnostics() {
         ].includes(node.valueKind) && !node.valueArgs) {
           diagnostics.push({
             severity: "warning",
-            title: `${screen.name} · ${node.title} is missing InputValue arguments`,
-            detail: "This InputValue helper needs arguments to know which variable, field, dict key, or page name it should update.",
+            title: t("gui.diagnostics.node_missing_inputvalue_args_title", { screen: screen.name, node: node.title }),
+            detail: t("gui.diagnostics.node_missing_inputvalue_args_detail"),
             snippet: formatGuiScreenCode(screen),
           });
         }
@@ -5657,8 +5759,8 @@ function computeDiagnostics() {
       if (["if", "showif"].includes(node.type) && !node.condition) {
         diagnostics.push({
           severity: "error",
-          title: `${screen.name} · ${node.title} is missing a condition`,
-          detail: "Conditional blocks need an expression to decide when to render.",
+          title: t("gui.diagnostics.node_missing_condition_title", { screen: screen.name, node: node.title }),
+          detail: t("gui.diagnostics.node_missing_condition_detail"),
           snippet: formatGuiScreenCode(screen),
         });
       }
@@ -5666,8 +5768,8 @@ function computeDiagnostics() {
       if (node.type === "for" && (!node.variableName || !node.iterableExpression)) {
         diagnostics.push({
           severity: "error",
-          title: `${screen.name} · ${node.title} is incomplete`,
-          detail: "for blocks need both a loop variable and an iterable expression.",
+          title: t("gui.diagnostics.node_for_incomplete_title", { screen: screen.name, node: node.title }),
+          detail: t("gui.diagnostics.node_for_incomplete_detail"),
           snippet: formatGuiScreenCode(screen),
         });
       }
@@ -5675,8 +5777,8 @@ function computeDiagnostics() {
       if (node.type === "use" && !node.targetScreen) {
         diagnostics.push({
           severity: "error",
-          title: `${screen.name} · ${node.title} has no target screen`,
-          detail: "use statements need a target screen name.",
+          title: t("gui.diagnostics.node_no_target_screen_title", { screen: screen.name, node: node.title }),
+          detail: t("gui.diagnostics.node_no_target_screen_detail"),
           snippet: formatGuiScreenCode(screen),
         });
       }
@@ -5684,8 +5786,8 @@ function computeDiagnostics() {
       if (node.type === "default" && (!node.defaultName || !node.defaultValue)) {
         diagnostics.push({
           severity: "error",
-          title: `${screen.name} · ${node.title} is missing a default pair`,
-          detail: "default statements need both a variable name and a value.",
+          title: t("gui.diagnostics.node_default_incomplete_title", { screen: screen.name, node: node.title }),
+          detail: t("gui.diagnostics.node_default_incomplete_detail"),
           snippet: formatGuiScreenCode(screen),
         });
       }
@@ -5698,10 +5800,13 @@ function computeDiagnostics() {
     if (!entry.name || !entry.value || missingAuxValue) {
       diagnostics.push({
         severity: "warning",
-        title: `${getConfigScopeMeta(scope).label} "${entry.name || "(unnamed)"}" is incomplete`,
+        title: t("gui.diagnostics.config_incomplete_title", {
+          scope: getConfigScopeLabel(scope),
+          name: entry.name || t("gui.config-unnamed"),
+        }),
         detail: scope === "guiPreferences"
-          ? "GUI preference bindings need a GUI variable, a preference key, and a default value."
-          : "Config-like entries should have both a name and a value to emit valid code.",
+          ? t("gui.diagnostics.config_gui_preference_incomplete_detail")
+          : t("gui.diagnostics.config_incomplete_detail"),
         snippet: formatAllConfigCode(),
       });
     }
@@ -5713,8 +5818,8 @@ function computeDiagnostics() {
     if (!entry.name) {
       diagnostics.push({
         severity: "warning",
-        title: `Python UI helper is missing a name`,
-        detail: "Each helper should have a class name or function name so the generated code is reusable.",
+        title: t("gui.diagnostics.python_missing_name_title"),
+        detail: t("gui.diagnostics.python_missing_name_detail"),
         snippet: formatAllPythonUiCode(),
       });
     }
@@ -5722,8 +5827,8 @@ function computeDiagnostics() {
     if (entry.name && !isValidPythonIdentifier(entry.name)) {
       diagnostics.push({
         severity: "warning",
-        title: `Python UI helper "${entry.name}" is not a valid Python identifier`,
-        detail: "Class names, helper prefixes, and function names should start with a letter or underscore and only contain letters, numbers, or underscores.",
+        title: t("gui.diagnostics.python_invalid_identifier_title", { name: entry.name }),
+        detail: t("gui.diagnostics.python_invalid_identifier_detail"),
         snippet: formatPythonUiEntryCode(entry),
       });
     }
@@ -5731,8 +5836,8 @@ function computeDiagnostics() {
     if (entry.kind === "barvalue" && !entry.barAdjustment) {
       diagnostics.push({
         severity: "warning",
-        title: `BarValue "${entry.name}" is missing get_adjustment()`,
-        detail: "Custom BarValue classes need a get_adjustment() expression so bars know what Adjustment to render.",
+        title: t("gui.diagnostics.python_bar_missing_adjustment_title", { name: entry.name }),
+        detail: t("gui.diagnostics.python_bar_missing_adjustment_detail"),
         snippet: formatPythonUiEntryCode(entry),
       });
     }
@@ -5740,8 +5845,8 @@ function computeDiagnostics() {
     if (entry.kind === "inputvalue" && (!entry.inputGetText || !entry.inputSetTextBody)) {
       diagnostics.push({
         severity: "warning",
-        title: `InputValue "${entry.name}" is incomplete`,
-        detail: "Custom InputValue classes should usually implement both get_text() and set_text().",
+        title: t("gui.diagnostics.python_input_incomplete_title", { name: entry.name }),
+        detail: t("gui.diagnostics.python_input_incomplete_detail"),
         snippet: formatPythonUiEntryCode(entry),
       });
     }
@@ -5749,8 +5854,8 @@ function computeDiagnostics() {
     if (entry.kind === "displayable" && !entry.displayableRenderBody) {
       diagnostics.push({
         severity: "warning",
-        title: `Displayable "${entry.name}" is still using the placeholder render()`,
-        detail: "Custom displayables almost always need a real render() body before they are production-ready.",
+        title: t("gui.diagnostics.python_displayable_placeholder_title", { name: entry.name }),
+        detail: t("gui.diagnostics.python_displayable_placeholder_detail"),
         snippet: formatPythonUiEntryCode(entry),
       });
     }
@@ -5759,8 +5864,8 @@ function computeDiagnostics() {
       if (!entry.parameters) {
         diagnostics.push({
           severity: "warning",
-          title: `Custom statement "${entry.name}" is missing its statement keyword`,
-          detail: "renpy.register_statement() needs the statement keyword that authors will write in script files.",
+          title: t("gui.diagnostics.python_statement_missing_keyword_title", { name: entry.name }),
+          detail: t("gui.diagnostics.python_statement_missing_keyword_detail"),
           snippet: formatPythonUiEntryCode(entry),
         });
       }
@@ -5768,8 +5873,8 @@ function computeDiagnostics() {
       if (!entry.statementParseBody) {
         diagnostics.push({
           severity: "warning",
-          title: `Custom statement "${entry.name}" is still using the placeholder parse()`,
-          detail: "Custom statements usually need a real parse(lexer) implementation so the generated syntax is not just a raw rest() capture.",
+          title: t("gui.diagnostics.python_statement_placeholder_parse_title", { name: entry.name }),
+          detail: t("gui.diagnostics.python_statement_placeholder_parse_detail"),
           snippet: formatPythonUiEntryCode(entry),
         });
       }
@@ -5777,8 +5882,8 @@ function computeDiagnostics() {
       if (!entry.statementExecuteBody && !entry.statementNextBody && !entry.statementPostExecuteBody && !entry.statementExecuteDefaultBody && !entry.statementExecuteInitBody) {
         diagnostics.push({
           severity: "warning",
-          title: `Custom statement "${entry.name}" has no custom runtime hook yet`,
-          detail: "Right now execute() will just fall back to pass. Add execute(), next(), execute_init(), post_execute(), or execute_default() before relying on it.",
+          title: t("gui.diagnostics.python_statement_no_runtime_hook_title", { name: entry.name }),
+          detail: t("gui.diagnostics.python_statement_no_runtime_hook_detail"),
           snippet: formatPythonUiEntryCode(entry),
         });
       }
@@ -5787,8 +5892,8 @@ function computeDiagnostics() {
     if (entry.kind === "restart_helper" && !entry.restartTarget) {
       diagnostics.push({
         severity: "warning",
-        title: `restart_interaction helper "${entry.name}" has no assignment target`,
-        detail: "These helpers are most useful when they update a variable before calling renpy.restart_interaction().",
+        title: t("gui.diagnostics.python_restart_no_assignment_title", { name: entry.name }),
+        detail: t("gui.diagnostics.python_restart_no_assignment_detail"),
         snippet: formatPythonUiEntryCode(entry),
       });
     }
@@ -5797,8 +5902,8 @@ function computeDiagnostics() {
       if (!entry.defineScreenName) {
         diagnostics.push({
           severity: "warning",
-          title: `define_screen helper "${entry.name}" is missing a screen name`,
-          detail: "renpy.define_screen() needs a target screen name to register.",
+          title: t("gui.diagnostics.python_define_screen_missing_name_title", { name: entry.name }),
+          detail: t("gui.diagnostics.python_define_screen_missing_name_detail"),
           snippet: formatPythonUiEntryCode(entry),
         });
       }
@@ -5806,8 +5911,8 @@ function computeDiagnostics() {
       if (entry.defineScreenName && definedScreenNames.has(entry.defineScreenName)) {
         diagnostics.push({
           severity: "warning",
-          title: `Python screen "${entry.defineScreenName}" duplicates a screen-language screen`,
-          detail: "A Python-defined screen and a screen-language screen with the same name can be confusing. Prefer one source of truth.",
+          title: t("gui.diagnostics.python_define_screen_duplicate_title", { name: entry.defineScreenName }),
+          detail: t("gui.diagnostics.python_define_screen_duplicate_detail"),
           snippet: formatPythonUiEntryCode(entry),
         });
       }
@@ -5818,8 +5923,8 @@ function computeDiagnostics() {
     if (entry.kind !== "usage" && !entry.image && !entry.framesExpression) {
       diagnostics.push({
         severity: "warning",
-        title: `Cursor "${entry.name}" is missing image data`,
-        detail: "Hardware and displayable cursor entries should define either an image or a raw frame expression.",
+        title: t("gui.diagnostics.cursor_missing_image_title", { name: entry.name }),
+        detail: t("gui.diagnostics.cursor_missing_image_detail"),
         snippet: formatAllCursorCode(),
       });
     }
@@ -5827,8 +5932,8 @@ function computeDiagnostics() {
     if (entry.kind === "usage" && entry.targetCursor && !cursorNames.has(entry.targetCursor)) {
       diagnostics.push({
         severity: "warning",
-        title: `Cursor usage "${entry.name}" references missing cursor "${entry.targetCursor}"`,
-        detail: "Usage snippets should point at a cursor that is defined in the cursor editor.",
+        title: t("gui.diagnostics.cursor_usage_missing_title", { name: entry.name, cursor: entry.targetCursor }),
+        detail: t("gui.diagnostics.cursor_usage_missing_detail"),
         snippet: formatAllCursorCode(),
       });
     }
@@ -5838,8 +5943,8 @@ function computeDiagnostics() {
     if (entry.mode === "default" && !entry.shaderSpec) {
       diagnostics.push({
         severity: "warning",
-        title: `Shader "${entry.name}" is missing a shader spec`,
-        detail: "Default shader entries need a shader string such as \"wave:10\".",
+        title: t("gui.diagnostics.shader_missing_spec_title", { name: entry.name }),
+        detail: t("gui.diagnostics.shader_missing_spec_detail"),
         snippet: formatAllShaderCode(),
       });
     }
@@ -5847,8 +5952,8 @@ function computeDiagnostics() {
     if (entry.mode === "style" && (!entry.shaderSpec || !entry.targetName)) {
       diagnostics.push({
         severity: "warning",
-        title: `Style shader "${entry.name}" is incomplete`,
-        detail: "Style-mode shader entries need both a target style and a shader spec.",
+        title: t("gui.diagnostics.shader_style_incomplete_title", { name: entry.name }),
+        detail: t("gui.diagnostics.shader_style_incomplete_detail"),
         snippet: formatAllShaderCode(),
       });
     }
@@ -5856,8 +5961,8 @@ function computeDiagnostics() {
     if (entry.mode === "style" && entry.targetName && !styleNames.has(entry.targetName)) {
       diagnostics.push({
         severity: "info",
-        title: `Style shader "${entry.name}" targets missing style "${entry.targetName}"`,
-        detail: "This may be intentional, but often means the style has not been created yet.",
+        title: t("gui.diagnostics.shader_style_missing_target_title", { name: entry.name, target: entry.targetName }),
+        detail: t("gui.diagnostics.shader_style_missing_target_detail"),
         snippet: formatAllShaderCode(),
       });
     }
@@ -5865,8 +5970,8 @@ function computeDiagnostics() {
     if (entry.mode === "callback" && (!entry.callbackKey || !entry.callbackFunction)) {
       diagnostics.push({
         severity: "warning",
-        title: `Callback shader "${entry.name}" is incomplete`,
-        detail: "Callback entries need both a callback key and a callback function.",
+        title: t("gui.diagnostics.shader_callback_incomplete_title", { name: entry.name }),
+        detail: t("gui.diagnostics.shader_callback_incomplete_detail"),
         snippet: formatAllShaderCode(),
       });
     }
@@ -5874,8 +5979,8 @@ function computeDiagnostics() {
     if (entry.mode === "custom" && (!entry.name || !entry.customShaders)) {
       diagnostics.push({
         severity: "warning",
-        title: `Custom shader "${entry.name || "(unnamed)"}" is incomplete`,
-        detail: "Custom text shader registrations need a registration name and shaders= expression.",
+        title: t("gui.diagnostics.shader_custom_incomplete_title", { name: entry.name || t("gui.shader-unnamed") }),
+        detail: t("gui.diagnostics.shader_custom_incomplete_detail"),
         snippet: formatAllShaderCode(),
       });
     }
@@ -5978,9 +6083,9 @@ function renderDiagnostics() {
   const infoCount = diagnostics.filter((item) => item.severity === "info").length;
 
   guiDiagnosticsOverviewEl.innerHTML = `
-    <span class="gui-property-pill">Errors: ${errorCount}</span>
-    <span class="gui-property-pill">Warnings: ${warningCount}</span>
-    <span class="gui-property-pill">Info: ${infoCount}</span>
+    <span class="gui-property-pill">${escapeHtml(t("gui.diagnostics.errors-count", { count: errorCount }))}</span>
+    <span class="gui-property-pill">${escapeHtml(t("gui.diagnostics.warnings-count", { count: warningCount }))}</span>
+    <span class="gui-property-pill">${escapeHtml(t("gui.diagnostics.info-count", { count: infoCount }))}</span>
   `;
 
   guiDiagnosticsListEl.innerHTML = diagnostics.length
@@ -5990,13 +6095,13 @@ function renderDiagnostics() {
         <span>${escapeHtml(tt(item.detail))}</span>
       </div>
     `).join("")
-    : `<div class="gui-inline-empty">No diagnostics to report right now.</div>`;
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.diagnostics.empty"))}</div>`;
 
   guiDiagnosticsCodePreviewEl.textContent = diagnostics
     .map((item) => item.snippet)
     .filter(Boolean)
     .slice(0, 5)
-    .join("\n\n");
+    .join("\n\n") || t("gui.output.empty");
 }
 
 function renderTopbar() {
@@ -6434,7 +6539,9 @@ guiConfigEntryListEl.addEventListener("click", (event) => {
   }
   activeConfigEntryKey = card.getAttribute("data-config-entry-key");
   render();
-  setStatus(`Opened ${getActiveConfigEntryContext()?.scope || ""} entry.`);
+  setStatus(t("gui.status.config_entry_opened", {
+    scope: getConfigScopeLabel(getActiveConfigEntryContext()?.scope || "config"),
+  }));
 });
 
 newConfigEntryButton.addEventListener("click", () => {
@@ -6442,7 +6549,10 @@ newConfigEntryButton.addEventListener("click", () => {
   projectState.gui.config.push(entry);
   activeConfigEntryKey = `config:${entry.id}`;
   render();
-  saveProjectState(`Created config entry "${entry.name}".`);
+  saveProjectState(t("gui.status.config_entry_created", {
+    scope: getConfigScopeLabel("config"),
+    name: entry.name,
+  }));
 });
 
 newGuiVariableEntryButton.addEventListener("click", () => {
@@ -6450,7 +6560,10 @@ newGuiVariableEntryButton.addEventListener("click", () => {
   projectState.gui.guiVariables.push(entry);
   activeConfigEntryKey = `guiVariables:${entry.id}`;
   render();
-  saveProjectState(`Created GUI variable "${entry.name}".`);
+  saveProjectState(t("gui.status.config_entry_created", {
+    scope: getConfigScopeLabel("guiVariables"),
+    name: entry.name,
+  }));
 });
 
 newGuiPreferenceEntryButton.addEventListener("click", () => {
@@ -6458,7 +6571,10 @@ newGuiPreferenceEntryButton.addEventListener("click", () => {
   projectState.gui.guiPreferences.push(entry);
   activeConfigEntryKey = `guiPreferences:${entry.id}`;
   render();
-  saveProjectState(`Created GUI preference "${getGuiPreferenceName(entry)}".`);
+  saveProjectState(t("gui.status.config_entry_created", {
+    scope: getConfigScopeLabel("guiPreferences"),
+    name: getGuiPreferenceName(entry),
+  }));
 });
 
 newPreferenceEntryButton.addEventListener("click", () => {
@@ -6466,7 +6582,10 @@ newPreferenceEntryButton.addEventListener("click", () => {
   projectState.gui.preferences.push(entry);
   activeConfigEntryKey = `preferences:${entry.id}`;
   render();
-  saveProjectState(`Created preference entry "${entry.name}".`);
+  saveProjectState(t("gui.status.config_entry_created", {
+    scope: getConfigScopeLabel("preferences"),
+    name: entry.name,
+  }));
 });
 
 newStoreEntryButton.addEventListener("click", () => {
@@ -6474,7 +6593,10 @@ newStoreEntryButton.addEventListener("click", () => {
   projectState.gui.store.push(entry);
   activeConfigEntryKey = `store:${entry.id}`;
   render();
-  saveProjectState(`Created store entry "${entry.name}".`);
+  saveProjectState(t("gui.status.config_entry_created", {
+    scope: getConfigScopeLabel("store"),
+    name: entry.name,
+  }));
 });
 
 guiConfigFormEl.addEventListener("change", () => {
@@ -6497,8 +6619,11 @@ guiDeleteConfigButton.addEventListener("click", () => {
   if (!context?.entry) {
     return;
   }
-  if (!window.confirm(`Delete ${context.scope} entry "${context.entry.name}"?`)) {
-    setStatus(`Kept entry "${context.entry.name}".`);
+  if (!window.confirm(t("gui.confirm.config_entry_delete", {
+    scope: getConfigScopeLabel(context.scope),
+    name: context.entry.name,
+  }))) {
+    setStatus(t("gui.status.config_entry_kept", { name: context.entry.name }));
     return;
   }
   deleteActiveConfigEntry();
@@ -6511,7 +6636,7 @@ guiPythonUiListEl.addEventListener("click", (event) => {
   }
   activePythonUiId = card.getAttribute("data-python-ui-id");
   render();
-  setStatus(`Opened Python UI helper "${getActivePythonUiEntry()?.name || ""}".`);
+  setStatus(t("gui.status.python_helper_opened", { name: getActivePythonUiEntry()?.name || "" }));
 });
 
 newGuiPythonActionButton.addEventListener("click", () => {
@@ -6519,7 +6644,7 @@ newGuiPythonActionButton.addEventListener("click", () => {
   projectState.gui.pythonUiHelpers.push(entry);
   activePythonUiId = entry.id;
   render();
-  saveProjectState(`Created Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_created", { name: entry.name }));
 });
 
 newGuiPythonBarButton.addEventListener("click", () => {
@@ -6527,7 +6652,7 @@ newGuiPythonBarButton.addEventListener("click", () => {
   projectState.gui.pythonUiHelpers.push(entry);
   activePythonUiId = entry.id;
   render();
-  saveProjectState(`Created Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_created", { name: entry.name }));
 });
 
 newGuiPythonInputButton.addEventListener("click", () => {
@@ -6535,7 +6660,7 @@ newGuiPythonInputButton.addEventListener("click", () => {
   projectState.gui.pythonUiHelpers.push(entry);
   activePythonUiId = entry.id;
   render();
-  saveProjectState(`Created Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_created", { name: entry.name }));
 });
 
 newGuiPythonDisplayableButton.addEventListener("click", () => {
@@ -6543,7 +6668,7 @@ newGuiPythonDisplayableButton.addEventListener("click", () => {
   projectState.gui.pythonUiHelpers.push(entry);
   activePythonUiId = entry.id;
   render();
-  saveProjectState(`Created Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_created", { name: entry.name }));
 });
 
 newGuiPythonStatementButton.addEventListener("click", () => {
@@ -6551,7 +6676,7 @@ newGuiPythonStatementButton.addEventListener("click", () => {
   projectState.gui.pythonUiHelpers.push(entry);
   activePythonUiId = entry.id;
   render();
-  saveProjectState(`Created Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_created", { name: entry.name }));
 });
 
 newGuiPythonRestartButton.addEventListener("click", () => {
@@ -6559,7 +6684,7 @@ newGuiPythonRestartButton.addEventListener("click", () => {
   projectState.gui.pythonUiHelpers.push(entry);
   activePythonUiId = entry.id;
   render();
-  saveProjectState(`Created Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_created", { name: entry.name }));
 });
 
 newGuiPythonDefineScreenButton.addEventListener("click", () => {
@@ -6567,7 +6692,7 @@ newGuiPythonDefineScreenButton.addEventListener("click", () => {
   projectState.gui.pythonUiHelpers.push(entry);
   activePythonUiId = entry.id;
   render();
-  saveProjectState(`Created Python UI helper "${entry.name}".`);
+  saveProjectState(t("gui.status.python_helper_created", { name: entry.name }));
 });
 
 guiPythonUiFormEl.addEventListener("change", () => {
@@ -6640,8 +6765,8 @@ guiDeletePythonUiButton.addEventListener("click", () => {
   if (!entry) {
     return;
   }
-  if (!window.confirm(`Delete Python UI helper "${entry.name}"?`)) {
-    setStatus(`Kept Python UI helper "${entry.name}".`);
+  if (!window.confirm(t("gui.confirm.python_helper_delete", { name: entry.name }))) {
+    setStatus(t("gui.status.python_helper_kept", { name: entry.name }));
     return;
   }
   deleteActivePythonUiEntry();
@@ -6654,7 +6779,7 @@ guiCursorListEl.addEventListener("click", (event) => {
   }
   activeCursorId = card.getAttribute("data-cursor-id");
   render();
-  setStatus(`Opened cursor entry "${getActiveCursor()?.name || ""}".`);
+  setStatus(t("gui.status.cursor_opened", { name: getActiveCursor()?.name || "" }));
 });
 
 newHardwareCursorButton.addEventListener("click", () => {
@@ -6662,7 +6787,7 @@ newHardwareCursorButton.addEventListener("click", () => {
   projectState.gui.cursors.push(entry);
   activeCursorId = entry.id;
   render();
-  saveProjectState(`Created hardware cursor "${entry.name}".`);
+  saveProjectState(t("gui.status.cursor_created", { kind: getCursorKindLabel(entry.kind), name: entry.name }));
 });
 
 newDisplayableCursorButton.addEventListener("click", () => {
@@ -6670,7 +6795,7 @@ newDisplayableCursorButton.addEventListener("click", () => {
   projectState.gui.cursors.push(entry);
   activeCursorId = entry.id;
   render();
-  saveProjectState(`Created displayable cursor "${entry.name}".`);
+  saveProjectState(t("gui.status.cursor_created", { kind: getCursorKindLabel(entry.kind), name: entry.name }));
 });
 
 newCursorUsageButton.addEventListener("click", () => {
@@ -6678,7 +6803,7 @@ newCursorUsageButton.addEventListener("click", () => {
   projectState.gui.cursors.push(entry);
   activeCursorId = entry.id;
   render();
-  saveProjectState(`Created cursor usage "${entry.name}".`);
+  saveProjectState(t("gui.status.cursor_created", { kind: getCursorKindLabel(entry.kind), name: entry.name }));
 });
 
 guiCursorFormEl.addEventListener("change", () => {
@@ -6705,8 +6830,8 @@ guiDeleteCursorButton.addEventListener("click", () => {
   if (!cursor) {
     return;
   }
-  if (!window.confirm(`Delete cursor entry "${cursor.name}"?`)) {
-    setStatus(`Kept cursor entry "${cursor.name}".`);
+  if (!window.confirm(t("gui.confirm.cursor_delete", { name: cursor.name }))) {
+    setStatus(t("gui.status.cursor_kept", { name: cursor.name }));
     return;
   }
   deleteActiveCursor();
@@ -6719,7 +6844,7 @@ guiShaderListEl.addEventListener("click", (event) => {
   }
   activeShaderId = card.getAttribute("data-shader-id");
   render();
-  setStatus(`Opened shader entry "${getActiveShader()?.name || ""}".`);
+  setStatus(t("gui.status.shader_opened", { name: getActiveShader()?.name || "" }));
 });
 
 newGuiShaderButton.addEventListener("click", () => {
@@ -6727,7 +6852,7 @@ newGuiShaderButton.addEventListener("click", () => {
   projectState.gui.textShaders.push(entry);
   activeShaderId = entry.id;
   render();
-  saveProjectState(`Created shader entry "${entry.name}".`);
+  saveProjectState(t("gui.status.shader_created", { name: entry.name }));
 });
 
 guiShaderFormEl.addEventListener("change", () => {
@@ -6754,8 +6879,8 @@ guiDeleteShaderButton.addEventListener("click", () => {
   if (!shader) {
     return;
   }
-  if (!window.confirm(`Delete shader entry "${shader.name}"?`)) {
-    setStatus(`Kept shader entry "${shader.name}".`);
+  if (!window.confirm(t("gui.confirm.shader_delete", { name: shader.name }))) {
+    setStatus(t("gui.status.shader_kept", { name: shader.name }));
     return;
   }
   deleteActiveShader();

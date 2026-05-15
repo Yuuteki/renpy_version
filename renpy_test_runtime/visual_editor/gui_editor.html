@@ -1003,52 +1003,52 @@
               <aside class="gui-column gui-list-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Config & Defaults</h2>
-                    <p>Manage <code>config</code>, GUI preference bindings, <code>preferences</code>, and default store values.</p>
+                    <h2 data-i18n="gui.config-title">Config & Defaults</h2>
+                    <p><span data-i18n="gui.config-desc-prefix">Manage </span><code>config</code><span data-i18n="gui.config-desc-mid">, GUI preference bindings, </span><code>preferences</code><span data-i18n="gui.config-desc-suffix">, and default store values.</span></p>
                   </div>
                 </div>
 
-                <div id="guiConfigEmpty" class="panel-empty-state hidden">
+                <div id="guiConfigEmpty" class="panel-empty-state hidden" data-i18n="gui.config-empty">
                   No config entries yet. Add one of the common scopes below.
                 </div>
 
                 <div id="guiConfigEntryList" class="character-list gui-entity-list"></div>
 
                 <div class="gui-stack-actions">
-                  <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button">New Config Entry</button>
-                  <button id="newGuiVariableEntryButton" class="secondary gui-bottom-button" type="button">New GUI Variable</button>
-                  <button id="newGuiPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New GUI Preference</button>
-                  <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button">New Preference Default</button>
-                  <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button">New Store Default</button>
+                  <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button" data-i18n="gui.config-new-config">New Config Entry</button>
+                  <button id="newGuiVariableEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-gui-variable">New GUI Variable</button>
+                  <button id="newGuiPreferenceEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-gui-preference">New GUI Preference</button>
+                  <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-preference">New Preference Default</button>
+                  <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-store">New Store Default</button>
                 </div>
               </aside>
 
               <section class="gui-column gui-detail-column">
-                <div id="guiConfigEmptyState" class="gui-empty-detail">
+                <div id="guiConfigEmptyState" class="gui-empty-detail" data-i18n="gui.config-empty-detail">
                   Select an entry to edit its scope and emitted Ren'Py statement.
                 </div>
 
                 <form id="guiConfigForm" class="character-detail-form hidden">
                   <div class="gui-style-basics">
                     <label>
-                      Scope
+                      <span data-i18n="gui.config-scope">Scope</span>
                       <select id="guiConfigScopeInput">
-                        <option value="config">config</option>
-                        <option value="guiVariables">gui variables</option>
-                        <option value="guiPreferences">gui preferences</option>
-                        <option value="preferences">preferences</option>
-                        <option value="store">store</option>
+                        <option value="config" data-i18n="gui.config-scope.config.option">config</option>
+                        <option value="guiVariables" data-i18n="gui.config-scope.guiVariables.option">gui variables</option>
+                        <option value="guiPreferences" data-i18n="gui.config-scope.guiPreferences.option">gui preferences</option>
+                        <option value="preferences" data-i18n="gui.config-scope.preferences.option">preferences</option>
+                        <option value="store" data-i18n="gui.config-scope.store.option">store</option>
                       </select>
                     </label>
 
                     <label>
                       <span id="guiConfigNameLabel">Name</span>
-                      <input id="guiConfigNameInput" type="text" placeholder="e.g. default_textshader" />
+                      <input id="guiConfigNameInput" type="text" placeholder="e.g. default_textshader" data-i18n-placeholder="placeholder.gui.config-name" />
                     </label>
 
                     <label>
                       <span id="guiConfigStorePathLabel">Store Path</span>
-                      <input id="guiConfigStorePathInput" type="text" placeholder="Optional, e.g. persistent or my_store" />
+                      <input id="guiConfigStorePathInput" type="text" placeholder="Optional, e.g. persistent or my_store" data-i18n-placeholder="placeholder.gui.config-store-path" />
                     </label>
                   </div>
 
@@ -1056,16 +1056,16 @@
 
                   <label>
                     <span id="guiConfigValueLabel">Value</span>
-                    <textarea id="guiConfigValueInput" rows="4" placeholder='e.g. "wave:10", True, 0.25, {"idle": [("gui/cursor.png", 4, 4)]}'></textarea>
+                    <textarea id="guiConfigValueInput" rows="4" placeholder='e.g. "wave:10", True, 0.25, {"idle": [("gui/cursor.png", 4, 4)]}' data-i18n-placeholder="placeholder.gui.config-value"></textarea>
                   </label>
 
                   <label>
-                    Description
-                    <textarea id="guiConfigDescriptionInput" rows="2" placeholder="Optional notes about why this entry exists."></textarea>
+                    <span data-i18n="gui.config-description">Description</span>
+                    <textarea id="guiConfigDescriptionInput" rows="2" placeholder="Optional notes about why this entry exists." data-i18n-placeholder="placeholder.gui.config-description"></textarea>
                   </label>
 
                   <div class="inspector-actions">
-                    <button id="guiDeleteConfigButton" class="danger-button" type="button">Delete Entry</button>
+                    <button id="guiDeleteConfigButton" class="danger-button" type="button" data-i18n="gui.config-delete">Delete Entry</button>
                   </div>
                 </form>
               </section>
@@ -1073,8 +1073,8 @@
               <aside class="gui-column gui-preview-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Config Output</h2>
-                    <p>Generated code from all config, preference, and store defaults.</p>
+                    <h2 data-i18n="gui.config-output-title">Config Output</h2>
+                    <p data-i18n="gui.config-output-desc">Generated code from all config, preference, and store defaults.</p>
                   </div>
                 </div>
 
@@ -1088,61 +1088,61 @@
               <aside class="gui-column gui-list-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Python UI</h2>
-                    <p>Template custom <code>Action</code>, <code>BarValue</code>, <code>InputValue</code>, <code>Displayable</code>, creator-defined statements, and other low-level GUI helpers.</p>
+                    <h2 data-i18n="gui.python-title">Python UI</h2>
+                    <p><span data-i18n="gui.python-desc-prefix">Template custom </span><code>Action</code><span data-i18n="gui.python-desc-mid1">, </span><code>BarValue</code><span data-i18n="gui.python-desc-mid2">, </span><code>InputValue</code><span data-i18n="gui.python-desc-mid3">, </span><code>Displayable</code><span data-i18n="gui.python-desc-suffix">, creator-defined statements, and other low-level GUI helpers.</span></p>
                   </div>
                 </div>
 
-                <div id="guiPythonUiEmpty" class="panel-empty-state hidden">
+                <div id="guiPythonUiEmpty" class="panel-empty-state hidden" data-i18n="gui.python-empty">
                   No Python UI helpers yet. Add one of the common templates below.
                 </div>
 
                 <div id="guiPythonUiList" class="character-list gui-entity-list"></div>
 
                 <div class="gui-stack-actions">
-                  <button id="newGuiPythonActionButton" class="primary gui-bottom-button" type="button">New Action Class</button>
-                  <button id="newGuiPythonBarButton" class="secondary gui-bottom-button" type="button">New BarValue Class</button>
-                  <button id="newGuiPythonInputButton" class="secondary gui-bottom-button" type="button">New InputValue Class</button>
-                  <button id="newGuiPythonDisplayableButton" class="secondary gui-bottom-button" type="button">New Displayable Class</button>
-                  <button id="newGuiPythonStatementButton" class="secondary gui-bottom-button" type="button">New Custom Statement</button>
-                  <button id="newGuiPythonRestartButton" class="secondary gui-bottom-button" type="button">New restart_interaction Helper</button>
-                  <button id="newGuiPythonDefineScreenButton" class="secondary gui-bottom-button" type="button">New define_screen Helper</button>
+                  <button id="newGuiPythonActionButton" class="primary gui-bottom-button" type="button" data-i18n="gui.python-new-action">New Action Class</button>
+                  <button id="newGuiPythonBarButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-bar">New BarValue Class</button>
+                  <button id="newGuiPythonInputButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-input">New InputValue Class</button>
+                  <button id="newGuiPythonDisplayableButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-displayable">New Displayable Class</button>
+                  <button id="newGuiPythonStatementButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-statement">New Custom Statement</button>
+                  <button id="newGuiPythonRestartButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-restart">New restart_interaction Helper</button>
+                  <button id="newGuiPythonDefineScreenButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-define-screen">New define_screen Helper</button>
                 </div>
               </aside>
 
               <section class="gui-column gui-detail-column">
-                <div id="guiPythonUiEmptyState" class="gui-empty-detail">
+                <div id="guiPythonUiEmptyState" class="gui-empty-detail" data-i18n="gui.python-empty-detail">
                   Select a helper to edit its template and generated Python code.
                 </div>
 
                 <form id="guiPythonUiForm" class="character-detail-form hidden">
                   <div class="gui-style-basics">
                     <label>
-                      Kind
+                      <span data-i18n="gui.python-kind">Kind</span>
                       <select id="guiPythonUiKindInput">
-                        <option value="action">Action Class</option>
-                        <option value="barvalue">BarValue Class</option>
-                        <option value="inputvalue">InputValue Class</option>
-                        <option value="displayable">Displayable Class</option>
-                        <option value="statement">Custom Statement</option>
-                        <option value="restart_helper">restart_interaction Helper</option>
-                        <option value="define_screen">define_screen Helper</option>
+                        <option value="action" data-i18n="gui.python-kind.action.label">Action Class</option>
+                        <option value="barvalue" data-i18n="gui.python-kind.barvalue.label">BarValue Class</option>
+                        <option value="inputvalue" data-i18n="gui.python-kind.inputvalue.label">InputValue Class</option>
+                        <option value="displayable" data-i18n="gui.python-kind.displayable.label">Displayable Class</option>
+                        <option value="statement" data-i18n="gui.python-kind.statement.label">Custom Statement</option>
+                        <option value="restart_helper" data-i18n="gui.python-kind.restart_helper.label">restart_interaction Helper</option>
+                        <option value="define_screen" data-i18n="gui.python-kind.define_screen.label">define_screen Helper</option>
                       </select>
                     </label>
 
                     <label>
                       <span id="guiPythonUiNameLabel">Class Name</span>
-                      <input id="guiPythonUiNameInput" type="text" placeholder="e.g. ToggleCodexAction" />
+                      <input id="guiPythonUiNameInput" type="text" placeholder="e.g. ToggleCodexAction" data-i18n-placeholder="gui.python-kind.action.namePlaceholder" />
                     </label>
 
                     <label>
                       <span id="guiPythonUiParametersLabel">Constructor Args</span>
-                      <input id="guiPythonUiParametersInput" type="text" placeholder="e.g. flag_name, enabled_value=True" />
+                      <input id="guiPythonUiParametersInput" type="text" placeholder="e.g. flag_name, enabled_value=True" data-i18n-placeholder="gui.python-kind.action.parametersPlaceholder" />
                     </label>
 
                     <label>
-                      Usage Example
-                      <input id="guiPythonUiUsageInput" type="text" placeholder='Optional override, e.g. action ToggleCodexAction("dev_mode")' />
+                      <span data-i18n="gui.python-usage-example">Usage Example</span>
+                      <input id="guiPythonUiUsageInput" type="text" placeholder='Optional override, e.g. action ToggleCodexAction("dev_mode")' data-i18n-placeholder="placeholder.gui.python-usage" />
                     </label>
                   </div>
 
@@ -1151,96 +1151,96 @@
                   <div id="guiPythonUiActionFields" class="gui-style-panel hidden">
                     <div class="gui-style-panel-header">
                       <div>
-                        <h3>Action Methods</h3>
-                        <p>Build a custom action object for button actions, selected states, and tooltips.</p>
+                        <h3 data-i18n="gui.python-action-title">Action Methods</h3>
+                        <p data-i18n="gui.python-action-desc">Build a custom action object for button actions, selected states, and tooltips.</p>
                       </div>
                     </div>
 
                     <label>
-                      __call__ Body
-                      <textarea id="guiPythonUiActionCallBodyInput" rows="4" placeholder='e.g. store.dev_mode = not store.dev_mode&#10;return None'></textarea>
+                      <span data-i18n="gui.python-call-body">__call__ Body</span>
+                      <textarea id="guiPythonUiActionCallBodyInput" rows="4" placeholder='e.g. store.dev_mode = not store.dev_mode&#10;return None' data-i18n-placeholder="placeholder.gui.python-action-call"></textarea>
                     </label>
 
                     <div class="gui-inline-fields">
                       <label>
-                        get_sensitive() Expression
-                        <input id="guiPythonUiActionSensitiveInput" type="text" placeholder="e.g. not main_menu" />
+                        <span data-i18n="gui.python-sensitive-expression">get_sensitive() Expression</span>
+                        <input id="guiPythonUiActionSensitiveInput" type="text" placeholder="e.g. not main_menu" data-i18n-placeholder="placeholder.gui.python-action-sensitive" />
                       </label>
 
                       <label>
-                        get_selected() Expression
-                        <input id="guiPythonUiActionSelectedInput" type="text" placeholder="e.g. persistent.dev_mode" />
+                        <span data-i18n="gui.python-selected-expression">get_selected() Expression</span>
+                        <input id="guiPythonUiActionSelectedInput" type="text" placeholder="e.g. persistent.dev_mode" data-i18n-placeholder="placeholder.gui.python-action-selected" />
                       </label>
 
                       <label>
-                        get_tooltip() Expression
-                        <input id="guiPythonUiActionTooltipInput" type="text" placeholder='e.g. _("Toggle dev mode")' />
+                        <span data-i18n="gui.python-tooltip-expression">get_tooltip() Expression</span>
+                        <input id="guiPythonUiActionTooltipInput" type="text" placeholder='e.g. _("Toggle dev mode")' data-i18n-placeholder="placeholder.gui.python-action-tooltip" />
                       </label>
 
                       <label>
-                        alt
-                        <input id="guiPythonUiActionAltInput" type="text" placeholder='e.g. _("Toggle developer mode")' />
+                        <span data-i18n="gui.python-alt">alt</span>
+                        <input id="guiPythonUiActionAltInput" type="text" placeholder='e.g. _("Toggle developer mode")' data-i18n-placeholder="placeholder.gui.python-action-alt" />
                       </label>
                     </div>
 
                     <label>
-                      periodic(st) Body
-                      <textarea id="guiPythonUiActionPeriodicBodyInput" rows="3" placeholder='Optional, e.g.&#10;if store.needs_refresh:&#10;    renpy.restart_interaction()'></textarea>
+                      <span data-i18n="gui.python-periodic-body">periodic(st) Body</span>
+                      <textarea id="guiPythonUiActionPeriodicBodyInput" rows="3" placeholder='Optional, e.g.&#10;if store.needs_refresh:&#10;    renpy.restart_interaction()' data-i18n-placeholder="placeholder.gui.python-action-periodic"></textarea>
                     </label>
                   </div>
 
                   <div id="guiPythonUiBarFields" class="gui-style-panel hidden">
                     <div class="gui-style-panel-header">
                       <div>
-                        <h3>BarValue Methods</h3>
-                        <p>Build a custom value source for bars, sliders, and scroll-style widgets.</p>
+                        <h3 data-i18n="gui.python-bar-title">BarValue Methods</h3>
+                        <p data-i18n="gui.python-bar-desc">Build a custom value source for bars, sliders, and scroll-style widgets.</p>
                       </div>
                     </div>
 
                     <label>
-                      get_adjustment() Expression
-                      <textarea id="guiPythonUiBarAdjustmentInput" rows="3" placeholder='e.g. ui.adjustment(range=100, value=preferences.get_volume("music"))'></textarea>
+                      <span data-i18n="gui.python-adjustment-expression">get_adjustment() Expression</span>
+                      <textarea id="guiPythonUiBarAdjustmentInput" rows="3" placeholder='e.g. ui.adjustment(range=100, value=preferences.get_volume("music"))' data-i18n-placeholder="placeholder.gui.python-bar-adjustment"></textarea>
                     </label>
 
                     <div class="gui-inline-fields">
                       <label>
-                        get_style() Expression
-                        <input id="guiPythonUiBarStyleInput" type="text" placeholder='e.g. ("bar", "vbar")' />
+                        <span data-i18n="gui.python-style-expression">get_style() Expression</span>
+                        <input id="guiPythonUiBarStyleInput" type="text" placeholder='e.g. ("bar", "vbar")' data-i18n-placeholder="placeholder.gui.python-bar-style" />
                       </label>
 
                       <label>
-                        get_tooltip() Expression
-                        <input id="guiPythonUiBarTooltipInput" type="text" placeholder='e.g. _("Master volume")' />
+                        <span data-i18n="gui.python-tooltip-expression">get_tooltip() Expression</span>
+                        <input id="guiPythonUiBarTooltipInput" type="text" placeholder='e.g. _("Master volume")' data-i18n-placeholder="placeholder.gui.python-bar-tooltip" />
                       </label>
 
                       <label>
-                        alt
-                        <input id="guiPythonUiBarAltInput" type="text" placeholder='e.g. _("Volume bar")' />
+                        <span data-i18n="gui.python-alt">alt</span>
+                        <input id="guiPythonUiBarAltInput" type="text" placeholder='e.g. _("Volume bar")' data-i18n-placeholder="placeholder.gui.python-bar-alt" />
                       </label>
                     </div>
 
                     <label>
-                      replaces(other) Body
-                      <textarea id="guiPythonUiBarReplacesBodyInput" rows="3" placeholder='Optional, e.g.&#10;return isinstance(other, VolumeBarValue) and other.channel == self.channel'></textarea>
+                      <span data-i18n="gui.python-replaces-body">replaces(other) Body</span>
+                      <textarea id="guiPythonUiBarReplacesBodyInput" rows="3" placeholder='Optional, e.g.&#10;return isinstance(other, VolumeBarValue) and other.channel == self.channel' data-i18n-placeholder="placeholder.gui.python-bar-replaces"></textarea>
                     </label>
 
                     <label>
-                      periodic(st) Body
-                      <textarea id="guiPythonUiBarPeriodicBodyInput" rows="3" placeholder="Optional, e.g. return None"></textarea>
+                      <span data-i18n="gui.python-periodic-body">periodic(st) Body</span>
+                      <textarea id="guiPythonUiBarPeriodicBodyInput" rows="3" placeholder="Optional, e.g. return None" data-i18n-placeholder="placeholder.gui.python-bar-periodic"></textarea>
                     </label>
                   </div>
 
                   <div id="guiPythonUiInputFields" class="gui-style-panel hidden">
                     <div class="gui-style-panel-header">
                       <div>
-                        <h3>InputValue Methods</h3>
-                        <p>Build a custom text binding for screen input widgets.</p>
+                        <h3 data-i18n="gui.python-input-title">InputValue Methods</h3>
+                        <p data-i18n="gui.python-input-desc">Build a custom text binding for screen input widgets.</p>
                       </div>
                     </div>
 
                     <div class="gui-inline-fields">
                       <label>
-                        default
+                        <span data-i18n="gui.python-default">default</span>
                         <select id="guiPythonUiInputDefaultInput">
                           <option value="true">True</option>
                           <option value="false">False</option>
@@ -1248,7 +1248,7 @@
                       </label>
 
                       <label>
-                        editable
+                        <span data-i18n="gui.python-editable">editable</span>
                         <select id="guiPythonUiInputEditableInput">
                           <option value="true">True</option>
                           <option value="false">False</option>
@@ -1256,7 +1256,7 @@
                       </label>
 
                       <label>
-                        returnable
+                        <span data-i18n="gui.python-returnable">returnable</span>
                         <select id="guiPythonUiInputReturnableInput">
                           <option value="false">False</option>
                           <option value="true">True</option>
@@ -1265,73 +1265,73 @@
                     </div>
 
                     <label>
-                      get_text() Expression
-                      <input id="guiPythonUiInputGetTextInput" type="text" placeholder='e.g. store.player_name or ""' />
+                      <span data-i18n="gui.python-get-text-expression">get_text() Expression</span>
+                      <input id="guiPythonUiInputGetTextInput" type="text" placeholder='e.g. store.player_name or ""' data-i18n-placeholder="placeholder.gui.python-input-get-text" />
                     </label>
 
                     <label>
-                      set_text(s) Body
-                      <textarea id="guiPythonUiInputSetTextBodyInput" rows="4" placeholder='e.g. store.player_name = s'></textarea>
+                      <span data-i18n="gui.python-set-text-body">set_text(s) Body</span>
+                      <textarea id="guiPythonUiInputSetTextBodyInput" rows="4" placeholder='e.g. store.player_name = s' data-i18n-placeholder="placeholder.gui.python-input-set-text"></textarea>
                     </label>
 
                     <label>
-                      enter() Body
-                      <textarea id="guiPythonUiInputEnterBodyInput" rows="3" placeholder='Optional. Leave blank to use InputValue.enter(self).'></textarea>
+                      <span data-i18n="gui.python-enter-body">enter() Body</span>
+                      <textarea id="guiPythonUiInputEnterBodyInput" rows="3" placeholder='Optional. Leave blank to use InputValue.enter(self).' data-i18n-placeholder="placeholder.gui.python-input-enter"></textarea>
                     </label>
                   </div>
 
                   <div id="guiPythonUiDisplayableFields" class="gui-style-panel hidden">
                     <div class="gui-style-panel-header">
                       <div>
-                        <h3>Displayable Methods</h3>
-                        <p>Build a custom <code>renpy.Displayable</code> subclass for low-level rendering and event handling.</p>
+                        <h3 data-i18n="gui.python-displayable-title">Displayable Methods</h3>
+                        <p><span data-i18n="gui.python-displayable-desc-prefix">Build a custom </span><code>renpy.Displayable</code><span data-i18n="gui.python-displayable-desc-suffix"> subclass for low-level rendering and event handling.</span></p>
                       </div>
                     </div>
 
                     <label>
-                      __init__ Body
-                      <textarea id="guiPythonUiDisplayableInitBodyInput" rows="4" placeholder='Optional, e.g.&#10;self.child = renpy.displayable(child)&#10;self.alpha = 0.0'></textarea>
+                      <span data-i18n="gui.python-init-body">__init__ Body</span>
+                      <textarea id="guiPythonUiDisplayableInitBodyInput" rows="4" placeholder='Optional, e.g.&#10;self.child = renpy.displayable(child)&#10;self.alpha = 0.0' data-i18n-placeholder="placeholder.gui.python-displayable-init"></textarea>
                     </label>
 
                     <label>
-                      render(width, height, st, at) Body
-                      <textarea id="guiPythonUiDisplayableRenderBodyInput" rows="6" placeholder='e.g.&#10;render = renpy.Render(width, height)&#10;child_render = renpy.render(self.child, width, height, st, at)&#10;render.blit(child_render, (0, 0))&#10;return render'></textarea>
+                      <span data-i18n="gui.python-render-body">render(width, height, st, at) Body</span>
+                      <textarea id="guiPythonUiDisplayableRenderBodyInput" rows="6" placeholder='e.g.&#10;render = renpy.Render(width, height)&#10;child_render = renpy.render(self.child, width, height, st, at)&#10;render.blit(child_render, (0, 0))&#10;return render' data-i18n-placeholder="placeholder.gui.python-displayable-render"></textarea>
                     </label>
 
                     <label>
-                      event(ev, x, y, st) Body
-                      <textarea id="guiPythonUiDisplayableEventBodyInput" rows="4" placeholder='Optional, e.g.&#10;if renpy.map_event(ev, "dismiss"):&#10;    return True&#10;return None'></textarea>
+                      <span data-i18n="gui.python-event-body">event(ev, x, y, st) Body</span>
+                      <textarea id="guiPythonUiDisplayableEventBodyInput" rows="4" placeholder='Optional, e.g.&#10;if renpy.map_event(ev, "dismiss"):&#10;    return True&#10;return None' data-i18n-placeholder="placeholder.gui.python-displayable-event"></textarea>
                     </label>
 
                     <div class="gui-inline-fields">
                       <label>
-                        per_interact() Body
-                        <textarea id="guiPythonUiDisplayablePerInteractBodyInput" rows="3" placeholder='Optional, e.g.&#10;renpy.redraw(self, 0)'></textarea>
+                        <span data-i18n="gui.python-per-interact-body">per_interact() Body</span>
+                        <textarea id="guiPythonUiDisplayablePerInteractBodyInput" rows="3" placeholder='Optional, e.g.&#10;renpy.redraw(self, 0)' data-i18n-placeholder="placeholder.gui.python-displayable-per-interact"></textarea>
                       </label>
 
                       <label>
-                        visit() Body
-                        <textarea id="guiPythonUiDisplayableVisitBodyInput" rows="3" placeholder='Optional, e.g.&#10;return [self.child]'></textarea>
+                        <span data-i18n="gui.python-visit-body">visit() Body</span>
+                        <textarea id="guiPythonUiDisplayableVisitBodyInput" rows="3" placeholder='Optional, e.g.&#10;return [self.child]' data-i18n-placeholder="placeholder.gui.python-displayable-visit"></textarea>
                       </label>
                     </div>
 
                     <label>
-                      place(dest, x, y, width, height, surf, main=True) Body
-                      <textarea id="guiPythonUiDisplayablePlaceBodyInput" rows="4" placeholder='Optional, e.g.&#10;return renpy.Displayable.place(self, dest, x, y, width, height, surf, main=main)'></textarea>
+                      <span data-i18n="gui.python-place-body">place(dest, x, y, width, height, surf, main=True) Body</span>
+                      <textarea id="guiPythonUiDisplayablePlaceBodyInput" rows="4" placeholder='Optional, e.g.&#10;return renpy.Displayable.place(self, dest, x, y, width, height, surf, main=main)' data-i18n-placeholder="placeholder.gui.python-displayable-place"></textarea>
                     </label>
                   </div>
 
                   <div id="guiPythonUiStatementFields" class="gui-style-panel hidden">
                     <div class="gui-style-panel-header">
                       <div>
-                        <h3>Statement Registration</h3>
-                        <p>Build a <code>renpy.register_statement()</code> template with parser, lint, execution, and prediction hooks.</p>
+                        <h3 data-i18n="gui.python-statement-title">Statement Registration</h3>
+                        <p><span data-i18n="gui.python-statement-desc-prefix">Build a </span><code>renpy.register_statement()</code><span data-i18n="gui.python-statement-desc-suffix"> template with parser, lint, execution, and prediction hooks.</span></p>
                       </div>
                     </div>
 
                     <div class="gui-inline-fields">
                       <label>
-                        Block Mode
+                        <span data-i18n="gui.python-block-mode">Block Mode</span>
                         <select id="guiPythonUiStatementBlockInput">
                           <option value="false">False</option>
                           <option value="true">True</option>
@@ -1344,7 +1344,7 @@
                       </label>
 
                       <label>
-                        init
+                        <span data-i18n="gui.python-init">init</span>
                         <select id="guiPythonUiStatementInitInput">
                           <option value="false">False</option>
                           <option value="true">True</option>
@@ -1352,7 +1352,7 @@
                       </label>
 
                       <label>
-                        translatable
+                        <span data-i18n="gui.python-translatable">translatable</span>
                         <select id="guiPythonUiStatementTranslatableInput">
                           <option value="false">False</option>
                           <option value="true">True</option>
@@ -1360,7 +1360,7 @@
                       </label>
 
                       <label>
-                        predict_all
+                        <span data-i18n="gui.python-predict-all">predict_all</span>
                         <select id="guiPythonUiStatementPredictAllInput">
                           <option value="true">True</option>
                           <option value="false">False</option>
@@ -1368,76 +1368,76 @@
                       </label>
 
                       <label>
-                        init_priority
-                        <input id="guiPythonUiStatementInitPriorityInput" type="text" placeholder="e.g. 0" />
+                        <span data-i18n="gui.python-init-priority">init_priority</span>
+                        <input id="guiPythonUiStatementInitPriorityInput" type="text" placeholder="e.g. 0" data-i18n-placeholder="placeholder.gui.python-statement-init-priority" />
                       </label>
                     </div>
 
                     <label>
-                      parse(lexer) Body
-                      <textarea id="guiPythonUiStatementParseBodyInput" rows="5" placeholder='e.g.&#10;who = lexer.simple_expression()&#10;what = lexer.rest()&#10;return (who, what)'></textarea>
+                      <span data-i18n="gui.python-parse-body">parse(lexer) Body</span>
+                      <textarea id="guiPythonUiStatementParseBodyInput" rows="5" placeholder='e.g.&#10;who = lexer.simple_expression()&#10;what = lexer.rest()&#10;return (who, what)' data-i18n-placeholder="placeholder.gui.python-statement-parse"></textarea>
                     </label>
 
                     <label>
-                      execute(parsed_object) Body
-                      <textarea id="guiPythonUiStatementExecuteBodyInput" rows="4" placeholder='e.g.&#10;who, what = parsed_object&#10;renpy.say(eval(who), what)'></textarea>
+                      <span data-i18n="gui.python-execute-body">execute(parsed_object) Body</span>
+                      <textarea id="guiPythonUiStatementExecuteBodyInput" rows="4" placeholder='e.g.&#10;who, what = parsed_object&#10;renpy.say(eval(who), what)' data-i18n-placeholder="placeholder.gui.python-statement-execute"></textarea>
                     </label>
 
                     <div class="gui-inline-fields">
                       <label>
-                        lint(parsed_object) Body
-                        <textarea id="guiPythonUiStatementLintBodyInput" rows="4" placeholder='Optional, e.g.&#10;check = renpy.check_text_tags(parsed_object[1])&#10;if check:&#10;    renpy.error(check)'></textarea>
+                        <span data-i18n="gui.python-lint-body">lint(parsed_object) Body</span>
+                        <textarea id="guiPythonUiStatementLintBodyInput" rows="4" placeholder='Optional, e.g.&#10;check = renpy.check_text_tags(parsed_object[1])&#10;if check:&#10;    renpy.error(check)' data-i18n-placeholder="placeholder.gui.python-statement-lint"></textarea>
                       </label>
 
                       <label>
-                        predict(parsed_object) Body
-                        <textarea id="guiPythonUiStatementPredictBodyInput" rows="4" placeholder='Optional, e.g.&#10;return []'></textarea>
-                      </label>
-                    </div>
-
-                    <div class="gui-inline-fields">
-                      <label>
-                        next(parsed_object, *args) Body
-                        <textarea id="guiPythonUiStatementNextBodyInput" rows="4" placeholder='Optional, e.g.&#10;return None'></textarea>
-                      </label>
-
-                      <label>
-                        execute_init(parsed_object) Body
-                        <textarea id="guiPythonUiStatementExecuteInitBodyInput" rows="4" placeholder="Optional"></textarea>
+                        <span data-i18n="gui.python-predict-body">predict(parsed_object) Body</span>
+                        <textarea id="guiPythonUiStatementPredictBodyInput" rows="4" placeholder='Optional, e.g.&#10;return []' data-i18n-placeholder="placeholder.gui.python-optional-return-empty"></textarea>
                       </label>
                     </div>
 
                     <div class="gui-inline-fields">
                       <label>
-                        label(parsed_object) Expression
-                        <input id="guiPythonUiStatementLabelInput" type="text" placeholder='Optional, e.g. "mystatement_label"' />
+                        <span data-i18n="gui.python-next-body">next(parsed_object, *args) Body</span>
+                        <textarea id="guiPythonUiStatementNextBodyInput" rows="4" placeholder='Optional, e.g.&#10;return None' data-i18n-placeholder="placeholder.gui.python-optional-return-none"></textarea>
                       </label>
 
                       <label>
-                        warp(parsed_object) Expression
-                        <input id="guiPythonUiStatementWarpInput" type="text" placeholder="Optional, e.g. True" />
-                      </label>
-
-                      <label>
-                        post_label(parsed_object) Expression
-                        <input id="guiPythonUiStatementPostLabelInput" type="text" placeholder='Optional, e.g. "mystatement_return"' />
+                        <span data-i18n="gui.python-execute-init-body">execute_init(parsed_object) Body</span>
+                        <textarea id="guiPythonUiStatementExecuteInitBodyInput" rows="4" placeholder="Optional" data-i18n-placeholder="placeholder.gui.python-optional"></textarea>
                       </label>
                     </div>
 
                     <div class="gui-inline-fields">
                       <label>
-                        post_execute(parsed_object) Body
-                        <textarea id="guiPythonUiStatementPostExecuteBodyInput" rows="4" placeholder="Optional"></textarea>
+                        <span data-i18n="gui.python-label-expression">label(parsed_object) Expression</span>
+                        <input id="guiPythonUiStatementLabelInput" type="text" placeholder='Optional, e.g. "mystatement_label"' data-i18n-placeholder="placeholder.gui.python-statement-label" />
                       </label>
 
                       <label>
-                        translation_strings(parsed_object) Body
-                        <textarea id="guiPythonUiStatementTranslationStringsBodyInput" rows="4" placeholder='Optional, e.g.&#10;return [parsed_object[1]]'></textarea>
+                        <span data-i18n="gui.python-warp-expression">warp(parsed_object) Expression</span>
+                        <input id="guiPythonUiStatementWarpInput" type="text" placeholder="Optional, e.g. True" data-i18n-placeholder="placeholder.gui.python-optional-true" />
                       </label>
 
                       <label>
-                        execute_default(parsed_object) Body
-                        <textarea id="guiPythonUiStatementExecuteDefaultBodyInput" rows="4" placeholder="Optional"></textarea>
+                        <span data-i18n="gui.python-post-label-expression">post_label(parsed_object) Expression</span>
+                        <input id="guiPythonUiStatementPostLabelInput" type="text" placeholder='Optional, e.g. "mystatement_return"' data-i18n-placeholder="placeholder.gui.python-statement-post-label" />
+                      </label>
+                    </div>
+
+                    <div class="gui-inline-fields">
+                      <label>
+                        <span data-i18n="gui.python-post-execute-body">post_execute(parsed_object) Body</span>
+                        <textarea id="guiPythonUiStatementPostExecuteBodyInput" rows="4" placeholder="Optional" data-i18n-placeholder="placeholder.gui.python-optional"></textarea>
+                      </label>
+
+                      <label>
+                        <span data-i18n="gui.python-translation-strings-body">translation_strings(parsed_object) Body</span>
+                        <textarea id="guiPythonUiStatementTranslationStringsBodyInput" rows="4" placeholder='Optional, e.g.&#10;return [parsed_object[1]]' data-i18n-placeholder="placeholder.gui.python-statement-translation-strings"></textarea>
+                      </label>
+
+                      <label>
+                        <span data-i18n="gui.python-execute-default-body">execute_default(parsed_object) Body</span>
+                        <textarea id="guiPythonUiStatementExecuteDefaultBodyInput" rows="4" placeholder="Optional" data-i18n-placeholder="placeholder.gui.python-optional"></textarea>
                       </label>
                     </div>
                   </div>
@@ -1445,45 +1445,45 @@
                   <div id="guiPythonUiRestartFields" class="gui-style-panel hidden">
                     <div class="gui-style-panel-header">
                       <div>
-                        <h3>restart_interaction Helper</h3>
-                        <p>Build a helper function for screen-scope or store updates that need an immediate refresh.</p>
+                        <h3 data-i18n="gui.python-restart-title">restart_interaction Helper</h3>
+                        <p data-i18n="gui.python-restart-desc">Build a helper function for screen-scope or store updates that need an immediate refresh.</p>
                       </div>
                     </div>
 
                     <div class="gui-inline-fields">
                       <label>
-                        Assignment Target
-                        <input id="guiPythonUiRestartTargetInput" type="text" placeholder="e.g. store.overlay_mode" />
+                        <span data-i18n="gui.python-assignment-target">Assignment Target</span>
+                        <input id="guiPythonUiRestartTargetInput" type="text" placeholder="e.g. store.overlay_mode" data-i18n-placeholder="placeholder.gui.python-restart-target" />
                       </label>
 
                       <label>
-                        Assigned Expression
-                        <input id="guiPythonUiRestartValueInput" type="text" placeholder="e.g. value" />
+                        <span data-i18n="gui.python-assigned-expression">Assigned Expression</span>
+                        <input id="guiPythonUiRestartValueInput" type="text" placeholder="e.g. value" data-i18n-placeholder="placeholder.gui.python-restart-value" />
                       </label>
                     </div>
 
                     <label>
-                      Extra Body Before restart_interaction()
-                      <textarea id="guiPythonUiRestartBodyInput" rows="4" placeholder='Optional, e.g.&#10;store.overlay_dirty = True'></textarea>
+                      <span data-i18n="gui.python-restart-extra-body">Extra Body Before restart_interaction()</span>
+                      <textarea id="guiPythonUiRestartBodyInput" rows="4" placeholder='Optional, e.g.&#10;store.overlay_dirty = True' data-i18n-placeholder="placeholder.gui.python-restart-body"></textarea>
                     </label>
                   </div>
 
                   <div id="guiPythonUiDefineScreenFields" class="gui-style-panel hidden">
                     <div class="gui-style-panel-header">
                       <div>
-                        <h3>define_screen Registration</h3>
-                        <p>Build a Python-defined screen and register it through <code>renpy.define_screen()</code>.</p>
+                        <h3 data-i18n="gui.python-define-screen-title">define_screen Registration</h3>
+                        <p><span data-i18n="gui.python-define-screen-desc-prefix">Build a Python-defined screen and register it through </span><code>renpy.define_screen()</code><span data-i18n="gui.python-define-screen-desc-suffix">.</span></p>
                       </div>
                     </div>
 
                     <div class="gui-inline-fields">
                       <label>
-                        Screen Name
-                        <input id="guiPythonUiDefineScreenNameInput" type="text" placeholder="e.g. python_overlay" />
+                        <span data-i18n="gui.python-screen-name">Screen Name</span>
+                        <input id="guiPythonUiDefineScreenNameInput" type="text" placeholder="e.g. python_overlay" data-i18n-placeholder="placeholder.gui.python-define-screen-name" />
                       </label>
 
                       <label>
-                        modal
+                        <span data-i18n="gui.python-modal">modal</span>
                         <select id="guiPythonUiDefineModalInput">
                           <option value="false">False</option>
                           <option value="true">True</option>
@@ -1491,34 +1491,34 @@
                       </label>
 
                       <label>
-                        zorder
-                        <input id="guiPythonUiDefineZorderInput" type="number" step="1" placeholder="e.g. 0" />
+                        <span data-i18n="gui.python-zorder">zorder</span>
+                        <input id="guiPythonUiDefineZorderInput" type="number" step="1" placeholder="e.g. 0" data-i18n-placeholder="placeholder.gui.python-zorder" />
                       </label>
 
                       <label>
-                        tag
-                        <input id="guiPythonUiDefineTagInput" type="text" placeholder='Optional, e.g. "menu"' />
+                        <span data-i18n="gui.python-tag">tag</span>
+                        <input id="guiPythonUiDefineTagInput" type="text" placeholder='Optional, e.g. "menu"' data-i18n-placeholder="placeholder.gui.python-tag" />
                       </label>
 
                       <label>
-                        variant
-                        <input id="guiPythonUiDefineVariantInput" type="text" placeholder='Optional, e.g. "touch"' />
+                        <span data-i18n="gui.python-variant">variant</span>
+                        <input id="guiPythonUiDefineVariantInput" type="text" placeholder='Optional, e.g. "touch"' data-i18n-placeholder="placeholder.gui.python-variant" />
                       </label>
                     </div>
 
                     <label>
-                      Function Body
-                      <textarea id="guiPythonUiDefineBodyInput" rows="6" placeholder='e.g.&#10;ui.window(style="say_window")&#10;ui.vbox()&#10;ui.text("Python screen placeholder")'></textarea>
+                      <span data-i18n="gui.python-function-body">Function Body</span>
+                      <textarea id="guiPythonUiDefineBodyInput" rows="6" placeholder='e.g.&#10;ui.window(style="say_window")&#10;ui.vbox()&#10;ui.text("Python screen placeholder")' data-i18n-placeholder="placeholder.gui.python-define-body"></textarea>
                     </label>
                   </div>
 
                   <label>
-                    Notes
-                    <textarea id="guiPythonUiNotesInput" rows="3" placeholder="Optional notes about where this helper is used."></textarea>
+                    <span data-i18n="gui.python-notes">Notes</span>
+                    <textarea id="guiPythonUiNotesInput" rows="3" placeholder="Optional notes about where this helper is used." data-i18n-placeholder="placeholder.gui.python-notes"></textarea>
                   </label>
 
                   <div class="inspector-actions">
-                    <button id="guiDeletePythonUiButton" class="danger-button" type="button">Delete Helper</button>
+                    <button id="guiDeletePythonUiButton" class="danger-button" type="button" data-i18n="gui.python-delete">Delete Helper</button>
                   </div>
                 </form>
               </section>
@@ -1526,8 +1526,8 @@
               <aside class="gui-column gui-preview-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Python Output</h2>
-                    <p>Generated helper code plus usage hints for the currently selected template.</p>
+                    <h2 data-i18n="gui.python-output-title">Python Output</h2>
+                    <p data-i18n="gui.python-output-desc">Generated helper code plus usage hints for the currently selected template.</p>
                   </div>
                 </div>
 
@@ -1542,85 +1542,85 @@
               <aside class="gui-column gui-list-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Cursors</h2>
-                    <p>Define hardware cursor styles, displayable cursors, and usage snippets.</p>
+                    <h2 data-i18n="gui.cursor-title">Cursors</h2>
+                    <p data-i18n="gui.cursor-desc">Define hardware cursor styles, displayable cursors, and usage snippets.</p>
                   </div>
                 </div>
 
-                <div id="guiCursorEmpty" class="panel-empty-state hidden">
+                <div id="guiCursorEmpty" class="panel-empty-state hidden" data-i18n="gui.cursor-empty">
                   No cursor entries yet. Start with a hardware or displayable cursor.
                 </div>
 
                 <div id="guiCursorList" class="character-list gui-entity-list"></div>
 
                 <div class="gui-stack-actions">
-                  <button id="newHardwareCursorButton" class="primary gui-bottom-button" type="button">New Hardware Cursor</button>
-                  <button id="newDisplayableCursorButton" class="secondary gui-bottom-button" type="button">New Displayable Cursor</button>
-                  <button id="newCursorUsageButton" class="secondary gui-bottom-button" type="button">New Usage Snippet</button>
+                  <button id="newHardwareCursorButton" class="primary gui-bottom-button" type="button" data-i18n="gui.cursor-new-hardware">New Hardware Cursor</button>
+                  <button id="newDisplayableCursorButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.cursor-new-displayable">New Displayable Cursor</button>
+                  <button id="newCursorUsageButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.cursor-new-usage">New Usage Snippet</button>
                 </div>
               </aside>
 
               <section class="gui-column gui-detail-column">
-                <div id="guiCursorEmptyState" class="gui-empty-detail">
+                <div id="guiCursorEmptyState" class="gui-empty-detail" data-i18n="gui.cursor-empty-detail">
                   Select a cursor entry to edit it.
                 </div>
 
                 <form id="guiCursorForm" class="character-detail-form hidden">
                   <div class="gui-style-basics">
                     <label>
-                      Kind
+                      <span data-i18n="gui.cursor-kind">Kind</span>
                       <select id="guiCursorKindInput">
-                        <option value="hardware">Hardware Cursor</option>
-                        <option value="displayable">Displayable Cursor</option>
-                        <option value="usage">Usage Snippet</option>
+                        <option value="hardware" data-i18n="gui.cursor-kind.hardware">Hardware Cursor</option>
+                        <option value="displayable" data-i18n="gui.cursor-kind.displayable">Displayable Cursor</option>
+                        <option value="usage" data-i18n="gui.cursor-kind.usage">Usage Snippet</option>
                       </select>
                     </label>
 
                     <label>
-                      Name
-                      <input id="guiCursorNameInput" type="text" placeholder="e.g. menu or talk" />
+                      <span data-i18n="gui.cursor-name">Name</span>
+                      <input id="guiCursorNameInput" type="text" placeholder="e.g. menu or talk" data-i18n-placeholder="placeholder.gui.cursor-name" />
                     </label>
 
                     <label id="guiCursorStyleTargetField">
-                      Style Target
-                      <input id="guiCursorStyleTargetInput" type="text" placeholder="e.g. menu_button" />
+                      <span data-i18n="gui.cursor-style-target">Style Target</span>
+                      <input id="guiCursorStyleTargetInput" type="text" placeholder="e.g. menu_button" data-i18n-placeholder="placeholder.gui.cursor-style-target" />
                     </label>
 
                     <label id="guiCursorTargetCursorField">
-                      Cursor Name Used
-                      <input id="guiCursorTargetCursorInput" type="text" placeholder="e.g. menu" />
+                      <span data-i18n="gui.cursor-target-cursor">Cursor Name Used</span>
+                      <input id="guiCursorTargetCursorInput" type="text" placeholder="e.g. menu" data-i18n-placeholder="placeholder.gui.cursor-target-cursor" />
                     </label>
                   </div>
 
                   <div class="gui-inline-fields">
                     <label>
-                      Cursor Image / Displayable
-                      <input id="guiCursorImageInput" type="text" placeholder='e.g. "gui/cursor/menu_idle.png"' />
+                      <span data-i18n="gui.cursor-image">Cursor Image / Displayable</span>
+                      <input id="guiCursorImageInput" type="text" placeholder='e.g. "gui/cursor/menu_idle.png"' data-i18n-placeholder="placeholder.gui.cursor-image" />
                     </label>
 
                     <label>
-                      Hotspot X
-                      <input id="guiCursorHotspotXInput" type="number" step="1" placeholder="e.g. 4" />
+                      <span data-i18n="gui.cursor-hotspot-x">Hotspot X</span>
+                      <input id="guiCursorHotspotXInput" type="number" step="1" placeholder="e.g. 4" data-i18n-placeholder="placeholder.gui.cursor-hotspot-x" />
                     </label>
 
                     <label>
-                      Hotspot Y
-                      <input id="guiCursorHotspotYInput" type="number" step="1" placeholder="e.g. 4" />
+                      <span data-i18n="gui.cursor-hotspot-y">Hotspot Y</span>
+                      <input id="guiCursorHotspotYInput" type="number" step="1" placeholder="e.g. 4" data-i18n-placeholder="placeholder.gui.cursor-hotspot-y" />
                     </label>
                   </div>
 
                   <label id="guiCursorFramesField">
-                    Frames / Raw Mapping
-                    <textarea id="guiCursorFramesInput" rows="3" placeholder='Optional raw frame list, e.g. [("gui/cursor_a.png", 4, 4), ("gui/cursor_b.png", 4, 4)]'></textarea>
+                    <span data-i18n="gui.cursor-frames">Frames / Raw Mapping</span>
+                    <textarea id="guiCursorFramesInput" rows="3" placeholder='Optional raw frame list, e.g. [("gui/cursor_a.png", 4, 4), ("gui/cursor_b.png", 4, 4)]' data-i18n-placeholder="placeholder.gui.cursor-frames"></textarea>
                   </label>
 
                   <label>
-                    Note
-                    <textarea id="guiCursorNoteInput" rows="2" placeholder="Optional notes about this cursor entry."></textarea>
+                    <span data-i18n="gui.cursor-note">Note</span>
+                    <textarea id="guiCursorNoteInput" rows="2" placeholder="Optional notes about this cursor entry." data-i18n-placeholder="placeholder.gui.cursor-note"></textarea>
                   </label>
 
                   <div class="inspector-actions">
-                    <button id="guiDeleteCursorButton" class="danger-button" type="button">Delete Cursor Entry</button>
+                    <button id="guiDeleteCursorButton" class="danger-button" type="button" data-i18n="gui.cursor-delete">Delete Cursor Entry</button>
                   </div>
                 </form>
               </section>
@@ -1628,8 +1628,8 @@
               <aside class="gui-column gui-preview-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Cursor Output</h2>
-                    <p>Aggregated cursor configuration and usage code.</p>
+                    <h2 data-i18n="gui.cursor-output-title">Cursor Output</h2>
+                    <p data-i18n="gui.cursor-output-desc">Aggregated cursor configuration and usage code.</p>
                   </div>
                 </div>
 
@@ -1644,73 +1644,73 @@
               <aside class="gui-column gui-list-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Text Shaders</h2>
-                    <p>Manage default shader assignments, style-level shaders, callbacks, and registrations.</p>
+                    <h2 data-i18n="gui.shader-title">Text Shaders</h2>
+                    <p data-i18n="gui.shader-desc">Manage default shader assignments, style-level shaders, callbacks, and registrations.</p>
                   </div>
                 </div>
 
-                <div id="guiShaderEmpty" class="panel-empty-state hidden">
+                <div id="guiShaderEmpty" class="panel-empty-state hidden" data-i18n="gui.shader-empty">
                   No shader entries yet. Add a built-in or custom text shader setup.
                 </div>
 
                 <div id="guiShaderList" class="character-list gui-entity-list"></div>
 
-                <button id="newGuiShaderButton" class="primary gui-bottom-button" type="button">New Shader Entry</button>
+                <button id="newGuiShaderButton" class="primary gui-bottom-button" type="button" data-i18n="gui.shader-new">New Shader Entry</button>
               </aside>
 
               <section class="gui-column gui-detail-column">
-                <div id="guiShaderEmptyState" class="gui-empty-detail">
+                <div id="guiShaderEmptyState" class="gui-empty-detail" data-i18n="gui.shader-empty-detail">
                   Select a shader entry to edit it.
                 </div>
 
                 <form id="guiShaderForm" class="character-detail-form hidden">
                   <div class="gui-style-basics">
                     <label>
-                      Mode
+                      <span data-i18n="gui.shader-mode">Mode</span>
                       <select id="guiShaderModeInput">
-                        <option value="default">Default Shader</option>
-                        <option value="style">Style Shader</option>
-                        <option value="callback">Callback Mapping</option>
-                        <option value="custom">Custom Registration</option>
+                        <option value="default" data-i18n="gui.shader-mode.default">Default Shader</option>
+                        <option value="style" data-i18n="gui.shader-mode.style">Style Shader</option>
+                        <option value="callback" data-i18n="gui.shader-mode.callback">Callback Mapping</option>
+                        <option value="custom" data-i18n="gui.shader-mode.custom">Custom Registration</option>
                       </select>
                     </label>
 
                     <label>
-                      Name / Key
-                      <input id="guiShaderNameInput" type="text" placeholder="e.g. wave_default or title_glow" />
+                      <span data-i18n="gui.shader-name">Name / Key</span>
+                      <input id="guiShaderNameInput" type="text" placeholder="e.g. wave_default or title_glow" data-i18n-placeholder="placeholder.gui.shader-name" />
                     </label>
 
                     <label>
-                      Shader Spec
-                      <input id="guiShaderShaderSpecInput" type="text" placeholder='e.g. "wave:10" or "dissolve"' />
+                      <span data-i18n="gui.shader-spec">Shader Spec</span>
+                      <input id="guiShaderShaderSpecInput" type="text" placeholder='e.g. "wave:10" or "dissolve"' data-i18n-placeholder="placeholder.gui.shader-spec" />
                     </label>
 
                     <label>
-                      Target
-                      <input id="guiShaderTargetNameInput" type="text" placeholder="e.g. menu_button_text or default" />
+                      <span data-i18n="gui.shader-target">Target</span>
+                      <input id="guiShaderTargetNameInput" type="text" placeholder="e.g. menu_button_text or default" data-i18n-placeholder="placeholder.gui.shader-target" />
                     </label>
                   </div>
 
                   <div class="gui-inline-fields">
                     <label>
-                      Callback Key
-                      <input id="guiShaderCallbackKeyInput" type="text" placeholder='e.g. "default"' />
+                      <span data-i18n="gui.shader-callback-key">Callback Key</span>
+                      <input id="guiShaderCallbackKeyInput" type="text" placeholder='e.g. "default"' data-i18n-placeholder="placeholder.gui.shader-callback-key" />
                     </label>
 
                     <label>
-                      Callback Function
-                      <input id="guiShaderCallbackFunctionInput" type="text" placeholder="e.g. get_default_textshader" />
+                      <span data-i18n="gui.shader-callback-function">Callback Function</span>
+                      <input id="guiShaderCallbackFunctionInput" type="text" placeholder="e.g. get_default_textshader" data-i18n-placeholder="placeholder.gui.shader-callback-function" />
                     </label>
                   </div>
 
                   <label>
-                    Custom shaders= Expression / Raw Registration Data
-                    <textarea id="guiShaderCustomShadersInput" rows="4" placeholder='e.g. ("textshader.spin",) or raw kwargs lines'></textarea>
+                    <span data-i18n="gui.shader-custom-shaders">Custom shaders= Expression / Raw Registration Data</span>
+                    <textarea id="guiShaderCustomShadersInput" rows="4" placeholder='e.g. ("textshader.spin",) or raw kwargs lines' data-i18n-placeholder="placeholder.gui.shader-custom-shaders"></textarea>
                   </label>
 
                   <div class="gui-inline-fields">
                     <label>
-                      include_default
+                      <span data-i18n="gui.shader-include-default">include_default</span>
                       <select id="guiShaderIncludeDefaultInput">
                         <option value="true">True</option>
                         <option value="false">False</option>
@@ -1718,13 +1718,13 @@
                     </label>
 
                     <label>
-                      redraw
-                      <input id="guiShaderRedrawInput" type="text" placeholder="e.g. 0.02 or None" />
+                      <span data-i18n="gui.shader-redraw">redraw</span>
+                      <input id="guiShaderRedrawInput" type="text" placeholder="e.g. 0.02 or None" data-i18n-placeholder="placeholder.gui.shader-redraw" />
                     </label>
                   </div>
 
                   <div class="inspector-actions">
-                    <button id="guiDeleteShaderButton" class="danger-button" type="button">Delete Shader Entry</button>
+                    <button id="guiDeleteShaderButton" class="danger-button" type="button" data-i18n="gui.shader-delete">Delete Shader Entry</button>
                   </div>
                 </form>
               </section>
@@ -1732,8 +1732,8 @@
               <aside class="gui-column gui-preview-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Shader Output</h2>
-                    <p>Generated text shader code and usage notes.</p>
+                    <h2 data-i18n="gui.shader-output-title">Shader Output</h2>
+                    <p data-i18n="gui.shader-output-desc">Generated text shader code and usage notes.</p>
                   </div>
                 </div>
 
@@ -1749,7 +1749,7 @@
                 <div class="gui-panel-header">
                   <div>
                     <h2 data-i18n="gui.diagnostics.heading">Diagnostics</h2>
-                    <p>Static checks for structure, missing values, unresolved references, and likely GUI issues.</p>
+                    <p data-i18n="gui.diagnostics.desc">Static checks for structure, missing values, unresolved references, and likely GUI issues.</p>
                   </div>
                 </div>
 
