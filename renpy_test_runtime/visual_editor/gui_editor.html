@@ -107,60 +107,62 @@
                 </div>
                 <div id="guiStyleList" class="character-list gui-style-list"></div>
 
-                <button id="newGuiStyleButton" class="primary gui-bottom-button" type="button">New Style</button>
+                <button id="newGuiStyleButton" class="primary gui-bottom-button" type="button" data-i18n="gui.styles-new">
+                  New Style
+                </button>
               </aside>
 
               <section class="gui-column gui-detail-column">
-                <div id="guiStyleEmptyState" class="gui-empty-detail">
+                <div id="guiStyleEmptyState" class="gui-empty-detail" data-i18n="gui.styles-empty-detail">
                   Select a style from the list or create a new one to start editing.
                 </div>
 
                 <form id="guiStyleForm" class="character-detail-form hidden">
                   <div class="gui-panel-header gui-panel-header-tight">
                     <div>
-                      <h2>Style Detail</h2>
-                      <p>Define the style statement and its property overrides.</p>
+                      <h2 data-i18n="gui.styles-detail-title">Style Detail</h2>
+                      <p data-i18n="gui.styles-detail-desc">Define the style statement and its property overrides.</p>
                     </div>
                   </div>
 
                   <div class="gui-style-basics">
                     <label>
-                      Style Name
-                      <input id="guiStyleNameInput" type="text" placeholder="e.g. say_dialogue" />
+                      <span data-i18n="gui.styles-name">Style Name</span>
+                      <input id="guiStyleNameInput" type="text" placeholder="e.g. say_dialogue" data-i18n-placeholder="placeholder.gui.styles-name" />
                     </label>
 
                     <label>
-                      Parent Style
-                      <input id="guiStyleParentInput" type="text" placeholder="e.g. default or button" />
+                      <span data-i18n="gui.styles-parent">Parent Style</span>
+                      <input id="guiStyleParentInput" type="text" placeholder="e.g. default or button" data-i18n-placeholder="placeholder.gui.styles-parent" />
                     </label>
 
                     <label>
-                      Variant Expression
-                      <input id="guiStyleVariantInput" type="text" placeholder='e.g. "touch" or ["small", "touch"]' />
+                      <span data-i18n="gui.styles-variant">Variant Expression</span>
+                      <input id="guiStyleVariantInput" type="text" placeholder='e.g. "touch" or ["small", "touch"]' data-i18n-placeholder="placeholder.gui.styles-variant" />
                     </label>
 
                     <label>
-                      Primary Category
+                      <span data-i18n="gui.styles-category">Primary Category</span>
                       <select id="guiStyleCategoryInput">
-                        <option value="text">Text</option>
-                        <option value="window">Window</option>
-                        <option value="button">Button</option>
-                        <option value="bar">Bar</option>
-                        <option value="box">Box</option>
-                        <option value="grid">Grid</option>
-                        <option value="margin">Margin</option>
+                        <option value="text" data-i18n="gui.styles-category.text">Text</option>
+                        <option value="window" data-i18n="gui.styles-category.window">Window</option>
+                        <option value="button" data-i18n="gui.styles-category.button">Button</option>
+                        <option value="bar" data-i18n="gui.styles-category.bar">Bar</option>
+                        <option value="box" data-i18n="gui.styles-category.box">Box</option>
+                        <option value="grid" data-i18n="gui.styles-category.grid">Grid</option>
+                        <option value="margin" data-i18n="gui.styles-category.margin">Margin</option>
                       </select>
                     </label>
                   </div>
 
                   <label>
-                    properties Expression
-                    <textarea id="guiStylePropertiesExpressionInput" rows="3" placeholder='e.g. {"font": gui.default_font, "size": 36}'></textarea>
+                    <span data-i18n="gui.styles-properties-expression">properties Expression</span>
+                    <textarea id="guiStylePropertiesExpressionInput" rows="3" placeholder='e.g. {"font": gui.default_font, "size": 36}' data-i18n-placeholder="placeholder.gui.styles-properties-expression"></textarea>
                   </label>
 
                   <div class="gui-prefix-toolbar">
                     <div>
-                      <p class="section-label secondary-label">State Prefix</p>
+                      <p class="section-label secondary-label" data-i18n="gui.styles-state-prefix">State Prefix</p>
                       <p id="guiStylePrefixSummary" class="image-definition-help"></p>
                     </div>
                     <div id="guiStylePrefixTabs" class="gui-prefix-tabs"></div>
@@ -170,8 +172,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Position & Layout</h3>
-                          <p>Typed editors for common position-related properties.</p>
+                          <h3 data-i18n="gui.styles-panel-position-title">Position & Layout</h3>
+                          <p data-i18n="gui.styles-panel-position-desc">Typed editors for common position-related properties.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelPosition" class="gui-property-grid"></div>
@@ -180,8 +182,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Text</h3>
-                          <p>Font, color, outlines, text speed, and line handling.</p>
+                          <h3 data-i18n="gui.styles-panel-text-title">Text</h3>
+                          <p data-i18n="gui.styles-panel-text-desc">Font, color, outlines, text speed, and line handling.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelText" class="gui-property-grid"></div>
@@ -190,8 +192,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Window</h3>
-                          <p>Backgrounds, padding, fill behavior, and grouping.</p>
+                          <h3 data-i18n="gui.styles-panel-window-title">Window</h3>
+                          <p data-i18n="gui.styles-panel-window-desc">Backgrounds, padding, fill behavior, and grouping.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelWindow" class="gui-property-grid"></div>
@@ -200,8 +202,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Button</h3>
-                          <p>State-aware button visuals, sounds, focus, and cursors.</p>
+                          <h3 data-i18n="gui.styles-panel-button-title">Button</h3>
+                          <p data-i18n="gui.styles-panel-button-desc">State-aware button visuals, sounds, focus, and cursors.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelButton" class="gui-property-grid"></div>
@@ -210,8 +212,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Bar</h3>
-                          <p>Thumbs, gutters, orientation, and bar displayables.</p>
+                          <h3 data-i18n="gui.styles-panel-bar-title">Bar</h3>
+                          <p data-i18n="gui.styles-panel-bar-desc">Thumbs, gutters, orientation, and bar displayables.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelBar" class="gui-property-grid"></div>
@@ -220,8 +222,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Box</h3>
-                          <p>Spacing, wrapping, reversing, and justification behavior.</p>
+                          <h3 data-i18n="gui.styles-panel-box-title">Box</h3>
+                          <p data-i18n="gui.styles-panel-box-desc">Spacing, wrapping, reversing, and justification behavior.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelBox" class="gui-property-grid"></div>
@@ -230,8 +232,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Grid</h3>
-                          <p>Horizontal and vertical spacing controls for grid layouts.</p>
+                          <h3 data-i18n="gui.styles-panel-grid-title">Grid</h3>
+                          <p data-i18n="gui.styles-panel-grid-desc">Horizontal and vertical spacing controls for grid layouts.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelGrid" class="gui-property-grid"></div>
@@ -240,8 +242,8 @@
                     <section class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Margin</h3>
-                          <p>Outer spacing around windows, frames, buttons, and layout containers.</p>
+                          <h3 data-i18n="gui.styles-panel-margin-title">Margin</h3>
+                          <p data-i18n="gui.styles-panel-margin-desc">Outer spacing around windows, frames, buttons, and layout containers.</p>
                         </div>
                       </div>
                       <div id="guiStylePanelMargin" class="gui-property-grid"></div>
@@ -249,7 +251,9 @@
                   </div>
 
                   <div class="inspector-actions">
-                    <button id="guiDeleteStyleButton" class="danger-button" type="button">Delete Style</button>
+                    <button id="guiDeleteStyleButton" class="danger-button" type="button" data-i18n="gui.styles-delete">
+                      Delete Style
+                    </button>
                   </div>
                 </form>
               </section>
@@ -257,8 +261,8 @@
               <aside class="gui-column gui-preview-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Style Output</h2>
-                    <p>Current code preview and active property summary.</p>
+                    <h2 data-i18n="gui.styles-output-title">Style Output</h2>
+                    <p data-i18n="gui.styles-output-desc">Current code preview and active property summary.</p>
                   </div>
                 </div>
 
@@ -274,31 +278,33 @@
               <aside class="gui-column gui-list-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Screens</h2>
-                    <p>Build screen trees, apply templates, and wire actions and values.</p>
+                    <h2 data-i18n="gui.screens-title">Screens</h2>
+                    <p data-i18n="gui.screens-desc">Build screen trees, apply templates, and wire actions and values.</p>
                   </div>
                 </div>
 
-                <div id="guiScreenEmpty" class="panel-empty-state hidden">
+                <div id="guiScreenEmpty" class="panel-empty-state hidden" data-i18n="gui.screens-empty">
                   No screens yet. Create one or start from a special-screen template.
                 </div>
 
                 <div id="guiScreenList" class="character-list gui-entity-list"></div>
 
                 <div class="gui-stack-actions">
-                  <button id="newGuiScreenButton" class="primary gui-bottom-button" type="button">New Screen</button>
+                  <button id="newGuiScreenButton" class="primary gui-bottom-button" type="button" data-i18n="gui.screens-new">
+                    New Screen
+                  </button>
                   <label class="gui-compact-label">
-                    Template
+                    <span data-i18n="gui.screens-template">Template</span>
                     <select id="guiScreenTemplateInput"></select>
                   </label>
-                  <button id="createGuiScreenFromTemplateButton" class="secondary gui-bottom-button" type="button">
+                  <button id="createGuiScreenFromTemplateButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.screens-create-template">
                     Create From Template
                   </button>
                 </div>
               </aside>
 
               <section class="gui-column gui-detail-column">
-                <div id="guiScreenEmptyState" class="gui-empty-detail">
+                <div id="guiScreenEmptyState" class="gui-empty-detail" data-i18n="gui.screens-empty-detail">
                   Select a screen to edit its structure, then choose nodes in the tree to configure them.
                 </div>
 
@@ -306,29 +312,29 @@
                   <section class="gui-style-panel gui-screen-meta-panel">
                     <div class="gui-panel-header gui-panel-header-tight">
                       <div>
-                        <h2>Screen Detail</h2>
-                        <p>Configure the screen header, then build its node tree below.</p>
+                        <h2 data-i18n="gui.screens-detail-title">Screen Detail</h2>
+                        <p data-i18n="gui.screens-detail-desc">Configure the screen header, then build its node tree below.</p>
                       </div>
                     </div>
 
                     <div class="gui-style-basics">
                       <label>
-                        Screen Name
-                        <input id="guiScreenNameInput" type="text" placeholder="e.g. preferences" />
+                        <span data-i18n="gui.screens-name">Screen Name</span>
+                        <input id="guiScreenNameInput" type="text" placeholder="e.g. preferences" data-i18n-placeholder="placeholder.gui.screens-name" />
                       </label>
 
                       <label>
-                        Parameters
-                        <input id="guiScreenParametersInput" type="text" placeholder="e.g. title, items=None" />
+                        <span data-i18n="gui.screens-parameters">Parameters</span>
+                        <input id="guiScreenParametersInput" type="text" placeholder="e.g. title, items=None" data-i18n-placeholder="placeholder.gui.screens-parameters" />
                       </label>
 
                       <label>
-                        Tag
-                        <input id="guiScreenTagInput" type="text" placeholder="e.g. menu" />
+                        <span data-i18n="gui.screens-tag">Tag</span>
+                        <input id="guiScreenTagInput" type="text" placeholder="e.g. menu" data-i18n-placeholder="placeholder.gui.screens-tag" />
                       </label>
 
                       <label>
-                        Modal
+                        <span data-i18n="gui.screens-modal">Modal</span>
                         <select id="guiScreenModalInput">
                           <option value="false">False</option>
                           <option value="true">True</option>
@@ -336,126 +342,128 @@
                       </label>
 
                       <label>
-                        zorder
-                        <input id="guiScreenZorderInput" type="number" placeholder="e.g. 100" />
+                        <span data-i18n="gui.screens-zorder">zorder</span>
+                        <input id="guiScreenZorderInput" type="number" placeholder="e.g. 100" data-i18n-placeholder="placeholder.gui.screens-zorder" />
                       </label>
 
                       <label>
-                        Variant
-                        <input id="guiScreenVariantInput" type="text" placeholder='e.g. "touch"' />
+                        <span data-i18n="gui.screens-variant">Variant</span>
+                        <input id="guiScreenVariantInput" type="text" placeholder='e.g. "touch"' data-i18n-placeholder="placeholder.gui.screens-variant" />
                       </label>
                     </div>
 
                     <label>
-                      Head Statements
-                      <textarea id="guiScreenHeadStatementsInput" rows="3" placeholder='Extra screen-level lines such as style_prefix "menu" or predict False.'></textarea>
+                      <span data-i18n="gui.screens-head-statements">Head Statements</span>
+                      <textarea id="guiScreenHeadStatementsInput" rows="3" placeholder='Extra screen-level lines such as style_prefix "menu" or predict False.' data-i18n-placeholder="placeholder.gui.screens-head-statements"></textarea>
                     </label>
 
                     <label>
-                      Notes
-                      <textarea id="guiScreenNotesInput" rows="2" placeholder="Optional notes about this screen."></textarea>
+                      <span data-i18n="gui.screens-notes">Notes</span>
+                      <textarea id="guiScreenNotesInput" rows="2" placeholder="Optional notes about this screen." data-i18n-placeholder="placeholder.gui.screens-notes"></textarea>
                     </label>
 
                     <p id="guiScreenSpecialInfo" class="gui-info-banner hidden"></p>
 
                     <div class="inspector-actions gui-screen-delete-actions">
-                      <button id="guiDeleteScreenButton" class="danger-button" type="button">Delete Screen</button>
+                      <button id="guiDeleteScreenButton" class="danger-button" type="button" data-i18n="gui.screens-delete">
+                        Delete Screen
+                      </button>
                     </div>
                   </section>
 
                   <section class="gui-style-panel gui-screen-tree-panel">
                     <div class="gui-section-subheader gui-screen-tree-header">
                       <div>
-                        <h3>Node Tree</h3>
-                        <p>Use root and child nodes to model the screen language structure.</p>
+                        <h3 data-i18n="gui.screens-node-tree-title">Node Tree</h3>
+                        <p data-i18n="gui.screens-node-tree-desc">Use root and child nodes to model the screen language structure.</p>
                       </div>
                       <div class="gui-inline-actions">
                         <label class="gui-compact-label">
-                          New Node Type
+                          <span data-i18n="gui.screens-new-node-type">New Node Type</span>
                           <select id="guiNewScreenNodeTypeInput"></select>
                         </label>
-                        <button id="guiAddRootNodeButton" class="secondary" type="button">Add Root Node</button>
-                        <button id="guiAddNodeAsChildButton" class="secondary" type="button">Add Child Node</button>
+                        <button id="guiAddRootNodeButton" class="secondary" type="button" data-i18n="gui.screens-add-root-node">Add Root Node</button>
+                        <button id="guiAddNodeAsChildButton" class="secondary" type="button" data-i18n="gui.screens-add-child-node">Add Child Node</button>
                       </div>
                     </div>
 
                     <div id="guiScreenNodeTree" class="gui-tree"></div>
                   </section>
 
-                  <div id="guiScreenNodeEmptyState" class="gui-inline-empty">
+                  <div id="guiScreenNodeEmptyState" class="gui-inline-empty" data-i18n="gui.screens-node-empty-detail">
                     Select a node from the tree to edit its fields.
                   </div>
 
                   <form id="guiScreenNodeForm" class="character-detail-form gui-style-panel gui-screen-node-form hidden">
                     <div class="gui-style-basics">
                       <label>
-                        Node Type
+                        <span data-i18n="gui.screens-node-type">Node Type</span>
                         <select id="guiScreenNodeTypeInput"></select>
                       </label>
 
                       <label>
-                        Title
-                        <input id="guiScreenNodeTitleInput" type="text" placeholder="Shown in the tree only." />
+                        <span data-i18n="gui.screens-node-title">Title</span>
+                        <input id="guiScreenNodeTitleInput" type="text" placeholder="Shown in the tree only." data-i18n-placeholder="placeholder.gui.screens-node-title" />
                       </label>
 
                       <label>
-                        style
-                        <input id="guiScreenNodeStyleInput" type="text" placeholder="e.g. menu_button" />
+                        <span data-i18n="gui.screens-node-style">style</span>
+                        <input id="guiScreenNodeStyleInput" type="text" placeholder="e.g. menu_button" data-i18n-placeholder="placeholder.gui.screens-node-style" />
                       </label>
 
                       <label>
-                        id
-                        <input id="guiScreenNodeIdInput" type="text" placeholder="Optional screen id." />
+                        <span data-i18n="gui.screens-node-id">id</span>
+                        <input id="guiScreenNodeIdInput" type="text" placeholder="Optional screen id." data-i18n-placeholder="placeholder.gui.screens-node-id" />
                       </label>
                     </div>
 
                     <label>
-                      Extra Properties
-                      <textarea id="guiScreenNodePropertiesInput" rows="3" placeholder="Additional screen-language properties, one per line."></textarea>
+                      <span data-i18n="gui.screens-node-extra-properties">Extra Properties</span>
+                      <textarea id="guiScreenNodePropertiesInput" rows="3" placeholder="Additional screen-language properties, one per line." data-i18n-placeholder="placeholder.gui.screens-node-extra-properties"></textarea>
                     </label>
 
                     <div id="guiNodeTextField">
                       <label>
-                        Text / Label
-                        <textarea id="guiNodeTextInput" rows="2" placeholder="Text, input prompt, or button caption."></textarea>
+                        <span data-i18n="gui.screens-node-text">Text / Label</span>
+                        <textarea id="guiNodeTextInput" rows="2" placeholder="Text, input prompt, or button caption." data-i18n-placeholder="placeholder.gui.screens-node-text"></textarea>
                       </label>
                     </div>
 
                     <div class="gui-inline-fields">
                       <div id="guiNodeDisplayableField">
                         <label>
-                          Displayable / Image
-                          <input id="guiNodeDisplayableInput" type="text" placeholder='e.g. "gui/logo.png"' />
+                          <span data-i18n="gui.screens-node-displayable">Displayable / Image</span>
+                          <input id="guiNodeDisplayableInput" type="text" placeholder='e.g. "gui/logo.png"' data-i18n-placeholder="placeholder.gui.screens-node-displayable" />
                         </label>
                       </div>
 
                       <div id="guiNodeHoverDisplayableField">
                         <label>
-                          Hover / Alternate Displayable
-                          <input id="guiNodeHoverDisplayableInput" type="text" placeholder='e.g. "gui/button_hover.png"' />
+                          <span data-i18n="gui.screens-node-hover-displayable">Hover / Alternate Displayable</span>
+                          <input id="guiNodeHoverDisplayableInput" type="text" placeholder='e.g. "gui/button_hover.png"' data-i18n-placeholder="placeholder.gui.screens-node-hover-displayable" />
                         </label>
                       </div>
                     </div>
 
                     <div id="guiNodeConditionField">
                       <label>
-                        Condition
-                        <input id="guiNodeConditionInput" type="text" placeholder="e.g. persistent.unlocked" />
+                        <span data-i18n="gui.screens-node-condition">Condition</span>
+                        <input id="guiNodeConditionInput" type="text" placeholder="e.g. persistent.unlocked" data-i18n-placeholder="placeholder.gui.screens-node-condition" />
                       </label>
                     </div>
 
                     <div class="gui-inline-fields">
                       <div id="guiNodeVariableField">
                         <label>
-                          Variable Name
-                          <input id="guiNodeVariableInput" type="text" placeholder="e.g. item or player_name" />
+                          <span data-i18n="gui.screens-node-variable">Variable Name</span>
+                          <input id="guiNodeVariableInput" type="text" placeholder="e.g. item or player_name" data-i18n-placeholder="placeholder.gui.screens-node-variable" />
                         </label>
                       </div>
 
                       <div id="guiNodeIterableField">
                         <label>
-                          Iterable / Source
-                          <input id="guiNodeIterableInput" type="text" placeholder="e.g. inventory_items" />
+                          <span data-i18n="gui.screens-node-iterable">Iterable / Source</span>
+                          <input id="guiNodeIterableInput" type="text" placeholder="e.g. inventory_items" data-i18n-placeholder="placeholder.gui.screens-node-iterable" />
                         </label>
                       </div>
                     </div>
@@ -463,15 +471,15 @@
                     <div class="gui-inline-fields">
                       <div id="guiNodeTargetScreenField">
                         <label>
-                          Target Screen / Use Target
-                          <input id="guiNodeTargetScreenInput" type="text" placeholder="e.g. save or inventory_panel" />
+                          <span data-i18n="gui.screens-node-target-screen">Target Screen / Use Target</span>
+                          <input id="guiNodeTargetScreenInput" type="text" placeholder="e.g. save or inventory_panel" data-i18n-placeholder="placeholder.gui.screens-node-target-screen" />
                         </label>
                       </div>
 
                       <div id="guiNodeTargetArgsField">
                         <label>
-                          Target Arguments
-                          <input id="guiNodeTargetArgsInput" type="text" placeholder="Comma-separated args or keyword args." />
+                          <span data-i18n="gui.screens-node-target-args">Target Arguments</span>
+                          <input id="guiNodeTargetArgsInput" type="text" placeholder="Comma-separated args or keyword args." data-i18n-placeholder="placeholder.gui.screens-node-target-args" />
                         </label>
                       </div>
                     </div>
@@ -479,15 +487,15 @@
                     <div class="gui-inline-fields">
                       <div id="guiNodeEventField">
                         <label>
-                          Event Name
-                          <input id="guiNodeEventInput" type="text" placeholder='e.g. "show" or "replace"' />
+                          <span data-i18n="gui.screens-node-event">Event Name</span>
+                          <input id="guiNodeEventInput" type="text" placeholder='e.g. "show" or "replace"' data-i18n-placeholder="placeholder.gui.screens-node-event" />
                         </label>
                       </div>
 
                       <div id="guiNodeKeyField">
                         <label>
-                          Key
-                          <input id="guiNodeKeyInput" type="text" placeholder='e.g. "game_menu"' />
+                          <span data-i18n="gui.screens-node-key">Key</span>
+                          <input id="guiNodeKeyInput" type="text" placeholder='e.g. "game_menu"' data-i18n-placeholder="placeholder.gui.screens-node-key" />
                         </label>
                       </div>
                     </div>
@@ -495,14 +503,14 @@
                     <div class="gui-inline-fields">
                       <div id="guiNodeDelayField">
                         <label>
-                          Delay
-                          <input id="guiNodeDelayInput" type="number" step="any" placeholder="e.g. 0.25" />
+                          <span data-i18n="gui.screens-node-delay">Delay</span>
+                          <input id="guiNodeDelayInput" type="number" step="any" placeholder="e.g. 0.25" data-i18n-placeholder="placeholder.gui.screens-node-delay" />
                         </label>
                       </div>
 
                       <div id="guiNodeRepeatsField">
                         <label>
-                          Repeat
+                          <span data-i18n="gui.screens-node-repeat">Repeat</span>
                           <select id="guiNodeRepeatsInput">
                             <option value="false">False</option>
                             <option value="true">True</option>
@@ -514,15 +522,15 @@
                     <div class="gui-inline-fields">
                       <div id="guiNodeDefaultNameField">
                         <label>
-                          Default Name
-                          <input id="guiNodeDefaultNameInput" type="text" placeholder="e.g. current_page" />
+                          <span data-i18n="gui.screens-node-default-name">Default Name</span>
+                          <input id="guiNodeDefaultNameInput" type="text" placeholder="e.g. current_page" data-i18n-placeholder="placeholder.gui.screens-node-default-name" />
                         </label>
                       </div>
 
                       <div id="guiNodeDefaultValueField">
                         <label>
-                          Default Value
-                          <input id="guiNodeDefaultValueInput" type="text" placeholder="e.g. 1 or []" />
+                          <span data-i18n="gui.screens-node-default-value">Default Value</span>
+                          <input id="guiNodeDefaultValueInput" type="text" placeholder="e.g. 1 or []" data-i18n-placeholder="placeholder.gui.screens-node-default-value" />
                         </label>
                       </div>
                     </div>
@@ -530,140 +538,144 @@
                     <div class="gui-inline-fields">
                       <div id="guiNodeTransformField">
                         <label>
-                          Transform / ATL Name
-                          <input id="guiNodeTransformInput" type="text" placeholder="e.g. menu_fade" />
+                          <span data-i18n="gui.screens-node-transform">Transform / ATL Name</span>
+                          <input id="guiNodeTransformInput" type="text" placeholder="e.g. menu_fade" data-i18n-placeholder="placeholder.gui.screens-node-transform" />
                         </label>
                       </div>
 
                       <div id="guiNodeSidePositionsField">
                         <label>
-                          side positions
-                          <input id="guiNodeSidePositionsInput" type="text" placeholder='e.g. "c tl tr"' />
+                          <span data-i18n="gui.screens-node-side-positions">side positions</span>
+                          <input id="guiNodeSidePositionsInput" type="text" placeholder='e.g. "c tl tr"' data-i18n-placeholder="placeholder.gui.screens-node-side-positions" />
                         </label>
                       </div>
                     </div>
 
                     <div id="guiNodeGridFields" class="gui-inline-fields">
                       <label>
-                        Grid Columns
-                        <input id="guiNodeGridColumnsInput" type="number" step="1" placeholder="e.g. 2" />
+                        <span data-i18n="gui.screens-node-grid-columns">Grid Columns</span>
+                        <input id="guiNodeGridColumnsInput" type="number" step="1" placeholder="e.g. 2" data-i18n-placeholder="placeholder.gui.screens-node-grid-columns" />
                       </label>
 
                       <label>
-                        Grid Rows
-                        <input id="guiNodeGridRowsInput" type="number" step="1" placeholder="e.g. 3" />
+                        <span data-i18n="gui.screens-node-grid-rows">Grid Rows</span>
+                        <input id="guiNodeGridRowsInput" type="number" step="1" placeholder="e.g. 3" data-i18n-placeholder="placeholder.gui.screens-node-grid-rows" />
                       </label>
                     </div>
 
                     <div id="guiNodeActionFields" class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Action</h3>
-                          <p>Choose a common action or fall back to a raw action expression.</p>
+                          <h3 data-i18n="gui.screens-action-title">Action</h3>
+                          <p data-i18n="gui.screens-action-desc">Choose a common action or fall back to a raw action expression.</p>
                         </div>
                       </div>
 
                       <div class="gui-inline-fields">
                         <label>
-                          Action Kind
+                          <span data-i18n="gui.screens-action-kind">Action Kind</span>
                           <select id="guiNodeActionKindInput"></select>
                         </label>
 
                         <label>
-                          Action Args
-                          <input id="guiNodeActionArgsInput" type="text" placeholder='e.g. "load" or flag_name, True' />
+                          <span data-i18n="gui.screens-action-args">Action Args</span>
+                          <input id="guiNodeActionArgsInput" type="text" placeholder='e.g. "load" or flag_name, True' data-i18n-placeholder="placeholder.gui.screens-action-args" />
                         </label>
                       </div>
 
                       <label>
-                        Raw Action Expression
-                        <input id="guiNodeActionRawInput" type="text" placeholder='e.g. [SetVariable("page", 2), Return()]' />
+                        <span data-i18n="gui.screens-action-raw">Raw Action Expression</span>
+                        <input id="guiNodeActionRawInput" type="text" placeholder='e.g. [SetVariable("page", 2), Return()]' data-i18n-placeholder="placeholder.gui.screens-action-raw" />
                       </label>
                     </div>
 
                     <div id="guiNodeValueFields" class="gui-style-panel">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3 id="guiNodeValuePanelTitle">Value</h3>
-                          <p id="guiNodeValuePanelDescription">Used by bars, inputs, and other value-driven displayables.</p>
+                          <h3 id="guiNodeValuePanelTitle" data-i18n="gui.screens-value-title">Value</h3>
+                          <p id="guiNodeValuePanelDescription" data-i18n="gui.screens-value-desc">Used by bars, inputs, and other value-driven displayables.</p>
                         </div>
                       </div>
 
                       <div class="gui-inline-fields">
                         <label>
-                          Value Kind
+                          <span data-i18n="gui.screens-value-kind">Value Kind</span>
                           <select id="guiNodeValueKindInput"></select>
                         </label>
 
                         <label>
-                          Value Args
-                          <input id="guiNodeValueArgsInput" type="text" placeholder='e.g. "text speed" or player_name' />
+                          <span data-i18n="gui.screens-value-args">Value Args</span>
+                          <input id="guiNodeValueArgsInput" type="text" placeholder='e.g. "text speed" or player_name' data-i18n-placeholder="placeholder.gui.screens-value-args" />
                         </label>
                       </div>
 
                       <label>
-                        Raw Value Expression
-                        <input id="guiNodeValueRawInput" type="text" placeholder='e.g. Preference("music volume")' />
+                        <span data-i18n="gui.screens-value-raw">Raw Value Expression</span>
+                        <input id="guiNodeValueRawInput" type="text" placeholder='e.g. Preference("music volume")' data-i18n-placeholder="placeholder.gui.screens-value-raw" />
                       </label>
                     </div>
 
                     <div id="guiNodeInputFields" class="gui-style-panel hidden">
                       <div class="gui-style-panel-header">
                         <div>
-                          <h3>Input Settings</h3>
-                          <p>Configure standalone screen input widgets, or the special <code>screen input(prompt)</code> field used by <code>renpy.input()</code>.</p>
+                          <h3 data-i18n="gui.screens-input-title">Input Settings</h3>
+                          <p>
+                            <span data-i18n="gui.screens-input-desc-prefix">Configure standalone screen input widgets, or the special </span><code>screen input(prompt)</code><span data-i18n="gui.screens-input-desc-suffix"> field used by </span><code>renpy.input()</code><span data-i18n="gui.screens-input-desc-end">.</span>
+                          </p>
                         </div>
                       </div>
 
                       <div class="gui-inline-fields">
                         <label>
-                          Initial Text
-                          <input id="guiNodeInputDefaultTextInput" type="text" placeholder='e.g. "" or persistent.player_name' />
+                          <span data-i18n="gui.screens-input-initial-text">Initial Text</span>
+                          <input id="guiNodeInputDefaultTextInput" type="text" placeholder='e.g. "" or persistent.player_name' data-i18n-placeholder="placeholder.gui.screens-input-initial-text" />
                         </label>
 
                         <label>
-                          Allow Characters
-                          <input id="guiNodeInputAllowInput" type="text" placeholder="Optional allowed characters list." />
+                          <span data-i18n="gui.screens-input-allow">Allow Characters</span>
+                          <input id="guiNodeInputAllowInput" type="text" placeholder="Optional allowed characters list." data-i18n-placeholder="placeholder.gui.screens-input-allow" />
                         </label>
 
                         <label>
-                          Exclude Characters
-                          <input id="guiNodeInputExcludeInput" type="text" placeholder='e.g. {} or "\\n"' />
+                          <span data-i18n="gui.screens-input-exclude">Exclude Characters</span>
+                          <input id="guiNodeInputExcludeInput" type="text" placeholder='e.g. {} or "\\n"' data-i18n-placeholder="placeholder.gui.screens-input-exclude" />
                         </label>
                       </div>
 
                       <div class="gui-inline-fields">
                         <label>
-                          Max Length
-                          <input id="guiNodeInputLengthInput" type="number" step="1" placeholder="e.g. 32" />
+                          <span data-i18n="gui.screens-input-max-length">Max Length</span>
+                          <input id="guiNodeInputLengthInput" type="number" step="1" placeholder="e.g. 32" data-i18n-placeholder="placeholder.gui.screens-input-max-length" />
                         </label>
 
                         <label>
-                          Pixel Width
-                          <input id="guiNodeInputPixelWidthInput" type="text" placeholder="e.g. 360" />
+                          <span data-i18n="gui.screens-input-pixel-width">Pixel Width</span>
+                          <input id="guiNodeInputPixelWidthInput" type="text" placeholder="e.g. 360" data-i18n-placeholder="placeholder.gui.screens-input-pixel-width" />
                         </label>
 
                         <label>
-                          Mask Character
-                          <input id="guiNodeInputMaskInput" type="text" placeholder='e.g. "*"' />
+                          <span data-i18n="gui.screens-input-mask">Mask Character</span>
+                          <input id="guiNodeInputMaskInput" type="text" placeholder='e.g. "*"' data-i18n-placeholder="placeholder.gui.screens-input-mask" />
                         </label>
                       </div>
 
                       <label class="character-checkbox">
                         <input id="guiNodeInputCopyPasteInput" type="checkbox" />
-                        <span>Allow copy / paste</span>
+                        <span data-i18n="gui.screens-input-copy-paste">Allow copy / paste</span>
                       </label>
 
-                      <p class="gui-info-banner">For the special <code>input</code> screen, set the node <code>id</code> to <code>input</code>. For standalone screen widgets, bind an <code>InputValue</code> above.</p>
+                      <p class="gui-info-banner">
+                        <span data-i18n="gui.screens-input-info-prefix">For the special </span><code>input</code><span data-i18n="gui.screens-input-info-mid"> screen, set the node </span><code>id</code><span data-i18n="gui.screens-input-info-mid2"> to </span><code>input</code><span data-i18n="gui.screens-input-info-suffix">. For standalone screen widgets, bind an </span><code>InputValue</code><span data-i18n="gui.screens-input-info-end"> above.</span>
+                      </p>
                     </div>
 
                     <p id="guiNodeChildrenHint" class="gui-info-banner"></p>
 
                     <div class="inspector-actions">
-                      <button id="guiAddChildNodeButton" class="secondary" type="button">Add Child</button>
-                      <button id="guiMoveNodeUpButton" class="secondary" type="button">Move Up</button>
-                      <button id="guiMoveNodeDownButton" class="secondary" type="button">Move Down</button>
-                      <button id="guiDeleteNodeButton" class="danger-button" type="button">Delete Node</button>
+                      <button id="guiAddChildNodeButton" class="secondary" type="button" data-i18n="gui.screens-add-child">Add Child</button>
+                      <button id="guiMoveNodeUpButton" class="secondary" type="button" data-i18n="gui.screens-move-up">Move Up</button>
+                      <button id="guiMoveNodeDownButton" class="secondary" type="button" data-i18n="gui.screens-move-down">Move Down</button>
+                      <button id="guiDeleteNodeButton" class="danger-button" type="button" data-i18n="gui.screens-delete-node">Delete Node</button>
                     </div>
                   </form>
                 </div>
@@ -672,8 +684,10 @@
               <aside class="gui-column gui-preview-column gui-screen-preview-column">
                 <div class="gui-panel-header">
                   <div>
-                    <h2>Preview & Code</h2>
-                    <p>Approximate HTML preview, generated <code>screen</code> code, and screen-level diagnostics.</p>
+                    <h2 data-i18n="gui.screens-preview-title">Preview & Code</h2>
+                    <p>
+                      <span data-i18n="gui.screens-preview-desc-prefix">Approximate HTML preview, generated </span><code>screen</code><span data-i18n="gui.screens-preview-desc-suffix"> code, and screen-level diagnostics.</span>
+                    </p>
                   </div>
                 </div>
 
@@ -689,46 +703,46 @@
               <section class="gui-style-panel">
                 <div class="gui-style-panel-header">
                   <div>
-                    <h2>Replay</h2>
-                    <p>Generate a replay menu from labels that are marked as replay-enabled in the main visual editor.</p>
+                    <h2 data-i18n="gui.extras-replay-title">Replay</h2>
+                    <p data-i18n="gui.extras-replay-desc">Generate a replay menu from labels that are marked as replay-enabled in the main visual editor.</p>
                   </div>
                 </div>
 
                 <form id="guiReplayForm" class="character-detail-form">
                   <div class="gui-style-basics">
                     <label>
-                      Screen Name
-                      <input id="guiReplayScreenNameInput" type="text" placeholder="e.g. replay_gallery" />
+                      <span data-i18n="gui.extras-screen-name">Screen Name</span>
+                      <input id="guiReplayScreenNameInput" type="text" placeholder="e.g. replay_gallery" data-i18n-placeholder="placeholder.gui.extras-replay-screen-name" />
                     </label>
 
                     <label>
-                      Menu Button Label
-                      <input id="guiReplayMenuLabelInput" type="text" placeholder="e.g. Memories" />
+                      <span data-i18n="gui.extras-menu-button-label">Menu Button Label</span>
+                      <input id="guiReplayMenuLabelInput" type="text" placeholder="e.g. Memories" data-i18n-placeholder="placeholder.gui.extras-replay-menu-label" />
                     </label>
 
                     <label>
-                      Title
-                      <input id="guiReplayTitleInput" type="text" placeholder="e.g. Replay Gallery" />
+                      <span data-i18n="gui.extras-title">Title</span>
+                      <input id="guiReplayTitleInput" type="text" placeholder="e.g. Replay Gallery" data-i18n-placeholder="placeholder.gui.extras-replay-title" />
                     </label>
 
                     <label>
-                      Return Action
-                      <input id="guiReplayReturnActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' />
+                      <span data-i18n="gui.extras-return-action">Return Action</span>
+                      <input id="guiReplayReturnActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' data-i18n-placeholder="placeholder.gui.extras-return-action" />
                     </label>
                   </div>
 
                   <label class="character-checkbox">
                     <input id="guiReplayTagMenuInput" type="checkbox" />
-                    <span>Emit <code>tag menu</code> on the replay screen</span>
+                    <span><span data-i18n="gui.extras-replay-tag-prefix">Emit </span><code>tag menu</code><span data-i18n="gui.extras-replay-tag-suffix"> on the replay screen</span></span>
                   </label>
 
                   <label>
-                    Empty State Text
-                    <input id="guiReplayEmptyTextInput" type="text" placeholder="Shown when no replay labels are enabled." />
+                    <span data-i18n="gui.extras-empty-state-text">Empty State Text</span>
+                    <input id="guiReplayEmptyTextInput" type="text" placeholder="Shown when no replay labels are enabled." data-i18n-placeholder="placeholder.gui.extras-replay-empty-text" />
                   </label>
 
                   <div>
-                    <p class="section-label secondary-label">Enabled Replay Labels</p>
+                    <p class="section-label secondary-label" data-i18n="gui.extras-replay-labels">Enabled Replay Labels</p>
                     <div id="guiReplayLabelList" class="gui-chip-list"></div>
                   </div>
 
@@ -739,112 +753,112 @@
               <section class="gui-style-panel">
                 <div class="gui-style-panel-header">
                   <div>
-                    <h2>Music Rooms</h2>
-                    <p>Build menu screens backed by <code>MusicRoom()</code> using imported music resources or manual file paths.</p>
+                    <h2 data-i18n="gui.extras-music-title">Music Rooms</h2>
+                    <p><span data-i18n="gui.extras-music-desc-prefix">Build menu screens backed by </span><code>MusicRoom()</code><span data-i18n="gui.extras-music-desc-suffix"> using imported music resources or manual file paths.</span></p>
                   </div>
                 </div>
 
                 <div class="gui-extra-entity-layout">
                   <aside class="gui-extra-entity-list">
-                    <div id="guiMusicRoomEmpty" class="panel-empty-state hidden">
+                    <div id="guiMusicRoomEmpty" class="panel-empty-state hidden" data-i18n="gui.extras-music-empty">
                       No music rooms yet. Create one to start mapping tracks and controls.
                     </div>
 
                     <div id="guiMusicRoomList" class="character-list gui-entity-list"></div>
 
-                    <button id="newGuiMusicRoomButton" class="primary gui-bottom-button" type="button">New Music Room</button>
+                    <button id="newGuiMusicRoomButton" class="primary gui-bottom-button" type="button" data-i18n="gui.extras-music-new">New Music Room</button>
                   </aside>
 
                   <section class="gui-extra-entity-detail">
-                    <div id="guiMusicRoomEmptyState" class="gui-empty-detail">
+                    <div id="guiMusicRoomEmptyState" class="gui-empty-detail" data-i18n="gui.extras-music-empty-detail">
                       Select a music room to configure its track list and generated screen.
                     </div>
 
                     <form id="guiMusicRoomForm" class="character-detail-form hidden">
                       <div class="gui-style-basics">
                         <label>
-                          Room Name
-                          <input id="guiMusicRoomNameInput" type="text" placeholder="e.g. Bonus Music" />
+                          <span data-i18n="gui.extras-music-room-name">Room Name</span>
+                          <input id="guiMusicRoomNameInput" type="text" placeholder="e.g. Bonus Music" data-i18n-placeholder="placeholder.gui.extras-music-room-name" />
                         </label>
 
                         <label>
-                          Instance Name
-                          <input id="guiMusicRoomInstanceInput" type="text" placeholder="e.g. bonus_music_room" />
+                          <span data-i18n="gui.extras-instance-name">Instance Name</span>
+                          <input id="guiMusicRoomInstanceInput" type="text" placeholder="e.g. bonus_music_room" data-i18n-placeholder="placeholder.gui.extras-music-instance-name" />
                         </label>
 
                         <label>
-                          Screen Name
-                          <input id="guiMusicRoomScreenInput" type="text" placeholder="e.g. bonus_music_room_screen" />
+                          <span data-i18n="gui.extras-screen-name">Screen Name</span>
+                          <input id="guiMusicRoomScreenInput" type="text" placeholder="e.g. bonus_music_room_screen" data-i18n-placeholder="placeholder.gui.extras-music-screen-name" />
                         </label>
 
                         <label>
-                          Menu Button Label
-                          <input id="guiMusicRoomMenuLabelInput" type="text" placeholder="e.g. Music Room" />
+                          <span data-i18n="gui.extras-menu-button-label">Menu Button Label</span>
+                          <input id="guiMusicRoomMenuLabelInput" type="text" placeholder="e.g. Music Room" data-i18n-placeholder="placeholder.gui.extras-music-menu-label" />
                         </label>
                       </div>
 
                       <div class="gui-style-basics">
                         <label>
-                          Channel
-                          <input id="guiMusicRoomChannelInput" type="text" placeholder="e.g. music" />
+                          <span data-i18n="gui.extras-channel">Channel</span>
+                          <input id="guiMusicRoomChannelInput" type="text" placeholder="e.g. music" data-i18n-placeholder="placeholder.gui.extras-music-channel" />
                         </label>
 
                         <label>
-                          Fade Out
-                          <input id="guiMusicRoomFadeoutInput" type="text" placeholder="e.g. 1.0" />
+                          <span data-i18n="gui.extras-fade-out">Fade Out</span>
+                          <input id="guiMusicRoomFadeoutInput" type="text" placeholder="e.g. 1.0" data-i18n-placeholder="placeholder.gui.extras-fade-out" />
                         </label>
 
                         <label>
-                          Fade In
-                          <input id="guiMusicRoomFadeinInput" type="text" placeholder="e.g. 0.0" />
+                          <span data-i18n="gui.extras-fade-in">Fade In</span>
+                          <input id="guiMusicRoomFadeinInput" type="text" placeholder="e.g. 0.0" data-i18n-placeholder="placeholder.gui.extras-fade-in" />
                         </label>
 
                         <label>
-                          Stop Action
-                          <input id="guiMusicRoomRestoreActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' />
+                          <span data-i18n="gui.extras-stop-action">Stop Action</span>
+                          <input id="guiMusicRoomRestoreActionInput" type="text" placeholder='e.g. Return() or ShowMenu("extras")' data-i18n-placeholder="placeholder.gui.extras-return-action" />
                         </label>
                       </div>
 
                       <div class="gui-checkbox-row">
                         <label class="character-checkbox">
                           <input id="guiMusicRoomLoopInput" type="checkbox" />
-                          <span>Loop</span>
+                          <span data-i18n="gui.extras-loop">Loop</span>
                         </label>
 
                         <label class="character-checkbox">
                           <input id="guiMusicRoomSingleTrackInput" type="checkbox" />
-                          <span>Single Track</span>
+                          <span data-i18n="gui.extras-single-track">Single Track</span>
                         </label>
 
                         <label class="character-checkbox">
                           <input id="guiMusicRoomShuffleInput" type="checkbox" />
-                          <span>Shuffle</span>
+                          <span data-i18n="gui.extras-shuffle">Shuffle</span>
                         </label>
 
                         <label class="character-checkbox">
                           <input id="guiMusicRoomShowVolumeInput" type="checkbox" />
-                          <span>Add Music Volume Bar</span>
+                          <span data-i18n="gui.extras-add-music-volume-bar">Add Music Volume Bar</span>
                         </label>
 
                         <label class="character-checkbox">
                           <input id="guiMusicRoomAutoPlayInput" type="checkbox" />
-                          <span>Play On Screen Show</span>
+                          <span data-i18n="gui.extras-play-on-show">Play On Screen Show</span>
                         </label>
                       </div>
 
                       <div>
                         <div class="gui-section-subheader">
                           <div>
-                            <h3>Tracks</h3>
-                            <p>Each row can reference an imported music definition or fall back to a manual file path.</p>
+                            <h3 data-i18n="gui.extras-tracks">Tracks</h3>
+                            <p data-i18n="gui.extras-tracks-desc">Each row can reference an imported music definition or fall back to a manual file path.</p>
                           </div>
-                          <button id="guiMusicRoomAddTrackButton" class="secondary" type="button">Add Track</button>
+                          <button id="guiMusicRoomAddTrackButton" class="secondary" type="button" data-i18n="gui.extras-add-track">Add Track</button>
                         </div>
                         <div id="guiMusicRoomTrackList" class="gui-nested-list"></div>
                       </div>
 
                       <div class="inspector-actions">
-                        <button id="guiDeleteMusicRoomButton" class="danger-button" type="button">Delete Music Room</button>
+                        <button id="guiDeleteMusicRoomButton" class="danger-button" type="button" data-i18n="gui.extras-delete-music-room">Delete Music Room</button>
                       </div>
 
                       <pre id="guiMusicRoomCodePreview" class="code-preview"></pre>
@@ -856,124 +870,124 @@
               <section class="gui-style-panel">
                 <div class="gui-style-panel-header">
                   <div>
-                    <h2>Galleries</h2>
-                    <p>Define <code>Gallery()</code> objects, thumbnail buttons, and generated gallery menu screens.</p>
+                    <h2 data-i18n="gui.extras-gallery-title">Galleries</h2>
+                    <p><span data-i18n="gui.extras-gallery-desc-prefix">Define </span><code>Gallery()</code><span data-i18n="gui.extras-gallery-desc-suffix"> objects, thumbnail buttons, and generated gallery menu screens.</span></p>
                   </div>
                 </div>
 
                 <div class="gui-extra-entity-layout">
                   <aside class="gui-extra-entity-list">
-                    <div id="guiGalleryEmpty" class="panel-empty-state hidden">
+                    <div id="guiGalleryEmpty" class="panel-empty-state hidden" data-i18n="gui.extras-gallery-empty">
                       No galleries yet. Create one to wire thumbnails to unlockable CG images.
                     </div>
 
                     <div id="guiGalleryList" class="character-list gui-entity-list"></div>
 
-                    <button id="newGuiGalleryButton" class="primary gui-bottom-button" type="button">New Gallery</button>
+                    <button id="newGuiGalleryButton" class="primary gui-bottom-button" type="button" data-i18n="gui.extras-gallery-new">New Gallery</button>
                   </aside>
 
                   <section class="gui-extra-entity-detail">
-                    <div id="guiGalleryEmptyState" class="gui-empty-detail">
+                    <div id="guiGalleryEmptyState" class="gui-empty-detail" data-i18n="gui.extras-gallery-empty-detail">
                       Select a gallery to configure its object fields, thumbnail buttons, and generated screen.
                     </div>
 
                     <form id="guiGalleryForm" class="character-detail-form hidden">
                       <div class="gui-style-basics">
                         <label>
-                          Gallery Name
-                          <input id="guiGalleryNameInput" type="text" placeholder="e.g. CG Gallery" />
+                          <span data-i18n="gui.extras-gallery-name">Gallery Name</span>
+                          <input id="guiGalleryNameInput" type="text" placeholder="e.g. CG Gallery" data-i18n-placeholder="placeholder.gui.extras-gallery-name" />
                         </label>
 
                         <label>
-                          Instance Name
-                          <input id="guiGalleryInstanceInput" type="text" placeholder="e.g. cg_gallery" />
+                          <span data-i18n="gui.extras-instance-name">Instance Name</span>
+                          <input id="guiGalleryInstanceInput" type="text" placeholder="e.g. cg_gallery" data-i18n-placeholder="placeholder.gui.extras-gallery-instance-name" />
                         </label>
 
                         <label>
-                          Screen Name
-                          <input id="guiGalleryScreenInput" type="text" placeholder="e.g. cg_gallery_screen" />
+                          <span data-i18n="gui.extras-screen-name">Screen Name</span>
+                          <input id="guiGalleryScreenInput" type="text" placeholder="e.g. cg_gallery_screen" data-i18n-placeholder="placeholder.gui.extras-gallery-screen-name" />
                         </label>
 
                         <label>
-                          Menu Button Label
-                          <input id="guiGalleryMenuLabelInput" type="text" placeholder="e.g. Gallery" />
+                          <span data-i18n="gui.extras-menu-button-label">Menu Button Label</span>
+                          <input id="guiGalleryMenuLabelInput" type="text" placeholder="e.g. Gallery" data-i18n-placeholder="placeholder.gui.extras-gallery-menu-label" />
                         </label>
                       </div>
 
                       <div class="gui-style-basics">
                         <label>
-                          Background
-                          <input id="guiGalleryBackgroundInput" type="text" placeholder='e.g. "gui/gallery_bg.png" or bg_beach' />
+                          <span data-i18n="gui.extras-background">Background</span>
+                          <input id="guiGalleryBackgroundInput" type="text" placeholder='e.g. "gui/gallery_bg.png" or bg_beach' data-i18n-placeholder="placeholder.gui.extras-gallery-background" />
                         </label>
 
                         <label>
-                          Grid Columns
-                          <input id="guiGalleryColumnsInput" type="text" placeholder="e.g. 3" />
+                          <span data-i18n="gui.extras-grid-columns">Grid Columns</span>
+                          <input id="guiGalleryColumnsInput" type="text" placeholder="e.g. 3" data-i18n-placeholder="placeholder.gui.extras-gallery-columns" />
                         </label>
 
                         <label>
-                          Transition
-                          <input id="guiGalleryTransitionInput" type="text" placeholder="e.g. dissolve" />
+                          <span data-i18n="gui.extras-transition">Transition</span>
+                          <input id="guiGalleryTransitionInput" type="text" placeholder="e.g. dissolve" data-i18n-placeholder="placeholder.gui.extras-gallery-transition" />
                         </label>
 
                         <label>
-                          Slideshow Delay
-                          <input id="guiGallerySlideshowDelayInput" type="text" placeholder="e.g. 5.0" />
+                          <span data-i18n="gui.extras-slideshow-delay">Slideshow Delay</span>
+                          <input id="guiGallerySlideshowDelayInput" type="text" placeholder="e.g. 5.0" data-i18n-placeholder="placeholder.gui.extras-gallery-slideshow-delay" />
                         </label>
                       </div>
 
                       <div class="gui-checkbox-row">
                         <label class="character-checkbox">
                           <input id="guiGalleryTagMenuInput" type="checkbox" />
-                          <span>Emit <code>tag menu</code></span>
+                          <span><span data-i18n="gui.extras-gallery-tag-prefix">Emit </span><code>tag menu</code></span>
                         </label>
 
                         <label class="character-checkbox">
                           <input id="guiGalleryNavigationInput" type="checkbox" />
-                          <span>Show Gallery Navigation</span>
+                          <span data-i18n="gui.extras-show-gallery-navigation">Show Gallery Navigation</span>
                         </label>
 
                         <label class="character-checkbox">
                           <input id="guiGallerySpanButtonsInput" type="checkbox" />
-                          <span>Allow Span Buttons</span>
+                          <span data-i18n="gui.extras-allow-span-buttons">Allow Span Buttons</span>
                         </label>
 
                         <label class="character-checkbox">
                           <input id="guiGalleryUnlockedAdvanceInput" type="checkbox" />
-                          <span>Advance Through Unlocked Images Only</span>
+                          <span data-i18n="gui.extras-unlocked-advance">Advance Through Unlocked Images Only</span>
                         </label>
                       </div>
 
                       <div class="gui-style-basics">
                         <label>
-                          Locked Button Displayable
-                          <input id="guiGalleryLockedButtonInput" type="text" placeholder='e.g. "gui/gallery_locked.png"' />
+                          <span data-i18n="gui.extras-locked-button">Locked Button Displayable</span>
+                          <input id="guiGalleryLockedButtonInput" type="text" placeholder='e.g. "gui/gallery_locked.png"' data-i18n-placeholder="placeholder.gui.extras-gallery-locked-button" />
                         </label>
 
                         <label>
-                          Hover Border
-                          <input id="guiGalleryHoverBorderInput" type="text" placeholder='e.g. "gui/gallery_hover.png"' />
+                          <span data-i18n="gui.extras-hover-border">Hover Border</span>
+                          <input id="guiGalleryHoverBorderInput" type="text" placeholder='e.g. "gui/gallery_hover.png"' data-i18n-placeholder="placeholder.gui.extras-gallery-hover-border" />
                         </label>
 
                         <label>
-                          Idle Border
-                          <input id="guiGalleryIdleBorderInput" type="text" placeholder='e.g. "gui/gallery_idle.png"' />
+                          <span data-i18n="gui.extras-idle-border">Idle Border</span>
+                          <input id="guiGalleryIdleBorderInput" type="text" placeholder='e.g. "gui/gallery_idle.png"' data-i18n-placeholder="placeholder.gui.extras-gallery-idle-border" />
                         </label>
                       </div>
 
                       <div>
                         <div class="gui-section-subheader">
                           <div>
-                            <h3>Buttons</h3>
-                            <p>Each button can hold multiple image lines. One line equals one <code>g.image</code> or <code>g.unlock_image</code> call.</p>
+                            <h3 data-i18n="gui.extras-buttons">Buttons</h3>
+                            <p><span data-i18n="gui.extras-buttons-desc-prefix">Each button can hold multiple image lines. One line equals one </span><code>g.image</code><span data-i18n="gui.extras-buttons-desc-mid"> or </span><code>g.unlock_image</code><span data-i18n="gui.extras-buttons-desc-suffix"> call.</span></p>
                           </div>
-                          <button id="guiGalleryAddButtonButton" class="secondary" type="button">Add Button</button>
+                          <button id="guiGalleryAddButtonButton" class="secondary" type="button" data-i18n="gui.extras-add-button">Add Button</button>
                         </div>
                         <div id="guiGalleryButtonList" class="gui-nested-list"></div>
                       </div>
 
                       <div class="inspector-actions">
-                        <button id="guiDeleteGalleryButton" class="danger-button" type="button">Delete Gallery</button>
+                        <button id="guiDeleteGalleryButton" class="danger-button" type="button" data-i18n="gui.extras-delete-gallery">Delete Gallery</button>
                       </div>
 
                       <pre id="guiGalleryCodePreview" class="code-preview"></pre>

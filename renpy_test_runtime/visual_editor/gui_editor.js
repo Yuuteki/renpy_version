@@ -28,6 +28,7 @@ const i18n = window.visualEditorI18n || {
   applyTranslations() {},
 };
 const t = (key, vars = {}) => i18n.t(key, vars);
+const tt = (value) => i18n.translateText ? i18n.translateText(value) : value;
 const projectPath = params.get("project") || "";
 const bridgeUrl = params.get("bridge") || "";
 const bridgeToken = params.get("token") || "";
@@ -431,24 +432,24 @@ const defaultGuiState = {
 };
 
 const stylePrefixMeta = [
-  { id: "base", label: "Base", codePrefix: "", summary: "No state prefix. Applies as the default value for the property." },
-  { id: "idle", label: "Idle", codePrefix: "idle_", summary: "Used when the widget is not focused." },
-  { id: "hover", label: "Hover", codePrefix: "hover_", summary: "Used when the widget is focused or hovered." },
-  { id: "selected", label: "Selected", codePrefix: "selected_", summary: "Used for selected widgets before more specific selected states." },
-  { id: "insensitive", label: "Insensitive", codePrefix: "insensitive_", summary: "Used when the widget is disabled or unavailable." },
-  { id: "selected_idle", label: "Selected Idle", codePrefix: "selected_idle_", summary: "Used when selected and not focused." },
-  { id: "selected_hover", label: "Selected Hover", codePrefix: "selected_hover_", summary: "Used when selected and focused." },
-  { id: "selected_insensitive", label: "Selected Disabled", codePrefix: "selected_insensitive_", summary: "Used when selected but disabled." },
+  { id: "base", label: "Base", labelKey: "gui.styles-prefix.base.label", codePrefix: "", summaryKey: "gui.styles-prefix.base.summary" },
+  { id: "idle", label: "Idle", labelKey: "gui.styles-prefix.idle.label", codePrefix: "idle_", summaryKey: "gui.styles-prefix.idle.summary" },
+  { id: "hover", label: "Hover", labelKey: "gui.styles-prefix.hover.label", codePrefix: "hover_", summaryKey: "gui.styles-prefix.hover.summary" },
+  { id: "selected", label: "Selected", labelKey: "gui.styles-prefix.selected.label", codePrefix: "selected_", summaryKey: "gui.styles-prefix.selected.summary" },
+  { id: "insensitive", label: "Insensitive", labelKey: "gui.styles-prefix.insensitive.label", codePrefix: "insensitive_", summaryKey: "gui.styles-prefix.insensitive.summary" },
+  { id: "selected_idle", label: "Selected Idle", labelKey: "gui.styles-prefix.selected_idle.label", codePrefix: "selected_idle_", summaryKey: "gui.styles-prefix.selected_idle.summary" },
+  { id: "selected_hover", label: "Selected Hover", labelKey: "gui.styles-prefix.selected_hover.label", codePrefix: "selected_hover_", summaryKey: "gui.styles-prefix.selected_hover.summary" },
+  { id: "selected_insensitive", label: "Selected Disabled", labelKey: "gui.styles-prefix.selected_insensitive.label", codePrefix: "selected_insensitive_", summaryKey: "gui.styles-prefix.selected_insensitive.summary" },
 ];
 
 const styleCategoryMeta = {
-  text: { label: "Text", spotlightPanelId: "text" },
-  window: { label: "Window", spotlightPanelId: "window" },
-  button: { label: "Button", spotlightPanelId: "button" },
-  bar: { label: "Bar", spotlightPanelId: "bar" },
-  box: { label: "Box", spotlightPanelId: "box" },
-  grid: { label: "Grid", spotlightPanelId: "grid" },
-  margin: { label: "Margin", spotlightPanelId: "margin" },
+  text: { label: "Text", labelKey: "gui.styles-category.text", spotlightPanelId: "text" },
+  window: { label: "Window", labelKey: "gui.styles-category.window", spotlightPanelId: "window" },
+  button: { label: "Button", labelKey: "gui.styles-category.button", spotlightPanelId: "button" },
+  bar: { label: "Bar", labelKey: "gui.styles-category.bar", spotlightPanelId: "bar" },
+  box: { label: "Box", labelKey: "gui.styles-category.box", spotlightPanelId: "box" },
+  grid: { label: "Grid", labelKey: "gui.styles-category.grid", spotlightPanelId: "grid" },
+  margin: { label: "Margin", labelKey: "gui.styles-category.margin", spotlightPanelId: "margin" },
 };
 
 const stylePropertyGroups = {
@@ -1115,7 +1116,8 @@ let guiHealthState = {
 let guiHealthRefreshTimer = null;
 let guiProjectSyncMeta = {
   level: hasBridge ? "warn" : "bad",
-  text: hasBridge ? t("sync.project_json.initial_wait_gui") : t("sync.bridge.disconnected"),
+  key: hasBridge ? "sync.project_json.initial_wait_gui" : "sync.bridge.disconnected",
+  vars: {},
 };
 let activeStyleId = projectState.gui.styles[0]?.id ?? null;
 let activeStylePrefixId = "base";
@@ -1258,8 +1260,16 @@ function formatTimestamp(timestamp) {
   }
 }
 
-function setGuiProjectSyncMeta(level, text) {
-  guiProjectSyncMeta = { level, text };
+function setGuiProjectSyncMeta(level, key, vars = {}) {
+  guiProjectSyncMeta = { level, key, vars };
+}
+
+function getGuiProjectSyncText() {
+  if (guiProjectSyncMeta.key) {
+    return t(guiProjectSyncMeta.key, guiProjectSyncMeta.vars || {});
+  }
+
+  return "";
 }
 
 async function refreshGuiHealth() {
@@ -1319,16 +1329,16 @@ function queueBridgeProjectSave() {
   }
 
   window.clearTimeout(bridgeSaveTimer);
-  setGuiProjectSyncMeta("warn", t("sync.gui.manual_save"));
+  setGuiProjectSyncMeta("warn", "sync.gui.manual_save");
   bridgeSaveTimer = window.setTimeout(async () => {
     try {
       await callBridge("state", { state: projectState });
-      setGuiProjectSyncMeta("good", t("sync.gui.good"));
+      setGuiProjectSyncMeta("good", "sync.gui.good");
       queueGuiHealthRefresh();
     } catch (error) {
       console.error(error);
-      setGuiProjectSyncMeta("bad", t("sync.project_json.failed", { message: error.message }));
-      setStatus(`Project JSON sync failed: ${error.message}`);
+      setGuiProjectSyncMeta("bad", "sync.project_json.failed", { message: error.message });
+      setStatus(t("sync.project_json.failed", { message: error.message }));
     }
   }, 350);
 }
@@ -1360,7 +1370,7 @@ async function hydrateProjectStateFromBridge() {
       window.localStorage.setItem(storageKey, JSON.stringify(projectState, null, 2));
       resetActiveSelectionsFromProject();
       render();
-      setGuiProjectSyncMeta("good", t("sync.project_json.loaded"));
+      setGuiProjectSyncMeta("good", "sync.project_json.loaded");
       setStatus(t("gui.status.loaded"));
     } else if (response.importedState) {
       projectState = ensureProjectState(response.importedState);
@@ -1368,7 +1378,7 @@ async function hydrateProjectStateFromBridge() {
       resetActiveSelectionsFromProject();
       render();
       await callBridge("state", { state: projectState });
-      setGuiProjectSyncMeta("good", t("sync.project_json.imported"));
+      setGuiProjectSyncMeta("good", "sync.project_json.imported");
 
       const importSources = Array.isArray(response.importSummary?.sourcePaths) && response.importSummary.sourcePaths.length
         ? response.importSummary.sourcePaths
@@ -1386,16 +1396,18 @@ async function hydrateProjectStateFromBridge() {
       const importedTotal = importedCounts.reduce((sum, count) => sum + count, 0);
       setStatus(t("gui.status.imported", {
         sources: importSources.join(" + "),
-        suffix: importedTotal ? ` (${importedTotal} items).` : ".",
+        suffix: importedTotal
+          ? t("gui.status.imported_count_suffix", { count: importedTotal })
+          : t("gui.status.imported_suffix"),
       }));
     } else {
       await callBridge("state", { state: projectState });
-      setGuiProjectSyncMeta("good", t("sync.project_json.created"));
+      setGuiProjectSyncMeta("good", "sync.project_json.created");
       setStatus(t("gui.status.created"));
     }
   } catch (error) {
     console.error(error);
-    setGuiProjectSyncMeta("bad", t("gui.status.bridge_unavailable", { message: error.message }));
+    setGuiProjectSyncMeta("bad", "gui.status.bridge_unavailable", { message: error.message });
     setStatus(t("gui.status.bridge_unavailable", { message: error.message }));
   } finally {
     queueGuiHealthRefresh({ immediate: true });
@@ -2544,7 +2556,7 @@ function updateActiveStyle(patch) {
 
   Object.assign(activeStyle, patch);
   render();
-  saveProjectState(`Updated style "${activeStyle.name}".`);
+  saveProjectState(t("gui.status.style_updated", { name: activeStyle.name }));
 }
 
 function updateActiveStyleProperty(key, prefix, type, rawValue) {
@@ -2564,7 +2576,7 @@ function updateActiveStyleProperty(key, prefix, type, rawValue) {
       activeStyle.properties.splice(existingIndex, 1);
     }
     render();
-    saveProjectState(`Cleared ${key} on "${activeStyle.name}".`);
+    saveProjectState(t("gui.status.style_property_cleared", { property: key, name: activeStyle.name }));
     return;
   }
 
@@ -2583,7 +2595,7 @@ function updateActiveStyleProperty(key, prefix, type, rawValue) {
   }
 
   render();
-  saveProjectState(`Updated ${key} on "${activeStyle.name}".`);
+  saveProjectState(t("gui.status.style_property_updated", { property: key, name: activeStyle.name }));
 }
 
 function deleteActiveStyle() {
@@ -2596,7 +2608,7 @@ function deleteActiveStyle() {
   projectState.gui.styles = projectState.gui.styles.filter((style) => style.id !== activeStyle.id);
   activeStyleId = projectState.gui.styles[0]?.id ?? null;
   render();
-  saveProjectState(`Deleted style "${activeStyle.name}".`);
+  saveProjectState(t("gui.status.style_deleted", { name: activeStyle.name }));
 }
 
 function updateActiveScreen(patch) {
@@ -2608,7 +2620,7 @@ function updateActiveScreen(patch) {
 
   Object.assign(activeScreen, patch);
   render();
-  saveProjectState(`Updated screen "${activeScreen.name}".`);
+  saveProjectState(t("gui.status.screen_updated", { name: activeScreen.name }));
 }
 
 function updateActiveScreenNode(patch) {
@@ -2620,7 +2632,7 @@ function updateActiveScreenNode(patch) {
 
   Object.assign(nodeContext.node, patch);
   render();
-  saveProjectState(`Updated node "${nodeContext.node.title}".`);
+  saveProjectState(t("gui.status.node_updated", { name: nodeContext.node.title }));
 }
 
 function setActiveNodeType(nextType) {
@@ -2632,11 +2644,13 @@ function setActiveNodeType(nextType) {
   }
 
   if (!nextMeta.supportsChildren && nodeContext.node.children.length) {
-    const confirmed = window.confirm(`"${nextMeta.label}" does not support child nodes. Delete the existing children and continue?`);
+    const confirmed = window.confirm(t("gui.confirm.node_type_children", {
+      type: getScreenNodeLabel(nextType),
+    }));
 
     if (!confirmed) {
       render();
-      setStatus("Kept the current node type.");
+      setStatus(t("gui.status.node_type_kept"));
       return;
     }
 
@@ -2668,7 +2682,7 @@ function setActiveNodeType(nextType) {
   }
 
   render();
-  saveProjectState(`Changed node type to "${nextMeta.label}".`);
+  saveProjectState(t("gui.status.node_type_changed", { type: getScreenNodeLabel(nextType) }));
 }
 
 function deleteActiveScreen() {
@@ -2682,7 +2696,7 @@ function deleteActiveScreen() {
   activeScreenId = projectState.gui.screens[0]?.id ?? null;
   activeScreenNodeId = getFirstNodeId(getActiveScreen()?.nodes ?? []);
   render();
-  saveProjectState(`Deleted screen "${activeScreen.name}".`);
+  saveProjectState(t("gui.status.screen_deleted", { name: activeScreen.name }));
 }
 
 function addRootNode(type) {
@@ -2696,7 +2710,7 @@ function addRootNode(type) {
   activeScreen.nodes.push(node);
   activeScreenNodeId = node.id;
   render();
-  saveProjectState(`Added root ${screenNodeMeta[node.type].label} node.`);
+  saveProjectState(t("gui.status.node_root_added", { type: getScreenNodeLabel(node.type) }));
 }
 
 function addChildNode(type) {
@@ -2709,7 +2723,9 @@ function addChildNode(type) {
   const meta = screenNodeMeta[nodeContext.node.type];
 
   if (!meta?.supportsChildren) {
-    setStatus(`${meta?.label || "This node"} cannot contain child nodes.`);
+    setStatus(t("gui.status.node_cannot_contain", {
+      type: meta ? getScreenNodeLabel(nodeContext.node.type) : t("gui.screens-this-node"),
+    }));
     return;
   }
 
@@ -2717,7 +2733,7 @@ function addChildNode(type) {
   nodeContext.node.children.push(child);
   activeScreenNodeId = child.id;
   render();
-  saveProjectState(`Added child ${screenNodeMeta[child.type].label} node.`);
+  saveProjectState(t("gui.status.node_child_added", { type: getScreenNodeLabel(child.type) }));
 }
 
 function deleteActiveScreenNode() {
@@ -2733,7 +2749,7 @@ function deleteActiveScreenNode() {
     || nodeContext.parent?.id
     || getFirstNodeId(getActiveScreen()?.nodes ?? []);
   render();
-  saveProjectState(`Deleted node "${nodeContext.node.title}".`);
+  saveProjectState(t("gui.status.node_deleted", { name: nodeContext.node.title }));
 }
 
 function moveActiveScreenNode(direction) {
@@ -2753,7 +2769,7 @@ function moveActiveScreenNode(direction) {
   nodeContext.siblings.splice(nextIndex, 0, node);
   activeScreenNodeId = node.id;
   render();
-  saveProjectState(`Moved node "${node.title}".`);
+  saveProjectState(t("gui.status.node_moved", { name: node.title }));
 }
 
 function updateConfigEntry(patch) {
@@ -2875,7 +2891,7 @@ function updateReplayMenu(patch) {
     ...patch,
   });
   render();
-  saveProjectState(`Updated replay menu "${projectState.gui.replayMenu.screenName}".`);
+  saveProjectState(t("gui.status.replay_updated", { name: projectState.gui.replayMenu.screenName }));
 }
 
 function updateActiveMusicRoom(patch) {
@@ -2893,7 +2909,7 @@ function updateActiveMusicRoom(patch) {
 
   Object.assign(room, normalizedRoom);
   render();
-  saveProjectState(`Updated music room "${room.name}".`);
+  saveProjectState(t("gui.status.music_room_updated", { name: room.name }));
 }
 
 function updateMusicRoomTrack(trackId, patch) {
@@ -2914,7 +2930,7 @@ function updateMusicRoomTrack(trackId, patch) {
     ...patch,
   }, trackIndex));
   render();
-  saveProjectState(`Updated track "${getMusicRoomTrackDisplayName(room.tracks[trackIndex])}".`);
+  saveProjectState(t("gui.status.music_track_updated", { name: getMusicRoomTrackDisplayLabel(room.tracks[trackIndex]) }));
 }
 
 function deleteMusicRoomTrack(trackId) {
@@ -2932,7 +2948,7 @@ function deleteMusicRoomTrack(trackId) {
 
   room.tracks = room.tracks.filter((entry) => entry.id !== trackId);
   render();
-  saveProjectState(`Deleted track "${getMusicRoomTrackDisplayName(track)}".`);
+  saveProjectState(t("gui.status.music_track_deleted", { name: getMusicRoomTrackDisplayLabel(track) }));
 }
 
 function deleteActiveMusicRoom() {
@@ -2949,7 +2965,7 @@ function deleteActiveMusicRoom() {
     || projectState.gui.musicRooms[0]?.id
     || null;
   render();
-  saveProjectState(`Deleted music room "${room.name}".`);
+  saveProjectState(t("gui.status.music_room_deleted", { name: room.name }));
 }
 
 function updateActiveGallery(patch) {
@@ -2967,7 +2983,7 @@ function updateActiveGallery(patch) {
 
   Object.assign(gallery, normalizedGallery);
   render();
-  saveProjectState(`Updated gallery "${gallery.name}".`);
+  saveProjectState(t("gui.status.gallery_updated", { name: gallery.name }));
 }
 
 function updateGalleryButton(buttonId, patch) {
@@ -2988,7 +3004,7 @@ function updateGalleryButton(buttonId, patch) {
     ...patch,
   }, buttonIndex));
   render();
-  saveProjectState(`Updated gallery button "${gallery.buttons[buttonIndex].name}".`);
+  saveProjectState(t("gui.status.gallery_button_updated", { name: gallery.buttons[buttonIndex].name }));
 }
 
 function deleteGalleryButton(buttonId) {
@@ -3006,7 +3022,7 @@ function deleteGalleryButton(buttonId) {
 
   gallery.buttons = gallery.buttons.filter((entry) => entry.id !== buttonId);
   render();
-  saveProjectState(`Deleted gallery button "${button.name}".`);
+  saveProjectState(t("gui.status.gallery_button_deleted", { name: button.name }));
 }
 
 function deleteActiveGallery() {
@@ -3023,7 +3039,7 @@ function deleteActiveGallery() {
     || projectState.gui.galleries[0]?.id
     || null;
   render();
-  saveProjectState(`Deleted gallery "${gallery.name}".`);
+  saveProjectState(t("gui.status.gallery_deleted", { name: gallery.name }));
 }
 
 function getStyleProperty(style, key, prefix = activeStylePrefixId) {
@@ -3118,6 +3134,37 @@ function formatGuiStyleCode(style) {
   return `${headerParts.join(" ")}:\n${bodyLines.join("\n")}`;
 }
 
+function getStyleCategoryLabel(categoryId) {
+  const meta = styleCategoryMeta[categoryId];
+  return meta?.labelKey ? t(meta.labelKey) : t("gui.styles-category.style");
+}
+
+function getStylePrefixLabel(prefix) {
+  return prefix?.labelKey ? t(prefix.labelKey) : (prefix?.label || "");
+}
+
+function getStylePrefixSummary(prefix) {
+  return prefix?.summaryKey ? t(prefix.summaryKey) : "";
+}
+
+function getStylePropertyTypeLabel(type) {
+  const key = `gui.styles-type.${type}`;
+  const translated = t(key);
+  return translated === key ? type : translated;
+}
+
+function getScreenNodeLabel(type) {
+  return tt(screenNodeMeta[type]?.label || type);
+}
+
+function getScreenActionLabel(item) {
+  return tt(item?.label || "");
+}
+
+function getScreenValueLabel(item) {
+  return tt(item?.label || "");
+}
+
 function renderStyleList() {
   const hasStyles = projectState.gui.styles.length > 0;
 
@@ -3141,16 +3188,22 @@ function renderStyleList() {
     }
 
     const propertyCount = style.properties.length;
-    const propertyLabel = propertyCount === 1 ? "property" : "properties";
+    const propertyLabel = propertyCount === 1
+      ? t("gui.styles-property-count-one")
+      : t("gui.styles-property-count-many");
     card.innerHTML = `
       <strong>${escapeHtml(style.name)}</strong>
-      <span>${escapeHtml(`${styleCategoryMeta[style.category]?.label || "Style"} · ${propertyCount} ${propertyLabel}`)}</span>
+      <span>${escapeHtml(t("gui.styles-card-summary", {
+        category: getStyleCategoryLabel(style.category),
+        count: propertyCount,
+        propertyLabel,
+      }))}</span>
     `;
 
     const openStyle = () => {
       activeStyleId = style.id;
       render();
-      setStatus(`Opened style "${style.name}".`);
+      setStatus(t("gui.status.style_opened", { name: style.name }));
     };
 
     card.addEventListener("click", openStyle);
@@ -3172,13 +3225,18 @@ function renderStylePrefixTabs(style) {
       type="button"
       data-style-prefix-id="${escapeHtml(prefix.id)}"
     >
-      ${escapeHtml(prefix.label)}
+      ${escapeHtml(getStylePrefixLabel(prefix))}
     </button>
   `).join("");
 
   const prefix = stylePrefixMeta.find((item) => item.id === activeStylePrefixId) || stylePrefixMeta[0];
   const currentPrefixPropertyCount = style.properties.filter((property) => property.prefix === activeStylePrefixId).length;
-  guiStylePrefixSummaryEl.textContent = `${prefix.summary} ${currentPrefixPropertyCount ? `${currentPrefixPropertyCount} properties are set for this prefix.` : "No explicit properties are set for this prefix yet."}`;
+  const countSummary = currentPrefixPropertyCount === 1
+    ? t("gui.styles-prefix.property-set-one")
+    : (currentPrefixPropertyCount
+      ? t("gui.styles-prefix.property-set-many", { count: currentPrefixPropertyCount })
+      : t("gui.styles-prefix.properties-none"));
+  guiStylePrefixSummaryEl.textContent = `${getStylePrefixSummary(prefix)} ${countSummary}`;
 }
 
 function buildPropertyFieldMarkup(style, definition) {
@@ -3198,7 +3256,7 @@ function buildPropertyFieldMarkup(style, definition) {
         <input
           type="text"
           value="${escapeHtml(value)}"
-          placeholder="${escapeHtml(definition.placeholder || "#ffffff")}"
+          placeholder="${escapeHtml(tt(definition.placeholder || "#ffffff"))}"
           data-style-property-key="${escapeHtml(definition.key)}"
           data-style-property-type="${escapeHtml(definition.type)}"
           data-style-property-source="text"
@@ -3209,7 +3267,7 @@ function buildPropertyFieldMarkup(style, definition) {
     controlMarkup = `
       <div class="gui-bool-row">
         <select data-style-property-key="${escapeHtml(definition.key)}" data-style-property-type="${escapeHtml(definition.type)}">
-          <option value="" ${!value ? "selected" : ""}>Unset</option>
+          <option value="" ${!value ? "selected" : ""}>${escapeHtml(t("gui.styles-unset"))}</option>
           <option value="true" ${value === "true" ? "selected" : ""}>True</option>
           <option value="false" ${value === "false" ? "selected" : ""}>False</option>
         </select>
@@ -3220,7 +3278,7 @@ function buildPropertyFieldMarkup(style, definition) {
       <input
         type="number"
         value="${escapeHtml(value)}"
-        placeholder="${escapeHtml(definition.placeholder || "")}"
+        placeholder="${escapeHtml(tt(definition.placeholder || ""))}"
         step="${definition.type === "float" ? "any" : "1"}"
         data-style-property-key="${escapeHtml(definition.key)}"
         data-style-property-type="${escapeHtml(definition.type)}"
@@ -3231,7 +3289,7 @@ function buildPropertyFieldMarkup(style, definition) {
       <input
         type="text"
         value="${escapeHtml(value)}"
-        placeholder="${escapeHtml(definition.placeholder || "")}"
+        placeholder="${escapeHtml(tt(definition.placeholder || ""))}"
         data-style-property-key="${escapeHtml(definition.key)}"
         data-style-property-type="${escapeHtml(definition.type)}"
       />
@@ -3242,10 +3300,10 @@ function buildPropertyFieldMarkup(style, definition) {
     <label class="gui-property-field">
       <div class="gui-property-field-header">
         <strong>${escapeHtml(definition.label)}</strong>
-        <span class="gui-property-type">${escapeHtml(definition.type)}</span>
+        <span class="gui-property-type">${escapeHtml(getStylePropertyTypeLabel(definition.type))}</span>
       </div>
       ${controlMarkup}
-      <p class="gui-property-help">${escapeHtml(definition.help || "")}</p>
+      <p class="gui-property-help">${escapeHtml(tt(definition.help || ""))}</p>
     </label>
   `;
 }
@@ -3272,7 +3330,9 @@ function renderStylePropertySummary(style) {
     .sort((left, right) => (stylePropertyOrder[left.key] ?? 999) - (stylePropertyOrder[right.key] ?? 999));
 
   if (!prefixProperties.length) {
-    guiStylePropertySummaryEl.innerHTML = `<span class="gui-property-pill">${escapeHtml(`${prefixMeta.label}: no explicit properties set`)}</span>`;
+    guiStylePropertySummaryEl.innerHTML = `<span class="gui-property-pill">${escapeHtml(t("gui.styles-prefix.no-properties-pill", {
+      prefix: getStylePrefixLabel(prefixMeta),
+    }))}</span>`;
     return;
   }
 
@@ -3306,27 +3366,42 @@ function renderStyleDetail() {
 }
 
 function renderScreenTemplateOptions() {
+  const currentValue = guiScreenTemplateInput.value;
   const options = specialScreenTemplateMeta.map((template) => `
-    <option value="${escapeHtml(template.id)}">${escapeHtml(`${template.label} · ${template.description}`)}</option>
+    <option value="${escapeHtml(template.id)}">${escapeHtml(t("gui.screens-template-option", {
+      label: template.label,
+      description: tt(template.description),
+    }))}</option>
   `).join("");
   guiScreenTemplateInput.innerHTML = options;
+  if (currentValue) {
+    guiScreenTemplateInput.value = currentValue;
+  }
 }
 
 function renderScreenNodeTypeOptions() {
+  const currentNewType = guiNewScreenNodeTypeInput.value;
+  const currentNodeType = guiScreenNodeTypeInput.value;
   const options = screenNodeTypeOrder.map((type) => `
-    <option value="${escapeHtml(type)}">${escapeHtml(screenNodeMeta[type].label)}</option>
+    <option value="${escapeHtml(type)}">${escapeHtml(getScreenNodeLabel(type))}</option>
   `).join("");
 
   guiNewScreenNodeTypeInput.innerHTML = options;
   guiScreenNodeTypeInput.innerHTML = options;
+  if (currentNewType) {
+    guiNewScreenNodeTypeInput.value = currentNewType;
+  }
+  if (currentNodeType) {
+    guiScreenNodeTypeInput.value = currentNodeType;
+  }
 }
 
 function renderActionValueOptions(nodeType = "text") {
   guiNodeActionKindInput.innerHTML = screenActionMeta.map((item) => `
-    <option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>
+    <option value="${escapeHtml(item.id)}">${escapeHtml(getScreenActionLabel(item))}</option>
   `).join("");
   guiNodeValueKindInput.innerHTML = getValueMetaForNodeType(nodeType).map((item) => `
-    <option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>
+    <option value="${escapeHtml(item.id)}">${escapeHtml(getScreenValueLabel(item))}</option>
   `).join("");
 }
 
@@ -3348,8 +3423,10 @@ function renderScreenList() {
     return `
       <div class="gui-entity-card ${screen.id === activeScreenId ? "is-active" : ""}" data-screen-id="${escapeHtml(screen.id)}">
         <strong>${escapeHtml(screen.name)}</strong>
-        <span>${escapeHtml(`${nodeCount} nodes${screen.tag ? ` · tag ${screen.tag}` : ""}`)}</span>
-        ${isAutoManaged ? '<span class="gui-entity-flag">Auto-managed special screen</span>' : ""}
+        <span>${escapeHtml(screen.tag
+          ? t("gui.screens-card-summary-tag", { count: nodeCount, tag: screen.tag })
+          : t("gui.screens-card-summary", { count: nodeCount }))}</span>
+        ${isAutoManaged ? `<span class="gui-entity-flag">${escapeHtml(t("gui.screens-auto-managed"))}</span>` : ""}
       </div>
     `;
   }).join("");
@@ -3364,9 +3441,11 @@ function renderScreenTreeNode(node, depth) {
   return `
     <div class="gui-tree-node" style="--gui-depth:${depth};">
       <button class="gui-tree-node-card ${node.id === activeScreenNodeId ? "is-active" : ""}" type="button" data-screen-node-id="${escapeHtml(node.id)}">
-        <span class="gui-tree-node-meta">${escapeHtml(meta.label)}</span>
-        <strong>${escapeHtml(node.title)}</strong>
-        <span>${escapeHtml(node.children.length ? `${node.children.length} children` : "leaf node")}</span>
+        <span class="gui-tree-node-meta">${escapeHtml(getScreenNodeLabel(node.type))}</span>
+        <strong>${escapeHtml(tt(node.title))}</strong>
+        <span>${escapeHtml(node.children.length
+          ? t("gui.screens-tree-children", { count: node.children.length })
+          : t("gui.screens-tree-leaf"))}</span>
       </button>
       ${node.children.length ? `<div class="gui-tree-children">${node.children.map((child) => renderScreenTreeNode(child, depth + 1)).join("")}</div>` : ""}
     </div>
@@ -3378,7 +3457,7 @@ function renderScreenTree() {
 
   guiScreenNodeTreeEl.innerHTML = activeScreen?.nodes.length
     ? activeScreen.nodes.map((node) => renderScreenTreeNode(node, 0)).join("")
-    : `<div class="gui-inline-empty">No nodes yet. Add a root node or start from a template.</div>`;
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.screens-no-nodes"))}</div>`;
 }
 
 function renderScreenNodeDetail() {
@@ -3464,23 +3543,23 @@ function renderScreenNodeDetail() {
   guiMoveNodeUpButton.disabled = !nodeContext || nodeContext.index <= 0;
   guiMoveNodeDownButton.disabled = !nodeContext || nodeContext.index >= nodeContext.siblings.length - 1;
   guiNodeChildrenHint.textContent = meta.supportsChildren
-    ? `${meta.label} can contain child nodes.`
+    ? t("gui.screens-node-can-contain", { node: getScreenNodeLabel(node.type) })
     : (node.children.length
-      ? `${meta.label} normally does not render child nodes. Existing children should be reviewed.`
-      : `${meta.label} is a leaf node.`);
+      ? t("gui.screens-node-hidden-children", { node: getScreenNodeLabel(node.type) })
+      : t("gui.screens-node-leaf-hint", { node: getScreenNodeLabel(node.type) }));
 
   const actionMeta = screenActionMeta.find((item) => item.id === node.actionKind) || screenActionMeta[0];
   const valueMetaList = getValueMetaForNodeType(node.type);
   const valueMeta = valueMetaList.find((item) => item.id === node.valueKind) || valueMetaList[0];
-  guiNodeActionArgsInput.placeholder = actionMeta.placeholder || "";
-  guiNodeValueArgsInput.placeholder = valueMeta.placeholder || "";
+  guiNodeActionArgsInput.placeholder = tt(actionMeta.placeholder || "");
+  guiNodeValueArgsInput.placeholder = tt(valueMeta.placeholder || "");
   guiNodeValueRawInput.placeholder = node.type === "input"
-    ? 'e.g. VariableInputValue("player_name", default=True)'
-    : 'e.g. Preference("music volume")';
-  guiNodeValuePanelTitle.textContent = node.type === "input" ? "InputValue" : "Value";
+    ? tt('e.g. VariableInputValue("player_name", default=True)')
+    : tt('e.g. Preference("music volume")');
+  guiNodeValuePanelTitle.textContent = node.type === "input" ? t("gui.screens-input-value-title") : t("gui.screens-value-title");
   guiNodeValuePanelDescription.textContent = node.type === "input"
-    ? "Bind the input field to an InputValue helper, or use a raw expression for advanced cases."
-    : "Used by bars, inputs, and other value-driven displayables.";
+    ? t("gui.screens-input-value-desc")
+    : t("gui.screens-value-desc");
 }
 
 function renderScreenDetail() {
@@ -3508,7 +3587,7 @@ function renderScreenDetail() {
   guiScreenSpecialInfoEl.classList.toggle("hidden", !isAutoManagedScreenName(activeScreen.name));
 
   if (isAutoManagedScreenName(activeScreen.name)) {
-    guiScreenSpecialInfoEl.textContent = `"${activeScreen.name}" is a special Ren'Py screen. The engine usually calls it automatically, so in the main visual editor you often do not need a separate Screen Block for it.`;
+    guiScreenSpecialInfoEl.textContent = t("gui.screens-special-info", { name: activeScreen.name });
   }
 
   renderScreenTree();
@@ -3785,12 +3864,12 @@ function getPreviewSideImageLabel() {
     ? projectState.images.find((image) => image?.isSideImage && `${image?.name || ""}`.trim())?.name?.trim()
     : "";
 
-  return sideImageName || "side image";
+  return sideImageName || t("gui.screens-preview-side-image");
 }
 
 function renderPreviewNode(node) {
   const meta = screenNodeMeta[node.type];
-  const previewLabel = escapeHtml(node.text || node.title || meta.label);
+  const previewLabel = escapeHtml(node.text || (node.title ? tt(node.title) : getScreenNodeLabel(node.type)));
   const childMarkup = node.children.map((child) => renderPreviewNode(child)).join("");
 
   switch (node.type) {
@@ -3801,10 +3880,10 @@ function renderPreviewNode(node) {
     case "button":
       return `<button class="gui-preview-button">${previewLabel}</button>`;
     case "imagebutton":
-      return `<button class="gui-preview-button gui-preview-imagebutton"><span>${escapeHtml(node.title || "Image Button")}</span></button>`;
+      return `<button class="gui-preview-button gui-preview-imagebutton"><span>${escapeHtml(node.title ? tt(node.title) : t("gui.screens-preview-image-button"))}</span></button>`;
     case "frame":
     case "window":
-      return `<div class="gui-preview-frame">${childMarkup || `<div class="gui-preview-placeholder">${escapeHtml(meta.label)}</div>`}</div>`;
+      return `<div class="gui-preview-frame">${childMarkup || `<div class="gui-preview-placeholder">${escapeHtml(getScreenNodeLabel(node.type))}</div>`}</div>`;
     case "vbox":
       return `<div class="gui-preview-vbox">${childMarkup}</div>`;
     case "hbox":
@@ -3824,7 +3903,7 @@ function renderPreviewNode(node) {
     case "vbar":
       return `<div class="gui-preview-bar ${node.type === "vbar" ? "is-vertical" : ""}"><span></span></div>`;
     case "input":
-      return `<input class="gui-preview-input" type="${node.inputMask.trim() ? "password" : "text"}" value="${escapeHtml(node.inputDefaultText || "")}" placeholder="${escapeHtml(node.title || "Input")}" />`;
+      return `<input class="gui-preview-input" type="${node.inputMask.trim() ? "password" : "text"}" value="${escapeHtml(node.inputDefaultText || "")}" placeholder="${escapeHtml(node.title ? tt(node.title) : t("gui.screens-preview-input"))}" />`;
     case "add":
       if (isSideImageExpression(node.displayable)) {
         return `
@@ -3834,7 +3913,7 @@ function renderPreviewNode(node) {
           </div>
         `;
       }
-      return `<div class="gui-preview-add">${escapeHtml(node.displayable || "displayable")}</div>`;
+      return `<div class="gui-preview-add">${escapeHtml(node.displayable || t("gui.screens-preview-displayable"))}</div>`;
     case "if":
     case "showif":
     case "for":
@@ -3848,13 +3927,13 @@ function renderPreviewNode(node) {
     case "raw":
       return `
         <div class="gui-preview-logic">
-          <strong>${escapeHtml(meta.label)}</strong>
-          <span>${escapeHtml(node.title)}</span>
+          <strong>${escapeHtml(getScreenNodeLabel(node.type))}</strong>
+          <span>${escapeHtml(tt(node.title))}</span>
           ${childMarkup}
         </div>
       `;
     default:
-      return `<div class="gui-preview-placeholder">${escapeHtml(meta.label)}</div>`;
+      return `<div class="gui-preview-placeholder">${escapeHtml(getScreenNodeLabel(node.type))}</div>`;
   }
 }
 
@@ -3870,7 +3949,7 @@ function renderScreenPreview() {
     <div class="gui-preview-device">
       <div class="gui-preview-header">${escapeHtml(activeScreen.name)}</div>
       <div class="gui-preview-body">
-        ${activeScreen.nodes.map((node) => renderPreviewNode(node)).join("") || '<div class="gui-preview-placeholder">No nodes yet.</div>'}
+        ${activeScreen.nodes.map((node) => renderPreviewNode(node)).join("") || `<div class="gui-preview-placeholder">${escapeHtml(t("gui.screens-preview-no-nodes"))}</div>`}
       </div>
     </div>
   `;
@@ -3975,11 +4054,11 @@ function renderReplaySection() {
     ? replayGraphs.map((graph) => `
       <div class="gui-replay-chip">
         <strong>${escapeHtml(graph.title)}</strong>
-        <span>${escapeHtml(`${graph.label} · ${graph.lockedMode}`)}</span>
+        <span>${escapeHtml(t("gui.extras-replay-chip-summary", { label: graph.label, mode: graph.lockedMode }))}</span>
         <code>${escapeHtml(formatReplayActionExpression(graph))}</code>
       </div>
     `).join("")
-    : `<div class="gui-inline-empty">No replay-enabled labels yet. Enable replay on a label in the main editor first.</div>`;
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.extras-replay-empty-labels"))}</div>`;
 
   guiReplayCodePreviewEl.textContent = formatReplayMenuCode();
 }
@@ -4006,6 +4085,11 @@ function getMusicRoomTrackDisplayName(track) {
   return `${track?.title || ""}`.trim() || `${importedAudio?.name || ""}`.trim() || getResolvedMusicRoomTrackSource(track) || "Untitled Track";
 }
 
+function getMusicRoomTrackDisplayLabel(track) {
+  const name = getMusicRoomTrackDisplayName(track);
+  return name === "Untitled Track" ? t("gui.extras-music-untitled-track") : name;
+}
+
 function getMusicRoomTrackSubtitle(track) {
   const importedAudio = getAudioDefinitionByIdLocal(track?.audioDefinitionId || "");
   const source = getResolvedMusicRoomTrackSource(track);
@@ -4015,6 +4099,11 @@ function getMusicRoomTrackSubtitle(track) {
   }
 
   return source || "No file path yet";
+}
+
+function getMusicRoomTrackSubtitleLabel(track) {
+  const subtitle = getMusicRoomTrackSubtitle(track);
+  return subtitle === "No file path yet" ? t("gui.extras-music-no-file-path") : subtitle;
 }
 
 function getVolumePreferenceNameForChannel(channel) {
@@ -4131,7 +4220,7 @@ function renderMusicRoomList() {
   guiMusicRoomListEl.innerHTML = projectState.gui.musicRooms.map((room) => `
     <div class="gui-entity-card ${room.id === activeMusicRoomId ? "is-active" : ""}" data-music-room-id="${escapeHtml(room.id)}">
       <strong>${escapeHtml(room.name)}</strong>
-      <span>${escapeHtml(`${room.tracks.length} tracks · ${room.channel}`)}</span>
+      <span>${escapeHtml(t("gui.extras-music-card-summary", { count: room.tracks.length, channel: room.channel }))}</span>
     </div>
   `).join("");
 }
@@ -4144,10 +4233,13 @@ function renderMusicRoomTrackList(room) {
       const selectedImportedAudio = getAudioDefinitionByIdLocal(track.audioDefinitionId);
       const hasMissingAudio = Boolean(track.audioDefinitionId) && !selectedImportedAudio;
       const options = [
-        `<option value="">Manual file path</option>`,
+        `<option value="">${escapeHtml(t("gui.extras-music-manual-file-path"))}</option>`,
         ...availableAudioDefinitions.map((entry) => `
           <option value="${escapeHtml(entry.id)}" ${entry.id === track.audioDefinitionId ? "selected" : ""}>
-            ${escapeHtml(`${entry.name} · ${entry.sourcePath || "No source path yet"}`)}
+            ${escapeHtml(t("gui.extras-music-import-option", {
+              name: entry.name,
+              source: entry.sourcePath || t("gui.extras-music-no-source-path"),
+            }))}
           </option>
         `),
       ];
@@ -4155,7 +4247,7 @@ function renderMusicRoomTrackList(room) {
       if (hasMissingAudio) {
         options.push(`
           <option value="${escapeHtml(track.audioDefinitionId)}" selected>
-            ${escapeHtml(`Missing import · ${track.audioDefinitionId}`)}
+            ${escapeHtml(t("gui.extras-music-missing-import", { id: track.audioDefinitionId }))}
           </option>
         `);
       }
@@ -4164,46 +4256,46 @@ function renderMusicRoomTrackList(room) {
         <div class="gui-nested-card" data-music-track-id="${escapeHtml(track.id)}">
           <div class="gui-nested-card-header">
             <div>
-              <strong>${escapeHtml(getMusicRoomTrackDisplayName(track))}</strong>
-              <span>${escapeHtml(getMusicRoomTrackSubtitle(track))}</span>
+              <strong>${escapeHtml(getMusicRoomTrackDisplayLabel(track))}</strong>
+              <span>${escapeHtml(getMusicRoomTrackSubtitleLabel(track))}</span>
             </div>
-            <button class="danger-button" type="button" data-music-track-action="delete">Delete</button>
+            <button class="danger-button" type="button" data-music-track-action="delete">${escapeHtml(t("common.delete"))}</button>
           </div>
 
           <div class="gui-inline-fields">
             <label class="gui-compact-label">
-              Title
-              <input type="text" value="${escapeHtml(track.title)}" placeholder="Display name in the menu" data-music-track-field="title" />
+              ${escapeHtml(t("gui.extras-title"))}
+              <input type="text" value="${escapeHtml(track.title)}" placeholder="${escapeHtml(t("placeholder.gui.extras-music-track-title"))}" data-music-track-field="title" />
             </label>
 
             <label class="gui-compact-label">
-              Imported Music
+              ${escapeHtml(t("gui.extras-imported-music"))}
               <select data-music-track-field="audioDefinitionId">
                 ${options.join("")}
               </select>
             </label>
 
             <label class="gui-compact-label">
-              Manual File Path
-              <input type="text" value="${escapeHtml(track.filename)}" placeholder="audio/bgm/title.ogg" data-music-track-field="filename" />
+              ${escapeHtml(t("gui.extras-manual-file-path"))}
+              <input type="text" value="${escapeHtml(track.filename)}" placeholder="${escapeHtml(t("placeholder.gui.extras-music-track-file"))}" data-music-track-field="filename" />
             </label>
           </div>
 
           <div class="gui-inline-fields">
             <label class="gui-compact-label">
-              Unlock Action
-              <input type="text" value="${escapeHtml(track.actionExpression)}" placeholder='e.g. Function(renpy.notify, "Unlocked")' data-music-track-field="actionExpression" />
+              ${escapeHtml(t("gui.extras-unlock-action"))}
+              <input type="text" value="${escapeHtml(track.actionExpression)}" placeholder="${escapeHtml(t("placeholder.gui.extras-music-track-action"))}" data-music-track-field="actionExpression" />
             </label>
           </div>
 
           <label class="character-checkbox">
             <input type="checkbox" ${track.alwaysUnlocked ? "checked" : ""} data-music-track-field="alwaysUnlocked" />
-            <span>Always Unlocked</span>
+            <span>${escapeHtml(t("gui.extras-always-unlocked"))}</span>
           </label>
         </div>
       `;
     }).join("")
-    : `<div class="gui-inline-empty">No tracks yet. Add one and link it to imported music or a manual file path.</div>`;
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.extras-music-empty-tracks"))}</div>`;
 }
 
 function renderMusicRoomDetail() {
@@ -4416,74 +4508,79 @@ function renderGalleryList() {
   guiGalleryListEl.innerHTML = projectState.gui.galleries.map((gallery) => `
     <div class="gui-entity-card ${gallery.id === activeGalleryId ? "is-active" : ""}" data-gallery-id="${escapeHtml(gallery.id)}">
       <strong>${escapeHtml(gallery.name)}</strong>
-      <span>${escapeHtml(`${gallery.buttons.length} buttons · ${gallery.columns} cols`)}</span>
+      <span>${escapeHtml(t("gui.extras-gallery-card-summary", { count: gallery.buttons.length, columns: gallery.columns }))}</span>
     </div>
   `).join("");
 }
 
 function renderGalleryButtonList(gallery) {
   guiGalleryButtonListEl.innerHTML = gallery.buttons.length
-    ? gallery.buttons.map((button) => `
-      <div class="gui-nested-card" data-gallery-button-id="${escapeHtml(button.id)}">
-        <div class="gui-nested-card-header">
-          <div>
-            <strong>${escapeHtml(button.name)}</strong>
-            <span>${escapeHtml(button.autoUnlock ? "unlock_image()" : "image()")} · ${escapeHtml(splitRawLines(button.imageLines).length ? `${splitRawLines(button.imageLines).length} image lines` : "no image lines yet")}</span>
+    ? gallery.buttons.map((button) => {
+      const imageLineCount = splitRawLines(button.imageLines).length;
+      return `
+        <div class="gui-nested-card" data-gallery-button-id="${escapeHtml(button.id)}">
+          <div class="gui-nested-card-header">
+            <div>
+              <strong>${escapeHtml(button.name)}</strong>
+              <span>${escapeHtml(button.autoUnlock ? "unlock_image()" : "image()")} · ${escapeHtml(imageLineCount
+                ? t("gui.extras-gallery-image-lines", { count: imageLineCount })
+                : t("gui.extras-gallery-no-image-lines"))}</span>
+            </div>
+            <button class="danger-button" type="button" data-gallery-button-action="delete">${escapeHtml(t("common.delete"))}</button>
           </div>
-          <button class="danger-button" type="button" data-gallery-button-action="delete">Delete</button>
+
+          <div class="gui-inline-fields">
+            <label class="gui-compact-label">
+              ${escapeHtml(t("gui.extras-button-name"))}
+              <input type="text" value="${escapeHtml(button.name)}" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-button-name"))}" data-gallery-button-field="name" />
+            </label>
+
+            <label class="gui-compact-label">
+              ${escapeHtml(t("gui.extras-unlocked-thumbnail"))}
+              <input type="text" value="${escapeHtml(button.unlockedThumb)}" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-unlocked-thumb"))}" data-gallery-button-field="unlockedThumb" />
+            </label>
+
+            <label class="gui-compact-label">
+              ${escapeHtml(t("gui.extras-locked-thumbnail"))}
+              <input type="text" value="${escapeHtml(button.lockedThumb)}" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-locked-thumb"))}" data-gallery-button-field="lockedThumb" />
+            </label>
+          </div>
+
+          <div class="gui-inline-fields">
+            <label class="gui-compact-label">
+              ${escapeHtml(t("gui.extras-hover-border-override"))}
+              <input type="text" value="${escapeHtml(button.hoverBorder)}" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-hover-border"))}" data-gallery-button-field="hoverBorder" />
+            </label>
+
+            <label class="gui-compact-label">
+              ${escapeHtml(t("gui.extras-idle-border-override"))}
+              <input type="text" value="${escapeHtml(button.idleBorder)}" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-idle-border"))}" data-gallery-button-field="idleBorder" />
+            </label>
+
+            <label class="gui-compact-label">
+              ${escapeHtml(t("gui.extras-transform"))}
+              <input type="text" value="${escapeHtml(button.transformExpression)}" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-transform"))}" data-gallery-button-field="transformExpression" />
+            </label>
+          </div>
+
+          <label class="character-checkbox">
+            <input type="checkbox" ${button.autoUnlock ? "checked" : ""} data-gallery-button-field="autoUnlock" />
+            <span>${escapeHtml(t("gui.extras-use-unlock-image-prefix"))} <code>unlock_image()</code> ${escapeHtml(t("gui.extras-use-unlock-image-suffix"))}</span>
+          </label>
+
+          <label class="gui-compact-label">
+            ${escapeHtml(t("gui.extras-conditions"))}
+            <textarea rows="3" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-conditions"))}" data-gallery-button-field="conditions">${escapeHtml(button.conditions)}</textarea>
+          </label>
+
+          <label class="gui-compact-label">
+            ${escapeHtml(t("gui.extras-image-lines"))}
+            <textarea rows="4" placeholder="${escapeHtml(t("placeholder.gui.extras-gallery-image-lines"))}" data-gallery-button-field="imageLines">${escapeHtml(button.imageLines)}</textarea>
+          </label>
         </div>
-
-        <div class="gui-inline-fields">
-          <label class="gui-compact-label">
-            Button Name
-            <input type="text" value="${escapeHtml(button.name)}" placeholder="e.g. beach_cg" data-gallery-button-field="name" />
-          </label>
-
-          <label class="gui-compact-label">
-            Unlocked Thumbnail
-            <input type="text" value="${escapeHtml(button.unlockedThumb)}" placeholder='e.g. "gui/gallery/thumb_beach.png"' data-gallery-button-field="unlockedThumb" />
-          </label>
-
-          <label class="gui-compact-label">
-            Locked Thumbnail
-            <input type="text" value="${escapeHtml(button.lockedThumb)}" placeholder='e.g. "gui/gallery/locked.png"' data-gallery-button-field="lockedThumb" />
-          </label>
-        </div>
-
-        <div class="gui-inline-fields">
-          <label class="gui-compact-label">
-            Hover Border Override
-            <input type="text" value="${escapeHtml(button.hoverBorder)}" placeholder='e.g. "gui/gallery/hover.png"' data-gallery-button-field="hoverBorder" />
-          </label>
-
-          <label class="gui-compact-label">
-            Idle Border Override
-            <input type="text" value="${escapeHtml(button.idleBorder)}" placeholder='e.g. "gui/gallery/idle.png"' data-gallery-button-field="idleBorder" />
-          </label>
-
-          <label class="gui-compact-label">
-            Transform
-            <input type="text" value="${escapeHtml(button.transformExpression)}" placeholder='e.g. dissolve or crop_transform, None' data-gallery-button-field="transformExpression" />
-          </label>
-        </div>
-
-        <label class="character-checkbox">
-          <input type="checkbox" ${button.autoUnlock ? "checked" : ""} data-gallery-button-field="autoUnlock" />
-          <span>Use <code>unlock_image()</code> for image lines</span>
-        </label>
-
-        <label class="gui-compact-label">
-          Conditions
-          <textarea rows="3" placeholder='One expression per line, e.g. persistent.cg_beach or unlock("cg_beach")' data-gallery-button-field="conditions">${escapeHtml(button.conditions)}</textarea>
-        </label>
-
-        <label class="gui-compact-label">
-          Image Lines
-          <textarea rows="4" placeholder='One argument list per line, e.g. "beach1" or "dawn1", "mary dawn smiling"' data-gallery-button-field="imageLines">${escapeHtml(button.imageLines)}</textarea>
-        </label>
-      </div>
-    `).join("")
-    : `<div class="gui-inline-empty">No gallery buttons yet. Add one to start wiring thumbnails and unlockable images.</div>`;
+      `;
+    }).join("")
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.extras-gallery-empty-buttons"))}</div>`;
 }
 
 function renderGalleryDetail() {
@@ -5469,7 +5566,7 @@ function computeDiagnostics() {
         diagnostics.push({
           severity: "warning",
           title: `${screen.name} · ${node.title} has hidden child nodes`,
-          detail: `${meta.label} does not normally render child nodes, so these children should be moved or the node type should be changed.`,
+          detail: `${getScreenNodeLabel(node.type)} does not normally render child nodes, so these children should be moved or the node type should be changed.`,
           snippet: formatGuiScreenCode(screen),
         });
       }
@@ -5788,8 +5885,8 @@ function computeDiagnostics() {
     if (graph.scope && !/^\{.*\}$/.test(graph.scope)) {
       diagnostics.push({
         severity: "info",
-        title: `Replay "${graph.title}" uses a custom scope expression`,
-        detail: "Replay scope is usually a dict literal. Non-dict expressions are still allowed, but worth double-checking.",
+        title: t("gui.diagnostics.replay_custom_scope_title", { name: graph.title }),
+        detail: t("gui.diagnostics.replay_custom_scope_detail"),
         snippet: formatReplayMenuCode(),
       });
     }
@@ -5799,8 +5896,8 @@ function computeDiagnostics() {
     if (!room.tracks.length) {
       diagnostics.push({
         severity: "warning",
-        title: `Music room "${room.name}" has no tracks`,
-        detail: "The screen will render, but there will be nothing to play until at least one track is configured.",
+        title: t("gui.diagnostics.music_no_tracks_title", { name: room.name }),
+        detail: t("gui.diagnostics.music_no_tracks_detail"),
         snippet: formatMusicRoomCode(room),
       });
     }
@@ -5809,8 +5906,11 @@ function computeDiagnostics() {
       if (!getResolvedMusicRoomTrackSource(track)) {
         diagnostics.push({
           severity: "warning",
-          title: `${room.name} · ${getMusicRoomTrackDisplayName(track)} is missing a file`,
-          detail: "Pick an imported music definition or provide a manual file path so MusicRoom.add() can emit valid code.",
+          title: t("gui.diagnostics.music_track_missing_file_title", {
+            room: room.name,
+            track: getMusicRoomTrackDisplayLabel(track),
+          }),
+          detail: t("gui.diagnostics.music_track_missing_file_detail"),
           snippet: formatMusicRoomCode(room),
         });
       }
@@ -5821,8 +5921,8 @@ function computeDiagnostics() {
     if (!gallery.buttons.length) {
       diagnostics.push({
         severity: "warning",
-        title: `Gallery "${gallery.name}" has no buttons`,
-        detail: "Add at least one button so the gallery screen can expose unlockable CGs.",
+        title: t("gui.diagnostics.gallery_no_buttons_title", { name: gallery.name }),
+        detail: t("gui.diagnostics.gallery_no_buttons_detail"),
         snippet: formatGalleryCode(gallery),
       });
     }
@@ -5831,8 +5931,11 @@ function computeDiagnostics() {
       if (!splitRawLines(button.imageLines).length) {
         diagnostics.push({
           severity: "warning",
-          title: `${gallery.name} · ${button.name} has no image lines`,
-          detail: "Each gallery button should define one or more image()/unlock_image() argument rows.",
+          title: t("gui.diagnostics.gallery_button_no_images_title", {
+            gallery: gallery.name,
+            button: button.name,
+          }),
+          detail: t("gui.diagnostics.gallery_button_no_images_detail"),
           snippet: formatGalleryCode(gallery),
         });
       }
@@ -5861,11 +5964,11 @@ function renderActiveScreenDiagnostics() {
   guiScreenDiagnosticsEl.innerHTML = diagnostics.length
     ? diagnostics.map((item) => `
       <div class="gui-diagnostic-card is-${escapeHtml(item.severity)}">
-        <strong>${escapeHtml(item.title)}</strong>
-        <span>${escapeHtml(item.detail)}</span>
+        <strong>${escapeHtml(tt(item.title))}</strong>
+        <span>${escapeHtml(tt(item.detail))}</span>
       </div>
     `).join("")
-    : `<div class="gui-inline-empty">No active issues detected for this screen.</div>`;
+    : `<div class="gui-inline-empty">${escapeHtml(t("gui.screens-no-active-issues"))}</div>`;
 }
 
 function renderDiagnostics() {
@@ -5883,8 +5986,8 @@ function renderDiagnostics() {
   guiDiagnosticsListEl.innerHTML = diagnostics.length
     ? diagnostics.map((item) => `
       <div class="gui-diagnostic-card is-${escapeHtml(item.severity)}">
-        <strong>${escapeHtml(item.title)}</strong>
-        <span>${escapeHtml(item.detail)}</span>
+        <strong>${escapeHtml(tt(item.title))}</strong>
+        <span>${escapeHtml(tt(item.detail))}</span>
       </div>
     `).join("")
     : `<div class="gui-inline-empty">No diagnostics to report right now.</div>`;
@@ -5912,7 +6015,7 @@ function renderTopbar() {
       level: hasBridge ? "good" : "bad",
     },
     {
-      label: guiProjectSyncMeta.text,
+      label: getGuiProjectSyncText(),
       level: guiProjectSyncMeta.level,
     },
     {
@@ -6041,7 +6144,7 @@ guiBackButton.addEventListener("click", () => {
 });
 
 guiSaveButton.addEventListener("click", () => {
-  setGuiProjectSyncMeta(hasBridge ? "warn" : "warn", hasBridge ? t("sync.gui.manual_save") : t("sync.project_json.local_only"));
+  setGuiProjectSyncMeta("warn", hasBridge ? "sync.gui.manual_save" : "sync.project_json.local_only");
   saveProjectState(hasBridge
     ? t("gui.status.saved")
     : t("gui.status.saved_local"));
@@ -6053,7 +6156,7 @@ newGuiStyleButton.addEventListener("click", () => {
   activeStyleId = nextStyle.id;
   activeStylePrefixId = "base";
   render();
-  saveProjectState(`Created style "${nextStyle.name}".`);
+  saveProjectState(t("gui.status.style_created", { name: nextStyle.name }));
 });
 
 guiDeleteStyleButton.addEventListener("click", () => {
@@ -6061,8 +6164,8 @@ guiDeleteStyleButton.addEventListener("click", () => {
   if (!activeStyle) {
     return;
   }
-  if (!window.confirm(`Delete style "${activeStyle.name}"? This cannot be undone.`)) {
-    setStatus(`Kept style "${activeStyle.name}".`);
+  if (!window.confirm(t("gui.confirm.style_delete", { name: activeStyle.name }))) {
+    setStatus(t("gui.status.style_kept", { name: activeStyle.name }));
     return;
   }
   deleteActiveStyle();
@@ -6126,7 +6229,8 @@ guiStylePrefixTabsEl.addEventListener("click", (event) => {
   }
   activeStylePrefixId = prefixButton.dataset.stylePrefixId;
   render();
-  setStatus(`Switched to ${prefixButton.textContent.trim()} prefix editing.`);
+  const prefix = stylePrefixMeta.find((item) => item.id === activeStylePrefixId) || stylePrefixMeta[0];
+  setStatus(t("gui.status.style_prefix_switched", { prefix: getStylePrefixLabel(prefix) }));
 });
 
 guiScreenListEl.addEventListener("click", (event) => {
@@ -6136,7 +6240,7 @@ guiScreenListEl.addEventListener("click", (event) => {
   });
 
   if (card) {
-    setStatus(`Opened screen "${getActiveScreen()?.name || ""}".`);
+    setStatus(t("gui.status.screen_opened", { name: getActiveScreen()?.name || "" }));
   }
 });
 
@@ -6146,7 +6250,7 @@ newGuiScreenButton.addEventListener("click", () => {
   activeScreenId = screen.id;
   activeScreenNodeId = null;
   render();
-  saveProjectState(`Created screen "${screen.name}".`);
+  saveProjectState(t("gui.status.screen_created", { name: screen.name }));
 });
 
 createGuiScreenFromTemplateButton.addEventListener("click", () => {
@@ -6155,7 +6259,7 @@ createGuiScreenFromTemplateButton.addEventListener("click", () => {
   activeScreenId = screen.id;
   activeScreenNodeId = getFirstNodeId(screen.nodes);
   render();
-  saveProjectState(`Created screen "${screen.name}" from template.`);
+  saveProjectState(t("gui.status.screen_created_template", { name: screen.name }));
 });
 
 guiDeleteScreenButton.addEventListener("click", () => {
@@ -6163,8 +6267,8 @@ guiDeleteScreenButton.addEventListener("click", () => {
   if (!screen) {
     return;
   }
-  if (!window.confirm(`Delete screen "${screen.name}"? This cannot be undone.`)) {
-    setStatus(`Kept screen "${screen.name}".`);
+  if (!window.confirm(t("gui.confirm.screen_delete", { name: screen.name }))) {
+    setStatus(t("gui.status.screen_kept", { name: screen.name }));
     return;
   }
   deleteActiveScreen();
@@ -6214,7 +6318,7 @@ guiScreenNodeTreeEl.addEventListener("click", (event) => {
   }
   activeScreenNodeId = card.getAttribute("data-screen-node-id");
   render();
-  setStatus(`Opened node "${getActiveScreenNodeContext()?.node?.title || ""}".`);
+  setStatus(t("gui.status.node_opened", { name: getActiveScreenNodeContext()?.node?.title || "" }));
 });
 
 guiScreenNodeTypeInput.addEventListener("change", () => {
@@ -6260,7 +6364,7 @@ guiScreenNodeTypeInput.addEventListener("change", () => {
 ].forEach((input) => {
   input.addEventListener("change", () => {
     updateActiveScreenNode({
-      title: guiScreenNodeTitleInput.value.trim() || (getActiveScreenNodeContext()?.node?.title || "Node"),
+      title: guiScreenNodeTitleInput.value.trim() || (getActiveScreenNodeContext()?.node?.title || t("gui.screens-node-fallback-title")),
       style: guiScreenNodeStyleInput.value.trim(),
       nodeId: guiScreenNodeIdInput.value.trim(),
       propertiesExpression: guiScreenNodePropertiesInput.value,
@@ -6316,8 +6420,8 @@ guiDeleteNodeButton.addEventListener("click", () => {
   if (!node) {
     return;
   }
-  if (!window.confirm(`Delete node "${node.title}"?`)) {
-    setStatus(`Kept node "${node.title}".`);
+  if (!window.confirm(t("gui.confirm.node_delete", { name: node.title }))) {
+    setStatus(t("gui.status.node_kept", { name: node.title }));
     return;
   }
   deleteActiveScreenNode();
@@ -6675,7 +6779,7 @@ guiMusicRoomListEl.addEventListener("click", (event) => {
   }
   activeMusicRoomId = card.getAttribute("data-music-room-id");
   render();
-  setStatus(`Opened music room "${getActiveMusicRoom()?.name || ""}".`);
+  setStatus(t("gui.status.music_room_opened", { name: getActiveMusicRoom()?.name || "" }));
 });
 
 newGuiMusicRoomButton.addEventListener("click", () => {
@@ -6683,7 +6787,7 @@ newGuiMusicRoomButton.addEventListener("click", () => {
   projectState.gui.musicRooms.push(room);
   activeMusicRoomId = room.id;
   render();
-  saveProjectState(`Created music room "${room.name}".`);
+  saveProjectState(t("gui.status.music_room_created", { name: room.name }));
 });
 
 guiMusicRoomFormEl.addEventListener("change", (event) => {
@@ -6720,7 +6824,7 @@ guiMusicRoomAddTrackButton.addEventListener("click", () => {
   }
   room.tracks.push(createBlankMusicRoomTrack());
   render();
-  saveProjectState(`Added a track to "${room.name}".`);
+  saveProjectState(t("gui.status.music_track_added", { name: room.name }));
 });
 
 guiMusicRoomTrackListEl.addEventListener("change", (event) => {
@@ -6758,8 +6862,8 @@ guiMusicRoomTrackListEl.addEventListener("click", (event) => {
     return;
   }
 
-  if (!window.confirm(`Delete track "${getMusicRoomTrackDisplayName(track)}"?`)) {
-    setStatus(`Kept track "${getMusicRoomTrackDisplayName(track)}".`);
+  if (!window.confirm(t("gui.confirm.music_track_delete", { name: getMusicRoomTrackDisplayLabel(track) }))) {
+    setStatus(t("gui.status.music_track_kept", { name: getMusicRoomTrackDisplayLabel(track) }));
     return;
   }
 
@@ -6771,8 +6875,8 @@ guiDeleteMusicRoomButton.addEventListener("click", () => {
   if (!room) {
     return;
   }
-  if (!window.confirm(`Delete music room "${room.name}"?`)) {
-    setStatus(`Kept music room "${room.name}".`);
+  if (!window.confirm(t("gui.confirm.music_room_delete", { name: room.name }))) {
+    setStatus(t("gui.status.music_room_kept", { name: room.name }));
     return;
   }
   deleteActiveMusicRoom();
@@ -6785,7 +6889,7 @@ guiGalleryListEl.addEventListener("click", (event) => {
   }
   activeGalleryId = card.getAttribute("data-gallery-id");
   render();
-  setStatus(`Opened gallery "${getActiveGallery()?.name || ""}".`);
+  setStatus(t("gui.status.gallery_opened", { name: getActiveGallery()?.name || "" }));
 });
 
 newGuiGalleryButton.addEventListener("click", () => {
@@ -6793,7 +6897,7 @@ newGuiGalleryButton.addEventListener("click", () => {
   projectState.gui.galleries.push(gallery);
   activeGalleryId = gallery.id;
   render();
-  saveProjectState(`Created gallery "${gallery.name}".`);
+  saveProjectState(t("gui.status.gallery_created", { name: gallery.name }));
 });
 
 guiGalleryFormEl.addEventListener("change", (event) => {
@@ -6832,7 +6936,7 @@ guiGalleryAddButtonButton.addEventListener("click", () => {
   }
   gallery.buttons.push(createBlankGalleryButton());
   render();
-  saveProjectState(`Added a gallery button to "${gallery.name}".`);
+  saveProjectState(t("gui.status.gallery_button_added", { name: gallery.name }));
 });
 
 guiGalleryButtonListEl.addEventListener("change", (event) => {
@@ -6870,8 +6974,8 @@ guiGalleryButtonListEl.addEventListener("click", (event) => {
     return;
   }
 
-  if (!window.confirm(`Delete gallery button "${button.name}"?`)) {
-    setStatus(`Kept gallery button "${button.name}".`);
+  if (!window.confirm(t("gui.confirm.gallery_button_delete", { name: button.name }))) {
+    setStatus(t("gui.status.gallery_button_kept", { name: button.name }));
     return;
   }
 
@@ -6883,8 +6987,8 @@ guiDeleteGalleryButton.addEventListener("click", () => {
   if (!gallery) {
     return;
   }
-  if (!window.confirm(`Delete gallery "${gallery.name}"?`)) {
-    setStatus(`Kept gallery "${gallery.name}".`);
+  if (!window.confirm(t("gui.confirm.gallery_delete", { name: gallery.name }))) {
+    setStatus(t("gui.status.gallery_kept", { name: gallery.name }));
     return;
   }
   deleteActiveGallery();
@@ -6905,6 +7009,8 @@ if (guiNavNoteDismissButton) {
 }
 
 window.addEventListener("visual-editor-locale-changed", () => {
+  renderScreenTemplateOptions();
+  renderScreenNodeTypeOptions();
   render();
 });
 

@@ -28,6 +28,10 @@
 - 修复图片、Live2D、音频、角色、变量、成就和定义列表过长时，新建按钮会跟随侧边栏滚动的问题。
 - 优化 `data-i18n-placeholder` 处理逻辑，使 placeholder、title 和 aria-label 统一通过可扩展的属性翻译配置表更新。
 - 将 GUI Editor 左侧说明改为可关闭的首次提示，关闭后会按项目记录到本地存储并保持隐藏。
+- 开始按功能区块推进 GUI Editor 完整汉化；公共区域的顶部同步状态、语言切换、左侧导航和首次提示现在会稳定跟随当前语言刷新。
+- 完成 GUI Editor `Styles` 区块汉化，覆盖样式列表、详情表单、状态前缀、属性帮助、placeholder、样式操作状态和删除确认。
+- 完成 GUI Editor `Screens` 区块汉化，覆盖 screen 列表、模板选择、节点树、节点详情、action/value/input 表单、预览占位、诊断提示和 screen/node 操作状态。
+- 完成 GUI Editor `Extras` 区块汉化，覆盖 Replay、Music Rooms、Galleries 的表单、列表摘要、嵌套条目、placeholder、删除确认、保存状态和相关诊断提示。
 
 ## [0.4.13] - 2026-04-26
 
