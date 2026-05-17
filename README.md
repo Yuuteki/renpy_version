@@ -113,6 +113,20 @@ python scripts/sync_visual_editor_runtime.py --check
 - Windows 完整安装包： [packaging/windows/FULL_INSTALLER.md](packaging/windows/FULL_INSTALLER.md)
 - Windows 覆盖安装包： [packaging/windows/PATCH_INSTALLER.md](packaging/windows/PATCH_INSTALLER.md)
 
+## Contributing
+
+如果你也想参与这个分支，欢迎提 issue、提建议，或者直接提交 PR。
+
+这条分支目前最欢迎的贡献方向包括：
+
+- bug 修复
+- 导出链路和导入链路改进
+- GUI Editor / Visual Editor 体验优化
+- Windows 工作流改进
+- 汉化与文档完善
+
+更具体的贡献说明见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
 ## 许可证
 
 - 本分支中由 `Yuteki` 新增的 fork 专属内容，按 [MIT License](LICENSE) 发布
