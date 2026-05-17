@@ -264,6 +264,7 @@ const guiGalleryCodePreviewEl = document.getElementById("guiGalleryCodePreview")
 
 const guiConfigEmptyEl = document.getElementById("guiConfigEmpty");
 const guiConfigEntryListEl = document.getElementById("guiConfigEntryList");
+const guiConfigCreateMenuEl = document.getElementById("guiConfigCreateMenu");
 const newConfigEntryButton = document.getElementById("newConfigEntryButton");
 const newGuiVariableEntryButton = document.getElementById("newGuiVariableEntryButton");
 const newGuiPreferenceEntryButton = document.getElementById("newGuiPreferenceEntryButton");
@@ -283,8 +284,35 @@ const guiConfigDescriptionInput = document.getElementById("guiConfigDescriptionI
 const guiDeleteConfigButton = document.getElementById("guiDeleteConfigButton");
 const guiConfigCodePreviewEl = document.getElementById("guiConfigCodePreview");
 
+function bindCreateDropdown(menuEl) {
+  if (!menuEl) {
+    return;
+  }
+
+  menuEl.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element) || !event.target.closest("button")) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      menuEl.open = false;
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!menuEl.open || menuEl.contains(event.target)) {
+      return;
+    }
+
+    menuEl.open = false;
+  });
+}
+
+bindCreateDropdown(guiConfigCreateMenuEl);
+
 const guiPythonUiEmptyEl = document.getElementById("guiPythonUiEmpty");
 const guiPythonUiListEl = document.getElementById("guiPythonUiList");
+const guiPythonUiCreateMenuEl = document.getElementById("guiPythonUiCreateMenu");
 const newGuiPythonActionButton = document.getElementById("newGuiPythonActionButton");
 const newGuiPythonBarButton = document.getElementById("newGuiPythonBarButton");
 const newGuiPythonInputButton = document.getElementById("newGuiPythonInputButton");
@@ -292,6 +320,7 @@ const newGuiPythonDisplayableButton = document.getElementById("newGuiPythonDispl
 const newGuiPythonStatementButton = document.getElementById("newGuiPythonStatementButton");
 const newGuiPythonRestartButton = document.getElementById("newGuiPythonRestartButton");
 const newGuiPythonDefineScreenButton = document.getElementById("newGuiPythonDefineScreenButton");
+bindCreateDropdown(guiPythonUiCreateMenuEl);
 const guiPythonUiEmptyStateEl = document.getElementById("guiPythonUiEmptyState");
 const guiPythonUiFormEl = document.getElementById("guiPythonUiForm");
 const guiPythonUiKindInput = document.getElementById("guiPythonUiKindInput");
@@ -365,9 +394,11 @@ const guiPythonUiCodePreviewEl = document.getElementById("guiPythonUiCodePreview
 
 const guiCursorEmptyEl = document.getElementById("guiCursorEmpty");
 const guiCursorListEl = document.getElementById("guiCursorList");
+const guiCursorCreateMenuEl = document.getElementById("guiCursorCreateMenu");
 const newHardwareCursorButton = document.getElementById("newHardwareCursorButton");
 const newDisplayableCursorButton = document.getElementById("newDisplayableCursorButton");
 const newCursorUsageButton = document.getElementById("newCursorUsageButton");
+bindCreateDropdown(guiCursorCreateMenuEl);
 const guiCursorEmptyStateEl = document.getElementById("guiCursorEmptyState");
 const guiCursorFormEl = document.getElementById("guiCursorForm");
 const guiCursorKindInput = document.getElementById("guiCursorKindInput");

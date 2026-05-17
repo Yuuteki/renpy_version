@@ -37,6 +37,10 @@
 - 完成 GUI Editor `Cursors` 区块汉化，覆盖硬件鼠标光标、可视组件鼠标光标、使用片段表单、引用列表、placeholder、操作状态、删除确认和鼠标光标相关诊断提示。
 - 完成 GUI Editor `Shaders` 区块汉化，覆盖默认文本着色器、样式着色器、callback 映射、自定义注册表单、使用提示、placeholder、操作状态、删除确认和文本着色器诊断提示。
 - 完成 GUI Editor `Diagnostics / Suggested Output` 收尾汉化，覆盖诊断说明、统计徽标、空状态、建议输出占位，以及 style/screen 节点相关诊断提示。
+- 补全主编辑器 `Keymap Settings` 动态卡片汉化，覆盖分类卡片、事件名称与说明、事件计数、展开后的绑定列表、raw override 表单、操作按钮和状态提示。
+- 修复 GUI Editor `Config & Defaults` 区块在内容较长或窄屏布局下无法正常上下滚动的问题，新增入口改为单行下拉按钮，列表和输出预览现在会在各自区域内滚动。
+- 将 GUI Editor `Python UI` 的新增 helper 入口同步改为单行下拉按钮，避免模板按钮过多挤占左侧列表空间。
+- 将 GUI Editor `Cursors` 的新增鼠标光标入口同步改为单行下拉按钮，保持左侧资源列表的可用空间。
 
 ## [0.4.13] - 2026-04-26
 

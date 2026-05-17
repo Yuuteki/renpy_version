@@ -1015,11 +1015,16 @@
                 <div id="guiConfigEntryList" class="character-list gui-entity-list"></div>
 
                 <div class="gui-stack-actions">
-                  <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button" data-i18n="gui.config-new-config">New Config Entry</button>
-                  <button id="newGuiVariableEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-gui-variable">New GUI Variable</button>
-                  <button id="newGuiPreferenceEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-gui-preference">New GUI Preference</button>
-                  <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-preference">New Preference Default</button>
-                  <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-store">New Store Default</button>
+                  <details id="guiConfigCreateMenu" class="gui-create-dropdown">
+                    <summary class="gui-create-dropdown-summary" data-i18n="gui.config-new-menu">New</summary>
+                    <div class="gui-create-dropdown-menu">
+                      <button id="newConfigEntryButton" class="primary gui-bottom-button" type="button" data-i18n="gui.config-new-config">New Config Entry</button>
+                      <button id="newGuiVariableEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-gui-variable">New GUI Variable</button>
+                      <button id="newGuiPreferenceEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-gui-preference">New GUI Preference</button>
+                      <button id="newPreferenceEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-preference">New Preference Default</button>
+                      <button id="newStoreEntryButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.config-new-store">New Store Default</button>
+                    </div>
+                  </details>
                 </div>
               </aside>
 
@@ -1100,13 +1105,18 @@
                 <div id="guiPythonUiList" class="character-list gui-entity-list"></div>
 
                 <div class="gui-stack-actions">
-                  <button id="newGuiPythonActionButton" class="primary gui-bottom-button" type="button" data-i18n="gui.python-new-action">New Action Class</button>
-                  <button id="newGuiPythonBarButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-bar">New BarValue Class</button>
-                  <button id="newGuiPythonInputButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-input">New InputValue Class</button>
-                  <button id="newGuiPythonDisplayableButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-displayable">New Displayable Class</button>
-                  <button id="newGuiPythonStatementButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-statement">New Custom Statement</button>
-                  <button id="newGuiPythonRestartButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-restart">New restart_interaction Helper</button>
-                  <button id="newGuiPythonDefineScreenButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-define-screen">New define_screen Helper</button>
+                  <details id="guiPythonUiCreateMenu" class="gui-create-dropdown">
+                    <summary class="gui-create-dropdown-summary" data-i18n="gui.python-new-menu">New</summary>
+                    <div class="gui-create-dropdown-menu">
+                      <button id="newGuiPythonActionButton" class="primary gui-bottom-button" type="button" data-i18n="gui.python-new-action">New Action Class</button>
+                      <button id="newGuiPythonBarButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-bar">New BarValue Class</button>
+                      <button id="newGuiPythonInputButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-input">New InputValue Class</button>
+                      <button id="newGuiPythonDisplayableButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-displayable">New Displayable Class</button>
+                      <button id="newGuiPythonStatementButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-statement">New Custom Statement</button>
+                      <button id="newGuiPythonRestartButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-restart">New restart_interaction Helper</button>
+                      <button id="newGuiPythonDefineScreenButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.python-new-define-screen">New define_screen Helper</button>
+                    </div>
+                  </details>
                 </div>
               </aside>
 
@@ -1554,9 +1564,14 @@
                 <div id="guiCursorList" class="character-list gui-entity-list"></div>
 
                 <div class="gui-stack-actions">
-                  <button id="newHardwareCursorButton" class="primary gui-bottom-button" type="button" data-i18n="gui.cursor-new-hardware">New Hardware Cursor</button>
-                  <button id="newDisplayableCursorButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.cursor-new-displayable">New Displayable Cursor</button>
-                  <button id="newCursorUsageButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.cursor-new-usage">New Usage Snippet</button>
+                  <details id="guiCursorCreateMenu" class="gui-create-dropdown">
+                    <summary class="gui-create-dropdown-summary" data-i18n="gui.cursor-new-menu">New</summary>
+                    <div class="gui-create-dropdown-menu">
+                      <button id="newHardwareCursorButton" class="primary gui-bottom-button" type="button" data-i18n="gui.cursor-new-hardware">New Hardware Cursor</button>
+                      <button id="newDisplayableCursorButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.cursor-new-displayable">New Displayable Cursor</button>
+                      <button id="newCursorUsageButton" class="secondary gui-bottom-button" type="button" data-i18n="gui.cursor-new-usage">New Usage Snippet</button>
+                    </div>
+                  </details>
                 </div>
               </aside>
 

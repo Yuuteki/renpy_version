@@ -3413,9 +3413,37 @@ function getProjectKeymapEventMeta(eventId) {
   return {
     id: eventId,
     label: eventId,
-    description: "Custom keymap event override.",
+    description: t("project-keymap-custom-event-description"),
     defaultBindings: [],
   };
+}
+
+function getProjectKeymapCategoryLabel(category) {
+  return tt(category.label);
+}
+
+function getProjectKeymapCategoryDescription(category) {
+  return tt(category.description);
+}
+
+function getProjectKeymapEventLabel(meta) {
+  return tt(meta.label);
+}
+
+function getProjectKeymapEventDescription(meta) {
+  return tt(meta.description);
+}
+
+function getProjectKeymapStatusLabel(entry) {
+  if (entry.rawExpression) {
+    return t("project-keymap-status-raw");
+  }
+
+  if (entry.useCustomList) {
+    return t("project-keymap-status-custom");
+  }
+
+  return t("project-keymap-status-default");
 }
 
 function getProjectKeymapOverrideEntry(eventId) {
@@ -11394,10 +11422,10 @@ function renderProjectKeymapSettings() {
     <details class="project-keymap-category" data-keymap-category="${escapeHtml(category.id)}" ${projectKeymapCategoryState[category.id] !== false ? "open" : ""}>
       <summary class="project-keymap-category-summary">
         <span>
-          <strong>${escapeHtml(category.label)}</strong>
-          <small>${escapeHtml(`${category.eventIds.length} events`)}</small>
+          <strong>${escapeHtml(getProjectKeymapCategoryLabel(category))}</strong>
+          <small>${escapeHtml(t("project-keymap-events-count", { count: category.eventIds.length }))}</small>
         </span>
-        <span>${escapeHtml(category.description)}</span>
+        <span>${escapeHtml(getProjectKeymapCategoryDescription(category))}</span>
       </summary>
 
       <div class="project-keymap-card-list">
@@ -11405,17 +11433,13 @@ function renderProjectKeymapSettings() {
     const meta = getProjectKeymapEventMeta(eventId);
     const entry = getProjectKeymapOverrideEntry(eventId);
     const effectiveBindings = getProjectKeymapEffectiveBindings(eventId);
-    const statusLabel = entry.rawExpression
-      ? "Raw override active."
-      : entry.useCustomList
-        ? "Custom binding list active."
-        : "Using Ren'Py default bindings.";
+    const statusLabel = getProjectKeymapStatusLabel(entry);
 
     return `
           <article class="project-keymap-card" data-keymap-event-id="${escapeHtml(eventId)}">
             <div class="project-keymap-card-header">
               <div class="project-keymap-card-copy">
-                <strong>${escapeHtml(meta.label)}</strong>
+                <strong>${escapeHtml(getProjectKeymapEventLabel(meta))}</strong>
                 <code>${escapeHtml(eventId)}</code>
               </div>
               <button
@@ -11424,17 +11448,17 @@ function renderProjectKeymapSettings() {
                 data-keymap-reset-event="${escapeHtml(eventId)}"
                 ${entry.rawExpression || entry.useCustomList ? "" : "disabled"}
               >
-                Reset
+                ${escapeHtml(t("project-keymap-reset"))}
               </button>
             </div>
 
-            <p class="project-settings-note">${escapeHtml(meta.description)}</p>
+            <p class="project-settings-note">${escapeHtml(getProjectKeymapEventDescription(meta))}</p>
             <p class="project-keymap-status">${escapeHtml(statusLabel)}</p>
 
             <p class="project-settings-note">
               ${meta.defaultBindings.length
-      ? `Default: ${meta.defaultBindings.map((binding) => `<code>${escapeHtml(binding)}</code>`).join(", ")}`
-      : "No tracked default binding list for this custom event."
+      ? `${escapeHtml(t("project-keymap-default-prefix"))} ${meta.defaultBindings.map((binding) => `<code>${escapeHtml(binding)}</code>`).join(", ")}`
+      : escapeHtml(t("project-keymap-no-default-bindings"))
     }
             </p>
 
@@ -11446,13 +11470,13 @@ function renderProjectKeymapSettings() {
                       type="button"
                       data-keymap-remove-event="${escapeHtml(eventId)}"
                       data-keymap-binding="${escapeHtml(binding)}"
-                      title="Remove ${escapeHtml(binding)}"
+                      title="${escapeHtml(t("project-keymap-remove-binding-title", { binding }))}"
                     >
                       <code>${escapeHtml(binding)}</code>
                       <span aria-hidden="true">×</span>
                     </button>
                   `).join("")
-      : '<span class="project-keymap-empty">No bindings in this list.</span>'
+      : `<span class="project-keymap-empty">${escapeHtml(t("project-keymap-no-bindings"))}</span>`
     }
             </div>
 
@@ -11460,22 +11484,22 @@ function renderProjectKeymapSettings() {
               <input
                 data-keymap-add-input="${escapeHtml(eventId)}"
                 type="text"
-                placeholder="e.g. K_t or shift_K_F5"
+                placeholder="${escapeHtml(t("placeholder.project-keymap-binding"))}"
               />
-              <button class="secondary" type="button" data-keymap-add-event="${escapeHtml(eventId)}">Add</button>
+              <button class="secondary" type="button" data-keymap-add-event="${escapeHtml(eventId)}">${escapeHtml(t("project-keymap-add-binding"))}</button>
             </div>
 
             <label>
-              Raw Override Expression
+              <span>${escapeHtml(t("project-keymap-raw-override-expression"))}</span>
               <textarea
                 data-keymap-raw-input="${escapeHtml(eventId)}"
                 rows="3"
-                placeholder="e.g. [ 'K_RETURN', 'K_SPACE' ] or config.keymap['dismiss'] + ['K_t']"
+                placeholder="${escapeHtml(t("placeholder.project-keymap-raw-override"))}"
               >${escapeHtml(entry.rawExpression)}</textarea>
             </label>
 
             <p class="project-settings-note">
-              If filled, generated code will use this exact expression instead of the binding list above.
+              ${escapeHtml(t("project-keymap-raw-note"))}
             </p>
           </article>
         `;
@@ -14796,7 +14820,7 @@ projectKeymapAddCustomEventButton?.addEventListener("click", () => {
   const nextEventId = `${projectKeymapCustomEventNameInput?.value || ""}`.trim();
 
   if (!nextEventId) {
-    setStatus("Enter a keymap event name before adding a custom event.");
+    setStatus(t("project-keymap-status-enter-event-name"));
     return;
   }
 
@@ -14804,12 +14828,12 @@ projectKeymapAddCustomEventButton?.addEventListener("click", () => {
 
   if (ensureProjectKeymapCustomEvent(nextEventId)) {
     projectKeymapCustomEventNameInput.value = "";
-    setStatus(`Added custom keymap event "${nextEventId}".`);
+    setStatus(t("project-keymap-status-added-custom-event", { event: nextEventId }));
     return;
   }
 
   projectKeymapCustomEventNameInput.value = "";
-  setStatus(`Keymap event "${nextEventId}" is already available.`);
+  setStatus(t("project-keymap-status-event-exists", { event: nextEventId }));
 });
 projectKeymapCustomEventNameInput?.addEventListener("keydown", (event) => {
   if (event.key !== "Enter") {
@@ -14840,11 +14864,11 @@ projectKeymapCategoryListEl?.addEventListener("click", (event) => {
     }
 
     if (addProjectKeymapBinding(eventId, inputEl.value)) {
-      setStatus(`Added "${inputEl.value.trim()}" to keymap event "${eventId}".`);
+      setStatus(t("project-keymap-status-added-binding", { binding: inputEl.value.trim(), event: eventId }));
       return;
     }
 
-    setStatus(`That keysym is already bound on "${eventId}", or the input was empty.`);
+    setStatus(t("project-keymap-status-duplicate-or-empty", { event: eventId }));
     return;
   }
 
@@ -14855,7 +14879,7 @@ projectKeymapCategoryListEl?.addEventListener("click", (event) => {
     const binding = removeButton.dataset.keymapBinding;
 
     if (removeProjectKeymapBinding(eventId, binding)) {
-      setStatus(`Removed "${binding}" from keymap event "${eventId}".`);
+      setStatus(t("project-keymap-status-removed-binding", { binding, event: eventId }));
     }
 
     return;
@@ -14867,7 +14891,7 @@ projectKeymapCategoryListEl?.addEventListener("click", (event) => {
     const eventId = resetButton.dataset.keymapResetEvent;
 
     resetProjectKeymapEvent(eventId);
-    setStatus(`Reset keymap event "${eventId}" to Ren'Py defaults.`);
+    setStatus(t("project-keymap-status-reset-event", { event: eventId }));
   }
 });
 projectKeymapCategoryListEl?.addEventListener("keydown", (event) => {
@@ -14880,11 +14904,14 @@ projectKeymapCategoryListEl?.addEventListener("keydown", (event) => {
   event.preventDefault();
 
   if (addProjectKeymapBinding(inputEl.dataset.keymapAddInput, inputEl.value)) {
-    setStatus(`Added "${inputEl.value.trim()}" to keymap event "${inputEl.dataset.keymapAddInput}".`);
+    setStatus(t("project-keymap-status-added-binding", {
+      binding: inputEl.value.trim(),
+      event: inputEl.dataset.keymapAddInput,
+    }));
     return;
   }
 
-  setStatus(`That keysym is already bound on "${inputEl.dataset.keymapAddInput}", or the input was empty.`);
+  setStatus(t("project-keymap-status-duplicate-or-empty", { event: inputEl.dataset.keymapAddInput }));
 });
 projectKeymapCategoryListEl?.addEventListener("change", (event) => {
   const rawInput = event.target.closest("[data-keymap-raw-input]");
@@ -14896,8 +14923,8 @@ projectKeymapCategoryListEl?.addEventListener("change", (event) => {
   setProjectKeymapRawExpression(rawInput.dataset.keymapRawInput, rawInput.value);
   setStatus(
     rawInput.value.trim()
-      ? `Applied a raw override for keymap event "${rawInput.dataset.keymapRawInput}".`
-      : `Cleared the raw override for keymap event "${rawInput.dataset.keymapRawInput}".`,
+      ? t("project-keymap-status-raw-applied", { event: rawInput.dataset.keymapRawInput })
+      : t("project-keymap-status-raw-cleared", { event: rawInput.dataset.keymapRawInput }),
   );
 });
 characterIdInput.addEventListener("input", (event) => {

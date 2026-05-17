@@ -207,6 +207,8 @@
 
 .gui-section {
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 #extrasSection {
@@ -224,10 +226,15 @@
 }
 
 .gui-column {
+  min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 16px;
   padding: 18px;
+}
+
+.gui-list-column {
+  overflow: hidden;
 }
 
 .gui-detail-column {
@@ -526,6 +533,100 @@
 .gui-stack-actions {
   display: grid;
   gap: 10px;
+}
+
+.gui-list-column > .gui-stack-actions {
+  max-height: min(32vh, 280px);
+  overflow: auto;
+  padding-right: 2px;
+  scrollbar-gutter: stable;
+}
+
+#configSection .gui-list-column > .gui-stack-actions,
+#pythonUiSection .gui-list-column > .gui-stack-actions,
+#cursorsSection .gui-list-column > .gui-stack-actions {
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+  scrollbar-gutter: auto;
+}
+
+#configSection .gui-list-column > .gui-stack-actions button,
+#pythonUiSection .gui-list-column > .gui-stack-actions button,
+#cursorsSection .gui-list-column > .gui-stack-actions button {
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.gui-create-dropdown {
+  position: relative;
+  min-width: 0;
+}
+
+.gui-create-dropdown-summary {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--accent);
+  color: #0a0b0d;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.35;
+  list-style: none;
+  transition: transform 120ms ease, background 120ms ease;
+}
+
+.gui-create-dropdown-summary:hover {
+  transform: translateY(-1px);
+  background: var(--accent-strong);
+}
+
+.gui-create-dropdown-summary::-webkit-details-marker {
+  display: none;
+}
+
+.gui-create-dropdown-summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  opacity: 0.78;
+}
+
+.gui-create-dropdown[open] .gui-create-dropdown-summary::after {
+  transform: rotate(225deg) translateY(-1px);
+}
+
+.gui-create-dropdown-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 10px);
+  z-index: 10;
+  display: grid;
+  gap: 8px;
+  max-height: min(48vh, 280px);
+  overflow: auto;
+  padding: 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(24, 26, 31, 0.98);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.gui-create-dropdown-menu button {
+  width: 100%;
 }
 
 .gui-stack-actions > * {
@@ -870,6 +971,15 @@
   min-height: 220px;
 }
 
+#configSection .gui-preview-column {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+#configSection .gui-preview-column .code-preview {
+  height: 100%;
+  min-height: 0;
+}
+
 .gui-diagnostics-list {
   display: grid;
   gap: 10px;
@@ -928,6 +1038,10 @@
 }
 
 @media (max-width: 1180px) {
+  body {
+    overflow: auto;
+  }
+
   .gui-shell {
     height: auto;
     min-height: 100vh;
@@ -944,6 +1058,11 @@
   .gui-section-grid {
     grid-template-columns: 1fr;
     height: auto;
+  }
+
+  .gui-section {
+    height: auto;
+    overflow: visible;
   }
 
   .gui-section-grid-wide,
