@@ -6,7 +6,7 @@
 
 ## 先了解这个项目目前的状态
 
-当前这条分支最在意的是把下面这些链路做稳：
+当前这条分支最在意的是把下面这些链路：
 
 - 从 Launcher 打开 `Visual Editor`
 - 项目状态保存到 `visual_editor/project.json`
@@ -51,11 +51,11 @@
 
 ## 本地测试建议
 
-当前最稳的测试环境还是 Windows。
+当前的测试环境是 Windows。
 
 默认维护方式是：
 
-- 根目录中的 [visual_editor](visual_editor) 和 [launcher/game](launcher/game) 是源码真身
+- 根目录中的 [visual_editor](visual_editor) 和 [launcher/game](launcher/game) 是源码
 - [renpy_test_runtime](renpy_test_runtime) 是可运行的测试副本
 
 如果你修改了编辑器或 Launcher 集成相关代码，通常建议先同步运行时：
@@ -80,7 +80,7 @@ python scripts/sync_visual_editor_runtime.py --check
 - 如果碰到 GUI 相关代码，GUI Editor 基本流程没有被带坏
 - 如果碰到资源相关代码，导入后的路径仍然能被 Ren'Py 识别
 
-如果你改的是文案、README 或非运行路径的脚本，说明你验证了什么就很好。
+如果你改的是文案、README 或非运行路径的脚本，说明你验证了什么就好。
 
 ## 提 Issue 的方式
 
@@ -96,9 +96,9 @@ python scripts/sync_visual_editor_runtime.py --check
 
 对这类项目来说，“能稳定复现”通常比“描述得很着急”更有帮助。
 
-## 关于风格和改动范围
+## 关于改动范围
 
-这条分支现在更适合：
+目前适合：
 
 - 小步提交
 - 明确目标
