@@ -1,17 +1,15 @@
 # Ren'Py Visual Editor Fork
 
 这是一个基于 Ren'Py 的实验性分支。  
-很简单：把一个真正能用的可视化编辑器，接进 Ren'Py Launcher 里。
+把一个能用的可视化编辑器，接进 Ren'Py Launcher 里。
 
-它现在还不是官方 SDK，也还不是“已经稳定可商用”的正式版本。更准确地说，它是一个已经跑通主链路、正在进入预发布测试阶段的工具分支。
+它现在还不是官方 SDK，也不是稳定的正式版本。
 
 如果你一直觉得 Ren'Py 很强，但写剧情、搭 GUI、接资源、反复导出脚本这套流程还不够顺手，那这个分支就是朝这个方向在努力。
 
 ## 现在到什么阶段了？
 
 当前预发布版本：`v0.5`
-
-这版已经把最重要的一些事情接起来了：
 
 - 可以直接从 Launcher 打开 `Visual Editor`
 - 可以把编辑状态同步到 `<project>/visual_editor/project.json`
@@ -21,6 +19,7 @@
 - 能在接管旧 GUI / 脚本文件前自动备份
 - 有资源导入、路径处理和项目健康检查
 - 编辑器支持中文和英文界面切换
+- 目前只支持Windows系统
 
 
 ## 我应该下载哪个版本？
@@ -85,12 +84,11 @@
   更新日志
 
 ## 如果你想直接开始测试
-
-当前最稳的测试路径还是 Windows。
+最好使用 Windows系统。
 
 默认维护方式是：
 
-- 根目录里的 [visual_editor](visual_editor) 和 [launcher/game](launcher/game) 是源码真身
+- 根目录里的 [visual_editor](visual_editor) 和 [launcher/game](launcher/game) 是源码
 - [renpy_test_runtime](renpy_test_runtime) 是可运行的 Windows 测试副本
 
 如果你改了编辑器或 Launcher 集成代码，先同步运行时再测：
@@ -117,7 +115,7 @@ python scripts/sync_visual_editor_runtime.py --check
 
 如果你也想参与这个分支，欢迎提 issue、提建议，或者直接提交 PR。
 
-这条分支目前最欢迎的贡献方向包括：
+目前最欢迎的贡献方向包括：
 
 - bug 修复
 - 导出链路和导入链路改进
