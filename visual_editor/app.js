@@ -1440,6 +1440,7 @@ function renderLocaleOptions(selectEl) {
   const locales = [
     { value: "en", label: t("ui.language.english") },
     { value: "zh-CN", label: t("ui.language.zhCN") },
+    { value: "zh-TW", label: t("ui.language.zhTW") },
   ];
 
   selectEl.innerHTML = locales.map((locale) => (
